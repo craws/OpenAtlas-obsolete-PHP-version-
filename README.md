@@ -1,10 +1,10 @@
 # About
 
-OpenAtlas is an open-source application for archeological, historical and geospatial data
+OpenAtlas is an open-source application for archeological, historical and geospatial data.
 
 Demo: http://openatlas.craws.net
 Wiki and issue tracker: http://redmine.craws.net/projects/uni/wiki
-GitHub: https://github.com/craws/OpenAtlas
+GitHub: https://github.com/craws/OpenAtlas  
 
 # Installation
 
