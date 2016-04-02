@@ -1,0 +1,47 @@
+<? $form = $this->form; ?>
+<div class="tableRow">
+    <div><label><?= $this->ucstring('date') ?></label></div>
+    <div class="tableCell dateSwitcher">
+        <span id="dateSwitcher" class="button"><?= $this->ucstring('show') ?></span>
+    </div>
+</div>
+<div class="tableRow dateSwitch display-none">
+    <?= $form->beginYear->renderLabel() ?>
+    <div class="tableCell">
+        <?= $form->beginYear->renderViewHelper() ?>
+        <?= $form->beginMonth->renderViewHelper() ?>
+        <?= $form->beginDay->renderViewHelper() ?>
+        <?= $form->beginComment->renderViewHelper() ?>
+    </div>
+</div>
+<div class="tableRow dateSwitch display-none">
+    <?= $form->begin2Day->renderLabel() ?>
+    <div class="tableCell">
+        <?= $form->begin2Year->renderViewHelper() ?>
+        <?= $form->begin2Month->renderViewHelper() ?>
+        <?= $form->begin2Day->renderViewHelper() ?>
+        <? if ($form->birth): ?>
+            <?= $form->birth->renderViewHelper() ?> <?= $form->birth->getLabel() ?>
+        <? endif ?>
+    </div>
+</div>
+<div class="tableRow dateSwitch display-none">
+    <?= $form->endYear->renderLabel() ?>
+    <div class="tableCell">
+        <?= $form->endYear->renderViewHelper() ?>
+        <?= $form->endMonth->renderViewHelper() ?>
+        <?= $form->endDay->renderViewHelper() ?>
+        <?= $form->endComment->renderViewHelper() ?>
+    </div>
+</div>
+<div class="tableRow dateSwitch display-none">
+    <?= $form->end2Day->renderLabel() ?>
+    <div class="tableCell">
+        <?= $form->end2Year->renderViewHelper() ?>
+        <?= $form->end2Month->renderViewHelper() ?>
+        <?= $form->end2Day->renderViewHelper() ?>
+        <? if ($form->death): ?>
+            <?= $form->death->renderViewHelper() ?> <?= $form->death->getLabel() ?>
+        <? endif ?>
+    </div>
+</div>

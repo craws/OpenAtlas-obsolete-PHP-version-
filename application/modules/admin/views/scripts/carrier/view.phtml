@@ -1,0 +1,68 @@
+<? $carrier = $this->carrier; ?>
+<? $this->breadcrumb = [$this->link('reference'), $carrier->name]; ?>
+<div id="tabs">
+    <ul>
+        <li><a href="#tabInfo"><?= $this->ucstring('info') ?></a></li>
+        <li><a href="#tabSource"><?= $this->ucstring('sources') ?> (<?= count($this->sourceLinks) ?>)</a></li>
+    </ul>
+    <div id="tabInfo">
+        <div class="buttonBar">
+            <?= $this->link($carrier, 'update') ?>
+            <?= $this->link($carrier, 'delete') ?>
+        </div>
+        <h1><?= $carrier->name ?></h1>
+        <?
+        $table = [];
+        if ($this->carrierType && $this->carrierType->rootId) {
+            $table['data'][_('type')] = $this->link($this->carrierType);
+        }
+        if ($this->object) {
+            $table['data'][_('place')] = $this->link($this->object);
+        }
+        foreach (['OA1' => _('begin'), 'OA2' => _('end')] as $key => $label) {
+            if (isset($this->dates[$key])) {
+                $dates = $this->dates[$key];
+                if (isset($dates['Exact date value'])) {
+                    $table['data'][$label] = $this->printDate($dates['Exact date value']->date) . ' ' .
+                        $dates['Exact date value']->description;
+                } else {
+                    $table['data'][$label] = $this->ucstring('between') . ' ' .
+                        $this->printDate($dates['From date value']->date) . ' ' . $this->translate('and') . ' ' .
+                        $this->printDate($dates['To date value']->date) . ' ' . $dates['From date value']->description;
+                }
+            }
+        }
+        $this->table = $this->tableLog($table, 'entity', $carrier->id);
+        ?>
+        <?= $this->render('tableDataItem.phtml'); ?>
+        <?= $this->description($carrier) ?>
+    </div>
+    <div id="tabSource">
+        <?
+        $tableSource = ['id' => 'source', 'pager' => true, 'filter' => true];
+        $tableSource['header'] = [_('source'), _('type'), _('page'), '', ''];
+        foreach ($this->sourceLinks as $link) {
+            $text = $this->translate('refers_to') . ': ' . $link->getRange()->name;
+            $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_delete', $text)) .
+                "')\" ";
+            $deleteLink = '<div><a href="/admin/function/unlink/id/' . $link->id . '/entityId/' . $carrier->id .
+                '/#tabSource' . '" class="button"' . $confirm . '>' . $this->ucstring('remove') . '</a></div>';
+            $tableSource['data'][] = [
+                $this->link($link->getRange()),
+                Model_NodeMapper::getNodeByEntity('type', 'Source', $link->getRange())->name,
+                $link->description,
+                '<a class="button" href="/admin/biblio/update/origin/reference/id/' . $link->id . '">' .
+                $this->ucstring('edit') . '</a>',
+                $deleteLink
+            ];
+        }
+        ?>
+        <? $this->table = $tableSource; ?>
+        <?= $this->render('tableSorter.phtml'); ?>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $("#tabs").tabs();
+    });
+</script>

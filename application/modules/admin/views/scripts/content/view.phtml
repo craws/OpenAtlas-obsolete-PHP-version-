@@ -1,0 +1,9 @@
+<? $this->breadcrumb = [[$this->ucstring('content'), '/admin/content'], $this->content->getText('title')]; ?>
+<? $this->buttonBar .= '<a href="/admin/content/update/id/' . $this->content->id . '">' . $this->ucstring('edit') . '</a>'; ?>
+<p><?= $this->content->getText('title') ?></p>
+<? foreach (Model_LanguageMapper::getAll() as $language): ?>
+    <p class="hint"><?= $language->name ?></p>
+    <div class="textPreview">
+        <div><?= $this->content->getText('text', $language->shortform) ?></div>
+    </div>
+<? endforeach ?>

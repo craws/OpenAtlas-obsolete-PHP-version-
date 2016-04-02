@@ -1,0 +1,192 @@
+@charset "UTF-8";
+
+body,
+.pagedisplay[disabled="disabled"],
+.ui-widget-content,
+.ui-tabs .ui-tabs-panel,
+#breadcrumb div a:hover,
+table.data td.label,
+th a,
+table.tablesorter tbody td,
+div#tabs .ui-state-active a,
+select.error,
+div#tabs #map a
+{
+    color: #000000;
+}
+
+#adminUser, #adminUser a {
+    color: #adadad;
+}
+
+#adminMenu div a,
+#breadcrumb div a,
+.submit,
+button,
+a.button,
+#buttonBar a,
+.buttonBar a,
+span.button,
+div.separator,
+.dateSwitch,
+#languageMenu a,
+#languageMenu span,
+div#tabs .ui-widget-content a.button,
+div#tabs .ui-widget-content .buttonBar a,
+.ui-widget-header,
+.tableSelect.error,
+table.tablesorter thead tr th,
+table.tablesorter tfoot tr th,
+div#tabs li a,
+.ui-dialog .ui-dialog-titlebar-close,
+.dateSwitch label.error,
+table.tablesorter a.button:hover,
+.changelogVersion
+{
+    color: #ffffff;
+}
+
+p.hint,
+tr.tableGroup,
+div#tabs a.add,
+div.dataTable > div.groupLabel,
+div.tableRow div.formGroupLabel
+{
+    color: #efefef;
+}
+
+
+a,
+.info,
+table a,
+span.active,
+.ui-widget-content a,
+div#tabs table a,
+div#tabs a,
+#adminMenu div a:hover,
+#adminMenu div.selected a,
+#adminMenu div.selected a:hover,
+span.tooltip
+{
+    color: #9c1c6b;
+}
+
+div#tabs table a:hover,
+table a:hover
+{
+    color: #9c1c6b;
+}
+
+.inactive,
+.inactive a
+{
+    color: #666666;
+}
+
+.error,
+label.invalid
+{
+    color: #e60005;
+}
+
+button,
+.submit,
+a.button,
+span.button,
+#buttonBar a,
+.buttonBar a,
+#breadcrumb,
+.dateSwitch,
+tr.tableGroup,
+div#tabs a.add,
+.ui-state-default,
+.ui-widget-content .ui-state-default,
+.changelogVersion
+{
+    background-color: #9c1c6b;
+}
+
+.ui-state-active,
+.ui-widget-content .ui-state-active,
+.ui-widget-header .ui-state-active,
+#tabs .ui-widget-content,
+table.tablesorter tbody td,
+div#tabs .ui-state-active.ui-state-hover,
+div#tabs .ui-state-active,
+select
+{
+    background-color: #ffffff;
+}
+
+body,
+.ui-widget-content,
+.ui-tabs .ui-tabs-panel,
+#adminHead
+{
+    background-color: #ffe9e8;
+}
+
+div#tabs .ui-state-hover,
+a.button:hover,
+#buttonBar a:hover,
+button:hover,
+.buttonBar a:hover,
+span.button:hover {
+    background-color: #9c1c6b;
+}
+
+#adminMenu,
+p.hint,
+#languageMenu span,
+.overlay,
+.ui-widget-header,
+div.tableRow div.formGroupLabel,
+div.dataTable > div.groupLabel,
+.pagedisplay[disabled="disabled"],
+table.tablesorter thead tr th,
+table.tablesorter tfoot tr th,
+.ui-widget-header .ui-state-default
+{
+    background-color: #000000;
+}
+
+
+
+#languageMenu a,
+table.tablesorter tbody tr.odd td
+{
+    background-color: #adadad;
+}
+
+#adminMenu > div.selected
+{
+    border-color: #9c1c6b;
+}
+
+div.textPreview
+{
+    border-color: #000000;
+}
+
+table.tablesorter thead tr th,
+table.tablesorter tfoot tr th,
+table.tablesorter tbody td
+{
+    border-color: #efefef;
+}
+
+
+textarea,
+input[type=text],
+input[type=password],
+select
+{
+    border-color: #adadad;
+}
+
+div.pagedisplay {
+    border-top-color: #969392;
+    border-left-color: #969392;
+    border-bottom-color: #ffffff;
+    border-right-color: #ffffff;
+}

@@ -1,0 +1,22 @@
+<? if ($this->offline): ?><html>
+    <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    </head>
+    <body>
+    </body>
+  </html>
+<? elseif ($this->maintenance): ?><html>
+    <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+      <?= $this->headTitle() ?>
+      <link href="/css/reset.css" rel="stylesheet" />
+      <link href="/css/admin_style.css" rel="stylesheet" />
+      <link href="/css/admin_color.css" rel="stylesheet" />
+      <link href="/css/admin_images.css" rel="stylesheet" />
+    </head>
+    <body>
+      <p><?= $this->translate('under_maintenance') ?></p>
+    </body>
+  </html>
+<? endif ?>
+

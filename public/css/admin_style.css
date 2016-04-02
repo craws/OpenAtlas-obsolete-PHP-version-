@@ -1,0 +1,707 @@
+@charset "UTF-8";
+
+html, body, input, select, textarea {
+    font-family: helvetica, arial, sans-serif;
+}
+
+#description {
+    width: 33em;
+    height: 8em;
+}
+
+#searchOptions {
+    padding-top: 1em;
+}
+
+table.tablesorter thead tr th.sorter-false {
+    background-color: inherit;
+    border: none;
+    cursor: default;
+}
+
+span.tooltip {
+    font-family: courier new, monospace;
+    padding: 0.1em 0.2em 0 0.2em;
+    font-weight: bold;
+    border-width: 1px;
+    border-style: solid;
+    cursor: help;
+    position: relative;
+}
+
+.tablesorter .filtered {
+    display: none;
+}
+
+.leaflet-control-container input[type="text"] {
+    margin: 4px;
+    padding: 2px;
+}
+
+.ui-tabs-vertical .ui-tabs-nav {
+    float: left;
+}
+
+.ui-dialog .ui-dialog-title {
+    overflow: visible;
+}
+
+#tabs {
+    background: none;
+}
+
+.ui-tabs-vertical .ui-tabs-nav li {
+    float: none;
+    width: 100%;
+}
+#content .ui-tabs-vertical .ui-tabs-nav li a {
+    float: none;
+    display: block;
+}
+
+.ui-tabs-vertical .ui-tabs-panel {
+    float: right;
+}
+
+.ui-dialog .ui-dialog-titlebar-close span {
+    display: block;
+    margin: 0;
+}
+
+.ui-button .ui-button-text {
+    display: block;
+    line-height: 0;
+}
+
+#breadcrumb > div.separator {
+    padding-top: 0.5em;
+}
+
+#poweredBy {
+    font-size: 0.8em;
+    padding-top: 0.9em;
+}
+
+.ui-state-default .ui-icon {
+    background: none;
+}
+
+
+.ui-button-icon-only .ui-button-text, .ui-button-icons-only .ui-button-text {
+    padding: 0;
+    text-indent: 0;
+}
+
+a, .ui-widget-content a {
+    text-decoration: none;
+}
+
+#adminUser {
+    text-align: right;
+    padding-top: 0.5em;
+}
+
+#adminUser div.languageSeparator {
+    font-size: 1.5em;
+    display: inline-block;
+}
+
+#adminUser div#changelog {
+    margin-top: 1.5em;
+}
+
+#submit, #formSubmit, .submit, #continueButton {
+    padding: 0.4em 1em;
+    font-size: 1em;
+}
+
+.tableSelect {
+    cursor: pointer;
+}
+
+.ui-widget {
+    font-size: 1em;
+}
+
+.ui-widget-header {
+    background: none;
+}
+
+.ui-dialog {
+    padding: 0;
+    background: none;
+}
+
+.ui-widget-content, .ui-widget-header {
+    border: none;
+    border-radius: 0;
+}
+
+select::-ms-expand { /* for IE 11 */
+    display: none;
+}
+
+#tabs .ui-widget-header {
+    border: none;
+}
+
+#tabs .ui-widget-header, .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default,
+.ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
+    background: none;
+    border: none;
+}
+
+select.pagesize {
+    width: 4em;
+}
+
+.ui-tabs .ui-tabs-nav li {
+    margin: 1px;
+}
+
+a {
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#adminUser {
+    float: right;
+}
+
+#adminUser div {
+    font-size: 0.8em;
+    margin-top: 0.5em;
+}
+
+#adminUser #greeting {
+    font-size: 1em;
+    margin: 0;
+}
+
+#adminMenu {
+    height: 3.2em;
+}
+
+#breadcrumb, #adminMenu {
+    padding-left: 1em;
+    padding-right: 1em;
+}
+
+#breadcrumb {
+    height: 2.5em;
+}
+
+#adminMenu > div, #breadcrumb > div {
+    font-weight: bold;
+    float: left;
+    margin-right: 1em;
+    padding-top: 1em;
+}
+
+#breadcrumb > div {
+    margin-right: 0.5em;
+    padding-top: 1em;
+}
+
+#breadcrumb > div {
+    padding-top: 0.6em;
+}
+
+#adminMenu > div.selected {
+    height: 1.8em;
+    border-bottom-width: 0.4em;
+    border-bottom-style: solid;
+}
+
+#adminMenu div a, #breadcrumb div span {
+    display: block;
+}
+
+#adminMenu a {
+    display: block;
+    text-decoration: none;
+}
+
+#adminUser, #adminUser a {
+    text-decoration: none;
+}
+
+#languageMenu span {
+    font-weight: bold;
+    padding: 0.2em 0.4em;
+}
+
+#languageMenu a {
+    padding: 0.2em 0.4em;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: none;
+}
+
+.overlayContainer {
+    font-size: 0.9em;
+}
+
+#searchForm {
+    margin-bottom: 1em;
+}
+
+#adminMenu #indexSearch {
+    margin-right: 0;
+    float: right;
+}
+
+#indexSearch input {
+    border-style: solid;
+}
+
+#indexSearch button {
+    font-size: 0.8em;
+    margin-right: 0;
+}
+
+.ui-tabs .ui-tabs-nav li.ui-tabs-active a {
+    cursor: pointer;
+}
+
+div.tableRow div.subformTitle {
+    font-weight: bold;
+    padding-top: 0.5em;
+}
+
+div.description {
+    max-width: 72em;
+}
+
+p.descriptionTitle {
+    margin-top: 1em;
+    font-weight: bold;
+}
+
+h1, tr.tableGroup {
+    font-weight: bold;
+}
+
+h1 {
+    margin-bottom: 1em;
+    font-size: 1.1em;
+}
+
+h2 {
+    font-weight: bold;
+}
+
+#tabs {
+    display: inline-block;
+}
+
+#tabs .ui-widget-header {
+    border: none;
+    background: none;
+    background-color: inherit;
+}
+
+#tabs .ui-corner-all {
+    border-radius: 0;
+}
+
+#tabs.ui-widget-content {
+    border: none;
+}
+
+:focus {outline:none;}
+::-moz-focus-inner {border:0;}
+
+.ui-tabs {
+    padding: 0;
+}
+
+.ui-tabs .ui-tabs-panel {
+    padding: 1em;
+}
+
+#tabs .pagesize, .overlayContainer .pagesize {
+    font-size: 0.9em;
+}
+
+#map {
+    float: left;
+    height: 440px;
+    width: 600px;
+    margin-left: 1em;
+}
+
+.ui-widget input {
+    font-size: 0.8em;
+}
+
+#adminHead {
+    padding: 0.5em 1em;
+    height: 7em;
+}
+
+.zoom {
+    padding-right: 1em;
+    cursor: pointer;
+}
+
+#content {
+    padding: 1em;
+    text-align: left;
+    font-size: 0.9em;
+}
+
+#formError {
+    display: none;
+}
+
+button, .submit {
+    background: none;
+    border: none;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+div.pagedisplay {
+    text-align: center;
+    font-size: 0.9em;
+    width: 10em;
+    height: 17px;
+    padding-top: 3px;
+    border-width: 1px;
+    border-style: solid;
+}
+
+div.dataTable {
+    display: table;
+}
+
+div.tableSubmit {
+    width: 1em;
+    margin-top: 0.5em;
+}
+
+div.dataTable > div.groupLabel {
+    font-weight: bold;
+    padding: 0.3em;
+    margin-bottom: 0.2em;
+    display: block;
+}
+
+div.dataTable > div {
+    display: table-row;
+}
+
+div.dataTable > div > div {
+    display: table-cell;
+    width: inherit;
+    padding: 0.2em;
+}
+
+form.insertTypeForm [type=text] {
+    width: 10em;
+}
+
+div.tableForm {
+    display: table;
+}
+
+div.tableRow {
+    display: table-row;
+}
+
+div.tableRow div {
+    text-align: right;
+    padding: 0.2em;
+}
+
+div.tableRow  div.mce-tinymce div, div.tableRow  div.mce-tinymce {
+    padding: 0;
+    text-align: left;
+}
+
+div.tableRow div.formGroupLabel {
+    font-weight: bold;
+    text-align: left;
+}
+
+div.tableRow div.tableCell {
+    text-align: left;
+}
+
+div.display-none {
+    display: none;
+}
+
+div.tableCell {
+    display: table-cell;
+    width: inherit;
+}
+
+div.changelogVersion {
+    font-size: 1.1em;
+    font-weight: bold;
+    padding: 0.3em;
+    width: 500px;
+}
+
+div.changelogDate {
+    font-size: 0.9em;
+    padding: 0.4em 0;
+}
+
+div.changelog {
+    margin: 1.5em 0 2em 0;
+}
+
+div.help {
+    margin-top: 10px;
+    padding: 0 10px;
+    display: inline-block;
+    font-size: 0.9em;
+}
+
+div.textPreview {
+    width: 800px;
+    border-width: 1px;
+    border-style: solid;
+}
+
+div.textPreview div {
+    margin: 0 0.5em;
+}
+
+#websiteName {
+    font-size: 1.4em;
+    font-weight: bold;
+    float: left;
+    padding: 0.5em;
+}
+
+div.textPreview > p {
+    padding: 0 0.5em;
+}
+
+.icon a img {
+    border: none;
+}
+
+p {
+    margin: 0.5em 0 1em 0;
+}
+
+p.hint {
+    display: inline-block;
+    font-weight: bold;
+    padding: 0.2em;
+    margin-bottom: 0.3em;
+    font-size: 1.1em;
+    text-align: left;
+}
+
+
+#breadcrumb a {
+    text-decoration: none;
+}
+
+#buttonBar {
+    margin-bottom: 1em;
+}
+
+.buttonBar {
+    margin-bottom: 1.5em;
+}
+
+form td img {
+    vertical-align: text-top;
+}
+
+div.ok span {
+    visibility: hidden;
+}
+
+span.info, span.error {
+    display: inline-block;
+    padding: 0.2em;
+    margin: 0.3em 0;
+}
+
+#websiteName span.info {
+    padding: 0;
+    margin: 0;
+}
+
+.message {
+    font-size: 0.7em;
+    font-weight: normal;
+}
+
+label.error {
+    padding-left: 0.5em;
+}
+
+.title {
+    font-size: 1.1em;
+    font-weight: bold;
+    padding: 0.5em 0 1em 0;
+}
+
+label.invalid {
+    padding-left: 0.5em;
+}
+
+table {
+    text-align: left;
+}
+
+th {
+    padding-right: 1em;
+}
+
+table.data td, table.tablesorter td, form td {
+    padding: 0.3em;
+    vertical-align: top;
+    white-space: nowrap;
+}
+
+table a {
+    text-decoration: none;
+}
+
+form td {
+    text-align: right;
+}
+
+form td.data,form td.button {
+    text-align: left;
+}
+
+tr.tableGroup td {
+    padding: 0.3em 0.5em;
+}
+
+th a {
+    text-decoration: none;
+}
+
+td.icon {
+    text-align: center;
+}
+
+ul.form-errors {
+    display: none;
+}
+
+input[type=text], input[type=password], textarea, select  {
+    border-width: 1px;
+    border-style: solid;
+}
+
+input[type=text], input[type=password], select {
+    padding: 0;
+    margin: 0;
+    width: 15.6em;
+    height: 1.6em;
+    -ms-box-sizing:content-box;
+    -moz-box-sizing:content-box;
+    -webkit-box-sizing:content-box;
+    box-sizing:content-box;
+}
+
+input[type=text], input[type=password] {
+    padding-left: 0.2em;
+    padding-right: 0.2em;
+}
+
+select {
+    width: 16em;
+}
+
+a.button, #buttonBar a, button, .buttonBar a, span.button, input[type=text], textarea, input[type=password], select {
+    -webkit-border-radius: 0.1em;
+    -moz-border-radius: 0.1em;
+    border-radius: 0.1em;
+}
+
+.submit, a.button, #buttonBar a, button, .buttonBar a, span.button {
+    display: inline-block;
+    font-weight: bold;
+    margin-right: 1em;
+    padding: 0.3em 0.5em;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.ui-dialog .ui-dialog-titlebar-close {
+    display: inline-block;
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+table .button {
+    margin-right: 0;
+}
+
+.tableRow .button {
+    font-size: 0.9em;
+}
+
+div.tableCell button {
+    min-height:  1.7em;
+    min-width:  1.9em;
+    margin-left: 0.5em;
+    padding: 0;
+}
+
+#buttonBar a.cancel {
+    border: none;
+    text-decoration: underline;
+}
+
+.log {
+    display: table-cell;
+}
+
+/* tablesorter */
+table {
+    border-collapse: inherit;
+    border-spacing: 3px;
+}
+
+table.tablesorter td.icon {
+    text-align: center;
+    padding: 0;
+}
+
+table.tablesorter {
+    margin: 5px 0;
+    text-align: left;
+}
+
+table.tablesorter thead tr th, table.tablesorter tfoot tr th {
+    font-weight: bold;
+    padding: 6px;
+    padding-right: 2em;
+}
+
+table.tablesorter tbody td {
+    vertical-align: top;
+    white-space: nowrap;
+}
+
+div.pager div {
+    margin: 0 0.2em;
+    float: left;
+}
+
+a.add {
+    border: none;
+    font-size: 0.8em;
+    margin-right: 0;
+    cursor: pointer;
+}

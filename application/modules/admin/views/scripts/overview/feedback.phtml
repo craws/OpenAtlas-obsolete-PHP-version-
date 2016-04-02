@@ -1,0 +1,28 @@
+<? $this->breadcrumb = [$this->link('overview'), $this->ucstring('feedback')]; ?>
+<p><?= $this->translate('feedback_intro') ?>:</p>
+<p>
+    1. <?= $this->translate('feedback_redmine') ?>:
+    <a href="http://redmine.craws.net/projects/uni" onclick="window.open(this.href); return false;">
+        http://redmine.craws.net
+    </a>
+</p>
+<p>
+    2. <?= $this->translate('feedback_mail') ?>
+    <a href="mailto:<?= $this->feedbackReceiver ?>"><?= $this->feedbackReceiver ?></a>
+</p>
+<? if (Model_SettingsMapper::getSetting('module', 'mail')): ?>
+    <?= $this->form->renderForm(false); ?>
+    <p>3. <?= $this->translate('feedback_form') ?></p>
+    <div class="tableRow">
+        <?= $this->form->subject->renderLabel() ?>
+        <div class="tableCell"><?= $this->form->subject->renderViewHelper() ?></div>
+    </div>
+    <div style="padding:0.2em;">
+    <?= $this->form->description->renderLabel() ?>
+    </div>
+    <div style="padding:0.2em;"><?= $this->form->description->renderViewHelper() ?></div>
+    <div style="margin-top:1em;padding:0.2em;">
+        <?= $this->form->formSubmit->renderViewHelper() ?>
+    </div>
+<? endif ?>
+

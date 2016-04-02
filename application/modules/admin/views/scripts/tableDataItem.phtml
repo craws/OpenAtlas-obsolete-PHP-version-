@@ -1,0 +1,10 @@
+<? if (isset($this->table['data'])): ?>
+    <div class="dataTable">
+        <? foreach ($this->table['data'] as $label => $value): ?>
+            <div>
+                <div><?= $this->ucstring($label) ?></div>
+                <div><?= $value ?></div>
+            </div>
+        <? endforeach ?>
+    </div>
+<? endif ?>

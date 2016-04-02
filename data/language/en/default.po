@@ -1,0 +1,1730 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: OpenATLAS\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-04-02 09:04+0100\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Alexander Watzinger <alexander.watzinger@craws.net>\n"
+"Language-Team: craws.net <alexander.watzinger@craws.net>\n"
+"Language: en_US\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: _;gettext;translate;setLabel;ucstring;message\n"
+"X-Poedit-Basepath: .\n"
+"X-Generator: Poedit 1.6.10\n"
+"X-Poedit-SearchPath-0: ../../..\n"
+
+#: ../../../application/modules/admin/controllers/ActorController.php:25
+#: ../../../application/modules/admin/controllers/EventController.php:29
+#: ../../../application/modules/admin/controllers/PlaceController.php:11
+#: ../../../application/modules/admin/controllers/SourceController.php:26
+msgid "error_link_exists"
+msgstr "This link already exists."
+
+#: ../../../application/modules/admin/controllers/ActorController.php:28
+#: ../../../application/modules/admin/controllers/ActorController.php:155
+#: ../../../application/modules/admin/controllers/BiblioController.php:29
+#: ../../../application/modules/admin/controllers/CarrierController.php:28
+#: ../../../application/modules/admin/controllers/EventController.php:32
+#: ../../../application/modules/admin/controllers/EventController.php:102
+#: ../../../application/modules/admin/controllers/HierarchyController.php:36
+#: ../../../application/modules/admin/controllers/InvolvementController.php:59
+#: ../../../application/modules/admin/controllers/MemberController.php:27
+#: ../../../application/modules/admin/controllers/MemberController.php:59
+#: ../../../application/modules/admin/controllers/PlaceController.php:14
+#: ../../../application/modules/admin/controllers/PlaceController.php:222
+#: ../../../application/modules/admin/controllers/ReferenceController.php:22
+#: ../../../application/modules/admin/controllers/RelationController.php:28
+#: ../../../application/modules/admin/controllers/SourceController.php:29
+#: ../../../application/modules/admin/controllers/SourceController.php:47
+#: ../../../application/modules/admin/controllers/SourceController.php:154
+#: ../../../application/modules/admin/controllers/UserController.php:90
+msgid "info_insert"
+msgstr "An entry has been created."
+
+#: ../../../application/modules/admin/controllers/ActorController.php:100
+#: ../../../application/modules/admin/controllers/EventController.php:43
+msgid "error_missing_class"
+msgstr "missing class"
+
+#: ../../../application/modules/admin/controllers/ActorController.php:253
+#: ../../../application/modules/admin/controllers/BiblioController.php:67
+#: ../../../application/modules/admin/controllers/CarrierController.php:87
+#: ../../../application/modules/admin/controllers/ContentController.php:28
+#: ../../../application/modules/admin/controllers/EventController.php:269
+#: ../../../application/modules/admin/controllers/HierarchyController.php:101
+#: ../../../application/modules/admin/controllers/InvolvementController.php:101
+#: ../../../application/modules/admin/controllers/MemberController.php:98
+#: ../../../application/modules/admin/controllers/PlaceController.php:165
+#: ../../../application/modules/admin/controllers/ProfileController.php:32
+#: ../../../application/modules/admin/controllers/ProfileController.php:63
+#: ../../../application/modules/admin/controllers/ReferenceController.php:53
+#: ../../../application/modules/admin/controllers/RelationController.php:69
+#: ../../../application/modules/admin/controllers/SettingsController.php:23
+#: ../../../application/modules/admin/controllers/SourceController.php:80
+#: ../../../application/modules/admin/controllers/SourceController.php:209
+#: ../../../application/modules/admin/controllers/UserController.php:58
+msgid "info_update"
+msgstr "Changes have been saved."
+
+#: ../../../application/modules/admin/controllers/ActorController.php:259
+#: ../../../application/modules/admin/controllers/CarrierController.php:108
+#: ../../../application/modules/admin/controllers/EventController.php:277
+#: ../../../application/modules/admin/controllers/FunctionController.php:19
+#: ../../../application/modules/admin/controllers/HierarchyController.php:120
+#: ../../../application/modules/admin/controllers/PlaceController.php:241
+#: ../../../application/modules/admin/controllers/PlaceController.php:247
+#: ../../../application/modules/admin/controllers/ReferenceController.php:87
+#: ../../../application/modules/admin/controllers/SourceController.php:54
+#: ../../../application/modules/admin/controllers/SourceController.php:215
+#: ../../../application/modules/admin/controllers/UserController.php:103
+msgid "info_delete"
+msgstr "The entry has been deleted."
+
+#: ../../../application/modules/admin/controllers/HierarchyController.php:27
+#: ../../../application/modules/admin/views/scripts/hierarchy/index.phtml:27
+msgid "error_name_empty"
+msgstr "The name can't be empty."
+
+#: ../../../application/modules/admin/controllers/HierarchyController.php:65
+#: ../../../application/modules/admin/controllers/HierarchyController.php:108
+#: ../../../application/modules/admin/controllers/UserController.php:20
+#: ../../../application/modules/admin/controllers/UserController.php:98
+#: ../../../application/modules/default/controllers/ErrorController.php:8
+msgid "error_forbidden"
+msgstr "Forbidden"
+
+#: ../../../application/modules/admin/controllers/HierarchyController.php:112
+msgid "error_links_exists"
+msgstr "Deletion not possible because links exists."
+
+#: ../../../application/modules/admin/controllers/HierarchyController.php:116
+msgid "error_subs_exists"
+msgstr "Deletion not possible because subtypes exists."
+
+#: ../../../application/modules/admin/controllers/IndexController.php:21
+#: ../../../application/modules/admin/controllers/IndexController.php:50
+msgid "error_login"
+msgstr "Failed login"
+
+#: ../../../application/modules/admin/controllers/IndexController.php:25
+msgid "error_login_attempts_exceeded"
+msgstr "Too many login attempts. You can try again after a few minutes."
+
+#: ../../../application/modules/admin/controllers/IndexController.php:118
+msgid "error_nonexist_email"
+msgstr "Sorry, but this email address is unknown to us."
+
+#: ../../../application/modules/admin/controllers/IndexController.php:131
+msgid "mail_reset_password_subject"
+msgstr "Password Reset "
+
+#: ../../../application/modules/admin/controllers/IndexController.php:136
+msgid "info_mail_password_confirmed_send"
+msgstr "A confirmation mail for a password reset has been sent to %s."
+
+#: ../../../application/modules/admin/controllers/IndexController.php:140
+#: ../../../application/modules/admin/controllers/IndexController.php:179
+#: ../../../application/modules/admin/controllers/OverviewController.php:47
+msgid "error_mail_send"
+msgstr "The mail couldn't be sent."
+
+#: ../../../application/modules/admin/controllers/IndexController.php:149
+msgid "error_invalid_request"
+msgstr "Invalid request"
+
+#: ../../../application/modules/admin/controllers/IndexController.php:156
+msgid "error_reset_outdated"
+msgstr "This request isn't valid anymore."
+
+#: ../../../application/modules/admin/controllers/IndexController.php:171
+msgid "mail_new_password_subject"
+msgstr "New Password"
+
+#: ../../../application/modules/admin/controllers/IndexController.php:176
+msgid "info_mail_new_password_send"
+msgstr "A new password has been sent to %s."
+
+#: ../../../application/modules/admin/controllers/OverviewController.php:42
+msgid "info_feedback_thanks"
+msgstr "Thank you for your feedback."
+
+#: ../../../application/modules/admin/controllers/ProfileController.php:52
+#: ../../../application/modules/admin/controllers/UserController.php:45
+#: ../../../application/modules/admin/controllers/UserController.php:75
+msgid "error_email_exists"
+msgstr "This email address is already in use."
+
+#: ../../../application/modules/admin/controllers/ProfileController.php:73
+msgid "error_wrong_password"
+msgstr "Wrong Password"
+
+#: ../../../application/modules/admin/controllers/ProfileController.php:77
+#: ../../../application/modules/admin/controllers/UserController.php:69
+msgid "error_password_retype"
+msgstr "The passwords didn't mach."
+
+#: ../../../application/modules/admin/controllers/ProfileController.php:83
+msgid "info_password_update"
+msgstr "Your password has been updated."
+
+#: ../../../application/modules/admin/controllers/UserController.php:41
+#: ../../../application/modules/admin/controllers/UserController.php:72
+msgid "error_username_exists"
+msgstr "This username is already in use"
+
+#: ../../../application/modules/admin/forms/Abstract.php:14
+msgid "yyyy"
+msgstr "yyyy"
+
+#: ../../../application/modules/admin/forms/Abstract.php:23
+msgid "mm"
+msgstr "mm"
+
+#: ../../../application/modules/admin/forms/Abstract.php:32
+msgid "dd"
+msgstr "dd"
+
+#: ../../../application/modules/admin/forms/Abstract.php:38
+#: ../../../application/modules/admin/views/scripts/class/view.phtml:35
+#: ../../../application/modules/admin/views/scripts/property/view.phtml:36
+msgid "comment"
+msgstr "comment"
+
+#: ../../../application/modules/admin/forms/Actor.php:12
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:50
+msgid "birth"
+msgstr "birth"
+
+#: ../../../application/modules/admin/forms/Actor.php:17
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:50
+msgid "death"
+msgstr "death"
+
+#: ../../../application/modules/admin/forms/Actor.php:24
+#: ../../../application/modules/admin/forms/Carrier.php:14
+#: ../../../application/modules/admin/forms/Event.php:14
+#: ../../../application/modules/admin/forms/Place.php:13
+#: ../../../application/modules/admin/forms/Profile.php:10
+#: ../../../application/modules/admin/forms/Reference.php:13
+#: ../../../application/modules/admin/forms/Source.php:21
+#: ../../../application/modules/admin/forms/Text.php:20
+#: ../../../application/modules/admin/forms/Type.php:16
+#: ../../../application/modules/admin/forms/User.php:48
+#: ../../../application/modules/admin/views/scripts/actor/form.phtml:44
+#: ../../../application/modules/admin/views/scripts/actor/index.phtml:9
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:254
+#: ../../../application/modules/admin/views/scripts/biblio/form.phtml:22
+#: ../../../application/modules/admin/views/scripts/carrier/form.phtml:28
+#: ../../../application/modules/admin/views/scripts/class/index.phtml:9
+#: ../../../application/modules/admin/views/scripts/class/view.phtml:11
+#: ../../../application/modules/admin/views/scripts/event/add.phtml:9
+#: ../../../application/modules/admin/views/scripts/event/form.phtml:39
+#: ../../../application/modules/admin/views/scripts/event/form.phtml:60
+#: ../../../application/modules/admin/views/scripts/event/form.phtml:78
+#: ../../../application/modules/admin/views/scripts/event/form.phtml:96
+#: ../../../application/modules/admin/views/scripts/event/form.phtml:114
+#: ../../../application/modules/admin/views/scripts/event/index.phtml:8
+#: ../../../application/modules/admin/views/scripts/event/view.phtml:139
+#: ../../../application/modules/admin/views/scripts/hierarchy/index.phtml:33
+#: ../../../application/modules/admin/views/scripts/hierarchy/view.phtml:45
+#: ../../../application/modules/admin/views/scripts/involvement/form.phtml:33
+#: ../../../application/modules/admin/views/scripts/involvement/form.phtml:54
+#: ../../../application/modules/admin/views/scripts/member/form.phtml:29
+#: ../../../application/modules/admin/views/scripts/overview/index.phtml:44
+#: ../../../application/modules/admin/views/scripts/overview/index.phtml:67
+#: ../../../application/modules/admin/views/scripts/place/add.phtml:9
+#: ../../../application/modules/admin/views/scripts/place/index.phtml:5
+#: ../../../application/modules/admin/views/scripts/property/index.phtml:9
+#: ../../../application/modules/admin/views/scripts/property/view.phtml:14
+#: ../../../application/modules/admin/views/scripts/reference/index.phtml:8
+#: ../../../application/modules/admin/views/scripts/reference/view.phtml:100
+#: ../../../application/modules/admin/views/scripts/relation/form.phtml:29
+#: ../../../application/modules/admin/views/scripts/search/index.phtml:7
+#: ../../../application/modules/admin/views/scripts/source/add.phtml:9
+#: ../../../application/modules/admin/views/scripts/source/index.phtml:6
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:95
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:122
+#: ../../../application/modules/admin/views/scripts/user/view.phtml:20
+msgid "name"
+msgstr "name"
+
+#: ../../../application/modules/admin/forms/Actor.php:26
+#: ../../../application/modules/admin/forms/Carrier.php:34
+#: ../../../application/modules/admin/forms/Event.php:16
+#: ../../../application/modules/admin/forms/Feedback.php:19
+#: ../../../application/modules/admin/forms/Involvement.php:36
+#: ../../../application/modules/admin/forms/Member.php:26
+#: ../../../application/modules/admin/forms/Place.php:32
+#: ../../../application/modules/admin/forms/Reference.php:27
+#: ../../../application/modules/admin/forms/Relation.php:33
+#: ../../../application/modules/admin/forms/Type.php:21
+#: ../../../library/Craws/View/Helper/Description.php:10
+msgid "description"
+msgstr "description"
+
+#: ../../../application/modules/admin/forms/Actor.php:33
+#: ../../../application/modules/admin/forms/Actor.php:42
+#: ../../../application/modules/admin/forms/Actor.php:51
+#: ../../../application/modules/admin/forms/Actor.php:60
+#: ../../../application/modules/admin/forms/Biblio.php:16
+#: ../../../application/modules/admin/forms/Carrier.php:22
+#: ../../../application/modules/admin/forms/Carrier.php:31
+#: ../../../application/modules/admin/forms/Event.php:23
+#: ../../../application/modules/admin/forms/Event.php:32
+#: ../../../application/modules/admin/forms/Event.php:58
+#: ../../../application/modules/admin/forms/Event.php:67
+#: ../../../application/modules/admin/forms/Event.php:76
+#: ../../../application/modules/admin/forms/Involvement.php:17
+#: ../../../application/modules/admin/forms/Involvement.php:32
+#: ../../../application/modules/admin/forms/Member.php:17
+#: ../../../application/modules/admin/forms/Place.php:22
+#: ../../../application/modules/admin/forms/Reference.php:23
+#: ../../../application/modules/admin/forms/Relation.php:18
+#: ../../../application/modules/admin/forms/Source.php:17
+#: ../../../library/Craws/View/Helper/DisplayTableSelectMulti.php:16
+msgid "select"
+msgstr "select"
+
+#: ../../../application/modules/admin/forms/Actor.php:38
+#: ../../../application/modules/admin/views/scripts/actor/form.phtml:61
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:42
+msgid "residence"
+msgstr "residence"
+
+#: ../../../application/modules/admin/forms/Actor.php:47
+#: ../../../application/modules/admin/views/scripts/actor/form.phtml:62
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:45
+msgid "appears_first"
+msgstr "appears first"
+
+#: ../../../application/modules/admin/forms/Actor.php:56
+#: ../../../application/modules/admin/views/scripts/actor/form.phtml:63
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:48
+msgid "appears_last"
+msgstr "appears last"
+
+#: ../../../application/modules/admin/forms/Actor.php:74
+#: ../../../application/modules/admin/forms/Carrier.php:43
+#: ../../../application/modules/admin/forms/Event.php:43
+#: ../../../application/modules/admin/forms/Member.php:35
+#: ../../../application/modules/admin/forms/Place.php:40
+#: ../../../application/modules/admin/forms/Reference.php:38
+#: ../../../application/modules/admin/forms/Relation.php:42
+#: ../../../application/modules/admin/forms/Source.php:33
+msgid "insert_and_continue"
+msgstr "Insert and continue"
+
+#: ../../../application/modules/admin/forms/Biblio.php:12
+#: ../../../application/layouts/scripts/admin.phtml:8
+#: ../../../application/modules/admin/views/scripts/biblio/form.phtml:44
+#: ../../../application/modules/admin/views/scripts/biblio/insert.phtml:1
+#: ../../../application/modules/admin/views/scripts/place/view.phtml:137
+#: ../../../application/modules/admin/views/scripts/reference/index.phtml:3
+msgid "reference"
+msgstr "reference"
+
+#: ../../../application/modules/admin/forms/Biblio.php:19
+msgid "page(s)"
+msgstr "page(s)"
+
+#: ../../../application/modules/admin/forms/Carrier.php:18
+#: ../../../application/modules/admin/forms/Reference.php:18
+#: ../../../application/modules/admin/forms/Source.php:12
+#: ../../../application/modules/admin/forms/Text.php:11
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:162
+#: ../../../application/modules/admin/views/scripts/biblio/form.phtml:22
+#: ../../../application/modules/admin/views/scripts/carrier/view.phtml:17
+#: ../../../application/modules/admin/views/scripts/carrier/view.phtml:43
+#: ../../../application/modules/admin/views/scripts/event/view.phtml:35
+#: ../../../application/modules/admin/views/scripts/event/view.phtml:111
+#: ../../../application/modules/admin/views/scripts/log/index.phtml:9
+#: ../../../application/modules/admin/views/scripts/place/index.phtml:5
+#: ../../../application/modules/admin/views/scripts/place/view.phtml:35
+#: ../../../application/modules/admin/views/scripts/place/view.phtml:114
+#: ../../../application/modules/admin/views/scripts/reference/index.phtml:8
+#: ../../../application/modules/admin/views/scripts/reference/view.phtml:18
+#: ../../../application/modules/admin/views/scripts/reference/view.phtml:51
+#: ../../../application/modules/admin/views/scripts/reference/view.phtml:100
+#: ../../../application/modules/admin/views/scripts/source/add.phtml:9
+#: ../../../application/modules/admin/views/scripts/source/index.phtml:6
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:22
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:95
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:156
+msgid "type"
+msgstr "type"
+
+#: ../../../application/modules/admin/forms/Carrier.php:27
+#: ../../../application/modules/admin/forms/Event.php:28
+#: ../../../library/Craws/View/Helper/Link.php:28
+#: ../../../application/layouts/scripts/admin.phtml:8
+#: ../../../application/modules/admin/views/scripts/carrier/form.phtml:45
+#: ../../../application/modules/admin/views/scripts/carrier/view.phtml:20
+#: ../../../application/modules/admin/views/scripts/event/form.phtml:132
+#: ../../../application/modules/admin/views/scripts/event/form.phtml:136
+#: ../../../application/modules/admin/views/scripts/event/view.phtml:28
+#: ../../../application/modules/admin/views/scripts/place/add.phtml:6
+#: ../../../application/modules/admin/views/scripts/place/index.phtml:1
+#: ../../../application/modules/admin/views/scripts/place/insert.phtml:5
+msgid "place"
+msgstr "place"
+
+#: ../../../application/modules/admin/forms/Content.php:20
+#: ../../../application/modules/admin/forms/Password.php:26
+#: ../../../application/modules/admin/forms/Profile.php:30
+#: ../../../application/modules/admin/forms/Settings.php:15
+#: ../../../application/modules/admin/forms/Type.php:22
+#: ../../../application/modules/admin/forms/User.php:67
+msgid "save"
+msgstr "save"
+
+#: ../../../application/modules/admin/forms/Display.php:13
+#: ../../../application/modules/admin/views/scripts/user/view.phtml:22
+msgid "language"
+msgstr "language"
+
+#: ../../../application/modules/admin/forms/Display.php:21
+msgid "theme"
+msgstr "color scheme"
+
+#: ../../../application/modules/admin/forms/Display.php:25
+msgid "layout"
+msgstr "layout"
+
+#: ../../../application/modules/admin/forms/Display.php:27
+msgid "default"
+msgstr "default"
+
+#: ../../../application/modules/admin/forms/Display.php:28
+msgid "advanced"
+msgstr "advanced"
+
+#: ../../../application/modules/admin/forms/Display.php:32
+msgid "table_rows"
+msgstr "table rows"
+
+#: ../../../application/modules/admin/forms/Event.php:19
+#: ../../../application/modules/admin/forms/Type.php:11
+#: ../../../application/modules/admin/views/scripts/event/view.phtml:25
+msgid "super"
+msgstr "super"
+
+#: ../../../application/modules/admin/forms/Event.php:54
+#: ../../../application/modules/admin/views/scripts/event/form.phtml:134
+msgid "recipient"
+msgstr "recipient"
+
+#: ../../../application/modules/admin/forms/Event.php:63
+#: ../../../application/modules/admin/views/scripts/event/form.phtml:135
+msgid "donor"
+msgstr "donor"
+
+#: ../../../application/modules/admin/forms/Event.php:72
+msgid "given_place"
+msgstr "given place"
+
+#: ../../../application/modules/admin/forms/Feedback.php:12
+msgid "subject"
+msgstr "subject"
+
+#: ../../../application/modules/admin/forms/Feedback.php:13
+msgid "suggestion"
+msgstr "suggestion"
+
+#: ../../../application/modules/admin/forms/Feedback.php:14
+msgid "question"
+msgstr "question"
+
+#: ../../../application/modules/admin/forms/Feedback.php:15
+msgid "problem"
+msgstr "problem"
+
+#: ../../../application/modules/admin/forms/Feedback.php:24
+msgid "send"
+msgstr "send"
+
+#: ../../../application/modules/admin/forms/Involvement.php:27
+#: ../../../application/layouts/scripts/admin.phtml:8
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:77
+#: ../../../application/modules/admin/views/scripts/event/form.phtml:131
+#: ../../../application/modules/admin/views/scripts/event/index.phtml:1
+#: ../../../application/modules/admin/views/scripts/event/view.phtml:166
+#: ../../../application/modules/admin/views/scripts/involvement/form.phtml:78
+#: ../../../application/modules/admin/views/scripts/involvement/insert.phtml:9
+#: ../../../application/modules/admin/views/scripts/place/view.phtml:75
+#: ../../../application/modules/admin/views/scripts/reference/view.phtml:26
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:68
+msgid "event"
+msgstr "event"
+
+#: ../../../application/modules/admin/forms/Involvement.php:52
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:77
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:86
+#: ../../../application/modules/admin/views/scripts/event/view.phtml:74
+msgid "activity"
+msgstr "activity"
+
+#: ../../../application/modules/admin/forms/LogFilter.php:10
+msgid "limit"
+msgstr "limit"
+
+#: ../../../application/modules/admin/forms/LogFilter.php:14
+#: ../../../application/layouts/scripts/admin.phtml:8
+#: ../../../application/modules/admin/views/scripts/log/index.phtml:9
+#: ../../../application/modules/admin/views/scripts/overview/index.phtml:44
+#: ../../../application/modules/admin/views/scripts/user/index.phtml:3
+#: ../../../application/modules/admin/views/scripts/user/insert.phtml:1
+#: ../../../application/modules/admin/views/scripts/user/update.phtml:1
+#: ../../../application/modules/admin/views/scripts/user/view.phtml:4
+msgid "user"
+msgstr "user"
+
+#: ../../../application/modules/admin/forms/LogFilter.php:22
+#: ../../../application/modules/admin/views/scripts/log/index.phtml:9
+msgid "priority"
+msgstr "priority"
+
+#: ../../../application/modules/admin/forms/LogFilter.php:34
+msgid "apply"
+msgstr "apply"
+
+#: ../../../application/modules/admin/forms/Login.php:10
+#: ../../../application/modules/admin/forms/User.php:17
+#: ../../../application/modules/admin/views/scripts/mail/reset-confirm.phtml:4
+#: ../../../application/modules/admin/views/scripts/user/index.phtml:6
+#: ../../../application/modules/admin/views/scripts/user/view.phtml:18
+msgid "username"
+msgstr "username"
+
+#: ../../../application/modules/admin/forms/Login.php:19
+#: ../../../application/modules/admin/forms/User.php:36
+#: ../../../application/modules/admin/views/scripts/mail/reset-confirm.phtml:5
+msgid "password"
+msgstr "password"
+
+#: ../../../application/modules/admin/forms/Login.php:26
+#: ../../../application/layouts/scripts/default.phtml:57
+#: ../../../application/modules/admin/views/scripts/index/index.phtml:1
+#: ../../../application/modules/admin/views/scripts/index/index.phtml:2
+#: ../../../application/modules/admin/views/scripts/index/reset-password.phtml:1
+msgid "login"
+msgstr "login"
+
+#: ../../../application/modules/admin/forms/Password.php:10
+msgid "current_password"
+msgstr "current password"
+
+#: ../../../application/modules/admin/forms/Password.php:19
+msgid "new_password"
+msgstr "new password"
+
+#: ../../../application/modules/admin/forms/Password.php:24
+#: ../../../application/modules/admin/forms/User.php:42
+msgid "password_retype"
+msgstr "Retype new password"
+
+#: ../../../application/modules/admin/forms/PasswordReset.php:12
+#: ../../../application/modules/admin/forms/Profile.php:14
+#: ../../../application/modules/admin/forms/User.php:52
+#: ../../../application/modules/admin/views/scripts/user/index.phtml:6
+#: ../../../application/modules/admin/views/scripts/user/view.phtml:21
+msgid "email"
+msgstr "email"
+
+#: ../../../application/modules/admin/forms/PasswordReset.php:20
+msgid "password_reset"
+msgstr "Submit"
+
+#: ../../../application/modules/admin/forms/Place.php:17
+msgid "site"
+msgstr "site"
+
+#: ../../../application/modules/admin/forms/Place.php:30
+#: ../../../application/modules/admin/views/scripts/place/view.phtml:64
+msgid "easting"
+msgstr "easting"
+
+#: ../../../application/modules/admin/forms/Place.php:31
+#: ../../../application/modules/admin/views/scripts/place/view.phtml:65
+msgid "northing"
+msgstr "northing"
+
+#: ../../../application/modules/admin/forms/Profile.php:19
+msgid "show_email"
+msgstr "show email"
+
+#: ../../../application/modules/admin/forms/Profile.php:25
+#: ../../../application/modules/admin/views/scripts/user/index.phtml:6
+msgid "newsletter"
+msgstr "newsletter"
+
+#: ../../../application/modules/admin/forms/Relation.php:22
+#: ../../../application/modules/admin/forms/Type.php:20
+#: ../../../library/Craws/View/Helper/DisplayTreeSelect.php:26
+#: ../../../application/modules/admin/views/scripts/hierarchy/index.phtml:35
+#: ../../../application/modules/admin/views/scripts/property/index.phtml:9
+#: ../../../application/modules/admin/views/scripts/property/view.phtml:15
+msgid "inverse"
+msgstr "inverse"
+
+#: ../../../application/modules/admin/forms/Search.php:13
+#: ../../../application/layouts/scripts/admin.phtml:132
+msgid "search_term"
+msgstr "search term"
+
+#: ../../../application/modules/admin/forms/Search.php:31
+#: ../../../application/layouts/scripts/admin.phtml:133
+#: ../../../application/modules/admin/views/scripts/search/index.phtml:1
+msgid "search"
+msgstr "search"
+
+#: ../../../application/modules/admin/forms/Settings.php:33
+#: ../../../application/modules/admin/views/scripts/settings/index.phtml:16
+msgid "off"
+msgstr "off"
+
+#: ../../../application/modules/admin/forms/Settings.php:33
+#: ../../../application/modules/admin/views/scripts/settings/index.phtml:17
+msgid "on"
+msgstr "on"
+
+#: ../../../application/modules/admin/forms/Settings.php:38
+msgid "emergency"
+msgstr "emergency"
+
+#: ../../../application/modules/admin/forms/Settings.php:39
+msgid "alert"
+msgstr "alert"
+
+#: ../../../application/modules/admin/forms/Settings.php:40
+msgid "critical"
+msgstr "critical"
+
+#: ../../../application/modules/admin/forms/Settings.php:41
+msgid "error"
+msgstr "error"
+
+#: ../../../application/modules/admin/forms/Settings.php:42
+msgid "warn"
+msgstr "warn"
+
+#: ../../../application/modules/admin/forms/Settings.php:43
+msgid "notice"
+msgstr "notice"
+
+#: ../../../application/modules/admin/forms/Settings.php:44
+#: ../../../application/modules/admin/forms/User.php:56
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:5
+#: ../../../application/modules/admin/views/scripts/carrier/view.phtml:5
+#: ../../../application/modules/admin/views/scripts/class/view.phtml:10
+#: ../../../application/modules/admin/views/scripts/event/view.phtml:5
+#: ../../../application/modules/admin/views/scripts/hierarchy/view.phtml:13
+#: ../../../application/modules/admin/views/scripts/place/view.phtml:5
+#: ../../../application/modules/admin/views/scripts/property/view.phtml:10
+#: ../../../application/modules/admin/views/scripts/reference/view.phtml:5
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:6
+#: ../../../application/modules/admin/views/scripts/user/view.phtml:27
+msgid "info"
+msgstr "info"
+
+#: ../../../application/modules/admin/forms/Settings.php:45
+msgid "debug"
+msgstr "debug"
+
+#: ../../../application/modules/admin/forms/Source.php:25
+#: ../../../application/layouts/scripts/admin.phtml:9
+#: ../../../application/modules/admin/views/scripts/content/index.phtml:3
+#: ../../../application/modules/admin/views/scripts/content/update.phtml:1
+#: ../../../application/modules/admin/views/scripts/content/view.phtml:1
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:26
+msgid "content"
+msgstr "content"
+
+#: ../../../application/modules/admin/forms/Test.php:11
+#: ../../../application/modules/admin/views/scripts/hierarchy/view.phtml:65
+#: ../../../application/modules/admin/views/scripts/property/index.phtml:9
+#: ../../../application/modules/admin/views/scripts/property/view.phtml:16
+msgid "domain"
+msgstr "domain"
+
+#: ../../../application/modules/admin/forms/Test.php:18
+#: ../../../application/modules/admin/views/scripts/place/view.phtml:92
+#: ../../../application/modules/admin/views/scripts/property/index.phtml:5
+msgid "property"
+msgstr "property"
+
+#: ../../../application/modules/admin/forms/Test.php:25
+#: ../../../application/modules/admin/views/scripts/hierarchy/view.phtml:65
+#: ../../../application/modules/admin/views/scripts/property/index.phtml:9
+#: ../../../application/modules/admin/views/scripts/property/view.phtml:17
+msgid "range"
+msgstr "range"
+
+#: ../../../application/modules/admin/forms/Test.php:32
+msgid "test"
+msgstr "test"
+
+#: ../../../application/modules/admin/forms/Text.php:24
+#: ../../../application/modules/admin/views/scripts/content/index.phtml:9
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:153
+msgid "text"
+msgstr "text"
+
+#: ../../../application/modules/admin/forms/User.php:11
+msgid "active"
+msgstr "active"
+
+#: ../../../application/modules/admin/forms/User.php:23
+#: ../../../application/modules/admin/views/scripts/user/index.phtml:6
+#: ../../../application/modules/admin/views/scripts/user/view.phtml:19
+msgid "group"
+msgstr "group"
+
+#: ../../../application/modules/admin/forms/User.php:57
+msgid "insert"
+msgstr "Insert"
+
+#: ../../../application/modules/default/controllers/ErrorController.php:15
+msgid "error_site_not_found"
+msgstr "Sorry, but this site couldn't be found."
+
+#: ../../../application/modules/default/controllers/ErrorController.php:33
+msgid "error_non_existing_id"
+msgstr "This entry doesn't exist. Maybe you followed an out-dated link."
+
+#: ../../../application/modules/default/controllers/ErrorController.php:36
+msgid "error_application"
+msgstr "Sorry, but an error occurred."
+
+#: ../../../library/Craws/View/Helper/BookmarkToggle.php:7
+msgid "bookmark"
+msgstr "bookmark"
+
+#: ../../../library/Craws/View/Helper/BookmarkToggle.php:9
+msgid "bookmark_remove"
+msgstr "remove bookmark"
+
+#: ../../../library/Craws/View/Helper/DisplayTableSelect.php:21
+#: ../../../library/Craws/View/Helper/DisplayTreeSelect.php:34
+msgid "clear"
+msgstr "clear"
+
+#: ../../../library/Craws/View/Helper/DisplayTreeSelect.php:20
+#: ../../../library/Craws/View/Helper/DisplayTreeSelectMulti.php:26
+msgid "tip_hierarchy"
+msgstr "The options can be edited in Hierarchy."
+
+#: ../../../library/Craws/View/Helper/DisplayTreeSelectMulti.php:29
+msgid "change"
+msgstr "change"
+
+#: ../../../library/Craws/View/Helper/Link.php:25
+#: ../../../application/layouts/scripts/admin.phtml:8
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:162
+#: ../../../application/modules/admin/views/scripts/carrier/view.phtml:43
+#: ../../../application/modules/admin/views/scripts/event/view.phtml:111
+#: ../../../application/modules/admin/views/scripts/place/view.phtml:114
+#: ../../../application/modules/admin/views/scripts/reference/view.phtml:51
+#: ../../../application/modules/admin/views/scripts/source/index.phtml:3
+#: ../../../application/modules/admin/views/scripts/source/insert.phtml:9
+msgid "source"
+msgstr "source"
+
+#: ../../../library/Craws/View/Helper/Link.php:58
+#: ../../../application/modules/admin/views/scripts/actor/update.phtml:1
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:97
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:127
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:146
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:206
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:240
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:268
+#: ../../../application/modules/admin/views/scripts/biblio/update.phtml:7
+#: ../../../application/modules/admin/views/scripts/carrier/update.phtml:1
+#: ../../../application/modules/admin/views/scripts/carrier/view.phtml:55
+#: ../../../application/modules/admin/views/scripts/content/update.phtml:3
+#: ../../../application/modules/admin/views/scripts/content/view.phtml:2
+#: ../../../application/modules/admin/views/scripts/event/update.phtml:1
+#: ../../../application/modules/admin/views/scripts/event/view.phtml:96
+#: ../../../application/modules/admin/views/scripts/event/view.phtml:154
+#: ../../../application/modules/admin/views/scripts/hierarchy/update.phtml:1
+#: ../../../application/modules/admin/views/scripts/involvement/update.phtml:1
+#: ../../../application/modules/admin/views/scripts/involvement/update.phtml:3
+#: ../../../application/modules/admin/views/scripts/place/update.phtml:1
+#: ../../../application/modules/admin/views/scripts/place/view.phtml:150
+#: ../../../application/modules/admin/views/scripts/profile/update.phtml:1
+#: ../../../application/modules/admin/views/scripts/reference/update.phtml:6
+#: ../../../application/modules/admin/views/scripts/reference/view.phtml:40
+#: ../../../application/modules/admin/views/scripts/reference/view.phtml:63
+#: ../../../application/modules/admin/views/scripts/reference/view.phtml:89
+#: ../../../application/modules/admin/views/scripts/reference/view.phtml:115
+#: ../../../application/modules/admin/views/scripts/settings/index.phtml:1
+#: ../../../application/modules/admin/views/scripts/settings/update.phtml:1
+#: ../../../application/modules/admin/views/scripts/source/text-update.phtml:2
+#: ../../../application/modules/admin/views/scripts/source/update.phtml:1
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:143
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:165
+#: ../../../application/modules/admin/views/scripts/user/update.phtml:3
+#: ../../../application/modules/admin/views/scripts/user/view.phtml:6
+msgid "edit"
+msgstr "edit"
+
+#: ../../../library/Craws/View/Helper/Link.php:60
+#: ../../../application/modules/admin/views/scripts/log/view.phtml:3
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:167
+#: ../../../application/modules/admin/views/scripts/user/view.phtml:10
+msgid "delete"
+msgstr "delete"
+
+#: ../../../library/Craws/View/Helper/Link.php:62
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:87
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:117
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:136
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:166
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:196
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:230
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:259
+#: ../../../application/modules/admin/views/scripts/carrier/view.phtml:46
+#: ../../../application/modules/admin/views/scripts/event/view.phtml:83
+#: ../../../application/modules/admin/views/scripts/event/view.phtml:119
+#: ../../../application/modules/admin/views/scripts/event/view.phtml:144
+#: ../../../application/modules/admin/views/scripts/place/view.phtml:118
+#: ../../../application/modules/admin/views/scripts/place/view.phtml:142
+#: ../../../application/modules/admin/views/scripts/reference/view.phtml:30
+#: ../../../application/modules/admin/views/scripts/reference/view.phtml:54
+#: ../../../application/modules/admin/views/scripts/reference/view.phtml:78
+#: ../../../application/modules/admin/views/scripts/reference/view.phtml:104
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:43
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:72
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:100
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:126
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:160
+#: ../../../application/modules/admin/views/scripts/user/view.phtml:8
+msgid "confirm_delete"
+msgstr "delete %s?"
+
+#: ../../../library/Craws/View/Helper/TableLog.php:11
+#: ../../../application/modules/admin/views/scripts/actor/add.phtml:8
+#: ../../../application/modules/admin/views/scripts/actor/index.phtml:9
+#: ../../../application/modules/admin/views/scripts/biblio/form.phtml:22
+#: ../../../application/modules/admin/views/scripts/class/index.phtml:5
+#: ../../../application/modules/admin/views/scripts/event/add.phtml:9
+#: ../../../application/modules/admin/views/scripts/event/form.phtml:39
+#: ../../../application/modules/admin/views/scripts/event/form.phtml:78
+#: ../../../application/modules/admin/views/scripts/event/form.phtml:96
+#: ../../../application/modules/admin/views/scripts/event/index.phtml:8
+#: ../../../application/modules/admin/views/scripts/event/view.phtml:74
+#: ../../../application/modules/admin/views/scripts/event/view.phtml:166
+#: ../../../application/modules/admin/views/scripts/hierarchy/view.phtml:45
+#: ../../../application/modules/admin/views/scripts/involvement/form.phtml:33
+#: ../../../application/modules/admin/views/scripts/involvement/form.phtml:54
+#: ../../../application/modules/admin/views/scripts/member/form.phtml:29
+#: ../../../application/modules/admin/views/scripts/overview/index.phtml:44
+#: ../../../application/modules/admin/views/scripts/overview/index.phtml:67
+#: ../../../application/modules/admin/views/scripts/place/view.phtml:75
+#: ../../../application/modules/admin/views/scripts/place/view.phtml:92
+#: ../../../application/modules/admin/views/scripts/reference/index.phtml:8
+#: ../../../application/modules/admin/views/scripts/reference/view.phtml:74
+#: ../../../application/modules/admin/views/scripts/relation/form.phtml:29
+#: ../../../application/modules/admin/views/scripts/search/index.phtml:7
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:39
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:68
+msgid "class"
+msgstr "class"
+
+#: ../../../library/Craws/View/Helper/TableLog.php:13
+#: ../../../application/modules/admin/views/scripts/user/index.phtml:6
+#: ../../../application/modules/admin/views/scripts/user/view.phtml:23
+msgid "created"
+msgstr "created"
+
+#: ../../../application/layouts/scripts/admin.phtml:8
+#: ../../../application/modules/admin/views/scripts/overview/index.phtml:1
+msgid "overview"
+msgstr "overview"
+
+#: ../../../application/layouts/scripts/admin.phtml:8
+#: ../../../application/modules/admin/views/scripts/actor/add.phtml:6
+#: ../../../application/modules/admin/views/scripts/actor/add.phtml:8
+#: ../../../application/modules/admin/views/scripts/actor/index.phtml:3
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:112
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:187
+#: ../../../application/modules/admin/views/scripts/event/add.phtml:6
+#: ../../../application/modules/admin/views/scripts/event/view.phtml:74
+#: ../../../application/modules/admin/views/scripts/involvement/form.phtml:76
+#: ../../../application/modules/admin/views/scripts/involvement/insert.phtml:1
+#: ../../../application/modules/admin/views/scripts/involvement/insert.phtml:11
+#: ../../../application/modules/admin/views/scripts/member/form.phtml:51
+#: ../../../application/modules/admin/views/scripts/place/view.phtml:92
+#: ../../../application/modules/admin/views/scripts/reference/view.phtml:74
+#: ../../../application/modules/admin/views/scripts/relation/form.phtml:51
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:39
+msgid "actor"
+msgstr "actor"
+
+#: ../../../application/layouts/scripts/admin.phtml:8
+#: ../../../application/modules/admin/views/scripts/hierarchy/index.phtml:1
+msgid "hierarchy"
+msgstr "hierarchy"
+
+#: ../../../application/layouts/scripts/admin.phtml:9
+#: ../../../application/modules/admin/views/scripts/settings/index.phtml:2
+msgid "settings"
+msgstr "settings"
+
+#: ../../../application/layouts/scripts/admin.phtml:9
+#: ../../../application/modules/admin/views/scripts/faq/index.phtml:1
+msgid "faq"
+msgstr "FAQ"
+
+#: ../../../application/layouts/scripts/admin.phtml:95
+#: ../../../application/layouts/scripts/default.phtml:41
+msgid "hello"
+msgstr "hello"
+
+#: ../../../application/layouts/scripts/admin.phtml:98
+#: ../../../application/layouts/scripts/default.phtml:44
+#: ../../../application/modules/admin/views/scripts/profile/index.phtml:2
+msgid "profile"
+msgstr "profile"
+
+#: ../../../application/layouts/scripts/admin.phtml:99
+#: ../../../application/layouts/scripts/default.phtml:45
+msgid "logout"
+msgstr "logout"
+
+#: ../../../application/layouts/scripts/admin.phtml:102
+#: ../../../application/layouts/scripts/default.phtml:48
+msgid "version"
+msgstr "version"
+
+#: ../../../application/layouts/scripts/admin.phtml:108
+msgid "zoom_in"
+msgstr "larger font size"
+
+#: ../../../application/layouts/scripts/admin.phtml:110
+msgid "zoom_out"
+msgstr "smaller font size"
+
+#: ../../../application/layouts/scripts/admin.phtml:114
+msgid "frontend"
+msgstr "frontend"
+
+#: ../../../application/layouts/scripts/admin.phtml:152
+msgid "warning_no_js"
+msgstr ""
+"JavaScript seems to be disabled. The functionality of this site will be "
+"limited."
+
+#: ../../../application/layouts/scripts/default.phtml:5
+msgid "home"
+msgstr "home"
+
+#: ../../../application/layouts/scripts/default.phtml:5
+msgid "contact"
+msgstr "contact"
+
+#: ../../../application/layouts/scripts/default.phtml:55
+msgid "admin"
+msgstr "admin"
+
+#: ../../../application/modules/admin/views/scripts/actor/add.phtml:6
+#: ../../../application/modules/admin/views/scripts/actor/add.phtml:17
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:70
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:107
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:157
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:183
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:217
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:250
+#: ../../../application/modules/admin/views/scripts/event/add.phtml:6
+#: ../../../application/modules/admin/views/scripts/event/add.phtml:17
+#: ../../../application/modules/admin/views/scripts/event/view.phtml:67
+#: ../../../application/modules/admin/views/scripts/event/view.phtml:106
+#: ../../../application/modules/admin/views/scripts/event/view.phtml:135
+#: ../../../application/modules/admin/views/scripts/hierarchy/index.phtml:37
+#: ../../../application/modules/admin/views/scripts/place/add.phtml:6
+#: ../../../application/modules/admin/views/scripts/place/add.phtml:16
+#: ../../../application/modules/admin/views/scripts/place/view.phtml:109
+#: ../../../application/modules/admin/views/scripts/place/view.phtml:133
+#: ../../../application/modules/admin/views/scripts/source/add.phtml:6
+#: ../../../application/modules/admin/views/scripts/source/add.phtml:16
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:32
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:61
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:90
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:118
+msgid "add"
+msgstr "add"
+
+#: ../../../application/modules/admin/views/scripts/actor/add.phtml:8
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:77
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:112
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:187
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:221
+#: ../../../application/modules/admin/views/scripts/carrier/view.phtml:22
+#: ../../../application/modules/admin/views/scripts/event/view.phtml:37
+#: ../../../application/modules/admin/views/scripts/event/view.phtml:74
+#: ../../../application/modules/admin/views/scripts/event/view.phtml:166
+#: ../../../application/modules/admin/views/scripts/hierarchy/view.phtml:45
+#: ../../../application/modules/admin/views/scripts/overview/index.phtml:44
+#: ../../../application/modules/admin/views/scripts/overview/index.phtml:67
+#: ../../../application/modules/admin/views/scripts/place/view.phtml:75
+#: ../../../application/modules/admin/views/scripts/place/view.phtml:92
+#: ../../../application/modules/admin/views/scripts/reference/view.phtml:26
+#: ../../../application/modules/admin/views/scripts/reference/view.phtml:74
+#: ../../../application/modules/admin/views/scripts/search/index.phtml:7
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:39
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:68
+msgid "begin"
+msgstr "begin"
+
+#: ../../../application/modules/admin/views/scripts/actor/add.phtml:8
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:77
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:112
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:187
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:221
+#: ../../../application/modules/admin/views/scripts/carrier/view.phtml:22
+#: ../../../application/modules/admin/views/scripts/event/view.phtml:37
+#: ../../../application/modules/admin/views/scripts/event/view.phtml:74
+#: ../../../application/modules/admin/views/scripts/event/view.phtml:166
+#: ../../../application/modules/admin/views/scripts/hierarchy/view.phtml:45
+#: ../../../application/modules/admin/views/scripts/overview/index.phtml:44
+#: ../../../application/modules/admin/views/scripts/overview/index.phtml:67
+#: ../../../application/modules/admin/views/scripts/place/view.phtml:75
+#: ../../../application/modules/admin/views/scripts/place/view.phtml:92
+#: ../../../application/modules/admin/views/scripts/reference/view.phtml:26
+#: ../../../application/modules/admin/views/scripts/reference/view.phtml:74
+#: ../../../application/modules/admin/views/scripts/search/index.phtml:7
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:39
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:68
+msgid "end"
+msgstr "end"
+
+#: ../../../application/modules/admin/views/scripts/actor/form.phtml:44
+#: ../../../application/modules/admin/views/scripts/actor/index.phtml:9
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:50
+#: ../../../application/modules/admin/views/scripts/carrier/form.phtml:28
+#: ../../../application/modules/admin/views/scripts/event/add.phtml:9
+#: ../../../application/modules/admin/views/scripts/event/form.phtml:39
+#: ../../../application/modules/admin/views/scripts/event/form.phtml:60
+#: ../../../application/modules/admin/views/scripts/event/form.phtml:78
+#: ../../../application/modules/admin/views/scripts/event/form.phtml:96
+#: ../../../application/modules/admin/views/scripts/event/form.phtml:114
+#: ../../../application/modules/admin/views/scripts/event/index.phtml:8
+#: ../../../application/modules/admin/views/scripts/involvement/form.phtml:33
+#: ../../../application/modules/admin/views/scripts/involvement/form.phtml:54
+#: ../../../application/modules/admin/views/scripts/member/form.phtml:29
+#: ../../../application/modules/admin/views/scripts/place/add.phtml:9
+#: ../../../application/modules/admin/views/scripts/place/index.phtml:5
+#: ../../../application/modules/admin/views/scripts/place/view.phtml:50
+#: ../../../application/modules/admin/views/scripts/reference/view.phtml:100
+#: ../../../application/modules/admin/views/scripts/relation/form.phtml:29
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:95
+msgid "first"
+msgstr "first"
+
+#: ../../../application/modules/admin/views/scripts/actor/form.phtml:44
+#: ../../../application/modules/admin/views/scripts/actor/index.phtml:9
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:50
+#: ../../../application/modules/admin/views/scripts/carrier/form.phtml:28
+#: ../../../application/modules/admin/views/scripts/event/add.phtml:9
+#: ../../../application/modules/admin/views/scripts/event/form.phtml:39
+#: ../../../application/modules/admin/views/scripts/event/form.phtml:60
+#: ../../../application/modules/admin/views/scripts/event/form.phtml:78
+#: ../../../application/modules/admin/views/scripts/event/form.phtml:96
+#: ../../../application/modules/admin/views/scripts/event/form.phtml:114
+#: ../../../application/modules/admin/views/scripts/event/index.phtml:8
+#: ../../../application/modules/admin/views/scripts/involvement/form.phtml:33
+#: ../../../application/modules/admin/views/scripts/involvement/form.phtml:54
+#: ../../../application/modules/admin/views/scripts/member/form.phtml:29
+#: ../../../application/modules/admin/views/scripts/place/add.phtml:9
+#: ../../../application/modules/admin/views/scripts/place/index.phtml:5
+#: ../../../application/modules/admin/views/scripts/place/view.phtml:50
+#: ../../../application/modules/admin/views/scripts/reference/view.phtml:100
+#: ../../../application/modules/admin/views/scripts/relation/form.phtml:29
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:95
+msgid "last"
+msgstr "last"
+
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:6
+#: ../../../application/modules/admin/views/scripts/place/view.phtml:9
+#: ../../../application/modules/admin/views/scripts/reference/view.phtml:6
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:8
+msgid "events"
+msgstr "events"
+
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:7
+msgid "relations"
+msgstr "relations"
+
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:9
+#: ../../../application/modules/admin/views/scripts/carrier/view.phtml:6
+#: ../../../application/modules/admin/views/scripts/event/view.phtml:8
+#: ../../../application/modules/admin/views/scripts/place/view.phtml:11
+#: ../../../application/modules/admin/views/scripts/reference/view.phtml:7
+#: ../../../application/modules/admin/views/scripts/source/add.phtml:6
+msgid "sources"
+msgstr "sources"
+
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:10
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:221
+#: ../../../application/modules/admin/views/scripts/member/member.phtml:1
+msgid "member_of"
+msgstr "member of"
+
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:12
+msgid "members"
+msgstr "members"
+
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:14
+#: ../../../application/modules/admin/views/scripts/event/view.phtml:9
+#: ../../../application/modules/admin/views/scripts/place/view.phtml:12
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:11
+msgid "references"
+msgstr "references"
+
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:18
+#: ../../../application/modules/admin/views/scripts/reference/view.phtml:9
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:9
+msgid "places"
+msgstr "places"
+
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:36
+#: ../../../application/modules/admin/views/scripts/place/view.phtml:33
+msgid "alias"
+msgstr "alias"
+
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:57
+#: ../../../application/modules/admin/views/scripts/carrier/view.phtml:29
+#: ../../../application/modules/admin/views/scripts/event/view.phtml:44
+#: ../../../application/modules/admin/views/scripts/place/view.phtml:57
+msgid "between"
+msgstr "between"
+
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:58
+#: ../../../application/modules/admin/views/scripts/carrier/view.phtml:30
+#: ../../../application/modules/admin/views/scripts/event/view.phtml:45
+#: ../../../application/modules/admin/views/scripts/place/view.phtml:58
+msgid "and"
+msgstr "and"
+
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:89
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:120
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:139
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:169
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:199
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:233
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:261
+#: ../../../application/modules/admin/views/scripts/carrier/view.phtml:49
+#: ../../../application/modules/admin/views/scripts/event/view.phtml:86
+#: ../../../application/modules/admin/views/scripts/event/view.phtml:122
+#: ../../../application/modules/admin/views/scripts/event/view.phtml:147
+#: ../../../application/modules/admin/views/scripts/place/view.phtml:120
+#: ../../../application/modules/admin/views/scripts/place/view.phtml:144
+#: ../../../application/modules/admin/views/scripts/reference/view.phtml:33
+#: ../../../application/modules/admin/views/scripts/reference/view.phtml:57
+#: ../../../application/modules/admin/views/scripts/reference/view.phtml:81
+#: ../../../application/modules/admin/views/scripts/reference/view.phtml:107
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:46
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:75
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:103
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:129
+msgid "remove"
+msgstr "remove"
+
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:116
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:134
+#: ../../../application/modules/admin/views/scripts/relation/insert.phtml:1
+#: ../../../application/modules/admin/views/scripts/relation/update.phtml:1
+msgid "relation"
+msgstr "relation"
+
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:165
+#: ../../../application/modules/admin/views/scripts/place/view.phtml:117
+msgid "documented_in"
+msgstr "documented in"
+
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:195
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:229
+msgid "membership"
+msgstr "membership"
+
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:254
+#: ../../../application/modules/admin/views/scripts/carrier/view.phtml:43
+#: ../../../application/modules/admin/views/scripts/event/view.phtml:139
+#: ../../../application/modules/admin/views/scripts/place/view.phtml:137
+#: ../../../application/modules/admin/views/scripts/reference/view.phtml:26
+#: ../../../application/modules/admin/views/scripts/reference/view.phtml:51
+#: ../../../application/modules/admin/views/scripts/reference/view.phtml:74
+#: ../../../application/modules/admin/views/scripts/reference/view.phtml:100
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:122
+msgid "page"
+msgstr "page"
+
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:258
+#: ../../../application/modules/admin/views/scripts/event/view.phtml:143
+#: ../../../application/modules/admin/views/scripts/place/view.phtml:141
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:125
+msgid "referred_by"
+msgstr "referred by"
+
+#: ../../../application/modules/admin/views/scripts/biblio/insert.phtml:3
+#: ../../../application/modules/admin/views/scripts/involvement/insert.phtml:14
+#: ../../../application/modules/admin/views/scripts/member/insert.phtml:2
+#: ../../../application/modules/admin/views/scripts/member/member.phtml:2
+#: ../../../application/modules/admin/views/scripts/relation/insert.phtml:2
+#: ../../../application/modules/admin/views/scripts/tableSorter.phtml:3
+msgid "no_entries"
+msgstr "no entries"
+
+#: ../../../application/modules/admin/views/scripts/carrier/view.phtml:45
+#: ../../../application/modules/admin/views/scripts/reference/view.phtml:29
+#: ../../../application/modules/admin/views/scripts/reference/view.phtml:53
+#: ../../../application/modules/admin/views/scripts/reference/view.phtml:77
+#: ../../../application/modules/admin/views/scripts/reference/view.phtml:103
+msgid "refers_to"
+msgstr "refers to"
+
+#: ../../../application/modules/admin/views/scripts/class/index.phtml:4
+#: ../../../application/modules/admin/views/scripts/class/view.phtml:5
+#: ../../../application/modules/admin/views/scripts/overview/index.phtml:19
+#: ../../../application/modules/admin/views/scripts/overview/model.phtml:1
+#: ../../../application/modules/admin/views/scripts/property/index.phtml:4
+#: ../../../application/modules/admin/views/scripts/property/view.phtml:5
+msgid "model"
+msgstr "model"
+
+#: ../../../application/modules/admin/views/scripts/class/index.phtml:9
+#: ../../../application/modules/admin/views/scripts/class/view.phtml:11
+#: ../../../application/modules/admin/views/scripts/property/index.phtml:9
+#: ../../../application/modules/admin/views/scripts/property/view.phtml:13
+msgid "code"
+msgstr "code"
+
+#: ../../../application/modules/admin/views/scripts/class/view.phtml:19
+msgid "domain_for"
+msgstr "domain for"
+
+#: ../../../application/modules/admin/views/scripts/class/view.phtml:20
+msgid "range_for"
+msgstr "range for"
+
+#: ../../../application/modules/admin/views/scripts/content/index.phtml:5
+msgid "title"
+msgstr "title"
+
+#: ../../../application/modules/admin/views/scripts/dateForm.phtml:3
+#: ../../../application/modules/admin/views/scripts/log/index.phtml:9
+#: ../../../application/modules/admin/views/scripts/overview/index.phtml:44
+msgid "date"
+msgstr "date"
+
+#: ../../../application/modules/admin/views/scripts/dateForm.phtml:5
+msgid "show"
+msgstr "show"
+
+#: ../../../application/modules/admin/views/scripts/event/form.phtml:16
+msgid "acquisition"
+msgstr "acquisition"
+
+#: ../../../application/modules/admin/views/scripts/event/view.phtml:7
+#: ../../../application/modules/admin/views/scripts/place/view.phtml:10
+#: ../../../application/modules/admin/views/scripts/reference/view.phtml:8
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:7
+msgid "actors"
+msgstr "actors"
+
+#: ../../../application/modules/admin/views/scripts/event/view.phtml:11
+#: ../../../application/modules/admin/views/scripts/hierarchy/view.phtml:15
+msgid "subs"
+msgstr "subs"
+
+#: ../../../application/modules/admin/views/scripts/hierarchy/view.phtml:18
+msgid "entities"
+msgstr "entities"
+
+#: ../../../application/modules/admin/views/scripts/hierarchy/view.phtml:21
+msgid "properties"
+msgstr "properties"
+
+#: ../../../application/modules/admin/views/scripts/index/index.phtml:6
+#: ../../../application/modules/admin/views/scripts/index/reset-password.phtml:1
+msgid "password_forgot"
+msgstr "Forgot your password?"
+
+#: ../../../application/modules/admin/views/scripts/index/reset-password.phtml:2
+msgid "password_reset_info"
+msgstr ""
+"To obtain a new password, please enter your email address and a link will be "
+"emailed to you."
+
+#: ../../../application/modules/admin/views/scripts/log/index.phtml:1
+msgid "log"
+msgstr "log"
+
+#: ../../../application/modules/admin/views/scripts/log/index.phtml:2
+#: ../../../application/modules/admin/views/scripts/log/index.phtml:3
+msgid "delete_all"
+msgstr "delete all"
+
+#: ../../../application/modules/admin/views/scripts/log/index.phtml:9
+msgid "path"
+msgstr "path"
+
+#: ../../../application/modules/admin/views/scripts/log/index.phtml:9
+msgid "message"
+msgstr "message"
+
+#: ../../../application/modules/admin/views/scripts/mail/reset-confirm.phtml:2
+msgid "mail_new_password_for"
+msgstr "New password for"
+
+#: ../../../application/modules/admin/views/scripts/mail/reset-confirm.phtml:2
+#: ../../../application/modules/admin/views/scripts/mail/reset-password.phtml:3
+msgid "at"
+msgstr "at"
+
+#: ../../../application/modules/admin/views/scripts/mail/reset-password.phtml:2
+msgid "mail_received_request_for"
+msgstr "We received a password reset request for"
+
+#: ../../../application/modules/admin/views/scripts/mail/reset-password.phtml:4
+msgid "mail_reset_password_link"
+msgstr "To reset your password use the following link"
+
+#: ../../../application/modules/admin/views/scripts/mail/reset-password.phtml:6
+msgid "mail_link_is_valid_for"
+msgstr "This link will be valid for"
+
+#: ../../../application/modules/admin/views/scripts/mail/reset-password.phtml:7
+msgid "hours"
+msgstr "hours"
+
+#: ../../../application/modules/admin/views/scripts/member/insert.phtml:1
+#: ../../../application/modules/admin/views/scripts/member/update.phtml:7
+msgid "member"
+msgstr "member"
+
+#: ../../../application/modules/admin/views/scripts/overview/changelog.phtml:2
+msgid "changelog"
+msgstr "changelog"
+
+#: ../../../application/modules/admin/views/scripts/overview/credits.phtml:1
+#: ../../../application/modules/admin/views/scripts/overview/index.phtml:21
+msgid "credits"
+msgstr "credits"
+
+#: ../../../application/modules/admin/views/scripts/overview/feedback.phtml:1
+#: ../../../application/modules/admin/views/scripts/overview/index.phtml:28
+msgid "feedback"
+msgstr "feedback"
+
+#: ../../../application/modules/admin/views/scripts/overview/feedback.phtml:2
+msgid "feedback_intro"
+msgstr "There are multiple ways to provide feedback"
+
+#: ../../../application/modules/admin/views/scripts/overview/feedback.phtml:4
+msgid "feedback_redmine"
+msgstr "Our issue tracker, preferred but account required"
+
+#: ../../../application/modules/admin/views/scripts/overview/feedback.phtml:10
+msgid "feedback_mail"
+msgstr "Send a mail to"
+
+#: ../../../application/modules/admin/views/scripts/overview/feedback.phtml:15
+msgid "feedback_form"
+msgstr "Our feedback form"
+
+#: ../../../application/modules/admin/views/scripts/overview/index.phtml:16
+msgid "first_login"
+msgstr "This is your first log in. Welcome!"
+
+#: ../../../application/modules/admin/views/scripts/overview/index.phtml:23
+msgid "project_homepage"
+msgstr "Project Homepage"
+
+#: ../../../application/modules/admin/views/scripts/overview/index.phtml:27
+msgid "feedback_teaser"
+msgstr "Want a new feature or experience any problems? Tell us about it:"
+
+#: ../../../application/modules/admin/views/scripts/overview/index.phtml:32
+#: ../../../application/modules/admin/views/scripts/user/index.phtml:6
+msgid "last_login"
+msgstr "last login"
+
+#: ../../../application/modules/admin/views/scripts/overview/index.phtml:35
+msgid "failed_logins_since_last_login"
+msgstr "Failed login"
+
+#: ../../../application/modules/admin/views/scripts/overview/index.phtml:41
+msgid "latest_entries"
+msgstr "latest entries"
+
+#: ../../../application/modules/admin/views/scripts/overview/index.phtml:64
+msgid "bookmarks"
+msgstr "bookmarks"
+
+#: ../../../application/modules/admin/views/scripts/place/form.phtml:22
+msgid "situated_within"
+msgstr "situated within"
+
+#: ../../../application/modules/admin/views/scripts/place/view.phtml:7
+msgid "map"
+msgstr "map"
+
+#: ../../../application/modules/admin/views/scripts/place/view.phtml:41
+msgid "administrative unit"
+msgstr "administrative unit"
+
+#: ../../../application/modules/admin/views/scripts/place/view.phtml:48
+msgid "historical place"
+msgstr "historical place"
+
+#: ../../../application/modules/admin/views/scripts/profile/index.phtml:8
+msgid "information"
+msgstr "information"
+
+#: ../../../application/modules/admin/views/scripts/profile/index.phtml:15
+#: ../../../application/modules/admin/views/scripts/profile/index.phtml:19
+msgid "no"
+msgstr "no"
+
+#: ../../../application/modules/admin/views/scripts/profile/index.phtml:17
+#: ../../../application/modules/admin/views/scripts/profile/index.phtml:21
+#: ../../../application/modules/admin/views/scripts/user/index.phtml:10
+msgid "yes"
+msgstr "yes"
+
+#: ../../../application/modules/admin/views/scripts/profile/index.phtml:28
+msgid "display"
+msgstr "display"
+
+#: ../../../application/modules/admin/views/scripts/profile/password.phtml:1
+msgid "change_password"
+msgstr "change password"
+
+#: ../../../application/modules/admin/views/scripts/profile/password.phtml:3
+msgid "password_strength_rules"
+msgstr "Passwords must have at least 8 characters."
+
+#: ../../../application/modules/admin/views/scripts/search/form.phtml:8
+#: ../../../application/modules/admin/views/scripts/search/form.phtml:34
+msgid "hide_filter"
+msgstr "hide filter"
+
+#: ../../../application/modules/admin/views/scripts/search/form.phtml:10
+#: ../../../application/modules/admin/views/scripts/search/form.phtml:31
+msgid "show_filter"
+msgstr "show filter"
+
+#: ../../../application/modules/admin/views/scripts/search/form.phtml:16
+msgid "search_own"
+msgstr "search only for entities edited by myself"
+
+#: ../../../application/modules/admin/views/scripts/search/form.phtml:17
+msgid "search_description"
+msgstr "Also search in description"
+
+#: ../../../application/modules/admin/views/scripts/search/form.phtml:18
+msgid "classes"
+msgstr "classes"
+
+#: ../../../application/modules/admin/views/scripts/search/index.phtml:4
+msgid "no_search_results"
+msgstr "no search results"
+
+#: ../../../application/modules/admin/views/scripts/source/text-add.phtml:1
+msgid "add_text"
+msgstr "add text"
+
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:13
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:156
+msgid "texts"
+msgstr "texts"
+
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:42
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:71
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:99
+msgid "documents"
+msgstr "documents"
+
+#: ../../../application/modules/admin/views/scripts/tableSorter.phtml:12
+msgid "filter"
+msgstr "filter"
+
+#: ../../../application/modules/admin/views/scripts/tableSorter.phtml:33
+msgid "all"
+msgstr "all"
+
+#: ../../../application/modules/admin/views/scripts/user/index.phtml:4
+#: ../../../application/modules/admin/views/scripts/user/insert.phtml:1
+msgid "new"
+msgstr "new"
+
+#: ../../../application/modules/admin/views/scripts/user/view.phtml:24
+msgid "modified"
+msgstr "modified"
+
+#: ../../../application/modules/admin/views/scripts/user/view.phtml:25
+msgid "lastLogin"
+msgstr "last login"
+
+#: ../../../application/modules/admin/views/scripts/user/view.phtml:26
+msgid "failedLogins"
+msgstr "failed Logins"
+
+#: ../../../application/modules/default/views/scripts/offline/index.phtml:18
+msgid "under_maintenance"
+msgstr "This site is under maintenance. Please try again later."
+
+#~ msgid "changelog_intro"
+#~ msgstr ""
+#~ "This application is constantly developed further. Here is an overview of "
+#~ "the latest changes."
+
+#~ msgid "overview_intro"
+#~ msgstr "Data already entered into the system"
+
+#~ msgid "gender"
+#~ msgstr "gender"
+
+#~ msgid "involvement"
+#~ msgstr "involvement"
+
+#~ msgid "function"
+#~ msgstr "function"
+
+#~ msgid "node"
+#~ msgstr "node"
+
+#~ msgid "evidence"
+#~ msgstr "evidence"
+
+#~ msgid "edition"
+#~ msgstr "edition"
+
+#~ msgid "nodes"
+#~ msgstr "nodes"
+
+#~ msgid "document"
+#~ msgstr "document"
+
+#~ msgid "crm"
+#~ msgstr "model"
+
+#~ msgid "entries"
+#~ msgstr "entries"
+
+#~ msgid "phone"
+#~ msgstr "phone"
+
+#~ msgid "quality"
+#~ msgstr "quality"
+
+#~ msgid "location"
+#~ msgstr "location"
+
+#~ msgid "bibliography"
+#~ msgstr "bibliography"
+
+#~ msgid "logs"
+#~ msgstr "logs"
+
+#~ msgid "FAQ"
+#~ msgstr "FAQ"
+
+#~ msgid "help"
+#~ msgstr "help"
+
+#~ msgid "frequently_asked_questions"
+#~ msgstr "frequently asked questions"
+
+#~ msgid "users"
+#~ msgstr "users"
+
+#~ msgid "hide_archive"
+#~ msgstr "Hide archive"
+
+#~ msgid "show_archive"
+#~ msgstr "Show archive"
+
+#~ msgid "select_from_table"
+#~ msgstr "select from table"
+
+#~ msgid "show_dates"
+#~ msgstr "show dates"
+
+#~ msgid "literature"
+#~ msgstr "literature"
+
+#~ msgid "view"
+#~ msgstr "view"
+
+#~ msgid "error_missing_formfield"
+#~ msgstr "Missing formfield for this type."
+
+#~ msgid "new_actor"
+#~ msgstr "new actor"
+
+#~ msgid "insert_new_actor"
+#~ msgstr "insert new actor"
+
+#~ msgid "add_actor"
+#~ msgstr "add actor"
+
+#~ msgid "list"
+#~ msgstr "list"
+
+#~ msgid "add_relation"
+#~ msgstr "add relation"
+
+#~ msgid "alternative_names"
+#~ msgstr "alternative names"
+
+#~ msgid "periods"
+#~ msgstr "periods"
+
+#~ msgid "error_code_exists"
+#~ msgstr "This code is already in use."
+
+#~ msgid "error_name_exists"
+#~ msgstr "This name is already in use."
+
+#~ msgid "super_classes"
+#~ msgstr "super classes"
+
+#~ msgid "sub_classes"
+#~ msgstr "sub classes"
+
+#~ msgid "super_properties"
+#~ msgstr "super properties"
+
+#~ msgid "sub_types"
+#~ msgstr "sub types"
+
+#~ msgid "ip"
+#~ msgstr "IP"
+
+#~ msgid "agent"
+#~ msgstr "agent"
+
+#~ msgid "log_detail"
+#~ msgstr "log detail"
+
+#~ msgid "this_link"
+#~ msgstr "this link"
+
+#~ msgid "role"
+#~ msgstr "role"
+
+#~ msgid "bug_info1"
+#~ msgstr "Want a new feature or experience any problems? Tell us about it"
+
+#~ msgid "bug_info2"
+#~ msgstr "our issue tracker (preferred but account required)"
+
+#~ msgid "bug_info3"
+#~ msgstr "or send an email to "
+
+#~ msgid "order"
+#~ msgstr "order"
+
+#~ msgid "file"
+#~ msgstr "file"
+
+#~ msgid "image"
+#~ msgstr "image"
+
+#~ msgid "quantity"
+#~ msgstr "quantity"
+
+#~ msgid "price"
+#~ msgstr "price"
+
+#~ msgid "up"
+#~ msgstr "up"
+
+#~ msgid "down"
+#~ msgstr "down"
+
+#~ msgid "root"
+#~ msgstr "root"
+
+#~ msgid "error_wrong_mime_type"
+#~ msgstr "Wrong file type: %s"
+
+#~ msgid "error: "
+#~ msgstr "error:"
+
+#~ msgid "none"
+#~ msgstr "none"
+
+#~ msgid "downloaded"
+#~ msgstr "downloaded"
+
+#~ msgid "new_item"
+#~ msgstr "new item"
+
+#~ msgid "menu"
+#~ msgstr "menu"
+
+#~ msgid "downloads"
+#~ msgstr "downloads"
+
+#~ msgid "news"
+#~ msgstr "News"
+
+#~ msgid "thumbnail"
+#~ msgstr "thumbnail"
+
+#~ msgid "image_dimension_info"
+#~ msgstr ""
+#~ "Images will be proportional scaled until they meet following dimensions"
+
+#~ msgid "cancel"
+#~ msgstr "cancel"
+
+#~ msgid "max_size"
+#~ msgstr "maximum size"
+
+#~ msgid "allowed_mime_types"
+#~ msgstr "allowed file types"
+
+#~ msgid "image_dimensions"
+#~ msgstr "image dimensions"
+
+#~ msgid "thumbnail_dimensions"
+#~ msgstr "thumbnail dimensions"
+
+#~ msgid "progress_bar"
+#~ msgstr "progress bar"
+
+#~ msgid "progress_bar_info"
+#~ msgstr ""
+#~ "The progress bar is only for overview. Even if it reaches 100% please "
+#~ "wait until the page is redirected."
+
+#~ msgid "error_cant_delete_self"
+#~ msgstr "You can't delete yourself - zoing!"
+
+#, fuzzy
+#~ msgid "new_retype"
+#~ msgstr "confirm password"
+
+#~ msgid "success_update"
+#~ msgstr "The entry was updated"
+
+#~ msgid "success_insert"
+#~ msgstr "Der Eintrag wurde angelegt"
+
+#~ msgid "success_delete"
+#~ msgstr "The entry was deleted"
+
+#~ msgid "update_user"
+#~ msgstr "update user"
+
+#~ msgid "site_intro"
+#~ msgstr "Welcome"
+
+#~ msgid "add_user"
+#~ msgstr "add user"

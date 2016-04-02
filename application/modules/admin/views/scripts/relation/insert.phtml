@@ -1,0 +1,5 @@
+<? $this->breadcrumb = [$this->link('actor'), $this->link($this->actor), '+ ' . $this->ucstring('relation')]; ?>
+<? if (!$this->actors): ?><p><?= $this->ucstring('no_entries'); ?></p><? return ?><? endif ?>
+<div style="float:left;">
+    <?= $this->render('relation/form.phtml'); ?>
+</div>

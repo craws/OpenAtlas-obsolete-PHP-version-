@@ -1,0 +1,139 @@
+<? $form = $this->form; ?>
+<?= $this->displayErrors($form); ?>
+<?= $form->renderForm(false); ?>
+<div>
+    <div class="tableRow">
+        <?= $form->name->renderLabel() ?>
+        <div class="tableCell"><?= $form->name->renderViewHelper() ?></div>
+    </div>
+    <?= $this->displayTreeSelectMulti('type', $form, $this->types) ?>
+    <?= $this->displayTableSelect('super', $form); ?>
+    <?= $this->displayTableSelect('place', $form); ?>
+    <?= $this->render('dateForm.phtml'); ?>
+    <? if ($this->class->name == 'Acquisition'): ?>
+        <div class="tableRow">
+            &nbsp;
+            <div class="tableCell subformTitle"><?= $this->ucstring('acquisition') ?></div>
+        </div>
+        <?= $this->displayTableSelect('recipient', $form) ?>
+        <?= $this->displayTableSelect('donor', $form) ?>
+        <?= $this->displayTableSelect('acquisitionPlace', $form) ?>
+    <? endif ?>
+    <div style="margin-top:1em;">
+        <?= $form->description->renderLabel() ?>
+        <div><?= $form->description->renderViewHelper() ?></div>
+    </div>
+    <div style="margin-top:1em;">
+        <?= $form->formSubmit->renderViewHelper() ?>
+        <? if (!$this->actor && Zend_Controller_Front::getInstance()->getRequest()->getActionName() == 'insert'): ?>
+            <?= $form->continue ?>
+            <?= $form->continueButton->renderViewHelper() ?>
+        <? endif ?>
+    </div>
+</div>
+<?= '</form>' ?>
+<div id="superOverlay" class="overlay">
+    <div id='superDialog' class="overlayContainer">
+        <?
+        $superTable = ['id' => 'super', 'pager' => true, 'filter' => true];
+        $superTable['header'] = [_('name'), _('class'), _('first'), _('last')];
+        foreach ($this->events as $event) {
+            if (!$event->rootId) {
+                continue;  // dont show root event
+            }
+            $superTable['data'][] = [
+                '<a onclick="selectFromTable(this, \'super\', ' . $event->id . ')">' . $event->name . '</a>',
+                $event->getClass()->nameTranslated,
+                $event->first,
+                $event->last,
+            ];
+        }
+        $this->table = $superTable;
+        ?>
+        <?= $this->render('tableSorter.phtml'); ?>
+    </div>
+</div>
+<div id="placeOverlay" class="overlay">
+    <div id='placeDialog' class="overlayContainer">
+        <?
+        $placeTable = ['id' => 'place', 'pager' => true, 'filter' => true];
+        $placeTable['header'] = [_('name'), _('first'), _('last')];
+        foreach ($this->objects as $object) {
+            $placeTable['data'][] = [
+                '<a onclick="selectFromTable(this, \'place\', ' . $object->id . ')">' . $object->name . '</a>',
+                $object->first,
+                $object->last,
+            ];
+        }
+        $this->table = $placeTable;
+        ?>
+        <?= $this->render('tableSorter.phtml'); ?>
+    </div>
+</div>
+<? if ($this->class->name == 'Acquisition'): ?>
+    <div id="recipientOverlay" class="overlay">
+        <div id="recipientDialog" class="overlayContainer">
+            <?
+            $recipientTable = ['id' => 'recipient', 'pager' => true, 'filter' => true];
+            $recipientTable['header'] = [_('name'), _('class'), _('first'), _('last')];
+            foreach ($this->actors as $actor) {
+                $recipientTable['data'][] = [
+                    '<a onclick="selectFromTable(this, \'recipient\', ' . $actor->id . ')">' . $actor->name . '</a>',
+                    $actor->getClass()->nameTranslated,
+                    $actor->first,
+                    $actor->last,
+                ];
+            }
+            $this->table = $recipientTable;
+            ?>
+            <?= $this->render('tableSorter.phtml'); ?>
+        </div>
+    </div>
+    <div id="donorOverlay" class="overlay">
+        <div id='donorDialog' class="overlayContainer">
+            <?
+            $donorTable = ['id' => 'donor', 'pager' => true, 'filter' => true];
+            $donorTable['header'] = [_('name'), _('class'), _('first'), _('last')];
+            foreach ($this->actors as $actor) {
+                $donorTable['data'][] = [
+                    '<a onclick="selectFromTable(this, \'donor\', ' . $actor->id . ')">' . $actor->name . '</a>',
+                    $actor->getClass()->nameTranslated,
+                    $actor->first,
+                    $actor->last,
+                ];
+            }
+            $this->table = $donorTable;
+            ?>
+            <?= $this->render('tableSorter.phtml'); ?>
+        </div>
+    </div>
+    <div id="acquisitionPlaceOverlay" class="overlay">
+        <div id='acquisitionPlaceDialog' class="overlayContainer">
+            <?
+            $acquisitionPlaceTable = ['id' => 'acquisitionPlace', 'pager' => true, 'filter' => true];
+            $acquisitionPlaceTable['header'] = [_('name'), _('first'), _('last')];
+            foreach ($this->objects as $object) {
+                $acquisitionPlaceTable['data'][] = [
+                    '<a onclick="selectFromTable(this, \'acquisitionPlace\', ' . $object->id . ')">' . $object->name . '</a>',
+                    $object->first,
+                    $object->last,
+                ];
+            }
+            $this->table = $acquisitionPlaceTable;
+            ?>
+            <?= $this->render('tableSorter.phtml'); ?>
+        </div>
+    </div>
+<? endif ?>
+<?= $this->displayTreeOverlay('type', $this->typeTreeData, true) ?>
+<script type="text/javascript">
+    $(document).ready(function () {
+        createOverlay("super", "<?= $this->ucstring('event') ?>");
+        createOverlay("place", "<?= $this->ucstring('place') ?>");
+<? if ($this->class->name == 'Acquisition'): ?>
+            createOverlay("recipient", "<?= $this->ucstring('recipient') ?>");
+            createOverlay("donor", "<?= $this->ucstring('donor') ?>");
+            createOverlay("acquisitionPlace", "<?= $this->ucstring('place') ?>");
+<? endif ?>
+    });
+</script>

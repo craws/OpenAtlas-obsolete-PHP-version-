@@ -1,0 +1,4 @@
+<? $this->breadcrumb = [[$this->ucstring('user'), '/admin/user']]; ?>
+<? $this->breadcrumb[] = [$this->user->username, '/admin/user/view/id/' . $this->user->id]; ?>
+<? $this->breadcrumb[] = $this->ucstring('edit'); ?>
+<?= $this->form ?>

@@ -1,0 +1,81 @@
+<? $form = $this->form; ?>
+<?= $this->displayErrors($form); ?>
+<?= $form->renderForm(false); ?>
+<div>
+    <? if ($form->actorIds): ?>
+        <?= $this->displayTableSelectMulti('actor', $form, 'actor', true) ?>
+    <? elseif ($form->eventId): ?>
+        <?= $this->displayTableSelect('event', $form) ?>
+    <? endif ?>
+    <? if ($form->activity): ?>
+        <div class="tableRow">
+            <?= $form->activity->renderLabel() ?>
+            <div class="tableCell"><?= $form->activity->renderViewHelper() ?></div>
+        </div>
+    <? endif ?>
+    <?= $this->displayTreeSelect('involvement', $form) ?>
+    <?= $this->render('dateForm.phtml'); ?>
+    <div style="margin-top:1em;">
+        <?= $form->description->renderLabel() ?>
+        <div><?= $form->description->renderViewHelper() ?></div>
+    </div>
+    <div style="margin-top:1em;">
+        <?= $form->formSubmit->renderViewHelper() ?>
+    </div>
+</div>
+<?= '</form>' ?>
+<?= $this->displayTreeOverlay('involvement', $this->involvementTreeData) ?>
+<? if ($form->actorIds): ?>
+    <div id="actorOverlay" class="overlay">
+        <div id="actorDialog" class="overlayContainer">
+            <?
+            $actorTable = ['id' => 'actor', 'pager' => true, 'filter' => true];
+            $actorTable['header'] = [_('name'), _('class'), _('first'), _('last'), ''];
+            foreach ($this->actors as $actor) {
+                $actorTable['data'][] = [
+                    $actor->name,
+                    $actor->getClass()->nameTranslated,
+                    $actor->first,
+                    $actor->last,
+                    '<input class="multiTableSelect" type="checkbox" id="' . $actor->id . '" value="' .
+                        str_replace('"', '', $actor->name) . '"/>'
+                ];
+            }
+            $this->table = $actorTable;
+            ?>
+            <?= $this->render('tableSorter.phtml'); ?>
+        </div>
+    </div>
+<? elseif ($form->eventId): ?>
+    <div id="eventOverlay" class="overlay">
+        <div id="eventDialog" class="overlayContainer">
+            <?
+            $eventTable = ['id' => 'event', 'pager' => true, 'filter' => true];
+            $eventTable['header'] = [_('name'), _('class'), _('first'), _('last')];
+            foreach ($this->events as $event) {
+                if (!$event->rootId) {
+                    continue; // dont show root event
+                }
+                $eventTable['data'][] = [
+                    '<a onclick="selectFromTable(this, \'event\', ' . $event->id . ')">' . $event->name . '</a>',
+                    $event->getClass()->nameTranslated,
+                    $event->first,
+                    $event->last
+                ];
+            }
+            ?>
+            <? $this->table = $eventTable; ?>
+            <?= $this->render('tableSorter.phtml'); ?>
+        </div>
+    </div>
+<? endif ?>
+<script type="text/javascript">
+    $.validator.setDefaults({ignore: []});
+    $(document).ready(function () {
+        <? if ($form->actorIds): ?>
+            createOverlay("actor", "<?= $this->ucstring('actor') ?>", true);
+        <? elseif ($form->eventId): ?>
+            createOverlay("event", "<?= $this->ucstring('event') ?>");
+        <? endif ?>
+    });
+</script>

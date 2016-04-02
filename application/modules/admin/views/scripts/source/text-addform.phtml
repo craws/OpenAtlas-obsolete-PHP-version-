@@ -1,0 +1,26 @@
+<? $form = $this->form; ?>
+<?= $this->displayErrors($form); ?>
+<?= $form->renderForm(false); ?>
+<div>
+    <div class="tableRow">
+        <?= $form->name->renderLabel() ?>
+        <div class="tableCell"><?= $form->name->renderViewHelper() ?>
+        </div>
+    </div>
+    <div class="tableRow">
+        <?= $form->type->renderLabel() ?>
+        <div class="tableCell"><?= $form->type->renderViewHelper() ?>
+        </div>
+    </div>
+    <div style="margin-top:1em;margin-bottom:1em;">
+        <?= $form->description->renderLabel() ?>
+        <div><?= $form->description->renderViewHelper() ?></div>
+    </div>
+    <div style="margin-top:1em;margin-bottom:1em;">
+        <?= $form->formSubmit->renderViewHelper() ?>
+        <? if (Zend_Controller_Front::getInstance()->getRequest()->getActionName() == 'insert'): ?>
+            <?= $form->continue ?>
+        <? endif ?>
+    </div>
+</div>
+<?= '</form>' ?>

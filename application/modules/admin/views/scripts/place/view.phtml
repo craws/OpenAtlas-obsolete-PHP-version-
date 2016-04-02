@@ -1,0 +1,163 @@
+<? $object = $this->object; ?>
+<? $this->breadcrumb = [$this->link('place'), $object->name]; ?>
+<div id="tabs">
+    <ul>
+        <li><a href="#tabInfo"><?= $this->ucstring('info') ?></a></li>
+        <? if ($this->jsonData): ?>
+            <li><a href="#tabMap"><?= $this->ucstring('map') ?></a></li>
+        <? endif ?>
+        <li><a href="#tabEvents"><?= $this->ucstring('events') ?> (<?= count($this->events) ?>)</a></li>
+        <li><a href="#tabActor"><?= $this->ucstring('actors') ?> (<?= count($this->actorLinks) ?>)</a></li>
+        <li><a href="#tabSource"><?= $this->ucstring('sources') ?> (<?= count($this->sourceLinks) ?>)</a></li>
+        <li><a href="#tabReference"><?= $this->ucstring('references') ?> (<?= count($this->referenceLinks) ?>)</a></li>
+    </ul>
+    <? if ($this->jsonData): ?>
+        <div id="tabMap">
+            <div id="map" class="map" style="float: none;margin:0;width:70em;"></div>
+            <script type="text/javascript" src="/js/leaflet/map.js"></script>
+        </div>
+    <? endif ?>
+    <div id="tabInfo">
+        <div class="buttonBar">
+            <?= $this->link($object, 'update') ?>
+            <?= $this->link($object, 'delete') ?>
+            <?= $this->bookmarkToggle($object->id) ?>
+        </div>
+        <h1><?= $object->name ?></h1>
+        <?
+        if ($this->aliases) {
+            $aliasArray = [];
+            foreach ($this->aliases as $alias) {
+                $aliasArray[] = $alias->name;
+            }
+            $table['data'][_('alias')] = implode('<br/>', $aliasArray);
+        }
+        $table['data'][_('type')] = $this->link($this->site);
+        if ($this->administrative) {
+            $array = [];
+            foreach ($this->administrative as $element) {
+                $array[] = $this->link($element);
+            }
+            $table['data'][_('administrative unit')] = implode('<br/>', $array);
+        }
+        if ($this->historicals) {
+            $array = [];
+            foreach ($this->historicals as $element) {
+                $array[] = $this->link($element);
+            }
+            $table['data'][_('historical place')] = implode('<br/>', $array);
+        }
+        foreach (['OA1' => _('first'), 'OA2' => _('last')] as $key => $label) {
+            if (isset($this->dates[$key])) {
+                $dates = $this->dates[$key];
+                if (isset($dates['Exact date value'])) {
+                    $table['data'][$label] = $this->printDate($dates['Exact date value']->date) . ' ' .
+                        $dates['Exact date value']->description;
+                } else {
+                    $table['data'][$label] = $this->ucstring('between') . ' ' .
+                        $this->printDate($dates['From date value']->date) . ' ' . $this->translate('and') . ' ' .
+                        $this->printDate($dates['To date value']->date) . ' ' . $dates['From date value']->description;
+                }
+            }
+        }
+        if ($this->gis) {
+            $table['data'][_('easting')] = $this->gis->easting;
+            $table['data'][_('northing')] = $this->gis->northing;
+        }
+        $this->table = $this->tableLog($table, 'entity', $object->id);
+        ?>
+        <?= $this->render('tableDataItem.phtml'); ?>
+        <?= $this->description($object); ?>
+    </div>
+    <div id="tabEvents">
+        <?
+        $tableEvent = ['id' => 'event', 'pager' => true, 'filter' => true];
+        $tableEvent['header'] = [_('event'), _('class'), _('begin'), _('end')];
+        foreach ($this->events as $event) {
+            $dates = Model_DateMapper::getDateRange($event);
+            $tableEvent['data'][] = [
+                $this->link($event),
+                $event->getClass()->nameTranslated,
+                $dates['first'],
+                $dates['last']
+            ];
+        }
+        $this->table = $tableEvent;
+        ?>
+        <?= $this->render('tableSorter.phtml'); ?>
+    </div>
+    <div id="tabActor">
+        <?
+        $tableActor = ['id' => 'actor', 'pager' => true, 'filter' => true];
+        $tableActor['header'] = [_('actor'), _('property'), _('class'), _('begin'), _('end')];
+        foreach ($this->actorLinks as $link) {
+            $dates = Model_DateMapper::getDateRange($link->getDomain());
+            $tableActor['data'][] = [
+                $this->link($link->getDomain()),
+                $link->getProperty()->nameTranslated,
+                $link->getDomain()->getClass()->nameTranslated,
+                $dates['first'],
+                $dates['last']
+            ];
+        }
+        $this->table = $tableActor;
+        ?>
+        <?= $this->render('tableSorter.phtml'); ?>
+    </div>
+    <div id="tabSource">
+        <div class="buttonBar">
+            <a href="/admin/source/add/id/<?= $object->id ?>"><?= $this->ucstring('add') ?></a>
+            <?= $this->link('E33', 'insert', null, $object); ?>
+        </div>
+        <?
+        $tableSource = ['id' => 'source', 'pager' => true, 'filter' => true];
+        $tableSource['header'] = [_('source'), _('type'), ''];
+        foreach ($this->sourceLinks as $link) {
+            $source = $link->getDomain();
+            $text = $this->translate('documented_in') . ': ' . $source->name;
+            $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_delete', $text)) . "')\" ";
+            $deleteLink = '<div><a href="/admin/function/unlink/id/' . $link->id . '/entityId/' . $object->id . '/#tabSource' .
+                '" class="button"' . $confirm . '>' . $this->ucstring('remove') . '</a></div>';
+            $tableSource['data'][] = [
+                $this->link($source),
+                Model_NodeMapper::getNodeByEntity('type', 'Source', $source)->name,
+                $deleteLink
+            ];
+        }
+        ?>
+        <? $this->table = $tableSource; ?>
+        <?= $this->render('tableSorter.phtml'); ?>
+    </div>
+    <div id="tabReference">
+        <div class="buttonBar">
+            <a class="button" href="/admin/biblio/insert/id/<?= $object->id ?>"><?= $this->ucstring('add') ?></a>
+        </div>
+        <?
+        $tableBiblio = ['id' => 'reference', 'pager' => true, 'filter' => true];
+        $tableBiblio['header'] = [_('reference'), _('page'), 'class', 'type', '', ''];
+        foreach ($this->referenceLinks as $link) {
+            $reference = $link->getDomain();
+            $type = Model_LinkMapper::getLinkedEntity($reference, 'P2');
+            $text = $this->ucstring('referred_by') . ': ' . $reference->name;
+            $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_delete', $text)) . "')\" ";
+            $deleteLink = '<div><a href="/admin/function/unlink/id/' . $link->id . '/entityId/' . $object->id .
+                '/#tabReference' . '" class="button"' . $confirm . '>' . $this->ucstring('remove') . '</a></div>';
+            $tableBiblio['data'][] = [
+                $this->link($reference),
+                $link->description,
+                Model_NodeMapper::getById($type->rootId)->name,
+                $type->name,
+                '<a class="button" href="/admin/biblio/update/id/' . $link->id . '">' . $this->ucstring('edit') . '</a>',
+                $deleteLink
+            ];
+        }
+        ?>
+        <? $this->table = $tableBiblio; ?>
+        <?= $this->render('tableSorter.phtml'); ?>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $("#tabs").tabs();
+    });
+</script>

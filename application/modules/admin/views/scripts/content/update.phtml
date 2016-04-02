@@ -1,0 +1,4 @@
+<? $this->breadcrumb = [[$this->ucstring('content'), '/admin/content']]; ?>
+<? $this->breadcrumb[] = [$this->content->getText('title'), '/admin/content/view/id/' . $this->content->id]; ?>
+<? $this->breadcrumb[] = $this->ucstring('edit') ?>
+<?= $this->form ?>

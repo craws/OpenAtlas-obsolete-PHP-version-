@@ -1,0 +1,25 @@
+<?
+
+$this->breadcrumb = [$this->ucstring('reference')];
+$this->buttonBar = '<a href="/admin/reference/insert/type/bibliography">+ Bibliography</a>';
+$this->buttonBar .= '<a href="/admin/reference/insert/type/edition">+ Edition</a>';
+$this->buttonBar .= '<a href="/admin/carrier/insert">+ Information Carrier</a>';
+$table = ['id' => 'reference', 'pager' => true, 'filter' => true];
+$table['header'] = [_('name'), _('class'), _('type')];
+foreach ($this->references as $reference) {
+    $type = Model_LinkMapper::getLinkedEntity($reference, 'P2');
+    $className = $type->name;
+    $typeName = '';
+    if ($type->rootId) {
+        $className = Model_NodeMapper::getById($type->rootId)->name;
+        $typeName = $type->name;
+    }
+    $table['data'][] = [
+        $this->link($reference),
+        $className,
+        $typeName,
+    ];
+}
+?>
+<? $this->table = $table; ?>
+<?= $this->render('tableSorter.phtml') ?>

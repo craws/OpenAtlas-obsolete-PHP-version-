@@ -1,0 +1,48 @@
+<? $form = $this->form; ?>
+<?= $this->displayErrors($form); ?>
+<?= $form->renderForm(false); ?>
+<div>
+    <? if ($form->referenceId): ?>
+        <?= $this->displayTableSelect('reference', $form) ?>
+    <? endif ?>
+    <div class="tableRow">
+        <?= $form->page->renderLabel() ?>
+        <div class="tableCell"><?= $form->page->renderViewHelper() ?></div>
+    </div>
+    <div style="margin-top:1em;">
+        <?= $form->formSubmit->renderViewHelper() ?>
+    </div>
+</div>
+<?= '</form>' ?>
+<? if ($form->referenceId): ?>
+    <div id="referenceOverlay" class="overlay">
+        <div id='referenceDialog' class="overlayContainer">
+            <?
+            $table = ['id' => 'reference', 'pager' => true, 'filter' => true];
+            $table['header'] = [_('name'), _('class'), _('type')];
+            foreach ($this->references as $reference) {
+                $type = Model_LinkMapper::getLinkedEntity($reference, 'P2');
+                $className = $type->name;
+                $typeName = '';
+                if ($type->rootId) {
+                    $className = Model_NodeMapper::getById($type->rootId)->name;
+                    $typeName = $type->name;
+                }
+                $table['data'][] = [
+                    '<a onclick="selectFromTable(this, \'reference\', ' . $reference->id . ')">' . $reference->name . '</a>',
+                    $className,
+                    $typeName
+                ];
+            }
+            $this->table = $table;
+            ?>
+            <?= $this->render('tableSorter.phtml'); ?>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            createOverlay("reference", "<?= $this->ucstring('reference') ?>");
+        });
+    </script>
+<? endif ?>
+

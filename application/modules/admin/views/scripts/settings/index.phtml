@@ -1,0 +1,34 @@
+<? $this->buttonBar = '<a href="/admin/settings/update">' . $this->ucstring('edit') . '</a>'; ?>
+<? $this->breadcrumb = [$this->ucstring('settings')]; ?>
+<div class="dataTable">
+    <? foreach ($this->settings as $group => $data) { ?>
+        <div class="groupLabel"><?= $this->ucstring($group) ?></div>
+        <?
+        foreach ($data as $name => $value) {
+            $elementName = $group . "__" . $name;
+            $name = str_replace("_", " ", $this->ucstring($name));
+            if ($elementName == 'general__language') {
+                $language = Model_LanguageMapper::getById($value);
+                $value = $language->name;
+            } else if ($group == 'module' ||
+                in_array($elementName, ['general__maintenance', 'general__offline', 'mail__notify_login'])) {
+                $array = [
+                    0 => '<span class="inactive">' . $this->ucstring('off') . '</span>',
+                    1 => '<span class="active">' . $this->ucstring('on') . '</span>'
+                ];
+                $value = $array[$value];
+            } else if ($name == 'log_level') {
+                $array = [
+                    1 => 'emergency',
+                    2 => 'alert',
+                    3 => 'critical',
+                    4 => 'error', 5 => 'warn',
+                    6 => 'notice', 7 => 'debug'
+                ];
+                $value = '<span class="log ' . $array[$value] . '">' . $this->ucstring($array[$value]) . '</span>';
+            }
+            echo '<div><div>' . $name . '</div><div>' . $value . '</div></div>';
+        }
+    }
+    ?>
+</div>

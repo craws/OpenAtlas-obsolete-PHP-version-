@@ -1,0 +1,83 @@
+<? $type = $this->type; ?>
+<? $this->breadcrumb = [$this->link('hierarchy')]; ?>
+<? if ($type->superId): ?>
+    <? $this->breadcrumb[] = $this->link(Model_NodeMapper::getById($type->rootId)); ?>
+    <? $this->buttonBar = $this->link($type, 'update'); ?>
+    <? if (!$this->linksEntities && !$this->linksProperties && empty($type->subs)): ?>
+        <? $this->buttonBar .= $this->link($type, 'delete'); ?>
+    <? endif ?>
+<? endif ?>
+<? $this->breadcrumb[] = $type->name; ?>
+<div id="tabs">
+    <ul>
+        <li><a href="#tabInfo"><?= $this->ucstring('info') ?></a></li>
+        <? if ($type->subs): ?>
+            <li><a href="#tabSub"><?= $this->ucstring('subs') ?> (<?= count($type->subs) ?>)</a></li>
+        <? endif ?>
+        <? if ($this->linksEntities): ?>
+            <li><a href="#tabEntity"><?= $this->ucstring('entities') ?> (<?= count($this->linksEntities) ?>)</a></li>
+        <? endif ?>
+        <? if ($this->linksProperties): ?>
+            <li><a href="#tabProperty"><?= $this->ucstring('properties') ?> (<?= count($this->linksProperties) ?>)</a></li>
+        <? endif ?>
+    </ul>
+    <div id="tabInfo">
+        <h1><?= $type->name ?></h1>
+        <? $table = []; ?>
+        <? if ($type->superId): ?>
+            <? $table['data']['super'] = $this->link(Model_NodeMapper::getById($type->superId)); ?>
+        <? endif ?>
+        <? $this->table = $this->tableLog($table, 'entity', $type->id); ?>
+        <?= $this->render('tableDataItem.phtml'); ?>
+        <? $this->description($type); ?>
+    </div>
+    <? if ($type->subs): ?>
+        <div id="tabSub">
+            <? foreach ($type->subs as $sub): ?>
+                <p><?= $this->link($sub) ?></p>
+            <? endforeach ?>
+        </div>
+    <? endif ?>
+    <? if ($this->linksEntities): ?>
+        <div id="tabEntity">
+            <?
+            $table = ['id' => 'search', 'pager' => true, 'filter' => true];
+            $table['header'] = [_('name'), _('class'), _('begin'), _('end')];
+            foreach ($this->linksEntities as $entity) {
+                $dates = Model_DateMapper::getDateRange($entity);
+                $table['data'][] = [
+                    $this->link($entity),
+                    $this->link($entity->getClass()),
+                    $dates['first'],
+                    $dates['last']
+                ];
+            }
+            ?>
+            <? $this->table = $table; ?>
+            <?= $this->render('tableSorter.phtml'); ?>
+        </div>
+    <? endif ?>
+    <? if ($this->linksProperties): ?>
+        <div id="tabProperty">
+            <? foreach ($this->linksProperties as $link): ?>
+                <?
+                $table = ['id' => 'search', 'pager' => true, 'filter' => true];
+                $table['header'] = [_('domain'), _('range')];
+                foreach ($this->linksProperties as $link) {
+                    $table['data'][] = [
+                        $this->link($link->getDomain()->getDomain()),
+                        $this->link($link->getDomain()->getRange())
+                    ];
+                }
+                ?>
+            <? endforeach ?>
+            <? $this->table = $table; ?>
+            <?= $this->render('tableSorter.phtml'); ?>
+        </div>
+    <? endif ?>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $("#tabs").tabs();
+    });
+</script>

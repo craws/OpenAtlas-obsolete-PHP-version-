@@ -1,0 +1,9 @@
+<?
+
+$this->breadcrumb = [
+    $this->link('reference', null, 'reference'),
+    $this->link($this->reference),
+    $this->ucstring('edit')
+];
+?>
+<?= $this->render('reference/form.phtml'); ?>

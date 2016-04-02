@@ -1,0 +1,35 @@
+<?
+$this->breadcrumb = [$this->ucstring('profile')];
+$this->buttonBar = '
+    <a href="/admin/profile/update">' . $this->ucstring('edit') . '</a>
+    <a href="/admin/profile/password">' . $this->ucstring('change_password') . '</a>';
+?>
+<div style="float:left;">
+    <h1><?= $this->ucstring('information') ?></h1>
+    <?
+    $table['data'] = [
+        'username' => $this->user->username,
+        'name' => $this->user->realName,
+        'email' => $this->user->email
+    ];
+    $table['data']['show_email'] = $this->ucstring('no');
+    if ($this->user->getSetting('show_email')) {
+        $table['data']['show_email'] = $this->ucstring('yes');
+    }
+    $table['data']['newsletter'] = $this->ucstring('no');
+    if ($this->user->getSetting('newsletter')) {
+        $table['data']['newsletter'] = $this->ucstring('yes');
+    }
+    $this->table = $table;
+    ?>
+    <?= $this->render('tableDataItem.phtml'); ?>
+</div>
+<div style="float:left;padding-left:2em;">
+    <h1><?= $this->ucstring('display') ?></h1>
+    <?= $this->form->setAction($this->url());?>
+</div>
+<script type="text/javascript">
+    $('#displayForm').change(function () {
+        $('#displayForm').submit();
+    });
+</script>

@@ -1,0 +1,7 @@
+<? $log = $this->log ?>
+<? $this->breadcrumb = [$this->link('log'), $log->created]; ?>
+<? $this->buttonBar = '<a href="/admin/log/delete/id/' . $log->id . '">' . $this->ucstring('delete') . '</a>'; ?>
+<? $table['data'] = $this->data; ?>
+<? $this->table = $table; ?>
+<?= $this->render('tableDataItem.phtml'); ?>
+<p style="padding-top:1em;"><?= nl2br($log->message) ?></p>

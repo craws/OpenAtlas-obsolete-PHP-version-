@@ -1,0 +1,88 @@
+@charset "UTF-8";
+
+div.ok {
+    width: 24px;
+    height: 24px;
+    background-image: url('/images/icons/dialog-apply.png');
+}
+
+div.no {
+    width: 24px;
+    height: 24px;
+    background-image: url('/images/icons/dialog-no-2.png');
+}
+
+#adminLogo {
+    float: left;
+    width: 370px;
+    padding-bottom: 1em;
+    background-image: url('/images/layout/logo.png');
+    background-repeat: no-repeat;
+}
+
+#adminLogo a {
+    display: block;
+    height: 100px;
+}
+
+table.tablesorter thead tr .tablesorter-header {
+    background-image: url("/images/icons/arrow_updown.png");
+    background-position: right 0.4em top 0.4em;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+
+table.tablesorter thead tr .tablesorter-header:hover {
+    background-image: url("/images/icons/arrow_updown_hover.png");
+}
+
+table.tablesorter thead tr .tablesorter-headerDesc {
+    background-image: url("/images/icons/arrow_down.png");
+}
+
+table.tablesorter thead tr .tablesorter-headerDesc:hover {
+    background-image: url("/images/icons/arrow_down_hover.png");
+}
+
+table.tablesorter thead tr .tablesorter-headerAsc {
+    background-image: url("/images/icons/arrow_up.png");
+}
+
+table.tablesorter thead tr .tablesorter-headerAsc:hover {
+    background-image: url("/images/icons/arrow_up_hover.png");
+}
+
+table.tablesorter thead tr .sorter-false, table.tablesorter thead tr .sorter-false:hover {
+    background-image: none;
+}
+
+div.pager div.navigation {
+    background-repeat: no-repeat;
+    width: 20px;
+    height: 21px;
+}
+
+div.pager div.first {
+    background-image: url("/images/icons/first.png");
+}
+div.pager div.first:hover {
+    background-image: url("/images/icons/first_hover.png");
+}
+div.pager div.prev {
+    background-image: url("/images/icons/prev.png");
+}
+div.pager div.prev:hover {
+    background-image: url("/images/icons/prev_hover.png");
+}
+div.pager div.next {
+    background-image: url("/images/icons/next.png");
+}
+div.pager div.next:hover {
+    background-image: url("/images/icons/next_hover.png");
+}
+div.pager div.last {
+    background-image: url("/images/icons/last.png");
+}
+div.pager div.last:hover {
+    background-image: url("/images/icons/last_hover.png");
+}

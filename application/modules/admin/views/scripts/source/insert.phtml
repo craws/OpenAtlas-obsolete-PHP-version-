@@ -1,0 +1,10 @@
+<? $this->breadcrumb = [$this->link('source')]; ?>
+<? if ($this->event): ?>
+    <? $this->breadcrumb = [$this->link('event'), $this->link($this->event)]; ?>
+<? elseif ($this->actor): ?>
+    <? $this->breadcrumb = [$this->link('actor'), $this->link($this->actor)]; ?>
+<? elseif ($this->object): ?>
+    <? $this->breadcrumb = [$this->link('place'), $this->link($this->object)]; ?>
+<? endif ?>
+<? $this->breadcrumb[] = '+ ' . $this->ucstring('source') ?>
+<?= $this->render('source/form.phtml'); ?>

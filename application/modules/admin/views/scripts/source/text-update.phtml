@@ -1,0 +1,3 @@
+<? $this->breadcrumb = [$this->link('source'), $this->link($this->source), $this->text->name]; ?>
+<? $this->breadcrumb[] = $this->ucstring('edit') ?>
+<?= $this->render('source/text-addform.phtml'); ?>

@@ -1,0 +1,6 @@
+<body>
+    <?= $this->translate('mail_new_password_for') ?> <?= $this->mailUsername ?> <?= $this->translate('at') ?>
+    <a href="<?= $this->mailUrl ?>"><?= $this->mailUrl ?></a><br><br>
+    <?= $this->ucstring("username") ?>: <?= $this->mailUsername ?><br>
+    <?= $this->ucstring("password") ?>: <?= $this->mailPassword ?>
+</body>

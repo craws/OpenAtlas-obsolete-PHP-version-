@@ -1,0 +1,3 @@
+<? $this->breadcrumb = [$this->link('actor'), $this->link($this->actor), '+ ' . $this->ucstring('member_of')]; ?>
+<? if (!$this->actors): ?><p><?= $this->ucstring('no_entries'); ?></p><? return ?><? endif ?>
+<?= $this->render('member/form.phtml'); ?>

@@ -1,0 +1,17 @@
+<? $this->breadcrumb = [$this->link('event'), $this->link($this->event), '+ ' . $this->ucstring('actor')]; ?>
+<? if ($this->event && $this->actor): ?>
+    <? if ($this->origin == 'event'): ?>
+        <? $this->breadcrumb = [$this->link('event'), $this->link($this->event), '+ ' . $this->actor->name]; ?>
+    <? else: ?>
+        <? $this->breadcrumb = [$this->link('actor'), $this->link($this->actor), '+ ' . $this->event->name]; ?>
+    <? endif ?>
+<? elseif ($this->actor): ?>
+    <? $this->breadcrumb = [$this->link('actor'), $this->link($this->actor), '+ ' . $this->ucstring('event')]; ?>
+<? elseif ($this->event): ?>
+    <? $this->breadcrumb = [$this->link('event'), $this->link($this->event), '+ ' . $this->ucstring('actor')]; ?>
+<? endif ?>
+<? if ((!$this->actor && !$this->actors) || (!$this->event && !$this->events)): ?>
+    <p><?= $this->ucstring('no_entries'); ?></p>
+    <? return ?>
+<? endif ?>
+<?= $this->render('involvement/form.phtml'); ?>

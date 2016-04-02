@@ -1,0 +1,5 @@
+<? $this->breadcrumb = [$this->link('actor'), $this->link($this->actor), $this->link($this->event), $this->ucstring('edit')]; ?>
+<? if ($this->origin == 'event'): ?>
+    <? $this->breadcrumb = [$this->link('event'), $this->link($this->event), $this->link($this->actor), $this->ucstring('edit')]; ?>
+<? endif ?>
+<?= $this->render('involvement/form.phtml'); ?>

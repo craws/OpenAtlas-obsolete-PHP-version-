@@ -1,0 +1,160 @@
+<?= $this->doctype() ?>
+<? $version = Zend_Registry::get('config')->get('version') ?>
+<? $user = Zend_Registry::get('user'); ?>
+<? $theme = $user->getSetting('theme'); ?>
+<? $templatePath = APPLICATION_PATH . '/../public/themes/admin/' . $theme; ?>
+<? $validateMessageFile = "/js/jquery/validation/messages_" . Zend_Registry::get('Zend_Locale') . ".js"; ?>
+<? $controller = Zend_Controller_Front::getInstance()->getRequest()->getControllerName(); ?>
+<? $menu = [_('overview'), _('source'), _('event'), _('actor'), _('place'), _('reference'), _('hierarchy'), _('user'),
+    ('log'), _('content'), _('settings'), _('faq')]; ?>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <?= $this->headTitle('Admin') ?>
+        <link rel="stylesheet" href="/css/reset.css?v=<?= $version ?>" />
+        <link rel="stylesheet" href="/js/jquery/ui/jquery.smoothness.ui.min.css" />
+        <link rel="stylesheet" href="/js/jquery/jstree/themes/default/style.min.css" />
+        <script type="text/javascript" src="/js/jquery/jquery.min.js"></script>
+        <script type="text/javascript" src="/js/jquery/tablesorter/tablesorter.min.js"></script>
+        <script type="text/javascript" src="/js/jquery/tablesorter/tablesorter.widgets.js"></script>
+        <script type="text/javascript" src="/js/jquery/tablesorter/tablesorter.pager.js"></script>
+        <script type="text/javascript" src="/js/jquery/ui/ui.min.js"></script>
+        <script type="text/javascript" src="/js/jquery/jstree/jstree.min.js"></script>
+        <script type="text/javascript" src="/js/jquery/jstree/jstree.search.js"></script>
+        <script type="text/javascript" src="/js/jquery/validation/validate.min.js"></script>
+        <script type="text/javascript" src="/js/jquery/validation/adminForms.js"></script>
+        <? if (file_exists(APPLICATION_PATH . "/../public/" . $validateMessageFile)): ?>
+            <script src="<?= $validateMessageFile ?>"></script>
+        <? endif ?>
+        <script type="text/javascript" src="/js/functions.js"></script>
+        <? if ($this->jsonData): ?>
+            <script type="text/javascript">
+                var jsonMarker = [<?= $this->jsonData['marker'] ?>];
+                var jsonSearch = [<?= $this->jsonData['search'] ?>];
+            </script>
+            <script type="text/javascript" src="/js/leaflet/mapbox.js"></script>
+            <script type="text/javascript" src="/js/leaflet/easy-button.js"></script>
+            <script type="text/javascript" src="/js/leaflet/L.Control.Geonames.js"></script>
+            <script type="text/javascript" src="/js/leaflet/L.Control.sitesearch.js"></script>
+            <script type="text/javascript" src="/js/leaflet/leaflet.usermarker.js"></script>
+            <script type="text/javascript" src="/js/leaflet/leaflet.fullscreen-master/Control.FullScreen.js"></script>
+            <link rel="stylesheet" href="/js/leaflet/leaflet.fullscreen-master/Control.FullScreen.css" />
+            <link rel="stylesheet" href="/js/leaflet/leaflet.css" />
+            <link rel="stylesheet" href="/js/leaflet/font-awesome/css/font-awesome.min.css" />
+            <link rel="stylesheet" href="/js/leaflet/L.Control.Geonames.css" />
+            <link rel="stylesheet" href="/js/leaflet/L.Control.sitesearch.css" />
+            <link rel="stylesheet" href="/js/leaflet/leaflet.usermarker.css" />
+        <? endif ?>
+        <script type="text/javascript" src="/js/tinymce/tinymce.min.js"></script>
+        <script type="text/javascript">
+            tinymce.init({
+                mode: "specific_textareas",
+                editor_selector: "tinymce",
+                plugins: "link code textcolor colorpicker",
+                resize: "both",
+                toolbar: "bold italic underline strikethrough alignleft aligncenter alignright" +
+                    " alignjustify undo redo link unlink fontselect fontsizeselect forecolor code",
+                menubar: false,
+                toolbar_items_size : 'small',
+                relative_urls : false
+             });
+        </script>
+        <? foreach (['admin_style.css', 'admin_color.css', 'admin_images.css'] as $css): ?>
+            <link rel="stylesheet" href="/css/<?= $css ?>?v=<?= $version ?>" />
+            <? if ($theme && file_exists($templatePath . '/css/' . $css)): ?>
+                <link rel="stylesheet" href="/themes/admin/<?= $theme ?>/css/<?= $css ?>?v=<?= $version ?>" />
+            <? endif ?>
+        <? endforeach ?>
+        <? if ($user->group == 'readonly'): ?>
+            <style type="text/css">.buttonBar, table td.value a.button, .button.add  { display: none; }</style>
+        <? endif ?>
+    </head>
+    <body>
+        <div id="adminHead">
+            <div id="adminLogo"><a href="/admin"></a></div>
+            <div id="websiteName">
+                <?= Model_SettingsMapper::getSetting('general', 'sitename') ?>
+                <? if (strpos(filter_input(INPUT_SERVER, 'HTTP_HOST'), 'local') !== false): ?>
+                    <span class="info">local</span>
+                <? endif ?>
+                <? if (Model_SettingsMapper::getSetting("general", "offline") &&
+                    in_array($user->group, ['admin', 'editor'])): ?>
+                    <span class="error">Offline</span>
+                <? endif ?>
+                <? if (Model_SettingsMapper::getSetting("general", "maintenance") && $user->group == 'admin'): ?>
+                    <span class="error">Maintenance</span>
+                <? endif ?>
+                <br/>
+                <? foreach ($this->messenger() as $message): ?>
+                    <br/><div class='message <?= $message['type'] ?>'><?= $this->translate($message['message']) ?></div>
+                <? endforeach ?>
+            </div>
+            <div id="adminUser">
+                <? if ($user->active): ?>
+                    <div id="greeting">
+                        <?= $this->ucstring('hello') ?> <?= $user->username ?>
+                    </div>
+                    <div>
+                        <a href="/admin/profile"><?= $this->ucstring('profile') ?></a> |
+                        <a href="/admin/index/logout"><?= $this->ucstring('logout') ?></a>
+                    </div>
+                    <div id="changelog">
+                        <a href="/admin/overview/changelog"><?= $this->ucstring('version') ?> <?= $version ?></a>
+                    </div>
+                <? endif ?>
+                <div id="languageMenu">
+                    <div style="margin-right:5.6em;float:left;">
+                        <img class="zoom" src="/images/icons/zoom-in.png" onclick="resizeText(1)"
+                             alt="<?= $this->ucstring('zoom_in') ?>" title="<?= $this->ucstring('zoom_in') ?>"/><img
+                             class="zoom" src="/images/icons/zoom-out.png" onclick="resizeText(-1)"
+                             alt="<?= $this->ucstring('zoom_out') ?>" title="<?= $this->ucstring('zoom_out') ?>"/>
+                    </div>
+                    <?= $this->languageMenu() ?>
+                    <div class="languageSeparator">|</div>
+                    <a href="/" onclick='window.open(this.href); return false;'><?= $this->ucstring('frontend') ?></a>
+                </div>
+            </div>
+        </div>
+        <div style="clear:both;"></div>
+        <div id="adminMenu">
+            <? if ($user->active): ?>
+                <? $acl = new \Craws\Acl(); ?>
+                <? foreach ($menu as $item): ?>
+                    <? if ($acl->isAllowed($user->group, 'admin' . ":" . $item . ':' . 'index')): ?>
+                        <? $menuHighlight = (isset($this->menuHighlight))? $this->menuHighlight : $controller; ?>
+                        <div <?= ($item == $menuHighlight) ? 'class="selected"' : '' ?>>
+                            <a href="/admin/<?= $item ?>"><?= $this->ucstring($item) ?></a>
+                        </div>
+                    <? endif ?>
+                <? endforeach ?>
+                <div id="indexSearch">
+                    <form action="/admin/search" method="post" style="float:right;">
+                        <input name="term" type="text" placeholder="<?= $this->ucstring('search_term') ?>" />
+                        <button type="submit"><?= $this->ucstring('search') ?></button>
+                    </form>
+                </div>
+            <? endif ?>
+        </div>
+        <? if (isset($this->breadcrumb)) : ?>
+            <div id="breadcrumb">
+                <? $breadcrumb = []; ?>
+                <? foreach ($this->breadcrumb as $crumb): ?>
+                    <? if (is_array($crumb)): ?>
+                        <? $breadcrumb[] = '<div><a href="' . $crumb[1] . '">' . $crumb[0] . '</a></div>'; ?>
+                    <? else: ?>
+                        <? $breadcrumb[] = '<div><span>' . $crumb . '</span></div>'; ?>
+                    <? endif ?>
+                <? endforeach ?>
+                <?= implode(' <div class="separator">></div> ', $breadcrumb) ?>
+            </div>
+        <? endif ?>
+        <div id="content">
+            <noscript><div id="noscript-warning" class="error"><?= $this->translate("warning_no_js") ?></div></noscript>
+            <? if (isset($this->buttonBar) && ($user->group != 'readonly' || $controller == 'profile')): ?>
+                <div id="buttonBar"><?= $this->buttonBar ?></div>
+            <? endif ?>
+            <div id="formError"></div>
+            <?= $this->layout()->content ?>
+        </div>
+    </body>
+</html>

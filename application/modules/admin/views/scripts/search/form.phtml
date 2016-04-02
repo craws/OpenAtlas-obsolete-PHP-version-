@@ -1,0 +1,39 @@
+<? $form = $this->form; ?>
+<?= $form->renderForm(false); ?>
+    <?= $form->term->renderViewHelper() ?>
+    <?= $form->formSubmit->renderViewHelper() ?><br/>
+    <a style="text-decoration: underline">
+        <span id="optionSwitcher">
+            <? if (isset($this->optionToggle) && $this->optionToggle): ?>
+                <?= $this->ucstring('hide_filter') ?>
+            <? else: ?>
+                <?= $this->ucstring('show_filter') ?>
+            <? endif ?>
+        </span>
+    </a>
+    <div id="searchOptions" class="display-none">
+        <?= $form->optionToggle->renderViewHelper() ?>
+        <?= $form->searchOwn->renderViewHelper() ?><?= $this->ucstring('search_own') ?><br/>
+        <?= $form->searchDescription->renderViewHelper() ?><?= $this->ucstring('search_description') ?><br/><br/>
+        <span style="font-weight:bold;"><?= $this->ucstring('classes') ?></span><br/>
+        <?= $form->class->renderViewHelper() ?><br/>
+    </div>
+<?= '</form>' ?>
+<script type="text/javascript">
+    $(document).ready(function () {
+        <? if (isset($this->optionToggle) && $this->optionToggle): ?>
+            $("#searchOptions").removeClass('display-none');
+            $("#optionToggle").val(1);
+        <? endif ?>
+        $("#optionSwitcher").click(function () {
+            if ($("#optionToggle").val() != 0) {
+                $("#optionToggle").val(0);
+                $("#optionSwitcher").html("<?= $this->ucstring('show_filter') ?>");
+            } else {
+                $("#optionToggle").val(1);
+                $("#optionSwitcher").html("<?= $this->ucstring('hide_filter') ?>");
+            }
+            $("#searchOptions").toggleClass('display-none');
+        });
+    });
+</script>

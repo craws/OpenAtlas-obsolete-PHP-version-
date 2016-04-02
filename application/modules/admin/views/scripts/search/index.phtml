@@ -1,0 +1,18 @@
+<? $this->breadcrumb = [$this->ucstring('search')]; ?>
+<?= $this->render('search/form.phtml'); ?>
+<div style="clear:both;margin-bottom:1em;"></div>
+<? if (!$this->entities): ?><?= $this->ucstring('no_search_results'); ?><? return ?><? endif ?>
+<?
+$table = ['id' => 'search', 'pager' => true, 'filter' => true];
+$table['header'] = [_('name'), _('class'), _('begin'), _('end')];
+foreach ($this->entities as $entity) {
+    $table['data'][] = [
+        $this->link($entity),
+        $this->link($entity->getClass()),
+        $entity->first,
+        $entity->last
+    ];
+}
+?>
+<? $this->table = $table; ?>
+<?= $this->render('tableSorter.phtml'); ?>

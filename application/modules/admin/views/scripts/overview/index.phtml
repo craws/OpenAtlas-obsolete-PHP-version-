@@ -1,0 +1,77 @@
+<? $this->breadcrumb = [$this->ucstring('overview')]; ?>
+<? $namespace = new Zend_Session_Namespace('Default'); ?>
+<div style="float:left;margin-top:-10px;padding-right:2em;">
+    <?
+    $table = ['id' => 'overview'];
+    $table['header'] = ['', ''];
+    foreach ($this->count as $controller => $count) {
+        $table['data'][] = [$this->link($controller), $count];
+    }
+    $this->table = $table;
+    ?>
+    <?= $this->render('tableSorter.phtml'); ?>
+</div>
+<div style="float:left;">
+    <? if (!$namespace->lastLogin): ?>
+        <p style="margin-top:1em;"><?= $this->translate('first_login') ?></p>
+    <? endif ?>
+    <p style="margin-top:1em;">
+        <a href="/admin/overview/model"><?= $this->ucstring('model') ?></a> -
+        <a href="/admin/overview/changelog">Changelog</a> -
+        <a href="/admin/overview/credits"><?= $this->ucstring('credits') ?></a> -
+        <a href="https://github.com/craws/OpenAtlas" onclick="window.open(this.href); return false;">GitHub</a>
+    </p>
+    <p><?= $this->translate('feedback_teaser') ?>
+        <a href="/admin/overview/feedback"><?= $this->ucstring('feedback') ?></a>
+    </p>
+    <? if ($namespace->lastLogin): ?>
+        <p style="font-size:0.9em;">
+            <?= $this->ucstring('last_login') ?> <?= $namespace->lastLogin->setLocale(Zend_Registry::get('Zend_Locale')) ?>
+        </p>
+        <? if ($namespace->failedLoginCount > 0): ?>
+            <p><?= $this->ucstring('failed_logins_since_last_login') ?>: <?= $namespace->failedLoginCount ?></p>
+        <? endif ?>
+    <? endif ?>
+</div>
+<div style="clear:both;"></div>
+<? if ($this->latestEntries): ?>
+    <h1 style="padding-top:1em;"><?= $this->ucstring('latest_entries') ?></h1>
+    <?
+    $table = ['id' => 'search'];
+    $table['header'] = [ _('name'), _('class'), _('begin'), _('end'), _('user'), _('date')];
+    foreach ($this->latestEntries as $entity) {
+        $log = Model_UserLogMapper::getLogForView('entity', $entity->id);
+        if (!$log['created']) {
+            $log['created'] = '';
+        }
+        $table['data'][] = [
+            $this->link($entity),
+            $this->link($entity->getClass()),
+            $entity->first,
+            $entity->last,
+            $log['creator_name'],
+            $log['created']
+        ];
+    }
+    ?>
+    <? $this->table = $table; ?>
+    <?= $this->render('tableSorter.phtml'); ?>
+<? endif ?>
+<? if ($this->bookmarks): ?>
+    <h1 style="padding-top:1em;"><?= $this->ucstring('bookmarks') ?></h1>
+    <?
+    $table = ['id' => 'bookmark'];
+    $table['header'] = [ _('name'), _('class'), _('begin'), _('end'), ''];
+    foreach ($this->bookmarks as $entity) {
+        $table['data'][] = [
+            $this->link($entity),
+            $this->link($entity->getClass()),
+            $entity->first,
+            $entity->last,
+            $this->bookmarkToggle($entity->id)
+        ];
+    }
+    ?>
+    <? $this->table = $table; ?>
+    <?= $this->render('tableSorter.phtml'); ?>
+<? endif ?>

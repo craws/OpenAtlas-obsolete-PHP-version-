@@ -1,0 +1,65 @@
+<? $this->breadcrumb = [$this->ucstring('hierarchy')]; ?>
+<? $tabUl = ''; ?>
+<? $tabDiv = ''; ?>
+<? foreach ($this->types as $id => $type): ?>
+    <? $tabUl .= '<li><a href="#tab' . $type->id . '">' . $type->name . '</a></li>' ?>
+    <? $tabDiv .= '<div id="tab' . $type->id . '"><p><a id="add' . $type->id . '" class="button add" onclick="addForm('; ?>
+    <? $tabDiv .= $type->id . ', ' . (int) $type->directed . ');">+</a></p><div id="form' . $type->id . '"></div>'; ?>
+    <? if ($type->subs): ?>
+        <? global $printRecursiveTypes; ?>
+        <? $printRecursiveTypes = ''; ?>
+        <? $tabDiv .= recursiveTypes($type); ?>
+    <? endif ?>
+    <? $tabDiv .= '</div>'; ?>
+<? endforeach ?>
+<div id="tabs">
+    <ul><?= $tabUl ?></ul>
+    <?= $tabDiv ?>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $("#tabs").tabs().addClass("ui-tabs-vertical");
+    });
+    function validateName() {
+        if ($.trim($("#name").val()).length > 0) {
+            return true;
+        }
+        alert("<?= $this->ucstring('error_name_empty') ?>");
+        return false;
+    }
+    function addForm(superId, directed) {
+        $(".insertTypeForm").remove();
+        form = '<form onsubmit="return validateName();" class="insertTypeForm" id="insertTypeForm" method="post" action="/admin/hierarchy/insert/superId/' + superId + '">';
+        form += '<input type="text" name="name" id="name" class="required" placeholder="<?= $this->ucstring('name') ?>">';
+        if (directed === 1) {
+            form += '<input type="text" name="inverse" placeholder="<?= $this->ucstring('inverse') ?>">';
+        }
+        form += '<input type="submit" class="submit" value="<?= $this->ucstring('add') ?>"></form>';
+        $('#form' + superId).append(form);
+    }
+</script>
+<?
+
+function recursiveTypes($type, $level = 0) {
+    global $printRecursiveTypes;
+    foreach ($type->subs as $subType) {
+        if ($subType->subs) {
+            $printRecursiveTypes .= printType($subType, $level);
+            recursiveTypes($subType, $level + 1);
+        } else {
+            $printRecursiveTypes .= printType($subType, $level);
+        }
+    }
+    return $printRecursiveTypes;
+}
+
+function printType($type, $level) {
+    $directed = 0;
+    if ($type->directed) {
+        $directed = 1;
+    }
+    $html = '<a style="margin-left:' . $level . 'em;" href="/admin/hierarchy/view/id/' . $type->id . '">' . $type->name . '</a> ';
+    $html .= '<a class="button add" id="add' . $type->id . '" onclick="addForm(' . $type->id . ', ' . $directed . ');">+</a> ';
+    $html .= '<div style="margin-top:0.4em;margin-bottom:0.4em;margin-left:' . $level . 'em;" id="form' . $type->id . '"></div>';
+    return $html;
+}

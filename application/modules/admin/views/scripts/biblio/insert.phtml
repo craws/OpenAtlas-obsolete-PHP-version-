@@ -1,0 +1,6 @@
+<? $this->breadcrumb = [$this->link($this->controller), $this->link($this->entity), '+ ' . $this->ucstring('reference')]; ?>
+<? if (!$this->references): ?>
+    <p><?= $this->ucstring('no_entries'); ?></p>
+    <? return ?>
+<? endif ?>
+<?= $this->render('biblio/form.phtml'); ?>

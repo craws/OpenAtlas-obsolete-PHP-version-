@@ -1,0 +1,15 @@
+<VirtualHost *:80>
+        ServerName      CHANGEME
+        ServerAdmin     office@craws.net
+        SetEnv          APPLICATION_ENV production
+        DocumentRoot    /var/www/CHANGEME/public
+        <Directory      /var/www/CHANGEME/public>
+                AllowOverride None
+                RewriteEngine On
+                RewriteCond %{REQUEST_FILENAME} !-f
+                RewriteCond %{REQUEST_FILENAME} !-d
+                RewriteRule !\.(js|ico|gif|jpg|png|css)$ /index.php
+        </Directory>
+        ErrorLog        /var/log/apache2/CHANGEME/error.log
+        CustomLog       /var/log/apache2/CHANGEME/access.log combined
+</VirtualHost>

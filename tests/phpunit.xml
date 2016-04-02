@@ -1,0 +1,24 @@
+<phpunit
+    bootstrap="./application/bootstrap.php"
+    colors="true"
+    convertErrorsToExceptions="true"
+    convertNoticesToExceptions="true"
+    convertWarningsToExceptions="true"
+    strict="true"
+>
+    <testsuite name="Test Suite">
+        <directory>./</directory>
+    </testsuite>
+    <filter>
+        <whitelist>
+            <directory suffix=".php">../application/</directory>
+            <directory suffix=".php">../library/</directory>
+            <!-- directory suffix=".phtml">../application/</directory -->
+        </whitelist>
+    </filter>
+    <logging>
+        <log type="coverage-html" target="./log/report" charset="UTF-8" yui="true" highlight="true"
+         lowUpperBound="80" highLowerBound="95"/>
+        <log type="testdox-html" target="./log/testdox.html"/>
+    </logging>
+</phpunit>

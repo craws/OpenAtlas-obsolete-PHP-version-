@@ -1,0 +1,24 @@
+<?
+
+$this->breadcrumb = [$this->ucstring('content')];
+$table = ['id' => 'content'];
+$table['header'] = [_('title')];
+foreach (Model_LanguageMapper::getAll() as $language) {
+    $table['header'][] = $language->shortform;
+}
+$table['header'][] = _('text');
+foreach ($this->contents as $content) {
+    $array = ['<a href="/admin/content/view/id/' . $content->id . '">' . $content->getText('title') . '</a>'];
+    foreach (Model_LanguageMapper::getAll() as $language) {
+        $ok = '';
+        if ($content->getText('text', $language->shortform)) {
+            $ok = '<div class="ok"><span>*</span></div>';
+        }
+        $array[] = $ok;
+    }
+    $array[] = $content->getText('text');
+    $table['data'][] = $array;
+}
+?>
+<? $this->table = $table; ?>
+<?= $this->render('tableSorter.phtml') ?>

@@ -1,0 +1,20 @@
+<?
+
+$this->breadcrumb = [$this->ucstring('actor')];
+$this->buttonBar = '';
+foreach (Zend_Registry::get('config')->get('codeActor')->toArray() as $code) {
+    $this->buttonBar .= $this->link($code, 'insert');
+}
+$table = ['id' => 'actor', 'pager' => true, 'filter' => true];
+$table['header'] = [_('name'), _('class'), _('first'), _('last')];
+foreach ($this->actors as $actor) {
+    $table['data'][] = [
+        $this->link($actor),
+        $actor->getClass()->nameTranslated,
+        $actor->first,
+        $actor->last
+    ];
+}
+?>
+<? $this->table = $table; ?>
+<?= $this->render('tableSorter.phtml') ?>

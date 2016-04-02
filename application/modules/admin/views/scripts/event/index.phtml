@@ -1,0 +1,19 @@
+<? $this->breadcrumb = [$this->ucstring('event')]; ?>
+<? $this->buttonBar = ''; ?>
+<? foreach (Zend_Registry::get('config')->get('codeEvent')->toArray() as $code): ?>
+    <? $this->buttonBar .= $this->link($code, 'insert'); ?>
+<? endforeach ?>
+<?
+$table = ['id' => 'event', 'pager' => true, 'filter' => true];
+$table['header'] = [_('name'), _('class'), _('first'), _('last')];
+foreach ($this->events as $event) {
+    $table['data'][] = [
+        $this->link($event),
+        $event->getClass()->nameTranslated,
+        $event->first,
+        $event->last
+    ];
+}
+$this->table = $table;
+?>
+<?= $this->render('tableSorter.phtml') ?>

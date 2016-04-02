@@ -1,0 +1,9 @@
+<? $this->breadcrumb = [$this->link('event')]; ?>
+<? if ($this->source): ?>
+    <? $this->breadcrumb = [$this->link('source'), $this->link($this->source)]; ?>
+<? elseif ($this->actor): ?>
+    <? $this->breadcrumb = [$this->link('actor'), $this->link($this->actor)]; ?>
+<? endif ?>
+<? $this->breadcrumb[] = '+ ' . $this->class->nameTranslated ?>
+<?= $this->render('event/form.phtml'); ?>
+

@@ -1,0 +1,6 @@
+<? $this->breadcrumb = [$this->link('place')]; ?>
+<? if ($this->source): ?>
+    <? $this->breadcrumb = [$this->link('source'), $this->link($this->source)]; ?>
+<? endif ?>
+<? $this->breadcrumb[] = '+ ' . $this->ucstring('place') ?>
+<?= $this->render('place/form.phtml'); ?>

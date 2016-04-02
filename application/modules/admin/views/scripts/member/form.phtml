@@ -1,0 +1,55 @@
+<? $form = $this->form; ?>
+<?= $this->displayErrors($form); ?>
+<?= $form->renderForm(false); ?>
+<div>
+    <? if ($form->relatedActorIds): ?>
+        <?= $this->displayTableSelectMulti('relatedActor', $form, 'actor', true) ?>
+    <? endif ?>
+    <?= $this->displayTreeSelect('type', $form) ?>
+    <?= $this->render('dateForm.phtml'); ?>
+    <div style="margin-top:1em;">
+        <?= $form->description->renderLabel() ?>
+        <div><?= $form->description->renderViewHelper() ?></div>
+    </div>
+    <div style="margin-top:1em;">
+        <?= $form->formSubmit->renderViewHelper() ?>
+        <? if (in_array(Zend_Controller_Front::getInstance()->getRequest()->getActionName(), ['insert', 'member'])): ?>
+            <?= $form->continue ?>
+            <?= $form->continueButton->renderViewHelper() ?>
+        <? endif ?>
+    </div>
+</div>
+<?= '</form>' ?>
+<?= $this->displayTreeOverlay('type', $this->typeTreeData) ?>
+<? if ($form->relatedActorIds): ?>
+    <div id="relatedActorOverlay" class="overlay">
+        <div id="relatedActorDialog" class="overlayContainer">
+            <?
+            $actorTable = ['id' => 'relatedActor', 'pager' => true, 'filter' => true];
+            $actorTable['header'] = [_('name'), _('class'), _('first'), _('last'), ''];
+            foreach ($this->actors as $actor) {
+                if ($this->actor->id == $actor->id) {
+                    continue;
+                }
+                $actorTable['data'][] = [
+                    $actor->name,
+                    $actor->getClass()->nameTranslated,
+                    $actor->first,
+                    $actor->last,
+                    '<input class="multiTableSelect" type="checkbox" id="' . $actor->id . '" value="' .
+                        str_replace('"', '', $actor->name) . '"/>'
+                ];
+            }
+            $this->table = $actorTable;
+            ?>
+            <?= $this->render('tableSorter.phtml'); ?>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $.validator.setDefaults({ignore: []});
+        $(document).ready(function () {
+            createOverlay("relatedActor", "<?= $this->ucstring('actor') ?>", true);
+        });
+    </script>
+<? endif ?>
+

@@ -1,0 +1,10 @@
+<?
+
+$this->breadcrumb = [
+    $this->link('actor'),
+    $this->link($this->actor),
+    $this->link($this->relatedActor),
+    $this->ucstring('member')
+];
+?>
+<?= $this->render('member/form.phtml'); ?>

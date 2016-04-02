@@ -1,0 +1,63 @@
+<?php
+if (!isset($this->table['data'])) {
+    echo $this->ucstring('no_entries');
+    return;
+}
+$tableId = $this->table['id'] . 'Table';
+$input = '';
+$widgets = '{widgets: ["zebra"]}';
+$pager = '';
+if (isset($this->table['filter']) && $this->table['filter']) {
+    $input = '<input id="' . $tableId . 'Search" class="search" type="search" data-column="all" placeholder="' .
+        $this->ucstring('filter') . '">';
+    $widgets = '{widgets: ["zebra", "filter"], widgetOptions: {filter_external: ".search", filter_columnFilters: false}}';
+}
+?>
+<? if (isset($this->table['pager']) && $this->table['pager']): ?>
+    <? $tableRows = Zend_Registry::get('user')->getSetting('table_rows'); ?>
+    <? if (!$tableRows): ?>
+        <? $tableRows = Model_SettingsMapper::getSetting('general', 'default_table_rows'); ?>
+    <? endif ?>
+    <? $pager = '.tablesorterPager({positionFixed: false, container: $("#' . $tableId . 'Pager"), size: ' . $tableRows . '})'; ?>
+    <div id="<?= $tableId ?>Pager" class="pager">
+        <div class="navigation first"></div>
+        <div class="navigation prev"></div>
+        <div class="pagedisplay"><input class="pagedisplay" type="text" disabled="disabled"></div>
+        <div class="navigation next"></div>
+        <div class="navigation last"></div>
+        <div>
+            <select class="pagesize">
+                <? foreach([10, 20, 50, 100] as $option): ?>
+                    <option value="<?= $option ?>"><?= $option ?></option>
+                <? endforeach ?>
+                <option value="all"><?= $this->ucstring('all') ?></option>
+            </select>
+        </div>
+        <?= $input ?>
+    </div>
+<? endif ?>
+<table id="<?= $tableId ?>" class="tablesorter">
+    <thead>
+        <tr>
+            <? foreach ($this->table['header'] as $title): ?>
+                <? $class = '' ?>
+                <? if (!$title): ?>
+                    <? $class = ' class="sorter-false" ' ?>
+                <? endif ?>
+                <th <?= $class ?>><?= $this->ucstring($title) ?></th>
+            <? endforeach ?>
+        </tr>
+    </thead>
+    <tbody>
+        <? foreach ($this->table['data'] as $row): ?>
+            <tr>
+                <? foreach ($row as $value): ?>
+                    <?= $this->formatTableData($value) ?>
+                <? endforeach ?>
+            </tr>
+        <? endforeach ?>
+    </tbody>
+</table>
+<script type="text/javascript">
+    $("#<?= $tableId ?>").tablesorter(<?= $widgets ?>)<?= $pager ?>;
+</script>

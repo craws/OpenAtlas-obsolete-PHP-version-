@@ -1,0 +1,21 @@
+<?
+
+$this->breadcrumb = [
+    $this->link($this->controller),
+    $this->link($this->origin),
+    $this->ucstring('add') . ' ' . $this->ucstring('actor')];
+
+$table = ['id' => 'event', 'pager' => true, 'filter' => true];
+$table['header'] = [_('name'), _('class'), _('first'), _('last'), ''];
+foreach ($this->events as $event) {
+    $table['data'][] = [
+        $this->link($event),
+        $event->getClass()->nameTranslated,
+        $event->first,
+        $event->last,
+        '<a class="button" href="/admin/event/link/eventId/' . $event->id . '/rangeId/' . $this->origin->id . '">' .
+        $this->ucstring('add') . '</a>'];
+}
+?>
+<? $this->table = $table; ?>
+<?= $this->render('tableSorter.phtml'); ?>

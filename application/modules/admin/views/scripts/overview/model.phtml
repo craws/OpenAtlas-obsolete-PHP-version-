@@ -1,0 +1,37 @@
+<? $this->breadcrumb = [$this->link('overview'), $this->ucstring('model'), ]; ?>
+<div>
+    <a href="/file/view/file/schema"><img src="/file/view/file/schema" style="width:500px;" alt="schema" /></a>
+</div>
+<p>
+    <?= $this->link('class') ?> (<?= $this->count['classes'] ?>)
+    <?= $this->link('property') ?> (<?= $this->count['properties']  ?>)
+</p>
+<div>
+<p style="font-weight: bold;">Check for valid links</p>
+<?= $this->form ?>
+<? if ($this->testResult): ?>
+    <p>
+        Result for
+        <?= $this->link($this->testResult['domain']) ?> >
+        <?= $this->link($this->testResult['property']) ?> >
+        <?= $this->link($this->testResult['range']) ?>:
+    </p>
+    <p>
+        <? if (isset($this->testResult['domainError'])): ?>
+            <span class="error">Wrong domain</span> <?= $this->link($this->testResult['domain']) ?> for
+                <?= $this->link($this->testResult['property']) ?><br/>
+        <? endif ?>
+        <? if (isset($this->testResult['rangeError'])): ?>
+            <span class="error">Wrong range</span> <?= $this->link($this->testResult['range']) ?> for
+                <?= $this->link($this->testResult['property']) ?><br/>
+        <? endif ?>
+        <? if (!isset($this->testResult['domainError']) && !isset($this->testResult['rangeError'])): ?>
+            Valid link<br/>
+        <? endif ?>
+        <? if (isset($this->testResult['domainWhitelist'])): ?>
+            <?= $this->link($this->testResult['domain']) ?> as domain is whitelisted
+                (application won't check if links are valid)
+        <? endif ?>
+    </p>
+<? endif ?>
+</div>

@@ -1,0 +1,26 @@
+<?php
+
+/* Copyright 2016 by Alexander Watzinger and others. Please see the file README.md for licensing information */
+
+class Admin_Form_Type extends Craws\Form\Table {
+
+    public function init() {
+        $this->setAction($this->getView()->url());
+        $this->setName('typeForm')->setMethod('post');
+        $this->addElement('select', 'super', [
+            'label' => $this->getView()->ucstring('super'),
+            'required' => true,
+            'class' => 'required',
+        ]);
+        $this->addElement('text', 'name', [
+            'label' => $this->getView()->ucstring('name'),
+            'required' => true,
+            'class' => 'required',
+        ]);
+        $this->addElement('text', 'inverse', ['label' => $this->getView()->ucstring('inverse')]);
+        $this->addElement('textarea', 'description', ['label' => $this->getView()->ucstring('description')]);
+        $this->addElement('button', 'formSubmit', ['label' => $this->getView()->ucstring('save'), 'type' => 'submit']);
+        $this->setElementFilters(['StringTrim']);
+    }
+
+}

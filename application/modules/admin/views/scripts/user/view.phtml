@@ -1,0 +1,30 @@
+<?
+
+$user = $this->user;
+$this->breadcrumb = [[$this->ucstring('user'), '/admin/user'], $user->username];
+if ($user->group != 'admin' || Zend_Registry::get('user')->group == 'admin') {
+    $this->buttonBar = '<a href="/admin/user/update/id/' . $user->id . '">' . $this->ucstring('edit') . '</a>';
+    if ($user->id != Zend_Registry::get('user')->id) {
+        $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_delete', $user->username)) . "')\" ";
+        $this->buttonBar .= '<a href="/admin/user/delete/id/' . $user->id . '"' . $confirm . '>' .
+            $this->ucstring('delete') . '</a>';
+    }
+}
+$language = "n/a";
+if ($user->getSetting('language')) {
+    $language = Model_LanguageMapper::getById($user->getSetting('language'))->name;
+}
+$table['data'] = [
+    _('username') => '<span class="' . ($user->active ? "active" : "inactive") . '">' . $user->username . '</span>',
+    _('group') => $user->group,
+    _('name') => $user->realName,
+    _('email') => $user->email,
+    _('language') => $language,
+    _('created') => $user->created,
+    _('modified') => $user->modified,
+    _('lastLogin') => $user->loginLastSuccess,
+    _('failedLogins') => $user->loginFailedCount,
+    _('info') => $user->info,
+];
+$this->table = $table;
+echo $this->render('tableDataItem.phtml');

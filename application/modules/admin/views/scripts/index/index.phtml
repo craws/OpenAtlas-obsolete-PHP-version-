@@ -1,0 +1,9 @@
+<? $this->breadcrumb = [$this->ucstring('login')]; ?>
+<? $this->headTitle($this->ucstring('login')); ?>
+<?= $this->form->setAction($this->url()); ?>
+<? if (Model_SettingsMapper::getSetting('module', 'mail')): ?>
+    <p>
+        <a href="/admin/index/reset-password" style="text-decoration:none"><?= $this->ucstring("password_forgot") ?></a>
+    </p>
+<? endif ?>
+

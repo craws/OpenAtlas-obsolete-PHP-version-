@@ -1,0 +1,37 @@
+<? $this->breadcrumb = [$this->ucstring('log')]; ?>
+<? $this->buttonBar = '<a href="/admin/log/delete-all" onclick="return confirm(\'' . $this->ucstring('delete_all') . '?\')">' .
+    $this->ucstring('delete_all') . '</a>';
+?>
+<?= $this->form->setAction($this->url()); ?>
+<div style="padding-top: 1em;"></div>
+<?
+$table = ['id' => 'log', 'pager' => true, 'filter' => true];
+$table['header'] = [_('date'), _('priority'), _('type'), _('user'), _('path'), _('message')];
+foreach ($this->entries as $entry) {
+    $params = $entry->params;
+    $path = '';
+    if (isset($params['module'])) {
+        $path = '/ ' . $params['module'] . ' / ' . $params['controller'] . ' / ' . $params['action'];
+    }
+    $userLink = '';
+    if ($entry->userId) {
+        $user = Model_UserMapper::getById($entry->userId, false);
+        if ($user) {
+            $userLink = '<a href="/admin/user/view/id/' . $entry->userId . '">' . $user->username . '</a>';
+        } else {
+            $userLink = 'Deleted user (' . $entry->userId . ')';
+        }
+    }
+    $message = mb_strlen($entry->message) > 30 ? mb_substr($entry->message, 0, 27) . "..." : $entry->message;
+    $table['data'][] = [
+        '<a href="/admin/log/view/id/' . $entry->id . '">' . $entry->created . '</a>',
+        $entry->priority . ' ' . Model_LogMapper::$logLevels[$entry->priority],
+        $entry->type,
+        $userLink,
+        $path,
+        $message
+    ];
+}
+?>
+<? $this->table = $table; ?>
+<?= $this->render('tableSorter.phtml'); ?>

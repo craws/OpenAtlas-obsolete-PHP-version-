@@ -1,0 +1,24 @@
+<?
+
+$this->breadcrumb = [$this->ucstring('user')];
+$this->buttonBar = '<a href="/admin/user/insert">' . $this->ucstring('new') . '</a>';
+$table = ['id' => 'user', 'pager' => true, 'filter' => true];
+$table['header'] = [_('username'), _('group'), _('email'), _('newsletter'), _('created'), _('last_login')];
+foreach ($this->users as $user) {
+    $newsletter = '';
+    if ($user->getSetting('newsletter')) {
+        $newsletter = $this->ucstring('yes');
+    }
+    $table['data'][] = [
+        '<a href="/admin/user/view/id/' . $user->id . '" class="' . ($user->active ? "active" : "inactive") . '">' .
+        $user->username . '</a>',
+        $user->group,
+        $user->email,
+        $newsletter,
+        $user->created,
+        $user->loginLastSuccess
+    ];
+}
+?>
+<? $this->table = $table; ?>
+<?= $this->render('tableSorter.phtml'); ?>

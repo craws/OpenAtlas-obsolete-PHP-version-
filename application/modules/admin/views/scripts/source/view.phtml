@@ -1,0 +1,179 @@
+<? $source = $this->source; ?>
+<? $this->breadcrumb = [$this->link('source'), $source->name]; ?>
+<div style="clear:both;"></div>
+<div id="tabs">
+    <ul>
+        <li><a href="#tabInfo"><?= $this->ucstring('info') ?></a></li>
+        <li><a href="#tabActor"><?= $this->ucstring('actors') ?> (<?= count($this->actorLinks) ?>)</a></li>
+        <li><a href="#tabEvent"><?= $this->ucstring('events') ?> (<?= count($this->eventLinks) ?>)</a></li>
+        <li><a href="#tabPlace"><?= $this->ucstring('places') ?> (<?= count($this->placeLinks) ?>)</a></li>
+        <li>
+            <a href="#tabReference"><?= $this->ucstring('references') ?> (<?= count($this->referenceLinks) ?>)</a>
+        </li>
+        <li><a href="#tabText"><?= $this->ucstring('texts') ?> (<?= count($this->textLinks) ?>)</a></li>
+    </ul>
+    <div id="tabInfo">
+        <div class="buttonBar">
+            <?= $this->link($source, 'update') ?>
+            <?= $this->link($source, 'delete') ?>
+            <?= $this->bookmarkToggle($source->id) ?>
+        </div>
+        <h1><?= $source->name ?></h1>
+        <? $table['data'][_('type')] = $this->link($this->sourceType); ?>
+        <? $this->table = $this->tableLog($table, 'entity', $source->id); ?>
+        <?= $this->render('tableDataItem.phtml') ?>
+        <? if ($source->description): ?>
+            <p class="descriptionTitle"><?= $this->ucstring('content') ?><p>
+            <p><?= $source->description ?></p>
+        <? endif ?>
+    </div>
+    <div id="tabActor">
+        <div class="buttonBar">
+            <a href="/admin/actor/add/id/<?= $source->id ?>"><?= $this->ucstring('add') ?></a>
+            <? foreach (Zend_Registry::get('config')->get('codeActor')->toArray() as $code): ?>
+                <?= $this->link($code, 'insert', null, $source); ?>
+            <? endforeach ?>
+        </div>
+        <?
+        $tableActor = ['id' => 'actor', 'pager' => true, 'filter' => true];
+        $tableActor['header'] = [_('actor'), _('class'), _('begin'), _('end'), ''];
+        foreach ($this->actorLinks as $link) {
+            $dates = Model_DateMapper::getDateRange($link->getRange());
+            $text = $this->translate('documents') . ': ' . $link->getRange()->name;
+            $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_delete', $text)) .
+                "')\" ";
+            $deleteLink = '<a href="/admin/function/unlink/id/' . $link->id . '/entityId/' . $source->id . '/#tabActor' .
+                '" class="button"' . $confirm . '>' . $this->ucstring('remove') . '</a>';
+            $tableActor['data'][] = [
+                $this->link($link->getRange()),
+                $link->getRange()->getClass()->nameTranslated,
+                $dates['first'],
+                $dates['last'],
+                $deleteLink
+            ];
+        }
+        ?>
+        <? $this->table = $tableActor; ?>
+        <?= $this->render('tableSorter.phtml'); ?>
+    </div>
+    <div id="tabEvent">
+        <div class="buttonBar">
+            <a href="/admin/event/add/id/<?= $source->id ?>"><?= $this->ucstring('add') ?></a>
+            <? foreach (Zend_Registry::get('config')->get('codeEvent')->toArray() as $code): ?>
+                <?= $this->link($code, 'insert', null, $source); ?>
+            <? endforeach ?>
+        </div>
+        <?
+        $tableEvent = ['id' => 'event', 'pager' => true, 'filter' => true];
+        $tableEvent['header'] = [_('event'), _('class'), _('begin'), _('end'), ''];
+        foreach ($this->eventLinks as $link) {
+            $dates = Model_DateMapper::getDateRange($link->getRange());
+            $text = $this->translate('documents') . ': ' . $link->getRange()->name;
+            $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_delete', $text)) .
+                "')\" ";
+            $deleteLink = '<div><a href="/admin/function/unlink/id/' . $link->id . '/entityId/' . $source->id .
+                '/#tabEvent' . '" class="button"' . $confirm . '>' . $this->ucstring('remove') . '</a></div>';
+            $tableEvent['data'][] = [
+                $this->link($link->getRange()),
+                $link->getRange()->getClass()->nameTranslated,
+                $dates['first'],
+                $dates['last'],
+                $deleteLink
+            ];
+        }
+        ?>
+        <? $this->table = $tableEvent; ?>
+        <?= $this->render('tableSorter.phtml'); ?>
+    </div>
+    <div id="tabPlace">
+        <div class="buttonBar">
+            <a class="button" href="/admin/place/add/id/<?= $source->id ?>"><?= $this->ucstring('add') ?></a>
+            <?= $this->link('E18', 'insert', null, $source); ?>
+        </div>
+        <?
+        $tablePlace = ['id' => 'place', 'pager' => true, 'filter' => true];
+        $tablePlace['header'] = [_('name'), _('type'), _('first'), _('last'), ''];
+        foreach ($this->placeLinks as $link) {
+            $object = $link->getRange();
+            $dates = Model_DateMapper::getDateRange($object);
+            $text = $this->translate('documents') . ': ' . $link->getRange()->name;
+            $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_delete', $text)) .
+                "')\" ";
+            $deleteLink = '<div><a href="/admin/function/unlink/id/' . $link->id . '/entityId/' . $source->id .
+                '/#tabPlace' . '" class="button"' . $confirm . '>' . $this->ucstring('remove') . '</a></div>';
+            $tablePlace['data'][] = [
+                $this->link($object),
+                Model_NodeMapper::getNodeByEntity('type', 'Site', $object)->name,
+                $dates['first'],
+                $dates['last'],
+                $deleteLink
+            ];
+        }
+        ?>
+        <? $this->table = $tablePlace; ?>
+        <?= $this->render('tableSorter.phtml'); ?>
+    </div>
+    <div id="tabReference">
+        <div class="buttonBar">
+            <a class="button" href="/admin/biblio/insert/id/<?= $source->id ?>"><?= $this->ucstring('add') ?></a>
+        </div>
+        <?
+        $tableBiblio = ['id' => 'reference', 'pager' => true, 'filter' => true];
+        $tableBiblio['header'] = [_('name'), _('page'), 'class', 'type', '', ''];
+        foreach ($this->referenceLinks as $link) {
+            $reference = $link->getDomain();
+            $text = $this->ucstring('referred_by') . ': ' . $reference->name;
+            $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_delete', $text)) .
+                "')\" ";
+            $deleteLink = '<div><a href="/admin/function/unlink/id/' . $link->id . '/entityId/' . $source->id .
+                '/#tabReference' . '" class="button"' . $confirm . '>' . $this->ucstring('remove') . '</a></div>';
+            $type = Model_LinkMapper::getLinkedEntity($reference, 'P2');
+            $className = $type->name;
+            $typeName = '';
+            if ($type->rootId) {
+                $className = Model_NodeMapper::getById($type->rootId)->name;
+                $typeName = $type->name;
+            }
+            $tableBiblio['data'][] = [
+                $this->link($reference),
+                $link->description,
+                $className,
+                $typeName,
+                '<a class="button" href="/admin/biblio/update/origin/actor/id/' . $link->id . '">' .
+                $this->ucstring('edit') . '</a>',
+                $deleteLink
+            ];
+        }
+        ?>
+        <? $this->table = $tableBiblio; ?>
+        <?= $this->render('tableSorter.phtml'); ?>
+    </div>
+    <div id="tabText">
+        <div class="buttonBar">
+            <a href="/admin/source/text-add/id/<?= $source->id ?>">+ <?= $this->ucstring('text') ?></a>
+        </div>
+        <? $tableText = ['id' => 'text', 'pager' => true, 'filter' => true]; ?>
+        <? $tableText['header'] = [$this->ucstring('texts'), _('type'), '', '']; ?>
+        <? foreach ($this->textLinks as $textLink) {
+            $type = Model_LinkMapper::getLinkedEntity($textLink->getRange(), 'P2');
+            $confirm = " onclick=\"return confirm('" .
+            $this->ucstring($this->translate('confirm_delete', $textLink->getRange()->name)) . "')\" ";
+            $tableText['data'][] = [
+                $textLink->getRange()->name,
+                $type->name,
+                '<a class="button" href="/admin/source/text-update/linkId/' . $textLink->id . '">' .
+                $this->ucstring('edit') . '</a>',
+                '<a class="button" href="/admin/source/text-delete/linkId/' . $textLink->id . '"' . $confirm . '>' .
+                $this->ucstring('delete') . '</a>'
+            ];
+        }
+        ?>
+        <? $this->table = $tableText; ?>
+<?= $this->render('tableSorter.phtml'); ?>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $("#tabs").tabs();
+    });
+</script>

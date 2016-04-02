@@ -1,0 +1,68 @@
+<? $form = $this->form; ?>
+<?= $this->displayErrors($form); ?>
+<?= $form->renderForm(false); ?>
+<div>
+    <? if ($form->class): ?>
+        <div class="tableRow">
+            <?= $form->class->renderLabel() ?>
+            <div class="tableCell"><?= $form->class->renderViewHelper() ?></div>
+        </div>
+    <? endif ?>
+    <div class="tableRow">
+        <?= $form->name->renderLabel() ?>
+        <div class="tableCell"><?= $form->name->renderViewHelper() ?></div>
+    </div>
+    <?= $this->multipleSelect($form, 'alias') ?>
+    <? if ($form->genderId): ?>
+        <?= $this->displayTreeSelect('gender', $form) ?>
+    <? endif ?>
+    <?= $this->displayTableSelect('residence', $form) ?>
+    <?= $this->displayTableSelect('appearsFirst', $form) ?>
+    <?= $this->displayTableSelect('appearsLast', $form) ?>
+    <?= $this->render('dateForm.phtml'); ?>
+    <div style="margin-top:1em;">
+        <?= $form->description->renderLabel() ?>
+        <div><?= $form->description->renderViewHelper() ?></div>
+    </div>
+    <div style="margin-top:1em;">
+        <?= $form->formSubmit->renderViewHelper() ?>
+        <? if (!$this->event && Zend_Controller_Front::getInstance()->getRequest()->getActionName() == 'insert'): ?>
+            <?= $form->continue ?>
+            <?= $form->continueButton->renderViewHelper() ?>
+        <? endif ?>
+    </div>
+</div>
+<?= '</form>' ?>
+<? if ($form->genderId): ?>
+    <?= $this->displayTreeOverlay('gender', $this->genderTreeData) ?>
+<? endif ?>
+<? foreach (['residence', 'appearsFirst', 'appearsLast'] as $placeTable): ?>
+    <div id="<?= $placeTable ?>Overlay" class="overlay">
+        <div id='<?= $placeTable ?>Dialog' class="overlayContainer">
+            <?
+            $table = ['id' => $placeTable, 'pager' => true, 'filter' => true];
+            $table['header'] = [_('name'), _('first'), _('last')];
+            foreach ($this->objects as $object) {
+                $table['data'][] = [
+                    '<a onclick="selectFromTable(this, \'' . $placeTable . '\', ' . $object->id . ')">' .
+                        $object->name . '</a>',
+                    $object->first,
+                    $object->last,
+                ];
+            }
+            $this->table = $table;
+            ?>
+            <?= $this->render('tableSorter.phtml'); ?>
+        </div>
+    </div>
+<? endforeach ?>
+<script type="text/javascript">
+    $(document).ready(function () {
+        createOverlay("residence", "<?= $this->ucstring('residence') ?>");
+        createOverlay("appearsFirst", "<?= $this->ucstring('appears_first') ?>");
+        createOverlay("appearsLast", "<?= $this->ucstring('appears_last') ?>");
+        $("#aliasElementAdd").click(function () {
+            ajaxAddField("alias", $("#aliasElementId").val());
+        });
+    });
+</script>

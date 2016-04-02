@@ -1,0 +1,287 @@
+<? $actor = $this->actor; ?>
+<? $this->breadcrumb = [$this->link('actor'), $actor->name]; ?>
+<div id="tabs">
+    <ul>
+        <li><a href="#tabInfo"><?= $this->ucstring('info') ?></a></li>
+        <li><a href="#tabEvent"><?= $this->ucstring('events') ?> (<?= count($this->eventLinks) ?>)</a></li>
+        <li><a href="#tabRelation"><?= $this->ucstring('relations') ?> (<?= count($this->relationLinks) +
+            count($this->relationInverseLinks) ?>)</a></li>
+        <li><a href="#tabSource"><?= $this->ucstring('sources') ?> (<?= count($this->sourceLinks) ?>)</a></li>
+        <li><a href="#tabMemberOf"><?= $this->ucstring('member_of') ?> (<?= count($this->memberOfLinks) ?>)</a></li>
+        <? if ($actor->getClass()->code != 'E21'): ?>
+            <li><a href="#tabMember"><?= $this->ucstring('members') ?> (<?= count($this->memberLinks) ?>)</a></li>
+        <? endif ?>
+        <li><a href="#tabReference"><?= $this->ucstring('references') ?> (<?= count($this->referenceLinks) ?>)</a></li>
+        <? if ($this->objects): ?>
+            <? $this->jsonData = Model_GisMapper::getJsonData($this->objects); ?>
+            <? if ($this->jsonData): ?>
+                <li><a href="#tabPlace"><?= $this->ucstring('places') ?></a></li>
+            <? endif ?>
+        <? endif ?>
+    </ul>
+    <div id="tabInfo">
+        <div class="buttonBar">
+            <?= $this->link($actor, 'update') ?>
+            <?= $this->link($actor, 'delete') ?>
+            <?= $this->bookmarkToggle($actor->id) ?>
+        </div>
+        <h1><?= $actor->name ?></h1>
+        <?
+        $infoTable = [];
+        if ($this->aliases) {
+            $aliasArray = [];
+            foreach ($this->aliases as $alias) {
+                $aliasArray[] = $alias->name;
+            }
+            $infoTable['data'][_('alias')] = implode('<br/>', $aliasArray);
+        }
+        if ($this->gender) {
+            $infoTable['data']['Gender'] = $this->link($this->gender);
+        }
+        if ($this->residence) {
+            $infoTable['data'][_('residence')] = $this->link($this->residence);
+        }
+        if ($this->first) {
+            $infoTable['data'][_('appears_first')] = $this->link($this->first);
+        }
+        if ($this->last) {
+            $infoTable['data'][_('appears_last')] = $this->link($this->last);
+        }
+        foreach (['OA1' => _('first'), 'OA3' => _('birth'), 'OA2' => _('last'), 'OA4' => _('death')] as $key => $label) {
+            if (isset($this->dates[$key])) {
+                $dates = $this->dates[$key];
+                if (isset($dates['Exact date value'])) {
+                    $infoTable['data'][$label] = $this->printDate($dates['Exact date value']->date) . ' ' .
+                        $dates['Exact date value']->description;
+                } else {
+                    $infoTable['data'][$label] = $this->ucstring('between') . ' ' .
+                        $this->printDate($dates['From date value']->date) . ' ' . $this->translate('and') . ' ' .
+                        $this->printDate($dates['To date value']->date) . ' ' . $dates['From date value']->description;
+                }
+            }
+        }
+        $this->table = $this->tableLog($infoTable, 'entity', $actor->id);
+        ?>
+        <?= $this->render('tableDataItem.phtml'); ?>
+        <?= $this->description($actor) ?>
+    </div>
+    <div id="tabEvent">
+        <div class="buttonBar">
+            <a class="button" href="/admin/involvement/insert/origin/actor/actorId/<?= $actor->id ?>"><?= $this->ucstring('add') ?></a>
+            <? foreach (Zend_Registry::get('config')->get('codeEvent')->toArray() as $code): ?>
+                <?= $this->link($code, 'insert', null, $actor); ?>
+            <? endforeach ?>
+        </div>
+        <?
+        $eventTable = ['id' => 'event', 'pager' => true, 'filter' => true];
+        $eventTable['header'] = [_('activity'), _('event'), 'Involvement', _('begin'), _('end'), '', ''];
+        foreach ($this->eventLinks as $link) {
+            $dates = Model_DateMapper::getLinkDateRange($link);
+            $involvement = "";
+            $involvementType = Model_LinkPropertyMapper::getLinkedEntity($link, 'P2');
+            if ($involvementType) {
+                $involvement = $involvementType->name;
+            }
+            $activity = $link->getProperty()->nameInverseTranslated;
+            $text = $this->translate('activity') . ': ' . $activity . ' ' . $link->getDomain()->name;
+            $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_delete', $text)) . "')\" ";
+            $deleteLink = '<div><a href="/admin/function/unlink/id/' . $link->id . '/entityId/' . $actor->id . '/#tabEvent' .
+                '" class="button"' . $confirm . '>' . $this->ucstring('remove') . '</a></div>';
+            $eventTable['data'][] = [
+                $activity,
+                $this->link($link->getDomain()),
+                $involvement,
+                $dates['first'],
+                $dates['last'],
+                '<a class="button" href="/admin/involvement/update/origin/actor/id/' . $link->id . '">' .
+                    $this->ucstring('edit') . '</a>',
+                $deleteLink
+            ];
+        }
+        ?>
+        <? $this->table = $eventTable; ?>
+        <?= $this->render('tableSorter.phtml'); ?>
+    </div>
+    <div id="tabRelation">
+        <div class="buttonBar">
+            <a class="button" href="/admin/relation/insert/id/<?= $actor->id ?>"><?= $this->ucstring('add') ?></a>
+        </div>
+        <? if ($this->relationLinks || $this->relationInverseLinks): ?>
+            <?
+            $relationTable = ['id' => 'relation', 'pager' => true, 'filter' => true];
+            $relationTable['header'] = ['Actor Actor Relation', _('actor'), _('begin'), _('end'), '', ''];
+            foreach ($this->relationLinks as $link) {
+                $type = Model_LinkPropertyMapper::getLinkedEntity($link, 'P2');
+                $dates = Model_DateMapper::getLinkDateRange($link);
+                $text = $this->translate('relation') . ': ' . $type->getNameDirected() . ' ' . $link->getRange()->name;
+                $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_delete', $text)) .
+                    "')\" ";
+                $deleteLink = '<div><a href="/admin/function/unlink/id/' . $link->id . '/entityId/' . $actor->id .
+                    '/#tabRelation' . '" class="button"' . $confirm . '>' . $this->ucstring('remove') . '</a></div>';
+                $relationTable['data'][] = [
+                    $type->getNameDirected(),
+                    $this->link($link->getRange()),
+                    $dates['first'],
+                    $dates['last'],
+                    '<a class="button" href="/admin/relation/update/id/' . $link->id . '/originActorId/' . $actor->id .
+                        '">' . $this->ucstring('edit') . '</a>',
+                    $deleteLink
+                ];
+            }
+            foreach ($this->relationInverseLinks as $link) {
+                $type = Model_LinkPropertyMapper::getLinkedEntity($link, 'P2');
+                $dates = Model_DateMapper::getLinkDateRange($link);
+                $text = $this->translate('relation') . ': ' . $type->getNameDirected(true) . ' ' .
+                    $link->getDomain()->name;
+                $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_delete', $text)) .
+                    "')\" ";
+                $deleteLink = '<div><a href="/admin/function/unlink/id/' . $link->id . '/entityId/' . $actor->id .
+                    '/#tabRelation' . '" class="button"' . $confirm . '>' . $this->ucstring('remove') . '</a></div>';
+                $relationTable['data'][] = [
+                    $type->getNameDirected(true),
+                    $this->link($link->getDomain()),
+                    $dates['first'],
+                    $dates['last'],
+                    '<a class="button" href="/admin/relation/update/id/' . $link->id . '/originActorId/' . $actor->id .
+                        '">' . $this->ucstring('edit') . '</a>',
+                    $deleteLink
+                ];
+            }
+            ?>
+            <? $this->table = $relationTable; ?>
+            <?= $this->render('tableSorter.phtml'); ?>
+        <? endif ?>
+    </div>
+    <div id="tabSource">
+        <div class="buttonBar">
+            <a href="/admin/source/add/id/<?= $actor->id ?>"><?= $this->ucstring('add') ?></a>
+            <?= $this->link('E33', 'insert', null, $actor); ?>
+        </div>
+        <?
+        $sourceTable = ['id' => 'source', 'pager' => true, 'filter' => true];
+        $sourceTable['header'] = [_('source'), _('type'), ''];
+        foreach ($this->sourceLinks as $link) {
+            $source = $link->getDomain();
+            $text = $this->translate('documented_in') . ': ' . $source->name;
+            $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_delete', $text)) .
+                "')\" ";
+            $deleteLink = '<div><a href="/admin/function/unlink/id/' . $link->id . '/entityId/' . $actor->id .
+                '/#tabSource' . '" class="button"' . $confirm . '>' . $this->ucstring('remove') . '</a></div>';
+            $sourceTable['data'][] = [
+                $this->link($source),
+                Model_NodeMapper::getNodeByEntity('type', 'Source', $source)->name,
+                $deleteLink
+            ];
+        }
+        ?>
+        <? $this->table = $sourceTable; ?>
+        <?= $this->render('tableSorter.phtml'); ?>
+    </div>
+    <? if ($actor->getClass()->code != 'E21'): ?>
+        <div id="tabMember">
+            <div class="buttonBar">
+                <a class="button" href="/admin/member/insert/id/<?= $actor->id ?>"><?= $this->ucstring('add') ?></a>
+            </div>
+            <?
+            $memberTable = ['id' => 'member', 'pager' => true, 'filter' => true];
+            $memberTable['header'] = [ _('actor'), 'Actor Function', _('begin'), _('end'), '', ''];
+            foreach ($this->memberLinks as $link) {
+                $typeName = '';
+                $type = Model_LinkPropertyMapper::getLinkedEntity($link, 'P2');
+                if ($type && $type->rootId) {
+                    $typeName = $type->getNameDirected();
+                }
+                $dates = Model_DateMapper::getLinkDateRange($link);
+                $text = $this->translate('membership') . ': ' . $type->getNameDirected() . ' ' . $link->getRange()->name;
+                $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_delete', $text)) .
+                    "')\" ";
+                $deleteLink = '<div><a href="/admin/function/unlink/id/' . $link->id . '/entityId/' . $actor->id .
+                    '/#tabMember' . '" class="button"' . $confirm . '>' . $this->ucstring('remove') . '</a></div>';
+                $memberTable['data'][] = [
+                    $this->link($link->getRange()),
+                    $typeName,
+                    $dates['first'],
+                    $dates['last'],
+                    '<a class="button" href="/admin/member/update/id/' . $link->id . '/originActorId/' .
+                        $actor->id . '">' . $this->ucstring('edit') . '</a>',
+                    $deleteLink
+                ];
+            }
+            ?>
+            <? $this->table = $memberTable; ?>
+            <?= $this->render('tableSorter.phtml'); ?>
+        </div>
+    <? endif ?>
+    <div id="tabMemberOf">
+        <div class="buttonBar">
+            <a class="button" href="/admin/member/member/id/<?= $actor->id ?>"><?= $this->ucstring('add') ?></a>
+        </div>
+        <?
+        $memberOfTable = ['id' => 'memberOf', 'pager' => true, 'filter' => true];
+        $memberOfTable['header'] = [ _('member_of'), 'Actor Function', _('begin'), _('end'), '', ''];
+        foreach ($this->memberOfLinks as $link) {
+            $typeName = '';
+            $type = Model_LinkPropertyMapper::getLinkedEntity($link, 'P2');
+            if ($type && $type->rootId) {
+                $typeName = $type->getNameDirected();
+            }
+            $dates = Model_DateMapper::getLinkDateRange($link);
+            $text = $this->translate('membership') . ': ' . $type->getNameDirected() . ' ' . $link->getRange()->name;
+            $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_delete', $text)) .
+                "')\" ";
+            $deleteLink = '<div><a href="/admin/function/unlink/id/' . $link->id . '/entityId/' . $actor->id .
+                '/#tabMemberOf' . '" class="button"' . $confirm . '>' . $this->ucstring('remove') . '</a></div>';
+            $memberOfTable['data'][] = [
+                $this->link($link->getDomain()),
+                $typeName,
+                $dates['first'],
+                $dates['last'],
+                '<a class="button" href="/admin/member/update/id/' . $link->id . '/originActorId/' .
+                    $actor->id . '">' . $this->ucstring('edit') . '</a>',
+                $deleteLink
+            ];
+        }
+        ?>
+        <? $this->table = $memberOfTable; ?>
+        <?= $this->render('tableSorter.phtml'); ?>
+    </div>
+    <div id="tabReference">
+        <div class="buttonBar">
+            <a class="button" href="/admin/biblio/insert/id/<?= $actor->id ?>"><?= $this->ucstring('add') ?></a>
+        </div>
+        <?
+        $biblioTable = ['id' => 'reference', 'pager' => true, 'filter' => true];
+        $biblioTable['header'] = [_('name'), _('page'), 'class', 'type', '', ''];
+        foreach ($this->referenceLinks as $link) {
+            $reference = $link->getDomain();
+            $type = Model_LinkMapper::getLinkedEntity($reference, 'P2');
+            $text = $this->ucstring('referred_by') . ': ' . $reference->name;
+            $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_delete', $text)) . "')\" ";
+            $deleteLink = '<div><a href="/admin/function/unlink/id/' . $link->id . '/entityId/' . $actor->id .
+                '/#tabReference' . '" class="button"' . $confirm . '>' . $this->ucstring('remove') . '</a></div>';
+            $biblioTable['data'][] = [
+                $this->link($reference),
+                $link->description,
+                Model_NodeMapper::getById($type->rootId)->name,
+                $type->name,
+                '<a class="button" href="/admin/biblio/update/origin/actor/id/' . $link->id . '">' .
+                    $this->ucstring('edit') . '</a>',
+                $deleteLink
+            ];
+        }
+        ?>
+        <? $this->table = $biblioTable; ?>
+    <?= $this->render('tableSorter.phtml'); ?>
+    </div>
+    <? if ($this->jsonData): ?>
+        <div id="tabPlace">
+            <div id="map" class="map" style="float:none;margin:0;width:70em;"></div>
+            <script type="text/javascript" src="/js/leaflet/map.js"></script>
+        </div>
+    <? endif ?>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $("#tabs").tabs();
+    });
+</script>

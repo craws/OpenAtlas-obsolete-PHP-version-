@@ -1,0 +1,47 @@
+<? $form = $this->form; ?>
+<?= $this->displayErrors($form); ?>
+<?= $form->renderForm(false); ?>
+<div>
+    <div class="tableRow">
+        <?= $form->name->renderLabel() ?>
+        <div class="tableCell"><?= $form->name->renderViewHelper() ?></div>
+    </div>
+    <?= $this->displayTreeSelect('type', $form) ?>
+    <?= $this->displayTableSelect('object', $form) ?>
+    <?= $this->render('dateForm.phtml'); ?>
+    <div style="margin-top:1em;">
+        <?= $form->description->renderLabel() ?>
+        <div><?= $form->description->renderViewHelper() ?></div>
+    </div>
+    <div style="margin-top:1em;">
+        <?= $form->formSubmit->renderViewHelper() ?>
+        <? if (Zend_Controller_Front::getInstance()->getRequest()->getActionName() == 'insert'): ?>
+            <?= $form->continue ?>
+            <?= $form->continueButton->renderViewHelper() ?>
+        <? endif ?>
+    </div>
+</div>
+<div id="objectOverlay" class="overlay">
+    <div id='objectDialog' class="overlayContainer">
+        <?
+        $objectTable = ['id' => 'object', 'pager' => true, 'filter' => true];
+        $objectTable['header'] = [_('name'), _('first'), _('last')];
+        foreach ($this->objects as $object) {
+            $objectTable['data'][] = [
+                '<a onclick="selectFromTable(this, \'object\', ' . $object->id . ')">' . $object->name . '</a>',
+                $object->first,
+                $object->last,
+            ];
+        }
+        $this->table = $objectTable;
+        ?>
+        <?= $this->render('tableSorter.phtml'); ?>
+    </div>
+</div>
+<?= '</form>' ?>
+<?= $this->displayTreeOverlay('type', $this->typeTreeData) ?>
+<script type="text/javascript">
+    $(document).ready(function () {
+        createOverlay("object", "<?= $this->ucstring('place') ?>");
+    });
+</script>

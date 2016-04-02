@@ -1,0 +1,15 @@
+<?
+
+$this->breadcrumb = [$this->ucstring('source')];
+$this->buttonBar = $this->link('E33', 'insert');
+$table = ['id' => 'source', 'filter' => true, 'pager' => true];
+$table['header'] = [_('name'), _('type')];
+foreach ($this->sources as $source) {
+    $table['data'][] = [
+        $this->link($source),
+        Model_NodeMapper::getNodeByEntity('type', 'Source', $source)->name
+    ];
+}
+?>
+<? $this->table = $table; ?>
+<?= $this->render('tableSorter.phtml'); ?>

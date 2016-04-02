@@ -1,0 +1,27 @@
+
+# sensitive data
+application/configs/password.ini
+data/install/scripts/ostalpen_password.php
+
+# logs
+*.log
+tests/log/
+
+# ide and tools
+.zfproject.xml
+nbproject/
+.buildpath
+.settings/*
+.project
+
+# framework
+library/Zend/
+
+# binaries
+*.mo
+
+# tmp
+data/upload/tmp/*
+*.~lock*
+
+
