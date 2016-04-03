@@ -102,3 +102,4 @@ COPY crm.entity TO '/tmp/crm_entity.csv' DELIMITER ',' CSV HEADER FORCE QUOTE *;
 COPY crm.link TO '/tmp/crm_link.csv' DELIMITER ',' CSV HEADER FORCE QUOTE *;
 COPY crm.link_property TO '/tmp/crm_link_property.csv' DELIMITER ',' CSV HEADER FORCE QUOTE *;
 COPY crm.property TO '/tmp/crm_property.csv' DELIMITER ',' CSV HEADER FORCE QUOTE *;
+COPY gis.centerpoint TO '/tmp/gis_centerpoint.csv' DELIMITER ',' CSV HEADER FORCE QUOTE *;
