@@ -6,10 +6,10 @@ class Admin_OverviewController extends Zend_Controller_Action {
 
     public function indexAction() {
         $count['source'] = count(Model_EntityMapper::getByCodes('Source', 'Source Content'));
-        $count['event'] = count(Model_EntityMapper::getByCodes('Event'));
-        $count['actor'] = count(Model_EntityMapper::getByCodes('Actor'));
-        $count['place'] = count(Model_EntityMapper::getByCodes('PhysicalObject'));
-        $count['reference'] = count(Model_EntityMapper::getByCodes('Reference'));
+        $count['event'] = Model_EntityMapper::countByCodes('Event');
+        $count['actor'] = Model_EntityMapper::countByCodes('Actor');
+        $count['place'] = Model_EntityMapper::countByCodes('PhysicalObject');
+        $count['reference'] = Model_EntityMapper::countByCodes('Reference');
         $this->view->count = $count;
         $this->view->latestEntries = Model_EntityMapper::getLatest(5);
         $bookmarks = [];

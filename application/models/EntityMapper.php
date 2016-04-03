@@ -113,6 +113,16 @@ class Model_EntityMapper extends Model_AbstractMapper {
         return $entitites;
     }
 
+    public static function countByCodes($code) {
+        $codes = Zend_Registry::get('config')->get('code' . $code)->toArray();
+        $sql = "SELECT COUNT(*) AS count FROM crm.entity e JOIN crm.class c ON e.class_id = c.id
+            WHERE c.code IN ('" . implode("', '", $codes) . "');";
+        $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
+        $statement->execute();
+        $row = $statement->fetch();
+        return $row['count'];
+    }
+
     protected static function populate(Model_Entity $entity, array $row) {
         $classes = Zend_Registry::get('classes');
         $entity->id = $row['id'];
