@@ -50,10 +50,13 @@ class Admin_PlaceController extends Zend_Controller_Action {
         $this->view->historicals = Model_NodeMapper::getNodesByEntity('place', 'Historical Place', $place);
         $this->view->dates = Model_DateMapper::getDates($object);
         $this->view->events = array_merge(
-            Model_LinkMapper::getLinkedEntities($place, 'P7', true), Model_LinkMapper::getLinkedEntities($object, 'P24', true)
+            Model_LinkMapper::getLinkedEntities($place, 'P7', true),
+            Model_LinkMapper::getLinkedEntities($object, 'P24', true)
         );
         $this->view->actorLinks = array_merge(
-            Model_LinkMapper::getLinks($place, 'P74', true), Model_LinkMapper::getLinks($place, 'OA8', true), Model_LinkMapper::getLinks($place, 'OA9', true)
+            Model_LinkMapper::getLinks($place, 'P74', true),
+            Model_LinkMapper::getLinks($place, 'OA8', true),
+            Model_LinkMapper::getLinks($place, 'OA9', true)
         );
         $sourceLinks = [];
         $referenceLinks = [];

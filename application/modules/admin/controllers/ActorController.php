@@ -135,7 +135,7 @@ class Admin_ActorController extends Zend_Controller_Action {
         Model_DateMapper::saveDates($actor, $form);
         foreach (['residenceId' => 'P74', 'appearsFirstId' => 'OA8', 'appearsLastId' => 'OA9'] as $formField => $propertyCode) {
             if ($form->getValue($formField)) {
-                $place = Model_LinkMapper::getLinkedEntity(Model_EntityMapper::getById($form->getValue($formField)), 'P53');
+                $place = Model_LinkMapper::getLinkedEntity($form->getValue($formField), 'P53');
                 Model_LinkMapper::insert($propertyCode, $actor, $place);
             }
         }
@@ -230,7 +230,7 @@ class Admin_ActorController extends Zend_Controller_Action {
                 Model_LinkMapper::getLink($actor, $propertyCode)->delete();
             }
             if ($form->getValue($formField)) {
-                $place = Model_LinkMapper::getLinkedEntity(Model_EntityMapper::getById($form->getValue($formField)), 'P53');
+                $place = Model_LinkMapper::getLinkedEntity($form->getValue($formField), 'P53');
                 Model_LinkMapper::insert($propertyCode, $actor, $place);
             }
         }

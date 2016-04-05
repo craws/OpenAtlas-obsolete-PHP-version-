@@ -21,7 +21,7 @@ class Admin_CarrierController extends Zend_Controller_Action {
         }
         Model_LinkMapper::insert('P2', $carrier, $type);
         if ($form->getValue('objectId')) {
-            $place = Model_LinkMapper::getLinkedEntity(Model_EntityMapper::getById($form->getValue('objectId')), 'P53');
+            $place = Model_LinkMapper::getLinkedEntity($form->getValue('objectId'), 'P53');
             Model_LinkMapper::insert('OA8', $carrier, $place);
         }
         Model_DateMapper::saveDates($carrier, $form);
@@ -80,7 +80,7 @@ class Admin_CarrierController extends Zend_Controller_Action {
         }
         //var_dump($form->getValue('objectId'));Die;
         if ($form->getValue('objectId')) {
-            $place = Model_LinkMapper::getLinkedEntity(Model_EntityMapper::getById($form->getValue('objectId')), 'P53');
+            $place = Model_LinkMapper::getLinkedEntity($form->getValue('objectId'), 'P53');
             Model_LinkMapper::insert('OA8', $carrier, $place);
         }
         Model_DateMapper::saveDates($carrier, $form);

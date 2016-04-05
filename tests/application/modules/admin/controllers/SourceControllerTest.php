@@ -63,7 +63,7 @@ class Admin_SourceControllerTest extends ControllerTestCase {
         $this->request->setMethod('POST')->setPost($formValues);
         $this->dispatch('admin/source/text-add/id/' . $this->sourceId);
         $this->resetRequest()->resetResponse();
-        $textLink = Model_LinkMapper::getLink(Model_EntityMapper::getById($this->sourceId), 'P73');
+        $textLink = Model_LinkMapper::getLink($this->sourceId, 'P73');
         $this->dispatch('admin/source/text-update/linkId/' . $textLink->id);
         $this->resetRequest()->resetResponse();
         $this->request->setMethod('POST')->setPost($formValues);

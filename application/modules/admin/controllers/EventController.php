@@ -77,7 +77,7 @@ class Admin_EventController extends Zend_Controller_Action {
             }
         }
         if ($form->getValue('placeId')) {
-            $place = Model_LinkMapper::getLinkedEntity(Model_EntityMapper::getById($form->getValue('placeId')), 'P53');
+            $place = Model_LinkMapper::getLinkedEntity($form->getValue('placeId'), 'P53');
             Model_LinkMapper::insert('P7', $event, $place);
         }
         $superEvent = Zend_Registry::get('event')[0];
@@ -235,7 +235,7 @@ class Admin_EventController extends Zend_Controller_Action {
             Model_LinkMapper::getLink($event, 'P7')->delete();
         }
         if ($form->getValue('placeId')) {
-            $place = Model_LinkMapper::getLinkedEntity(Model_EntityMapper::getById($form->getValue('placeId')), 'P53');
+            $place = Model_LinkMapper::getLinkedEntity($form->getValue('placeId'), 'P53');
             Model_LinkMapper::insert('P7', $event, $place);
         }
         foreach (Model_LinkMapper::getLinks($event, 'P117') as $link) {

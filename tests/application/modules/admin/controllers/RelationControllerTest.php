@@ -44,13 +44,13 @@ class Admin_RelationControllerTest extends ControllerTestCase {
         ]);
         $this->dispatch('admin/relation/insert/id/' . $this->actorId);
         $this->resetRequest()->resetResponse();
-        $links = Model_LinkMapper::getLinks(Model_EntityMapper::getById($this->actorId), 'OA7');
+        $links = Model_LinkMapper::getLinks($this->actorId, 'OA7');
         $this->resetRequest()->resetResponse();
         $this->dispatch('admin/relation/update/id/' . $links[0]->id . '/originActorId/' . $this->actorId);
         $this->request->setMethod('POST')->setPost(['typeButton' => 'Placeholder', 'typeId' => $socialId, 'inverse' => 0]);
         $this->dispatch('admin/relation/update/id/' . $links[0]->id . '/originActorId/' . $this->actorId);
         $this->resetRequest()->resetResponse();
-        $links2 = Model_LinkMapper::getLinks(Model_EntityMapper::getById($this->actorId), 'OA7');
+        $links2 = Model_LinkMapper::getLinks($this->actorId, 'OA7');
         $this->dispatch('admin/relation/update/id/' . $links2[0]->id . '/originActorId/' . $this->actorId);
         $this->request->setMethod('POST')->setPost(['typeButton' => 'Placeholder', 'typeId' => $socialId, 'inverse' => 1]);
         $this->dispatch('admin/relation/update/id/' . $links2[0]->id . '/originActorId/' . $this->actorId);
