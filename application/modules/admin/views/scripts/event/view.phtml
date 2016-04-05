@@ -163,15 +163,14 @@
     <div id="tabSub">
         <? if ($this->subs): ?>
             <? $table = ['id' => 'sub', 'pager' => true, 'filter' => true]; ?>
-            <? $table['header'] = [_('event'), _('class'), _('begin'), _('end')]; ?>
+            <? $table['header'] = [_('event'), _('class'), _('first'), _('last')]; ?>
             <?
             foreach ($this->subs as $sub) {
-                $dates = Model_DateMapper::getDateRange($sub);
                 $table['data'][] = [
                     $this->link($sub),
                     $sub->getClass()->nameTranslated,
-                    $dates['first'],
-                    $dates['last']
+                    $sub->first,
+                    $sub->last
                 ];
             }
             $this->table = $table;

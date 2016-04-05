@@ -72,14 +72,13 @@
     <div id="tabEvents">
         <?
         $tableEvent = ['id' => 'event', 'pager' => true, 'filter' => true];
-        $tableEvent['header'] = [_('event'), _('class'), _('begin'), _('end')];
+        $tableEvent['header'] = [_('event'), _('class'), _('first'), _('last')];
         foreach ($this->events as $event) {
-            $dates = Model_DateMapper::getDateRange($event);
             $tableEvent['data'][] = [
                 $this->link($event),
                 $event->getClass()->nameTranslated,
-                $dates['first'],
-                $dates['last']
+                $event->first,
+                $event->last
             ];
         }
         $this->table = $tableEvent;
@@ -89,15 +88,14 @@
     <div id="tabActor">
         <?
         $tableActor = ['id' => 'actor', 'pager' => true, 'filter' => true];
-        $tableActor['header'] = [_('actor'), _('property'), _('class'), _('begin'), _('end')];
+        $tableActor['header'] = [_('actor'), _('property'), _('class'), _('first'), _('last')];
         foreach ($this->actorLinks as $link) {
-            $dates = Model_DateMapper::getDateRange($link->getDomain());
             $tableActor['data'][] = [
                 $this->link($link->getDomain()),
                 $link->getProperty()->nameTranslated,
                 $link->getDomain()->getClass()->nameTranslated,
-                $dates['first'],
-                $dates['last']
+                $link->getDomain()->first,
+                $link->getDomain()->last
             ];
         }
         $this->table = $tableActor;
