@@ -38,7 +38,7 @@
         $superTable = ['id' => 'super', 'pager' => true, 'filter' => true];
         $superTable['header'] = [_('name'), _('class'), _('first'), _('last')];
         foreach ($this->events as $event) {
-            if (!$event->rootId) {
+            if ($event->name == Zend_Registry::get('config')->get('eventRootName')) {
                 continue;  // dont show root event
             }
             $superTable['data'][] = [
