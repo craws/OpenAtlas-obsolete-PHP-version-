@@ -5,7 +5,7 @@ $this->breadcrumb = [
     $this->link($this->origin),
     $this->ucstring('add') . ' ' . $this->ucstring('actor')];
 $table = ['id' => 'actor', 'pager' => true, 'filter' => true];
-$table['header'] = [_('actor'), _('class'), _('begin'), _('end'), ''];
+$table['header'] = [_('actor'), _('class'), _('first'), _('last'), ''];
 
 foreach ($this->actors as $actor) {
     $table['data'][] = [

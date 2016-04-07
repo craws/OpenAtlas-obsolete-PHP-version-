@@ -74,7 +74,7 @@
         </div>
         <?
         $eventTable = ['id' => 'event', 'pager' => true, 'filter' => true];
-        $eventTable['header'] = [_('activity'), _('event'), 'Involvement', _('begin'), _('end'), '', ''];
+        $eventTable['header'] = [_('activity'), _('event'), 'Involvement', _('first'), _('last'), '', ''];
         foreach ($this->eventLinks as $link) {
             $dates = Model_DateMapper::getLinkDateRange($link);
             $involvement = "";
@@ -109,7 +109,7 @@
         <? if ($this->relationLinks || $this->relationInverseLinks): ?>
             <?
             $relationTable = ['id' => 'relation', 'pager' => true, 'filter' => true];
-            $relationTable['header'] = ['Actor Actor Relation', _('actor'), _('begin'), _('end'), '', ''];
+            $relationTable['header'] = ['Actor Actor Relation', _('actor'), _('first'), _('last'), '', ''];
             foreach ($this->relationLinks as $link) {
                 $type = Model_LinkPropertyMapper::getLinkedEntity($link, 'P2');
                 $dates = Model_DateMapper::getLinkDateRange($link);
@@ -184,7 +184,7 @@
             </div>
             <?
             $memberTable = ['id' => 'member', 'pager' => true, 'filter' => true];
-            $memberTable['header'] = [ _('actor'), 'Actor Function', _('begin'), _('end'), '', ''];
+            $memberTable['header'] = [ _('actor'), 'Actor Function', _('first'), _('last'), '', ''];
             foreach ($this->memberLinks as $link) {
                 $typeName = '';
                 $type = Model_LinkPropertyMapper::getLinkedEntity($link, 'P2');
@@ -218,7 +218,7 @@
         </div>
         <?
         $memberOfTable = ['id' => 'memberOf', 'pager' => true, 'filter' => true];
-        $memberOfTable['header'] = [ _('member_of'), 'Actor Function', _('begin'), _('end'), '', ''];
+        $memberOfTable['header'] = [ _('member_of'), 'Actor Function', _('first'), _('last'), '', ''];
         foreach ($this->memberOfLinks as $link) {
             $typeName = '';
             $type = Model_LinkPropertyMapper::getLinkedEntity($link, 'P2');

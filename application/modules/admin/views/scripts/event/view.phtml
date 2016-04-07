@@ -71,7 +71,7 @@
             </div>
             <?
             $actorTable = ['id' => 'actor', 'pager' => true, 'filter' => true];
-            $actorTable['header'] = [_('actor'), _('class'), _('activity'), 'Involvement', _('begin'), _('end'), '', ''];
+            $actorTable['header'] = [_('actor'), _('class'), _('activity'), 'Involvement', _('first'), _('last'), '', ''];
             foreach ($this->actorLinks as $link) {
                 $involvement = "";
                 $involvementType = Model_LinkPropertyMapper::getLinkedEntity($link, 'P2');

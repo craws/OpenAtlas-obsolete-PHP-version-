@@ -209,7 +209,7 @@ class Admin_EventController extends Zend_Controller_Action {
             }
             Admin_Form_Abstract::populateDates($form, $event, ['OA5' => 'begin', 'OA6' => 'end']);
             $this->view->class = $event->getClass();
-            $this->view->actor = $event;
+            $this->view->event = $event;
             $this->view->form = $form;
             $this->view->actors = Model_EntityMapper::getByCodes('Actor');
             $this->view->objects = Model_EntityMapper::getByCodes('PhysicalObject');

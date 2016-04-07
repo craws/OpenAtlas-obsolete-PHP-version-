@@ -37,15 +37,16 @@
         <?
         $superTable = ['id' => 'super', 'pager' => true, 'filter' => true];
         $superTable['header'] = [_('name'), _('class'), _('first'), _('last')];
-        foreach ($this->events as $event) {
-            if ($event->name == Zend_Registry::get('config')->get('eventRootName')) {
+        foreach ($this->events as $super) {
+            if ((isset($this->event) && $this->event->id == $super->id) ||
+                $super->name == Zend_Registry::get('config')->get('eventRootName')) {
                 continue;  // dont show root event
             }
             $superTable['data'][] = [
-                '<a onclick="selectFromTable(this, \'super\', ' . $event->id . ')">' . $event->name . '</a>',
-                $event->getClass()->nameTranslated,
-                $event->first,
-                $event->last,
+                '<a onclick="selectFromTable(this, \'super\', ' . $super->id . ')">' . $super->name . '</a>',
+                $super->getClass()->nameTranslated,
+                $super->first,
+                $super->last,
             ];
         }
         $this->table = $superTable;
