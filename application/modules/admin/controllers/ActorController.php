@@ -132,26 +132,10 @@ class Admin_ActorController extends Zend_Controller_Action {
             return;
         }
         $actor = Model_EntityMapper::insert($class->id, $form->getValue('name'), $form->getValue('description'));
-        Model_DateMapper::saveDates($actor, $form);
-        foreach (['residenceId' => 'P74', 'appearsFirstId' => 'OA8', 'appearsLastId' => 'OA9'] as $formField => $propertyCode) {
-            if ($form->getValue($formField)) {
-                $place = Model_LinkMapper::getLinkedEntity($form->getValue($formField), 'P53');
-                Model_LinkMapper::insert($propertyCode, $actor, $place);
-            }
-        }
-        if ($form->getValue('genderId')) {
-            Model_LinkMapper::insert('P2', $actor, Model_EntityMapper::getById($form->getValue('genderId')));
-        }
-        $data = $form->getValues();
-        foreach (array_unique($data['alias']) as $name) {
-            if (trim($name)) {
-                $alias = Model_EntityMapper::insert('E82', trim($name));
-                Model_LinkMapper::insert('P131', $actor, $alias);
-            }
-        }
         if ($source) {
             Model_LinkMapper::insert('P67', $source, $actor);
         }
+        self::saveAction($actor, $form);
         $this->_helper->message('info_insert');
         // @codeCoverageIgnoreStart
         if ($event) {
@@ -224,21 +208,30 @@ class Admin_ActorController extends Zend_Controller_Action {
         $actor->name = $form->getValue('name');
         $actor->description = $form->getValue('description');
         $actor->update();
-        Model_DateMapper::saveDates($actor, $form);
-        foreach (['residenceId' => 'P74', 'appearsFirstId' => 'OA8', 'appearsLastId' => 'OA9'] as $formField => $propertyCode) {
-            if (Model_LinkMapper::getLink($actor, $propertyCode)) {
-                Model_LinkMapper::getLink($actor, $propertyCode)->delete();
-            }
-            if ($form->getValue($formField)) {
-                $place = Model_LinkMapper::getLinkedEntity($form->getValue($formField), 'P53');
-                Model_LinkMapper::insert($propertyCode, $actor, $place);
-            }
-        }
         foreach (Model_LinkMapper::getLinkedEntities($actor, 'P131') as $alias) {
             $alias->delete();
         }
         foreach (Model_LinkMapper::getLinks($actor, 'P2') as $link) {
             $link->delete();
+        }
+        foreach (['residenceId' => 'P74', 'appearsFirstId' => 'OA8', 'appearsLastId' => 'OA9'] as $formField => $propertyCode) {
+            $link = Model_LinkMapper::getLink($actor, $propertyCode);
+            if ($link) {
+                $link->delete();
+            }
+        }
+        self::saveAction($actor, $form);
+        $this->_helper->message('info_update');
+        return $this->_helper->redirector->gotoUrl('/admin/actor/view/id/' . $actor->id);
+    }
+
+    public function saveAction($actor, $form) {
+        Model_DateMapper::saveDates($actor, $form);
+        foreach (['residenceId' => 'P74', 'appearsFirstId' => 'OA8', 'appearsLastId' => 'OA9'] as $formField => $propertyCode) {
+            if ($form->getValue($formField)) {
+                $place = Model_LinkMapper::getLinkedEntity($form->getValue($formField), 'P53');
+                Model_LinkMapper::insert($propertyCode, $actor, $place);
+            }
         }
         if ($form->getValue('genderId')) {
             Model_LinkMapper::insert('P2', $actor, Model_EntityMapper::getById($form->getValue('genderId')));

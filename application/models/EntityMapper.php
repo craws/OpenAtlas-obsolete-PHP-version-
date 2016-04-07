@@ -182,23 +182,15 @@ class Model_EntityMapper extends Model_AbstractMapper {
 
     public static function delete(Model_Entity $entity) {
         self::deleteDates($entity);
-        self::deleteLinkedObjects($entity, ['P1', 'P53', 'P73', 'P131']);
+        foreach (Model_LinkMapper::getLinks($entity, ['P1', 'P53', 'P73', 'P131']) as $link) {
+            parent::deleteAbstract('crm.entity', $link->getRange()->id);
+        }
         parent::deleteAbstract('crm.entity', $entity->id);
     }
 
-    private static function deleteLinkedObjects($entity, $codes) {
-        foreach ($codes as $code) {
-            foreach (Model_LinkMapper::getLinks($entity, $code) as $link) {
-                parent::deleteAbstract('crm.entity', $link->getRange()->id);
-            }
-        }
-    }
-
     public static function deleteDates(Model_Entity $entity) {
-        foreach (['OA1', 'OA2', 'OA3', 'OA4', 'OA5', 'OA6'] as $code) {
-            foreach (Model_LinkMapper::getLinks($entity, $code) as $link) {
-                parent::deleteAbstract('crm.entity', $link->getRange()->id);
-            }
+        foreach (Model_LinkMapper::getLinks($entity, ['OA1', 'OA2', 'OA3', 'OA4', 'OA5', 'OA6']) as $link) {
+            parent::deleteAbstract('crm.entity', $link->getRange()->id);
         }
     }
 
