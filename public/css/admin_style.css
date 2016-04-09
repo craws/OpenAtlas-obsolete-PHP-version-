@@ -4,6 +4,10 @@ html, body, input, select, textarea {
     font-family: helvetica, arial, sans-serif;
 }
 
+.jstree li > a > .jstree-icon {
+    display: none; 
+}
+
 #description {
     width: 33em;
     height: 8em;

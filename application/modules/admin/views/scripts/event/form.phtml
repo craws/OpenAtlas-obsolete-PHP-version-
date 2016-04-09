@@ -25,7 +25,7 @@
     </div>
     <div style="margin-top:1em;">
         <?= $form->formSubmit->renderViewHelper() ?>
-        <? if (!$this->actor && Zend_Controller_Front::getInstance()->getRequest()->getActionName() == 'insert'): ?>
+        <? if (!$this->event && Zend_Controller_Front::getInstance()->getRequest()->getActionName() == 'insert'): ?>
             <?= $form->continue ?>
             <?= $form->continueButton->renderViewHelper() ?>
         <? endif ?>
@@ -37,15 +37,16 @@
         <?
         $superTable = ['id' => 'super', 'pager' => true, 'filter' => true];
         $superTable['header'] = [_('name'), _('class'), _('first'), _('last')];
-        foreach ($this->events as $event) {
-            if ($event->name == Zend_Registry::get('config')->get('eventRootName')) {
-                continue;  // dont show root event
+        foreach ($this->events as $super) {
+            if ((isset($this->event) && $this->event->id == $super->id) ||
+                $super->name == Zend_Registry::get('config')->get('eventRootName')) {
+                continue;  // dont show root or same event
             }
             $superTable['data'][] = [
-                '<a onclick="selectFromTable(this, \'super\', ' . $event->id . ')">' . $event->name . '</a>',
-                $event->getClass()->nameTranslated,
-                $event->first,
-                $event->last,
+                '<a onclick="selectFromTable(this, \'super\', ' . $super->id . ')">' . $super->name . '</a>',
+                $super->getClass()->nameTranslated,
+                $super->first,
+                $super->last,
             ];
         }
         $this->table = $superTable;
