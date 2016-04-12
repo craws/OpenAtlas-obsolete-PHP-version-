@@ -75,6 +75,7 @@ mkdir for error logs
 ### I18N
 
 compile .po files in data/language
+
     $ msgfmt file.po -o file.mo
 
 ### Finishing
