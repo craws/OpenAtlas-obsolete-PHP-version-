@@ -5,7 +5,7 @@ html, body, input, select, textarea {
 }
 
 .jstree li > a > .jstree-icon {
-    display: none; 
+    display: none;
 }
 
 #description {
@@ -580,7 +580,7 @@ form td {
     text-align: right;
 }
 
-form td.data,form td.button {
+form td.data, form td.button, form.table td {
     text-align: left;
 }
 

@@ -80,7 +80,7 @@
                 }
                 $text = 'Involvement: ' . $link->getRange()->name . ' ' .
                     $link->getProperty()->nameInverseTranslated;
-                $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_delete', $text)) .
+                $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_remove', $text)) .
                     "')\" ";
                 $deleteButton = '<a href="/admin/function/unlink/id/' . $link->id . '/entityId/' . $event->id .
                     '/#tabActor' . '" class="button"' . $confirm . '>' . $this->ucstring('remove') . '</a>';
@@ -116,7 +116,7 @@
                     $type = $sourceType->name;
                 }
                 $text = $link->getProperty()->nameInverseTranslated . ': ' . $link->getDomain()->name;
-                $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_delete', $text)) .
+                $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_remove', $text)) .
                     "')\" ";
                 $deleteButton = '<a href="/admin/function/unlink/id/' . $link->id . '/entityId/' . $event->id .
                     '/#tabSource' . '" class="button"' . $confirm . '>' . $this->ucstring('remove') . '</a>';
@@ -141,7 +141,7 @@
                 $reference = $link->getDomain();
                 $type = Model_LinkMapper::getLinkedEntity($reference, 'P2');
                 $text = $this->ucstring('referred_by') . ': ' . $reference->name;
-                $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_delete', $text)) .
+                $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_remove', $text)) .
                     "')\" ";
                 $deleteLink = '<div><a href="/admin/function/unlink/id/' . $link->id . '/entityId/' . $event->id .
                     '/#tabReference' . '" class="button"' . $confirm . '>' . $this->ucstring('remove') . '</a></div>';

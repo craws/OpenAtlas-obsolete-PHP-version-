@@ -26,7 +26,7 @@
         $tableEvent['header'] = [_('page'), _('event'), _('first'), _('last'), '', ''];
         foreach ($this->eventLinks as $link) {
             $text = $this->translate('refers_to') . ': ' . $link->getRange()->name;
-            $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_delete', $text)) .
+            $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_remove', $text)) .
                 "')\" ";
             $deleteLink = '<div><a href="/admin/function/unlink/id/' . $link->id . '/entityId/' . $reference->id .
                 '/#tabEvent' . '" class="button"' . $confirm . '>' . $this->ucstring('remove') . '</a></div>';
@@ -50,7 +50,7 @@
         $tableSource['header'] = [_('source'), _('type'), _('page'), '', ''];
         foreach ($this->sourceLinks as $link) {
             $text = $this->translate('refers_to') . ': ' . $link->getRange()->name;
-            $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_delete', $text)) .
+            $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_remove', $text)) .
                 "')\" ";
             $deleteLink = '<div><a href="/admin/function/unlink/id/' . $link->id . '/entityId/' . $reference->id .
                 '/#tabSource' . '" class="button"' . $confirm . '>' . $this->ucstring('remove') . '</a></div>';
@@ -73,7 +73,7 @@
         $tableActor['header'] = [_('page'), _('actor'), _('class'), _('first'), _('last'), '', ''];
         foreach ($this->actorLinks as $link) {
             $text = $this->translate('refers_to') . ': ' . $link->getRange()->name;
-            $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_delete', $text)) .
+            $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_remove', $text)) .
                 "')\" ";
             $deleteLink = '<a href="/admin/function/unlink/id/' . $link->id . '/entityId/' . $reference->id .
                 '/#tabActor' . '" class="button"' . $confirm . '>' . $this->ucstring('remove') . '</a>';
@@ -98,7 +98,7 @@
         $tablePlace['header'] = [_('page'), _('name'), _('type'), _('first'), _('last'), '', ''];
         foreach ($this->placeLinks as $link) {
             $text = $this->translate('refers_to') . ': ' . $link->getRange()->name;
-            $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_delete', $text)) .
+            $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_remove', $text)) .
                 "')\" ";
             $deleteLink = '<a href="/admin/function/unlink/id/' . $link->id . '/entityId/' . $reference->id .
                 '/#tabPlace' . '" class="button"' . $confirm . '>' . $this->ucstring('remove') . '</a>';

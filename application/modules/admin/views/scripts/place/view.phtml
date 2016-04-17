@@ -113,7 +113,7 @@
         foreach ($this->sourceLinks as $link) {
             $source = $link->getDomain();
             $text = $this->translate('documented_in') . ': ' . $source->name;
-            $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_delete', $text)) . "')\" ";
+            $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_remove', $text)) . "')\" ";
             $deleteLink = '<div><a href="/admin/function/unlink/id/' . $link->id . '/entityId/' . $object->id . '/#tabSource' .
                 '" class="button"' . $confirm . '>' . $this->ucstring('remove') . '</a></div>';
             $tableSource['data'][] = [
@@ -137,7 +137,7 @@
             $reference = $link->getDomain();
             $type = Model_LinkMapper::getLinkedEntity($reference, 'P2');
             $text = $this->ucstring('referred_by') . ': ' . $reference->name;
-            $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_delete', $text)) . "')\" ";
+            $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_remove', $text)) . "')\" ";
             $deleteLink = '<div><a href="/admin/function/unlink/id/' . $link->id . '/entityId/' . $object->id .
                 '/#tabReference' . '" class="button"' . $confirm . '>' . $this->ucstring('remove') . '</a></div>';
             $tableBiblio['data'][] = [

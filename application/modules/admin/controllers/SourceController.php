@@ -13,24 +13,20 @@ class Admin_SourceController extends Zend_Controller_Action {
         $origin = Model_EntityMapper::getById($this->_getParam('id'));
         $array = Zend_Registry::get('config')->get('codeView')->toArray();
         $controller = $array[$origin->getClass()->code];
-        $this->view->menuHighlight = $controller;
-        $this->view->controller = $controller;
-        $this->view->origin = $origin;
-        $this->view->sources = Model_EntityMapper::getByCodes('Source', 'Source Content');
-    }
-
-    public function linkAction() {
-        $source = Model_EntityMapper::getById($this->_getParam('sourceId'));
-        $entity = Model_EntityMapper::getById($this->_getParam('rangeId'));
-        if (Model_LinkMapper::linkExists('P67', $source, $entity)) {
-            $this->_helper->message('error_link_exists');
-        } else {
-            Model_LinkMapper::insert('P67', $source, $entity);
-            $this->_helper->message('info_insert');
+        if (!$this->getRequest()->isPost()) {
+            $this->view->menuHighlight = $controller;
+            $this->view->controller = $controller;
+            $this->view->origin = $origin;
+            $this->view->sources = Model_EntityMapper::getByCodes('Source', 'Source Content');
+            return;
         }
-        $array = Zend_Registry::get('config')->get('codeView')->toArray();
-        $controller = $array[$entity->getClass()->code];
-        return $this->_helper->redirector->gotoUrl('/admin/' . $controller . '/view/id/' . $entity->id . '/#tabSource');
+        foreach ($this->getRequest()->getPost() as $sourceId) {
+            $source = Model_EntityMapper::getById((int) $sourceId);
+            if (!Model_LinkMapper::linkExists('P67', $source, $origin)) {
+                Model_LinkMapper::insert('P67', $source, $origin);
+            }
+        }
+        return $this->_helper->redirector->gotoUrl('/admin/' . $controller . '/view/id/' . $origin->id . '/#tabSource');
     }
 
     public function textAddAction() {

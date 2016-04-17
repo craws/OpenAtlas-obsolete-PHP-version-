@@ -116,7 +116,6 @@ class Acl extends \Zend_Acl {
         $this->add(new \Zend_Acl_Resource('admin:source:delete'));
         $this->add(new \Zend_Acl_Resource('admin:source:index'));
         $this->add(new \Zend_Acl_Resource('admin:source:insert'));
-        $this->add(new \Zend_Acl_Resource('admin:source:link'));
         $this->add(new \Zend_Acl_Resource('admin:source:text-add'));
         $this->add(new \Zend_Acl_Resource('admin:source:text-delete'));
         $this->add(new \Zend_Acl_Resource('admin:source:text-update'));
@@ -243,7 +242,6 @@ class Acl extends \Zend_Acl {
         $this->allow('editor', 'admin:source:add');
         $this->allow('editor', 'admin:source:delete');
         $this->allow('editor', 'admin:source:insert');
-        $this->allow('editor', 'admin:source:link');
         $this->allow('editor', 'admin:source:text-add');
         $this->allow('editor', 'admin:source:text-delete');
         $this->allow('editor', 'admin:source:text-update');
