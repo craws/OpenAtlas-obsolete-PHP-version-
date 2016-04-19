@@ -78,6 +78,7 @@ class Admin_PlaceController extends Zend_Controller_Action {
         $object = Model_EntityMapper::getById($this->_getParam('id'));
         $place = Model_LinkMapper::getLinkedEntity($object, 'P53');
         $form = new Admin_Form_Place();
+        $this->view->form = $form;
         $aliasIndex = 0;
         $aliasElements = Model_LinkMapper::getLinkedEntities($object, 'P1');
         if ($aliasElements) {
@@ -92,11 +93,8 @@ class Admin_PlaceController extends Zend_Controller_Action {
             $form->addElement($element);
             $aliasIndex++;
         }
-        $form->populate(['aliasElementId' => $aliasIndex]);
-        if ($this->getRequest()->isPost()) {
-            Admin_Form_Abstract::preValidation($form, $this->getRequest()->getPost());
-        }
-        if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
+        $form->populate(['aliasId' => $aliasIndex]);
+        if (!$this->getRequest()->isPost()) {
             $site = Model_NodeMapper::getNodeByEntity('type', 'Site', $object);
             $form->populate([
                 'name' => $object->name,
@@ -119,7 +117,10 @@ class Admin_PlaceController extends Zend_Controller_Action {
             $this->view->historicals = $historicals;
             $this->view->historicalTreeData = Model_NodeMapper::getTreeData('place', 'historical place', $historicals);
             $this->view->object = $object;
-            $this->view->form = $form;
+            return;
+        }
+        Admin_Form_Abstract::preValidation($form, $this->getRequest()->getPost());
+        if (!$form->isValid($this->getRequest()->getPost())) {
             return;
         }
         $object->name = $form->getValue('name');

@@ -60,14 +60,13 @@ class Admin_Form_Actor extends Craws\Form\Table {
             'placeholder' => $this->getView()->ucstring('select'),
             'attribs' => ['readonly' => 'true'],
         ]);
-        foreach (['alias'] as $field) {
-            $this->addElement('button', $field . 'ElementAdd', ['label' => '+']);
-            $this->addElement('hidden', $field . 'ElementId', ['value' => 1]);
-        }
+        $this->addElement('button', 'aliasAdd', ['label' => '+']);
+        $this->addElement('hidden', 'aliasId', ['value' => 1]);
         $submitLabel = 'save';
         if (Zend_Controller_Front::getInstance()->getRequest()->getActionName() == 'insert') {
             $submitLabel = 'insert';
         }
+        $this->addElement('hidden', 'startTime', ['value' => time()]);
         $this->addElement('button', 'formSubmit', ['label' => $this->getView()->ucstring($submitLabel), 'type' => 'submit']);
         $this->addElement('hidden', 'continue', ['decorators' => ['ViewHelper'], 'value' => 0]);
         $this->addElement('button', 'continueButton', [

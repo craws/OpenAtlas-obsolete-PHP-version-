@@ -157,6 +157,7 @@ class Admin_ActorController extends Zend_Controller_Action {
     public function updateAction() {
         $actor = Model_EntityMapper::getById($this->_getParam('id'));
         $form = new Admin_Form_Actor();
+        $this->view->form = $form;
         $aliasIndex = 0;
         $aliasElements = Model_LinkMapper::getLinkedEntities($actor, 'P131');
         if ($aliasElements) {
@@ -171,11 +172,8 @@ class Admin_ActorController extends Zend_Controller_Action {
             $form->addElement($element);
             $aliasIndex++;
         }
-        $form->populate(['aliasElementId' => $aliasIndex]);
-        if ($this->getRequest()->isPost()) {
-            Admin_Form_Abstract::preValidation($form, $this->getRequest()->getPost());
-        }
-        if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
+        $form->populate(['aliasId' => $aliasIndex]);
+        if (!$this->getRequest()->isPost()) {
             $form->populate(['name' => $actor->name, 'description' => $actor->description]);
             foreach (['residence' => 'P74', 'appearsFirst' => 'OA8', 'appearsLast' => 'OA9'] as $formField => $propertyCode) {
                 $place = Model_LinkMapper::getLinkedEntity($actor, $propertyCode);
@@ -202,7 +200,10 @@ class Admin_ActorController extends Zend_Controller_Action {
             }
             $this->view->objects = Model_EntityMapper::getByCodes('PhysicalObject');
             $this->view->actor = $actor;
-            $this->view->form = $form;
+            return;
+        }
+        Admin_Form_Abstract::preValidation($form, $this->getRequest()->getPost());
+        if (!$form->isValid($this->getRequest()->getPost())) {
             return;
         }
         $actor->name = $form->getValue('name');

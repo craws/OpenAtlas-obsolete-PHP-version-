@@ -1,14 +1,14 @@
 <? $form = $this->form; ?>
 <?= $this->displayErrors($form); ?>
+<?= $form->renderForm(false); ?>
 <div style="float:left">
-    <?= $form->renderForm(false); ?>
     <div>
         <div class="tableRow">
             <?= $form->name->renderLabel() ?>
             <div class="tableCell"><?= $form->name->renderViewHelper() ?></div>
         </div>
         <?= $this->displayTreeSelect('site', $form) ?>
-        <?= $this->multipleSelect($form, 'alias') ?>
+        <?= $this->displayAliasForm($form) ?>
         <?= $this->render('dateForm.phtml'); ?>
         <div class="tableRow">
             <?= $form->easting->renderLabel() ?>
@@ -47,8 +47,8 @@
 <script type="text/javascript" src="/js/leaflet/map.js"></script>
 <script type="text/javascript">
     $(document).ready(function () {
-        $("#aliasElementAdd").click(function () {
-            ajaxAddField("alias", $("#aliasElementId").val());
+        $("#aliasAdd").click(function () {
+            ajaxAddField("alias", $("#aliasId").val());
         });
     });
 </script>

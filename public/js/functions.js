@@ -132,10 +132,10 @@ function ajaxAddField(fieldName, elementId) {
     $.ajax({
         type: "POST",
         url: "/admin/function/add-field",
-        data: "name=" + fieldName + ",elementId=" + elementId,
+        data: {name: fieldName, elementId: elementId},
         success: function (newElement) {
-            $("#" + fieldName + "ElementAdd").before(newElement);
-            $("#" + fieldName + "ElementId").val(++elementId);
+            $("#" + fieldName + "Add").before(newElement);
+            $("#" + fieldName + "Id").val(++elementId);
         }
     });
 }

@@ -24,8 +24,8 @@ class Admin_Form_Place extends Craws\Form\Table {
         ]);
         $this->addElement('hidden', 'administrativeId', ['decorators' => ['ViewHelper']]);
         $this->addElement('hidden', 'historicalId', ['decorators' => ['ViewHelper']]);
-        $this->addElement('button', 'aliasElementAdd', ['label' => '+']);
-        $this->addElement('hidden', 'aliasElementId', ['value' => 1]);
+        $this->addElement('button', 'aliasAdd', ['label' => '+']);
+        $this->addElement('hidden', 'aliasId', ['value' => 1]);
         Admin_Form_Abstract::addDates($this, ['begin', 'begin2', 'end', 'end2']);
         $this->addElement('text', 'easting', ['label' => $this->getView()->ucstring('easting')]);
         $this->addElement('text', 'northing', ['label' => $this->getView()->ucstring('northing')]);
