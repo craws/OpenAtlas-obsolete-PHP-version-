@@ -40,15 +40,16 @@ deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main
 
 ### Files
 
-copy the application to /var/www/your_sitename
+copy the files to /var/www/your_sitename
 
 ### Database
 
-WARNING! After importing data_web.sql you can login as admin (username: a, password: a), change account immediately!
+WARNING! After importing data_web.sql you can login as admin (username: a, password: a), change this account immediately!
 
-postgis is needed, one way to add it is to uncomment "CREATE EXTENSION postgis;" on top of data/install/structure.sql
+PostGis is needed. To add it uncomment "CREATE EXTENSION postgis;" on top of data/install/structure.sql
 
-as postgres:
+as postgres
+
     $ createuser openatlas_master -P
     $ createdb -O openatlas_master openatlas_master
     $ cd data/install
@@ -59,12 +60,14 @@ optional - create database openatlas_master_test for unittests
 ### Configuration
 
 adapt /application/configs/config.ini
+
 adapt and rename /application/configs/password.example.ini to password.ini
 
 ### Apache
 
-- use apache_config as template for a new vhost
-- mkdir for error logs
+use apache_config as template for a new vhost
+mkdir for error logs
+
     # a2ensite
     # apacha2ctl configtest
     # /etc/init.d/apache restart
@@ -72,33 +75,10 @@ adapt and rename /application/configs/password.example.ini to password.ini
 ### I18N
 
 compile .po files in data/language
+
     $ msgfmt file.po -o file.mo
 
 ### Finishing
 
-- replace default user and password
+- change default user and password
 - remove the data/install directory
-- test postgis, password reset, ...
-
-## Database Dupms
-
-### Structure
-
-1) pg_dump -sc --if-exists -n crm -n gis -n log -n web openatlas_master > structure.sql
-2) add "CREATE EXTENSION postgis;" and uncomment after installation for unittests
-
-### CRM Data
-
-pg_dump -a -n crm openatlas_master > data/install/data_crm.sql
-
-### Web Schema
-
-pg_dump -n web openatlas_master > /tmp/openatlas_web.sql
-
-### CSV
-
-COPY crm.class TO '/tmp/crm_class.csv' DELIMITER ',' CSV HEADER FORCE QUOTE *;
-COPY crm.entity TO '/tmp/crm_entity.csv' DELIMITER ',' CSV HEADER FORCE QUOTE *;
-COPY crm.link TO '/tmp/crm_link.csv' DELIMITER ',' CSV HEADER FORCE QUOTE *;
-COPY crm.link_property TO '/tmp/crm_link_property.csv' DELIMITER ',' CSV HEADER FORCE QUOTE *;
-COPY crm.property TO '/tmp/crm_property.csv' DELIMITER ',' CSV HEADER FORCE QUOTE *;
