@@ -2,7 +2,7 @@
 
 /* Copyright 2016 by Alexander Watzinger and others. Please see the file README.md for licensing information */
 
-class Model_EntityMapper extends Model_AbstractMapper {
+class Model_EntityMapper extends \Model_AbstractMapper {
 
     private static $sql = "
         SELECT e.id, e.class_id, e.name, e.description, e.created, e.modified, c.code,
@@ -192,6 +192,26 @@ class Model_EntityMapper extends Model_AbstractMapper {
         foreach (Model_LinkMapper::getLinks($entity, ['OA1', 'OA2', 'OA3', 'OA4', 'OA5', 'OA6']) as $link) {
             parent::deleteAbstract('crm.entity', $link->getRange()->id);
         }
+    }
+
+    /* checks if an entry was modified since opening the update form */
+    public static function checkIfModified(Model_Entity $entity, $startime) {
+        $sql = "SELECT e.modified FROM crm.entity e WHERE id = :id;";
+        $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
+        $statement->bindValue(':id', $entity->id);
+        $statement->execute();
+        $row = $statement->fetch();
+        $dateStarttime = new Zend_Date($startime, Zend_Date::TIMESTAMP);
+        $dateModified = parent::toZendDate($row['modified']);
+        var_dump($dateStarttime);
+        var_dump($dateModified);
+        if ($dateModified->isLater($dateStarttime)) {
+        //if ($dateStarttime->isLater($dateModified)) {
+            var_dump('yes');die;
+            return true;
+        }
+        var_dump('no');die;
+        return false;
     }
 
 }

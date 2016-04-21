@@ -157,53 +157,24 @@ class Admin_ActorController extends Zend_Controller_Action {
     public function updateAction() {
         $actor = Model_EntityMapper::getById($this->_getParam('id'));
         $form = new Admin_Form_Actor();
+        $form->prepareUpdate($actor);
         $this->view->form = $form;
-        $aliasIndex = 0;
-        $aliasElements = Model_LinkMapper::getLinkedEntities($actor, 'P131');
-        if ($aliasElements) {
-            foreach ($aliasElements as $alias) {
-                $element = $form->createElement('text', 'alias' . $aliasIndex, ['belongsTo' => 'alias']);
-                $element->setValue($alias->name);
-                $form->addElement($element);
-                $aliasIndex++;
-            }
-        } else {
-            $element = $form->createElement('text', 'alias0', ['belongsTo' => 'alias']);
-            $form->addElement($element);
-            $aliasIndex++;
-        }
-        $form->populate(['aliasId' => $aliasIndex]);
         if (!$this->getRequest()->isPost()) {
-            $form->populate(['name' => $actor->name, 'description' => $actor->description]);
-            foreach (['residence' => 'P74', 'appearsFirst' => 'OA8', 'appearsLast' => 'OA9'] as $formField => $propertyCode) {
-                $place = Model_LinkMapper::getLinkedEntity($actor, $propertyCode);
-                if ($place) {
-                    $object = Model_LinkMapper::getLinkedEntity($place, 'P53', true);
-                    $form->populate([
-                        $formField . 'Id' => $object->id,
-                        $formField . 'Button' => $object->name
-                    ]);
-                }
-            }
-            Admin_Form_Abstract::populateDates($form, $actor, ['OA1' => 'begin', 'OA3' => 'begin', 'OA2' => 'end', 'OA4' => 'end']);
-            if ($actor->getClass()->code != 'E21') {
-                $form->removeElement('birth');
-                $form->removeElement('death');
-                $form->removeElement('genderId');
-                $form->removeElement('genderButton');
-            } else {
-                $gender = Model_NodeMapper::getNodeByEntity('type', 'Gender', $actor);
-                if ($gender) {
-                    $form->populate(['genderId' => $gender->id, 'genderButton' => $gender->name]);
+            self::prepareDefaultUpdate($actor, $form);
+            return;
+        }
+        Admin_Form_Abstract::preValidation($form, $this->getRequest()->getPost());
+        $wasModified = Model_EntityMapper::checkIfModified($actor, $form->startTime->getValue());
+        if (!$form->isValid($this->getRequest()->getPost())) {
+            if ($actor->getClass()->code == 'E21') {
+                $gender = false;
+                if ($form->genderId->getValue()) {
+                    $gender = Model_EntityMapper::getById($form->genderId->getValue());
                 }
                 $this->view->genderTreeData = Model_NodeMapper::getTreeData('type', 'gender', $gender);
             }
             $this->view->objects = Model_EntityMapper::getByCodes('PhysicalObject');
             $this->view->actor = $actor;
-            return;
-        }
-        Admin_Form_Abstract::preValidation($form, $this->getRequest()->getPost());
-        if (!$form->isValid($this->getRequest()->getPost())) {
             return;
         }
         $actor->name = $form->getValue('name');
@@ -215,7 +186,7 @@ class Admin_ActorController extends Zend_Controller_Action {
         foreach (Model_LinkMapper::getLinks($actor, 'P2') as $link) {
             $link->delete();
         }
-        foreach (['residenceId' => 'P74', 'appearsFirstId' => 'OA8', 'appearsLastId' => 'OA9'] as $formField => $propertyCode) {
+        foreach (['residenceId' => 'P74', 'appearsFirstId' => 'OA8', 'appearsLastId' => 'OA9'] as $propertyCode) {
             $link = Model_LinkMapper::getLink($actor, $propertyCode);
             if ($link) {
                 $link->delete();
@@ -226,7 +197,31 @@ class Admin_ActorController extends Zend_Controller_Action {
         return $this->_helper->redirector->gotoUrl('/admin/actor/view/id/' . $actor->id);
     }
 
-    public function saveAction($actor, $form) {
+    private function prepareDefaultUpdate(Model_Entity $actor, Zend_Form $form) {
+        $form->populate(['name' => $actor->name, 'description' => $actor->description]);
+        foreach (['residence' => 'P74', 'appearsFirst' => 'OA8', 'appearsLast' => 'OA9'] as $formField => $propertyCode) {
+            $place = Model_LinkMapper::getLinkedEntity($actor, $propertyCode);
+            if ($place) {
+                $object = Model_LinkMapper::getLinkedEntity($place, 'P53', true);
+                $form->populate([
+                    $formField . 'Id' => $object->id,
+                    $formField . 'Button' => $object->name
+                ]);
+            }
+        }
+        Admin_Form_Abstract::populateDates($form, $actor, ['OA1' => 'begin', 'OA3' => 'begin', 'OA2' => 'end', 'OA4' => 'end']);
+        if ($actor->getClass()->code == 'E21') {
+            $gender = Model_NodeMapper::getNodeByEntity('type', 'Gender', $actor);
+            if ($gender) {
+                $form->populate(['genderId' => $gender->id, 'genderButton' => $gender->name]);
+            }
+            $this->view->genderTreeData = Model_NodeMapper::getTreeData('type', 'gender', $gender);
+        }
+        $this->view->objects = Model_EntityMapper::getByCodes('PhysicalObject');
+        $this->view->actor = $actor;
+    }
+
+    private function saveAction($actor, $form) {
         Model_DateMapper::saveDates($actor, $form);
         foreach (['residenceId' => 'P74', 'appearsFirstId' => 'OA8', 'appearsLastId' => 'OA9'] as $formField => $propertyCode) {
             if ($form->getValue($formField)) {

@@ -19,7 +19,7 @@ class Admin_Form_Actor extends Craws\Form\Table {
             'uncheckedValue' => 0,
         ]);
         $this->addElement('text', 'name', [
-            'class' => 'required',
+            //'class' => 'required',
             'required' => true,
             'label' => $this->getView()->ucstring('name'),
         ]);
@@ -75,6 +75,30 @@ class Admin_Form_Actor extends Craws\Form\Table {
             'onclick' => "$('#continue').val(1);$('#actorForm').submit();return false;"
         ]);
         $this->setElementFilters(['StringTrim']);
+    }
+
+    public function prepareUpdate(Model_Entity $actor) {
+        $aliasIndex = 0;
+        $aliasElements = Model_LinkMapper::getLinkedEntities($actor, 'P131');
+        if ($aliasElements) {
+            foreach ($aliasElements as $alias) {
+                $element = $this->createElement('text', 'alias' . $aliasIndex, ['belongsTo' => 'alias']);
+                $element->setValue($alias->name);
+                $this->addElement($element);
+                $aliasIndex++;
+            }
+        } else {
+            $element = $this->createElement('text', 'alias0', ['belongsTo' => 'alias']);
+            $this->addElement($element);
+            $aliasIndex++;
+        }
+        $this->populate(['aliasId' => $aliasIndex]);
+        if ($actor->getClass()->code != 'E21') {
+            $this->removeElement('birth');
+            $this->removeElement('death');
+            $this->removeElement('genderId');
+            $this->removeElement('genderButton');
+        }
     }
 
 }

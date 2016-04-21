@@ -1,4 +1,4 @@
-<? $this->breadcrumb = [$this->ucstring('search')]; ?>
+<? $this->breadcrumb = [$this->link('search'), $this->term]; ?>
 <?= $this->render('search/form.phtml'); ?>
 <div style="clear:both;margin-bottom:1em;"></div>
 <? if (!$this->entities): ?><?= $this->ucstring('no_search_results'); ?><? return ?><? endif ?>
