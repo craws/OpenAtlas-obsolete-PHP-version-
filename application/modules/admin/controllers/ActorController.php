@@ -164,8 +164,13 @@ class Admin_ActorController extends Zend_Controller_Action {
             return;
         }
         Admin_Form_Abstract::preValidation($form, $this->getRequest()->getPost());
-        $wasModified = Model_EntityMapper::checkIfModified($actor, $form->startTime->getValue());
-        if (!$form->isValid($this->getRequest()->getPost())) {
+        $formValid = $form->isValid($this->getRequest()->getPost());
+        $modified = Model_EntityMapper::checkIfModified($actor, $form->modified->getValue());
+        if ($modified) {
+            $this->view->modified = true;
+            $this->_helper->message('error_modified');
+        }
+        if (!$formValid || $modified) {
             if ($actor->getClass()->code == 'E21') {
                 $gender = false;
                 if ($form->genderId->getValue()) {
@@ -198,7 +203,11 @@ class Admin_ActorController extends Zend_Controller_Action {
     }
 
     private function prepareDefaultUpdate(Model_Entity $actor, Zend_Form $form) {
-        $form->populate(['name' => $actor->name, 'description' => $actor->description]);
+        $form->populate([
+            'name' => $actor->name,
+            'description' => $actor->description,
+            'modified' => $actor->modified->getTimestamp()
+        ]);
         foreach (['residence' => 'P74', 'appearsFirst' => 'OA8', 'appearsLast' => 'OA9'] as $formField => $propertyCode) {
             $place = Model_LinkMapper::getLinkedEntity($actor, $propertyCode);
             if ($place) {

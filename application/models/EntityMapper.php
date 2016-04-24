@@ -195,23 +195,10 @@ class Model_EntityMapper extends \Model_AbstractMapper {
     }
 
     /* checks if an entry was modified since opening the update form */
-    public static function checkIfModified(Model_Entity $entity, $startime) {
-        $sql = "SELECT e.modified FROM crm.entity e WHERE id = :id;";
-        $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
-        $statement->bindValue(':id', $entity->id);
-        $statement->execute();
-        $row = $statement->fetch();
-        $dateStarttime = new Zend_Date($startime, Zend_Date::TIMESTAMP);
-        $dateModified = parent::toZendDate($row['modified']);
-        var_dump($dateStarttime);
-        var_dump($dateModified);
-        if ($dateModified->isLater($dateStarttime)) {
-        //if ($dateStarttime->isLater($dateModified)) {
-            var_dump('yes');die;
+    public static function checkIfModified(Model_Entity $entity, $modified) {
+        if ($entity->modified->getTimestamp() > $modified) {
             return true;
         }
-        var_dump('no');die;
-        return false;
     }
 
 }
