@@ -24,8 +24,8 @@
         <?= $form->description->renderLabel() ?>
         <div><?= $form->description->renderViewHelper() ?></div>
     </div>
-    <?= $form->modified->renderViewHelper() ?>
     <div style="margin-top:1em;">
+        <?= $form->modified->renderViewHelper() ?>
         <?= $form->formSubmit->renderViewHelper() ?>
         <? if (!$this->event && Zend_Controller_Front::getInstance()->getRequest()->getActionName() == 'insert'): ?>
             <?= $form->continue ?>

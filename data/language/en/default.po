@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenATLAS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-17 17:43+0100\n"
+"POT-Creation-Date: 2016-04-25 17:04+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Alexander Watzinger <alexander.watzinger@craws.net>\n"
 "Language-Team: craws.net <alexander.watzinger@craws.net>\n"
@@ -33,11 +33,11 @@ msgstr "This link already exists."
 #: ../../../application/modules/admin/controllers/MemberController.php:27
 #: ../../../application/modules/admin/controllers/MemberController.php:59
 #: ../../../application/modules/admin/controllers/PlaceController.php:14
-#: ../../../application/modules/admin/controllers/PlaceController.php:225
+#: ../../../application/modules/admin/controllers/PlaceController.php:226
 #: ../../../application/modules/admin/controllers/ReferenceController.php:22
 #: ../../../application/modules/admin/controllers/RelationController.php:28
-#: ../../../application/modules/admin/controllers/SourceController.php:47
-#: ../../../application/modules/admin/controllers/SourceController.php:154
+#: ../../../application/modules/admin/controllers/SourceController.php:43
+#: ../../../application/modules/admin/controllers/SourceController.php:150
 #: ../../../application/modules/admin/controllers/UserController.php:90
 msgid "info_insert"
 msgstr "An entry has been created."
@@ -47,8 +47,12 @@ msgstr "An entry has been created."
 msgid "error_missing_class"
 msgstr "missing class"
 
-#: ../../../application/modules/admin/controllers/ActorController.php:224
-#: ../../../application/modules/admin/controllers/ActorController.php:246
+#: ../../../application/modules/admin/controllers/ActorController.php:172
+msgid "error_modified"
+msgstr "Update failed."
+
+#: ../../../application/modules/admin/controllers/ActorController.php:202
+#: ../../../application/modules/admin/controllers/ActorController.php:252
 #: ../../../application/modules/admin/controllers/BiblioController.php:67
 #: ../../../application/modules/admin/controllers/CarrierController.php:87
 #: ../../../application/modules/admin/controllers/ContentController.php:28
@@ -56,28 +60,28 @@ msgstr "missing class"
 #: ../../../application/modules/admin/controllers/HierarchyController.php:101
 #: ../../../application/modules/admin/controllers/InvolvementController.php:101
 #: ../../../application/modules/admin/controllers/MemberController.php:98
-#: ../../../application/modules/admin/controllers/PlaceController.php:168
+#: ../../../application/modules/admin/controllers/PlaceController.php:169
 #: ../../../application/modules/admin/controllers/ProfileController.php:32
 #: ../../../application/modules/admin/controllers/ProfileController.php:63
 #: ../../../application/modules/admin/controllers/ReferenceController.php:53
 #: ../../../application/modules/admin/controllers/RelationController.php:69
 #: ../../../application/modules/admin/controllers/SettingsController.php:23
-#: ../../../application/modules/admin/controllers/SourceController.php:80
-#: ../../../application/modules/admin/controllers/SourceController.php:209
+#: ../../../application/modules/admin/controllers/SourceController.php:76
+#: ../../../application/modules/admin/controllers/SourceController.php:205
 #: ../../../application/modules/admin/controllers/UserController.php:58
 msgid "info_update"
 msgstr "Changes have been saved."
 
-#: ../../../application/modules/admin/controllers/ActorController.php:252
+#: ../../../application/modules/admin/controllers/ActorController.php:258
 #: ../../../application/modules/admin/controllers/CarrierController.php:108
 #: ../../../application/modules/admin/controllers/EventController.php:277
 #: ../../../application/modules/admin/controllers/FunctionController.php:19
 #: ../../../application/modules/admin/controllers/HierarchyController.php:120
-#: ../../../application/modules/admin/controllers/PlaceController.php:244
-#: ../../../application/modules/admin/controllers/PlaceController.php:250
+#: ../../../application/modules/admin/controllers/PlaceController.php:245
+#: ../../../application/modules/admin/controllers/PlaceController.php:251
 #: ../../../application/modules/admin/controllers/ReferenceController.php:87
-#: ../../../application/modules/admin/controllers/SourceController.php:54
-#: ../../../application/modules/admin/controllers/SourceController.php:215
+#: ../../../application/modules/admin/controllers/SourceController.php:50
+#: ../../../application/modules/admin/controllers/SourceController.php:211
 #: ../../../application/modules/admin/controllers/UserController.php:103
 msgid "info_delete"
 msgstr "The entry has been deleted."
@@ -212,7 +216,7 @@ msgstr "death"
 #: ../../../application/modules/admin/forms/Text.php:20
 #: ../../../application/modules/admin/forms/Type.php:16
 #: ../../../application/modules/admin/forms/User.php:48
-#: ../../../application/modules/admin/views/scripts/actor/form.phtml:44
+#: ../../../application/modules/admin/views/scripts/actor/form.phtml:45
 #: ../../../application/modules/admin/views/scripts/actor/index.phtml:9
 #: ../../../application/modules/admin/views/scripts/actor/view.phtml:254
 #: ../../../application/modules/admin/views/scripts/biblio/form.phtml:22
@@ -288,24 +292,24 @@ msgid "select"
 msgstr "select"
 
 #: ../../../application/modules/admin/forms/Actor.php:38
-#: ../../../application/modules/admin/views/scripts/actor/form.phtml:61
+#: ../../../application/modules/admin/views/scripts/actor/form.phtml:62
 #: ../../../application/modules/admin/views/scripts/actor/view.phtml:42
 msgid "residence"
 msgstr "residence"
 
 #: ../../../application/modules/admin/forms/Actor.php:47
-#: ../../../application/modules/admin/views/scripts/actor/form.phtml:62
+#: ../../../application/modules/admin/views/scripts/actor/form.phtml:63
 #: ../../../application/modules/admin/views/scripts/actor/view.phtml:45
 msgid "appears_first"
 msgstr "appears first"
 
 #: ../../../application/modules/admin/forms/Actor.php:56
-#: ../../../application/modules/admin/views/scripts/actor/form.phtml:63
+#: ../../../application/modules/admin/views/scripts/actor/form.phtml:64
 #: ../../../application/modules/admin/views/scripts/actor/view.phtml:48
 msgid "appears_last"
 msgstr "appears last"
 
-#: ../../../application/modules/admin/forms/Actor.php:74
+#: ../../../application/modules/admin/forms/Actor.php:73
 #: ../../../application/modules/admin/forms/Carrier.php:43
 #: ../../../application/modules/admin/forms/Event.php:43
 #: ../../../application/modules/admin/forms/Member.php:35
@@ -575,7 +579,6 @@ msgstr "search term"
 
 #: ../../../application/modules/admin/forms/Search.php:31
 #: ../../../application/layouts/scripts/admin.phtml:133
-#: ../../../application/modules/admin/views/scripts/search/index.phtml:1
 msgid "search"
 msgstr "search"
 
@@ -705,6 +708,12 @@ msgstr "bookmark"
 msgid "bookmark_remove"
 msgstr "remove bookmark"
 
+#: ../../../library/Craws/View/Helper/DisplayAliasForm.php:9
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:36
+#: ../../../application/modules/admin/views/scripts/place/view.phtml:33
+msgid "alias"
+msgstr "alias"
+
 #: ../../../library/Craws/View/Helper/DisplayTableSelect.php:21
 #: ../../../library/Craws/View/Helper/DisplayTreeSelect.php:34
 msgid "clear"
@@ -778,26 +787,6 @@ msgid "delete"
 msgstr "delete"
 
 #: ../../../library/Craws/View/Helper/Link.php:62
-#: ../../../application/modules/admin/views/scripts/actor/view.phtml:87
-#: ../../../application/modules/admin/views/scripts/actor/view.phtml:117
-#: ../../../application/modules/admin/views/scripts/actor/view.phtml:136
-#: ../../../application/modules/admin/views/scripts/actor/view.phtml:196
-#: ../../../application/modules/admin/views/scripts/actor/view.phtml:230
-#: ../../../application/modules/admin/views/scripts/actor/view.phtml:259
-#: ../../../application/modules/admin/views/scripts/carrier/view.phtml:46
-#: ../../../application/modules/admin/views/scripts/event/view.phtml:83
-#: ../../../application/modules/admin/views/scripts/event/view.phtml:119
-#: ../../../application/modules/admin/views/scripts/event/view.phtml:144
-#: ../../../application/modules/admin/views/scripts/place/view.phtml:116
-#: ../../../application/modules/admin/views/scripts/place/view.phtml:140
-#: ../../../application/modules/admin/views/scripts/reference/view.phtml:29
-#: ../../../application/modules/admin/views/scripts/reference/view.phtml:53
-#: ../../../application/modules/admin/views/scripts/reference/view.phtml:76
-#: ../../../application/modules/admin/views/scripts/reference/view.phtml:101
-#: ../../../application/modules/admin/views/scripts/source/view.phtml:42
-#: ../../../application/modules/admin/views/scripts/source/view.phtml:70
-#: ../../../application/modules/admin/views/scripts/source/view.phtml:96
-#: ../../../application/modules/admin/views/scripts/source/view.phtml:122
 #: ../../../application/modules/admin/views/scripts/source/view.phtml:156
 #: ../../../application/modules/admin/views/scripts/user/view.phtml:8
 msgid "confirm_delete"
@@ -956,7 +945,7 @@ msgid "add"
 msgstr "add"
 
 #: ../../../application/modules/admin/views/scripts/actor/add.phtml:8
-#: ../../../application/modules/admin/views/scripts/actor/form.phtml:44
+#: ../../../application/modules/admin/views/scripts/actor/form.phtml:45
 #: ../../../application/modules/admin/views/scripts/actor/index.phtml:9
 #: ../../../application/modules/admin/views/scripts/actor/view.phtml:50
 #: ../../../application/modules/admin/views/scripts/actor/view.phtml:77
@@ -996,7 +985,7 @@ msgid "first"
 msgstr "first"
 
 #: ../../../application/modules/admin/views/scripts/actor/add.phtml:8
-#: ../../../application/modules/admin/views/scripts/actor/form.phtml:44
+#: ../../../application/modules/admin/views/scripts/actor/form.phtml:45
 #: ../../../application/modules/admin/views/scripts/actor/index.phtml:9
 #: ../../../application/modules/admin/views/scripts/actor/view.phtml:50
 #: ../../../application/modules/admin/views/scripts/actor/view.phtml:77
@@ -1034,6 +1023,16 @@ msgstr "first"
 #: ../../../application/modules/admin/views/scripts/source/view.phtml:93
 msgid "last"
 msgstr "last"
+
+#: ../../../application/modules/admin/views/scripts/actor/update.phtml:4
+msgid "error_modified_info"
+msgstr ""
+"The entry couldn't  be updated because it has been modified by  %s. Please "
+"copy or remember your changes and press reload to try again."
+
+#: ../../../application/modules/admin/views/scripts/actor/update.phtml:5
+msgid "reload"
+msgstr "reload"
 
 #: ../../../application/modules/admin/views/scripts/actor/view.phtml:6
 #: ../../../application/modules/admin/views/scripts/place/view.phtml:9
@@ -1078,11 +1077,6 @@ msgstr "references"
 msgid "places"
 msgstr "places"
 
-#: ../../../application/modules/admin/views/scripts/actor/view.phtml:36
-#: ../../../application/modules/admin/views/scripts/place/view.phtml:33
-msgid "alias"
-msgstr "alias"
-
 #: ../../../application/modules/admin/views/scripts/actor/view.phtml:57
 #: ../../../application/modules/admin/views/scripts/carrier/view.phtml:29
 #: ../../../application/modules/admin/views/scripts/event/view.phtml:44
@@ -1096,6 +1090,30 @@ msgstr "between"
 #: ../../../application/modules/admin/views/scripts/place/view.phtml:58
 msgid "and"
 msgstr "and"
+
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:87
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:117
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:136
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:166
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:196
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:230
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:259
+#: ../../../application/modules/admin/views/scripts/carrier/view.phtml:46
+#: ../../../application/modules/admin/views/scripts/event/view.phtml:83
+#: ../../../application/modules/admin/views/scripts/event/view.phtml:119
+#: ../../../application/modules/admin/views/scripts/event/view.phtml:144
+#: ../../../application/modules/admin/views/scripts/place/view.phtml:116
+#: ../../../application/modules/admin/views/scripts/place/view.phtml:140
+#: ../../../application/modules/admin/views/scripts/reference/view.phtml:29
+#: ../../../application/modules/admin/views/scripts/reference/view.phtml:53
+#: ../../../application/modules/admin/views/scripts/reference/view.phtml:76
+#: ../../../application/modules/admin/views/scripts/reference/view.phtml:101
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:42
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:70
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:96
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:122
+msgid "confirm_remove"
+msgstr "remove %s?"
 
 #: ../../../application/modules/admin/views/scripts/actor/view.phtml:89
 #: ../../../application/modules/admin/views/scripts/actor/view.phtml:120
@@ -1132,10 +1150,6 @@ msgstr "relation"
 #: ../../../application/modules/admin/views/scripts/place/view.phtml:115
 msgid "documented_in"
 msgstr "documented in"
-
-#: ../../../application/modules/admin/views/scripts/actor/view.phtml:166
-msgid "confirm_remove"
-msgstr "remove %s?"
 
 #: ../../../application/modules/admin/views/scripts/actor/view.phtml:195
 #: ../../../application/modules/admin/views/scripts/actor/view.phtml:229

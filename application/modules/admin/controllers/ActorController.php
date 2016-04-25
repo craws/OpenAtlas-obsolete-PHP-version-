@@ -167,7 +167,8 @@ class Admin_ActorController extends Zend_Controller_Action {
         $formValid = $form->isValid($this->getRequest()->getPost());
         $modified = Model_EntityMapper::checkIfModified($actor, $form->modified->getValue());
         if ($modified) {
-            $this->view->modified = true;
+            $log = Model_UserLogMapper::getLogForView('entity', $actor->id);
+            $this->view->modifier = $log['modifier_name'];
             $this->_helper->message('error_modified');
         }
         if (!$formValid || $modified) {

@@ -6,4 +6,8 @@ $this->breadcrumb = [
     $this->ucstring('edit')
 ];
 ?>
+<? if ($this->modifier): ?>
+    <p class="error"><?= $this->translate('error_modified_info', $this->modifier) ?></p>
+    <p><a class="button" href="/admin/reference/update/id/<?= $this->reference->id ?>"><?= $this->ucstring('reload') ?></a></p>
+<? endif ?>
 <?= $this->render('reference/form.phtml'); ?>

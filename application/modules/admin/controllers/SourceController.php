@@ -177,7 +177,8 @@ class Admin_SourceController extends Zend_Controller_Action {
     public function updateAction() {
         $source = Model_EntityMapper::getById($this->_getParam('id'));
         $form = new Admin_Form_Source();
-        if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
+        $this->view->form = $form;
+        if (!$this->getRequest()->isPost()) {
             $form->populate([
                 'class' => $source->getClass()->id,
                 'name' => $source->name,
@@ -190,7 +191,16 @@ class Admin_SourceController extends Zend_Controller_Action {
             }
             $this->view->typeTreeData = Model_NodeMapper::getTreeData('type', 'source', [$type]);
             $this->view->source = $source;
-            $this->view->form = $form;
+            return;
+        }
+        $formValid = $form->isValid($this->getRequest()->getPost());
+        $modified = Model_EntityMapper::checkIfModified($source, $form->modified->getValue());
+        if ($modified) {
+            $log = Model_UserLogMapper::getLogForView('entity', $source->id);
+            $this->view->modifier = $log['modifier_name'];
+            $this->_helper->message('error_modified');
+        }
+        if (!$formValid || $modified) {
             return;
         }
         $source->name = $form->getValue('name');
