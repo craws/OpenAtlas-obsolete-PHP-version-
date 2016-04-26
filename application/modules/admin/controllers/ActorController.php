@@ -135,7 +135,7 @@ class Admin_ActorController extends Zend_Controller_Action {
         if ($source) {
             Model_LinkMapper::insert('P67', $source, $actor);
         }
-        self::saveAction($actor, $form);
+        self::save($actor, $form);
         $this->_helper->message('info_insert');
         // @codeCoverageIgnoreStart
         if ($event) {
@@ -169,7 +169,6 @@ class Admin_ActorController extends Zend_Controller_Action {
         if ($modified) {
             $log = Model_UserLogMapper::getLogForView('entity', $actor->id);
             $this->view->modifier = $log['modifier_name'];
-            $this->_helper->message('error_modified');
         }
         if (!$formValid || $modified) {
             if ($actor->getClass()->code == 'E21') {
@@ -181,6 +180,7 @@ class Admin_ActorController extends Zend_Controller_Action {
             }
             $this->view->objects = Model_EntityMapper::getByCodes('PhysicalObject');
             $this->view->actor = $actor;
+            $this->_helper->message('error_modified');
             return;
         }
         $actor->name = $form->getValue('name');
@@ -198,7 +198,7 @@ class Admin_ActorController extends Zend_Controller_Action {
                 $link->delete();
             }
         }
-        self::saveAction($actor, $form);
+        self::save($actor, $form);
         $this->_helper->message('info_update');
         return $this->_helper->redirector->gotoUrl('/admin/actor/view/id/' . $actor->id);
     }
@@ -207,7 +207,7 @@ class Admin_ActorController extends Zend_Controller_Action {
         $form->populate([
             'name' => $actor->name,
             'description' => $actor->description,
-            'modified' => $actor->modified->getTimestamp()
+            'modified' => ($actor->modified) ? $actor->modified->getTimestamp() : 0
         ]);
         foreach (['residence' => 'P74', 'appearsFirst' => 'OA8', 'appearsLast' => 'OA9'] as $formField => $propertyCode) {
             $place = Model_LinkMapper::getLinkedEntity($actor, $propertyCode);
@@ -231,7 +231,7 @@ class Admin_ActorController extends Zend_Controller_Action {
         $this->view->actor = $actor;
     }
 
-    private function saveAction($actor, $form) {
+    private function save(Model_Entity $actor, Zend_Form $form) {
         Model_DateMapper::saveDates($actor, $form);
         foreach (['residenceId' => 'P74', 'appearsFirstId' => 'OA8', 'appearsLastId' => 'OA9'] as $formField => $propertyCode) {
             if ($form->getValue($formField)) {

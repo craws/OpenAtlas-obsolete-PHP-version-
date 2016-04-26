@@ -70,34 +70,9 @@ class Admin_EventController extends Zend_Controller_Action {
             return;
         }
         $event = Model_EntityMapper::insert($class->id, $form->getValue('name'), $form->getValue('description'));
-        Model_DateMapper::saveDates($event, $form);
-        if ($form->getValue('typeId')) {
-            foreach (explode(",", $form->getValue('typeId')) as $id) {
-                Model_LinkMapper::insert('P2', $event, Model_EntityMapper::getById($id));
-            }
-        }
-        if ($form->getValue('placeId')) {
-            $place = Model_LinkMapper::getLinkedEntity($form->getValue('placeId'), 'P53');
-            Model_LinkMapper::insert('P7', $event, $place);
-        }
-        $superEvent = Zend_Registry::get('event')[0];
-        if ($form->getValue('superId')) {
-            $superEvent = Model_EntityMapper::getById($form->getValue('superId'));
-        }
-        Model_LinkMapper::insert('P117', $event, $superEvent);
+        self::save($event, $form);
         if ($source) {
             Model_LinkMapper::insert('P67', $source, $event);
-        }
-        if ($class->name == 'Acquisition') {
-            if ($this->_getParam('recipientId')) {
-                Model_LinkMapper::insert('P22', $event, Model_EntityMapper::getById($this->_getParam('recipientId')));
-            }
-            if ($this->_getParam('donorId')) {
-                Model_LinkMapper::insert('P23', $event, Model_EntityMapper::getById($this->_getParam('donorId')));
-            }
-            if ($this->_getParam('acquisitionPlaceId')) {
-                Model_LinkMapper::insert('P24', $event, Model_EntityMapper::getById($this->_getParam('acquisitionPlaceId')));
-            }
         }
         $this->_helper->message('info_insert');
         // @codeCoverageIgnoreStart
@@ -150,8 +125,94 @@ class Admin_EventController extends Zend_Controller_Action {
         }
     }
 
+    private function save(Model_Entity $event, Zend_Form $form) {
+        Model_DateMapper::saveDates($event, $form);
+        if ($form->getValue('typeId')) {
+            foreach (explode(",", $form->getValue('typeId')) as $id) {
+                Model_LinkMapper::insert('P2', $event, Model_EntityMapper::getById($id));
+            }
+        }
+        if ($form->getValue('placeId')) {
+            $place = Model_LinkMapper::getLinkedEntity($form->getValue('placeId'), 'P53');
+            Model_LinkMapper::insert('P7', $event, $place);
+        }
+        $superEvent = Zend_Registry::get('event')[0];
+        if ($form->getValue('superId')) {
+            $superEvent = Model_EntityMapper::getById($form->getValue('superId'));
+        }
+        Model_LinkMapper::insert('P117', $event, $superEvent);
+        if ($event->getClass()->name == 'Acquisition') {
+            if ($this->_getParam('recipientId')) {
+                Model_LinkMapper::insert('P22', $event, Model_EntityMapper::getById($this->_getParam('recipientId')));
+            }
+            if ($this->_getParam('donorId')) {
+                Model_LinkMapper::insert('P23', $event, Model_EntityMapper::getById($this->_getParam('donorId')));
+            }
+            if ($this->_getParam('acquisitionPlaceId')) {
+                Model_LinkMapper::insert('P24', $event, Model_EntityMapper::getById($this->_getParam('acquisitionPlaceId')));
+            }
+        }
+    }
+
+    private function prepareDefaultUpdate(Model_Entity $event, Zend_Form $form) {
+        $form->populate([
+            'name' => $event->name,
+            'description' => $event->description,
+            'modified' => ($event->modified) ? $event->modified->getTimestamp() : 0,
+        ]);
+        if ($event->superId) {
+            $superEvent = Model_NodeMapper::getById($event->superId);
+            if ($superEvent->name != $this->rootEvent->name) {
+                $form->populate([
+                    'superButton' => $superEvent->name,
+                    'superId' => $superEvent->id
+                ]);
+            }
+        }
+        if ($event->getClass()->name == 'Acquisition') {
+            $recipient = Model_LinkMapper::getLinkedEntity($event, 'P22');
+            if ($recipient) {
+                $form->populate([
+                    'recipientButton' => $recipient->name,
+                    'recipientId' => $recipient->id
+                ]);
+            }
+            $donor = Model_LinkMapper::getLinkedEntity($event, 'P23');
+            if ($donor) {
+                $form->populate([
+                    'donorButton' => $donor->name,
+                    'donorId' => $donor->id
+                ]);
+            }
+            $acquisitionPlace = Model_LinkMapper::getLinkedEntity($event, 'P24');
+            if ($acquisitionPlace) {
+                $form->populate([
+                    'acquisitionPlaceButton' => $acquisitionPlace->name,
+                    'acquisitionPlaceId' => $acquisitionPlace->id
+                ]);
+            }
+        }
+        $location = Model_LinkMapper::getLinkedEntity($event, 'P7');
+        if ($location) {
+            $place = Model_LinkMapper::getLinkedEntity($location, 'P53', true);
+            $form->populate([
+                'placeButton' => $place->name,
+                'placeId' => $place->id
+            ]);
+        }
+        Admin_Form_Abstract::populateDates($form, $event, ['OA5' => 'begin', 'OA6' => 'end']);
+        $this->view->class = $event->getClass();
+        $this->view->actors = Model_EntityMapper::getByCodes('Actor');
+        $this->view->objects = Model_EntityMapper::getByCodes('PhysicalObject');
+        $this->view->events = Model_EntityMapper::getByCodes('Event');
+        $types = Model_NodeMapper::getNodesByEntity('type', 'Event', $event);
+        $this->view->types = $types;
+        $this->view->typeTreeData = Model_NodeMapper::getTreeData('type', 'event', $types);
+    }
+
     public function updateAction() {
         $event = Model_NodeMapper::getById($this->_getParam('id'));
+        $this->view->event = $event;
         // @codeCoverageIgnoreStart
         if ($event->name == $this->rootEvent->name) { // prevent update of root event
             return $this->_helper->redirector->gotoUrl('/admin/event/view/id/' . $event->id);
@@ -159,64 +220,24 @@ class Admin_EventController extends Zend_Controller_Action {
         // @codeCoverageIgnoreEnd
         $form = new Admin_Form_Event();
         $form->addFields($event->getClass());
-        if ($this->getRequest()->isPost()) {
-            Admin_Form_Abstract::preValidation($form, $this->getRequest()->getPost());
+        $this->view->form = $form;
+        if (!$this->getRequest()->isPost()) {
+            self::prepareDefaultUpdate($event, $form);
+            return;
         }
-        if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
-            $form->populate([
-                'name' => $event->name,
-                'description' => $event->description,
-            ]);
-            if ($event->superId) {
-                $superEvent = Model_NodeMapper::getById($event->superId);
-                if ($superEvent->name != $this->rootEvent->name) {
-                    $form->populate([
-                        'superButton' => $superEvent->name,
-                        'superId' => $superEvent->id
-                    ]);
-                }
-            }
-            if ($event->getClass()->name == 'Acquisition') {
-                $recipient = Model_LinkMapper::getLinkedEntity($event, 'P22');
-                if ($recipient) {
-                    $form->populate([
-                        'recipientButton' => $recipient->name,
-                        'recipientId' => $recipient->id
-                    ]);
-                }
-                $donor = Model_LinkMapper::getLinkedEntity($event, 'P23');
-                if ($donor) {
-                    $form->populate([
-                        'donorButton' => $donor->name,
-                        'donorId' => $donor->id
-                    ]);
-                }
-                $acquisitionPlace = Model_LinkMapper::getLinkedEntity($event, 'P24');
-                if ($acquisitionPlace) {
-                    $form->populate([
-                        'acquisitionPlaceButton' => $acquisitionPlace->name,
-                        'acquisitionPlaceId' => $acquisitionPlace->id
-                    ]);
-                }
-            }
-            $location = Model_LinkMapper::getLinkedEntity($event, 'P7');
-            if ($location) {
-                $place = Model_LinkMapper::getLinkedEntity($location, 'P53', true);
-                $form->populate([
-                    'placeButton' => $place->name,
-                    'placeId' => $place->id
-                ]);
-            }
-            Admin_Form_Abstract::populateDates($form, $event, ['OA5' => 'begin', 'OA6' => 'end']);
+        $formValid = $form->isValid($this->getRequest()->getPost());
+        $modified = Model_EntityMapper::checkIfModified($event, $form->modified->getValue());
+        if ($modified) {
+            $log = Model_UserLogMapper::getLogForView('entity', $event->id);
+            $this->view->modifier = $log['modifier_name'];
+        }
+        if (!$formValid || $modified) {
             $this->view->class = $event->getClass();
-            $this->view->event = $event;
-            $this->view->form = $form;
             $this->view->actors = Model_EntityMapper::getByCodes('Actor');
             $this->view->objects = Model_EntityMapper::getByCodes('PhysicalObject');
             $this->view->events = Model_EntityMapper::getByCodes('Event');
-            $types = Model_NodeMapper::getNodesByEntity('type', 'Event', $event);
-            $this->view->types = $types;
-            $this->view->typeTreeData = Model_NodeMapper::getTreeData('type', 'event', $types);
+            $this->view->typeTreeData = Model_NodeMapper::getTreeData('type', 'event');
+            $this->_helper->message('error_modified');
             return;
         }
         $event->name = $form->getValue('name');
@@ -225,47 +246,24 @@ class Admin_EventController extends Zend_Controller_Action {
         foreach (Model_LinkMapper::getLinks($event, 'P2') as $link) {
             $link->delete();
         }
-        if ($form->getValue('typeId')) {
-            foreach (explode(",", $form->getValue('typeId')) as $id) {
-                Model_LinkMapper::insert('P2', $event, Model_EntityMapper::getById($id));
-            }
-        }
-        Model_DateMapper::saveDates($event, $form);
         if (Model_LinkMapper::getLink($event, 'P7')) {
             Model_LinkMapper::getLink($event, 'P7')->delete();
-        }
-        if ($form->getValue('placeId')) {
-            $place = Model_LinkMapper::getLinkedEntity($form->getValue('placeId'), 'P53');
-            Model_LinkMapper::insert('P7', $event, $place);
         }
         foreach (Model_LinkMapper::getLinks($event, 'P117') as $link) {
             $link->delete();
         }
-        $superEvent = Zend_Registry::get('event')[0];
-        if ($form->getValue('superId')) {
-            $superEvent = Model_EntityMapper::getById($form->getValue('superId'));
-        }
-        Model_LinkMapper::insert('P117', $event, $superEvent);
         if ($event->getClass()->name == 'Acquisition') {
             foreach (Model_LinkMapper::getLinks($event, 'P22') as $link) {
                 $link->delete();
             }
-            if ($this->_getParam('recipientId')) {
-                Model_LinkMapper::insert('P22', $event, Model_EntityMapper::getById($this->_getParam('recipientId')));
-            }
             foreach (Model_LinkMapper::getLinks($event, 'P23') as $link) {
                 $link->delete();
-            }
-            if ($this->_getParam('donorId')) {
-                Model_LinkMapper::insert('P23', $event, Model_EntityMapper::getById($this->_getParam('donorId')));
             }
             foreach (Model_LinkMapper::getLinks($event, 'P24') as $link) {
                 $link->delete();
             }
-            if ($this->_getParam('acquisitionPlaceId')) {
-                Model_LinkMapper::insert('P24', $event, Model_EntityMapper::getById($this->_getParam('acquisitionPlaceId')));
-            }
         }
+        self::save($event, $form);
         $this->_helper->message('info_update');
         return $this->_helper->redirector->gotoUrl('/admin/event/view/id/' . $event->id);
     }

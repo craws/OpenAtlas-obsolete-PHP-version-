@@ -196,7 +196,7 @@ class Model_EntityMapper extends \Model_AbstractMapper {
 
     /* checks if an entry was modified since opening the update form */
     public static function checkIfModified(Model_Entity $entity, $modified) {
-        if ($entity->modified->getTimestamp() > $modified) {
+        if ($entity->modified && $entity->modified->getTimestamp() > $modified) {
             return true;
         }
     }

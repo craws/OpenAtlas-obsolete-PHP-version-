@@ -178,11 +178,13 @@ class Admin_SourceController extends Zend_Controller_Action {
         $source = Model_EntityMapper::getById($this->_getParam('id'));
         $form = new Admin_Form_Source();
         $this->view->form = $form;
+        $this->view->source = $source;
         if (!$this->getRequest()->isPost()) {
             $form->populate([
                 'class' => $source->getClass()->id,
                 'name' => $source->name,
-                'description' => $source->description
+                'description' => $source->description,
+                'modified' => ($source->modified) ? $source->modified->getTimestamp() : 0
             ]);
             $type = Model_NodeMapper::getNodeByEntity('type', 'Source', $source);
             if ($type) {
@@ -190,7 +192,6 @@ class Admin_SourceController extends Zend_Controller_Action {
                 $this->view->type = $type;
             }
             $this->view->typeTreeData = Model_NodeMapper::getTreeData('type', 'source', [$type]);
-            $this->view->source = $source;
             return;
         }
         $formValid = $form->isValid($this->getRequest()->getPost());
@@ -198,9 +199,10 @@ class Admin_SourceController extends Zend_Controller_Action {
         if ($modified) {
             $log = Model_UserLogMapper::getLogForView('entity', $source->id);
             $this->view->modifier = $log['modifier_name'];
-            $this->_helper->message('error_modified');
         }
         if (!$formValid || $modified) {
+            $this->_helper->message('error_modified');
+            $this->view->typeTreeData = Model_NodeMapper::getTreeData('type', 'source');
             return;
         }
         $source->name = $form->getValue('name');

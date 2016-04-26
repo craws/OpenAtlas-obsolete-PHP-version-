@@ -43,7 +43,7 @@ class Model_LinkMapper extends Model_AbstractMapper {
                 return $links[0];
                 // @codeCoverageIgnoreStart
         }
-        $error = 'Found ' . count($links) . ' ' . $code . ' links for (' . $entity . ')' . ' instead one.';
+        $error = 'Found ' . count($links) . ' ' . $code . ' links for (' . $entity->name . ')' . ' instead one.';
         if (is_a($entity, 'Model_Entity')) {
             $error = 'Found ' . count($links) . ' ' . $code . ' links for (' . $entity->id . ')' . ' instead one.';
         }
