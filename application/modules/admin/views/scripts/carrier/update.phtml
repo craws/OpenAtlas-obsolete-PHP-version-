@@ -1,2 +1,6 @@
 <? $this->breadcrumb = [$this->link('reference'), $this->link($this->carrier), $this->ucstring('edit')]; ?>
+<? if ($this->modifier): ?>
+    <p class="error"><?= $this->translate('error_modified_info', $this->modifier) ?></p>
+    <p><a class="button" href="/admin/carrier/update/id/<?= $this->carrier->id ?>"><?= $this->ucstring('reload') ?></a></p>
+<? endif ?>
 <?= $this->render('carrier/form.phtml'); ?>

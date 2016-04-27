@@ -33,16 +33,18 @@ class Admin_CarrierController extends Zend_Controller_Action {
     }
 
     public function updateAction() {
-        $form = new Admin_Form_Carrier();
         $carrier = Model_EntityMapper::getById($this->_getParam('id'));
-        if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
-            $type = Model_NodeMapper::getNodeByEntity('type', 'Information Carrier', $carrier);
-            $this->view->typeTreeData = Model_NodeMapper::getTreeData('type', 'information carrier', $type);
+        $form = new Admin_Form_Carrier();
+        $this->view->form = $form;
+        $this->view->carrier = $carrier;
+        $this->view->menuHighlight = 'reference';
+        $type = Model_NodeMapper::getNodeByEntity('type', 'Information Carrier', $carrier);
+        if (!$this->getRequest()->isPost()) {
             $form->populate([
                 'name' => $carrier->name,
                 'description' => $carrier->description,
                 'typeId' => Model_NodeMapper::getNodeByEntity('type', 'Information Carrier', $carrier)->id,
-
+                'modified' => ($carrier->modified) ? $carrier->modified->getTimestamp() : 0
             ]);
             if ($type->rootId) {
                 $form->populate(['typeButton' => $type->name]);
@@ -56,10 +58,20 @@ class Admin_CarrierController extends Zend_Controller_Action {
                     'objectId' => $object->id
                 ]);
             }
-            $this->view->menuHighlight = 'reference';
-            $this->view->carrier = $carrier;
-            $this->view->form = $form;
+            $this->view->typeTreeData = Model_NodeMapper::getTreeData('type', 'information carrier', $type);
             $this->view->objects = Model_EntityMapper::getByCodes('PhysicalObject');
+            return;
+        }
+        $formValid = $form->isValid($this->getRequest()->getPost());
+        $modified = Model_EntityMapper::checkIfModified($carrier, $form->modified->getValue());
+        if ($modified) {
+            $log = Model_UserLogMapper::getLogForView('entity', $carrier->id);
+            $this->view->modifier = $log['modifier_name'];
+        }
+        if (!$formValid || $modified) {
+            $this->view->objects = Model_EntityMapper::getByCodes('PhysicalObject');
+            $this->view->typeTreeData = Model_NodeMapper::getTreeData('type', 'information carrier');
+            $this->_helper->message('error_modified');
             return;
         }
         $carrier->name = $form->getValue('name');
