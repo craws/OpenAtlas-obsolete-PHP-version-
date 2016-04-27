@@ -18,6 +18,12 @@ class Admin_LogController extends Zend_Controller_Action {
         return $this->_helper->redirector->gotoUrl('/admin/log');
     }
 
+    public function deleteAction() {
+        $log = Model_LogMapper::getById($this->_getParam('id'));
+        $log->delete();
+        return $this->_helper->redirector->gotoUrl('/admin/log');
+    }
+
     public function viewAction() {
         $log = Model_LogMapper::getById($this->_getParam('id'));
         $data = [];
@@ -35,12 +41,6 @@ class Admin_LogController extends Zend_Controller_Action {
         $data['agent'] = $log->agent;
         $this->view->log = $log;
         $this->view->data = $data;
-    }
-
-    public function deleteAction() {
-        $log = Model_LogMapper::getById($this->_getParam('id'));
-        $log->delete();
-        return $this->_helper->redirector->gotoUrl('/admin/log');
     }
 
 }

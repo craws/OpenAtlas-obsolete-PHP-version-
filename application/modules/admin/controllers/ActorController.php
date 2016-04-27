@@ -68,21 +68,22 @@ class Admin_ActorController extends Zend_Controller_Action {
         }
         self::save($actor, $form);
         $this->_helper->message('info_insert');
+        $url = '/admin/actor/view/id/' . $actor->id;
         // @codeCoverageIgnoreStart
         if ($event) {
-            return $this->_helper->redirector->gotoUrl('/admin/involvement/insert/origin/event/eventId/' . $event->id . '/actorId/' . $actor->id);
+            $url = '/admin/involvement/insert/origin/event/eventId/' . $event->id . '/actorId/' . $actor->id;
         }
         if ($form->getElement('continue')->getValue() && $source) {
-            return $this->_helper->redirector->gotoUrl('/admin/actor/insert/sourceId/' . $source->id . '/code/' . $class->code);
+            $url = '/admin/actor/insert/sourceId/' . $source->id . '/code/' . $class->code;
         }
         if ($form->getElement('continue')->getValue()) {
-            return $this->_helper->redirector->gotoUrl('/admin/actor/insert/code/' . $class->code);
+            $url = '/admin/actor/insert/code/' . $class->code;
         }
         if ($source) {
-            return $this->_helper->redirector->gotoUrl('/admin/source/view/id/' . $source->id . '/#tabActor');
+            $url = '/admin/source/view/id/' . $source->id . '/#tabActor';
         }
-        return $this->_helper->redirector->gotoUrl('/admin/actor/view/id/' . $actor->id);
         // @codeCoverageIgnoreEnd
+        return $this->_helper->redirector->gotoUrl($url);
     }
 
     public function linkAction() {

@@ -83,7 +83,6 @@ class Acl extends \Zend_Acl {
 
         $this->add(new \Zend_Acl_Resource('admin:place:add'));
         $this->add(new \Zend_Acl_Resource('admin:place:delete'));
-        $this->add(new \Zend_Acl_Resource('admin:place:delete-name'));
         $this->add(new \Zend_Acl_Resource('admin:place:index'));
         $this->add(new \Zend_Acl_Resource('admin:place:insert'));
         $this->add(new \Zend_Acl_Resource('admin:place:link'));
@@ -226,7 +225,6 @@ class Acl extends \Zend_Acl {
 
         $this->allow('editor', 'admin:place:add');
         $this->allow('editor', 'admin:place:delete');
-        $this->allow('editor', 'admin:place:delete-name');
         $this->allow('editor', 'admin:place:insert');
         $this->allow('editor', 'admin:place:link');
         $this->allow('editor', 'admin:place:update');

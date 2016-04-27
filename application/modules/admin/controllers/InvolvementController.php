@@ -5,7 +5,7 @@
 class Admin_InvolvementController extends Zend_Controller_Action {
 
     public function insertAction() {
-        /* only multiple actors, multiple events not viable because of different activity possiblities */
+        /* Only multiple actors. Multiple events not viable because of different activity possiblities */
         $form = new Admin_Form_Involvement();
         $event = null;
         $actor = null;
@@ -30,9 +30,9 @@ class Admin_InvolvementController extends Zend_Controller_Action {
             } else {
                 $this->view->events = Model_EntityMapper::getByCodes('Event');
             }
-            $this->view->origin = $this->_getParam('origin');
             $this->view->form = $form;
             $this->view->involvementTreeData = Model_NodeMapper::getTreeData('type', 'involvement');
+            $this->view->origin = $this->_getParam('origin');
             return;
         }
         if ($event && $event->getClass()->code == 'E6') {
@@ -80,11 +80,11 @@ class Admin_InvolvementController extends Zend_Controller_Action {
             if ($involvement) {
                 $form->populate(['involvementId' => $involvement->id, 'involvementButton' => $involvement->name]);
             }
-            $this->view->involvementTreeData = Model_NodeMapper::getTreeData('type', 'involvement', $involvement);
             $this->view->actor = $actor;
             $this->view->event = $event;
-            $this->view->origin = 'event';
             $this->view->form = $form;
+            $this->view->involvementTreeData = Model_NodeMapper::getTreeData('type', 'involvement', $involvement);
+            $this->view->origin = 'event';
             return;
         }
         Model_LinkMapper::delete($link);

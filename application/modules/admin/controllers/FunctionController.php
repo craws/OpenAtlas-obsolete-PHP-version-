@@ -14,6 +14,13 @@ class Admin_FunctionController extends Zend_Controller_Action {
         echo '<br/>' . $element->renderViewHelper();
     }
 
+    public function bookmarkAction() {
+        $this->_helper->layout->disableLayout();
+        $this->_helper->viewRenderer->setNoRender(true);
+        $label = Model_UserMapper::bookmark($this->_getParam('entityId'));
+        echo $this->view->ucstring($label);
+    }
+
     public function unlinkAction() {
         Model_LinkMapper::getById($this->_getParam('id'))->delete();
         $this->_helper->message('info_delete');
@@ -23,10 +30,4 @@ class Admin_FunctionController extends Zend_Controller_Action {
         return $this->_helper->redirector->gotoUrl($url);
     }
 
-    public function bookmarkAction() {
-        $this->_helper->layout->disableLayout();
-        $this->_helper->viewRenderer->setNoRender(true);
-        $label = Model_UserMapper::bookmark($this->_getParam('entityId'));
-        echo $this->view->ucstring($label);
-    }
 }
