@@ -10,10 +10,10 @@ class Admin_BiblioController extends Zend_Controller_Action {
         $controller = $array[$entity->getClass()->code];
         $form = new Admin_Form_Biblio();
         if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
-            $this->view->menuHighlight = $controller;
-            $this->view->entity = $entity;
             $this->view->controller = $controller;
+            $this->view->entity = $entity;
             $this->view->form = $form;
+            $this->view->menuHighlight = $controller;
             $this->view->references = Model_EntityMapper::getByCodes('Bibliography');
             if ($entity->getClass()->code == 'E33') {
                 $this->view->references = Model_EntityMapper::getByCodes('Reference');
@@ -21,10 +21,7 @@ class Admin_BiblioController extends Zend_Controller_Action {
             return;
         }
         $reference = Model_EntityMapper::getById($this->_getParam('referenceId'));
-        $propertyCode = 'P67';
-        if ($reference->getClass()->code == 'E84') {
-            $propertyCode = 'P128';
-        }
+        $propertyCode = ($reference->getClass()->code == 'E84') ? 'P128' : 'P67';
         Model_LinkMapper::insert($propertyCode, $reference, $entity, $form->getValue('page'));
         $this->_helper->message('info_insert');
         return $this->_helper->redirector->gotoUrl('/admin/' . $controller . '/view/id/' . $entity->id . '/#tabReference');
@@ -36,38 +33,32 @@ class Admin_BiblioController extends Zend_Controller_Action {
         $reference = $link->getDomain();
         $array = Zend_Registry::get('config')->get('codeView')->toArray();
         $controller = $array[$entity->getClass()->code];
+        $tab = 'Reference';
+        $this->view->object = $link->getRange();
+        $this->view->relatedObject = $reference;
         if ($this->_getParam('origin') == 'reference') {
+            $controller = ($reference->getClass()->code == 'E84') ? 'carrier' : 'reference';
             $tab = ucfirst($controller);
-            $controller = 'reference';
-            if ($reference->getClass()->code == 'E84') {
-                $controller = 'carrier';
-            }
             $this->view->object = $reference;
             $this->view->relatedObject = $link->getRange();
-        } else {
-            $tab = 'Reference';
-            $this->view->object = $link->getRange();
-            $this->view->relatedObject = $reference;
         }
         $form = new Admin_Form_Biblio();
         $form->removeElement('referenceButton');
         $form->removeElement('referenceId');
         if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
             $form->populate(['page' => $link->description]);
-            $this->view->menuHighlight = $controller;
-            $this->view->entity = $entity;
-            $this->view->reference = $reference;
             $this->view->controller = $controller;
+            $this->view->entity = $entity;
             $this->view->form = $form;
+            $this->view->menuHighlight = $controller;
+            $this->view->reference = $reference;
             $this->view->tab = $tab;
             return;
         }
         $link->description = $form->getValue('page');
         $link->update();
         $this->_helper->message('info_update');
-        // @codeCoverageIgnoreStart
         return $this->_helper->redirector->gotoUrl('/admin/' . $controller . '/view/id/' . $this->view->object->id . '/#tab' . $tab);
-        // @codeCoverageIgnoreEnd
     }
 
 }
