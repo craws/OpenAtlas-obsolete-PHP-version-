@@ -4,6 +4,19 @@
 
 class Admin_UserController extends Zend_Controller_Action {
 
+    public function deleteAction() {
+        $user = Model_UserMapper::getById($this->_getParam('id'));
+        // @codeCoverageIgnoreStart
+        if ($user->group == 'admin' && Zend_Registry::get('user')->group != 'admin') {
+            $this->_helper->message('error_forbidden');
+            return $this->_helper->redirector->gotoUrl('/admin/user');
+        }
+        // @codeCoverageIgnoreEnd
+        $user->delete();
+        $this->_helper->message('info_delete');
+        return $this->_helper->redirector->gotoUrl('/admin/user');
+    }
+
     public function indexAction() {
         $this->view->users = Model_UserMapper::getAll();
     }
@@ -89,19 +102,6 @@ class Admin_UserController extends Zend_Controller_Action {
         $user->insert();
         $this->_helper->message('info_insert');
         return $this->_helper->redirector->gotoUrl('/admin/user/view/id/' . $user->id);
-    }
-
-    public function deleteAction() {
-        $user = Model_UserMapper::getById($this->_getParam('id'));
-        // @codeCoverageIgnoreStart
-        if ($user->group == 'admin' && Zend_Registry::get('user')->group != 'admin') {
-            $this->_helper->message('error_forbidden');
-            return $this->_helper->redirector->gotoUrl('/admin/user');
-        }
-        // @codeCoverageIgnoreEnd
-        $user->delete();
-        $this->_helper->message('info_delete');
-        return $this->_helper->redirector->gotoUrl('/admin/user');
     }
 
 }

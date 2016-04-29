@@ -4,11 +4,6 @@
 
 class Admin_SourceController extends Zend_Controller_Action {
 
-    public function indexAction() {
-        $this->view->sources = Model_EntityMapper::getByCodes('Source', 'Source Content');
-        $this->view->places = [];
-    }
-
     public function addAction() {
         $origin = Model_EntityMapper::getById($this->_getParam('id'));
         $array = Zend_Registry::get('config')->get('codeView')->toArray();
@@ -29,84 +24,15 @@ class Admin_SourceController extends Zend_Controller_Action {
         return $this->_helper->redirector->gotoUrl('/admin/' . $controller . '/view/id/' . $origin->id . '/#tabSource');
     }
 
-    public function textAddAction() {
-        $source = Model_EntityMapper::getById($this->_getParam('id'));
-        $form = new Admin_Form_Text();
-        if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
-            $this->view->form = $form;
-            $this->view->source = $source;
-            return;
-        }
-        $text = Model_EntityMapper::insert('E33', $form->getValue('name'), $form->getValue('description'));
-        Model_LinkMapper::insert('P2', $text, Model_EntityMapper::getById($form->getValue('type')));
-        Model_LinkMapper::insert('P73', $source, $text);
-        $this->_helper->message('info_insert');
-        return $this->_helper->redirector->gotoUrl('/admin/source/view/id/' . $source->id . '#tabText');
-    }
-
-    public function textDeleteAction() {
-        $link = Model_LinkMapper::getById($this->_getParam('linkId'));
-        $link->getRange()->delete();
+    public function deleteAction() {
+        Model_EntityMapper::getById($this->_getParam('id'))->delete();
         $this->_helper->message('info_delete');
-        return $this->_helper->redirector->gotoUrl('/admin/source/view/id/' . $link->getDomain()->id . '#tabText');
+        return $this->_helper->redirector->gotoUrl('/admin/source');
     }
 
-    public function textUpdateAction() {
-        $link = Model_LinkMapper::getById($this->_getParam('linkId'));
-        $text = Model_EntityMapper::getById($link->getRange()->id);
-        $source = Model_EntityMapper::getById($link->getDomain()->id);
-        $form = new Admin_Form_Text();
-        foreach (Model_LinkMapper::getLinks($text, 'P2') as $link) {
-            if (array_key_exists($link->getRange()->id, $form->getElement('type')->getMultiOptions())) {
-                $typeLink = $link;
-            }
-        }
-        if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
-            $form->populate(['type' => $typeLink->getRange()->id, 'name' => $text->name, 'description' => $text->description]);
-            $this->view->text = $text;
-            $this->view->source = $source;
-            $this->view->form = $form;
-            return;
-        }
-        $text->name = $form->getValue('name');
-        $text->description = $form->getValue('description');
-        $text->update();
-        $typeLink->delete();
-        Model_LinkMapper::insert('P2', $text, Model_EntityMapper::getById($form->getValue('type')));
-        $this->_helper->message('info_update');
-        return $this->_helper->redirector->gotoUrl('/admin/source/view/id/' . $source->id . '#tabText');
-    }
-
-    public function viewAction() {
-        $source = Model_EntityMapper::getById($this->_getParam('id'));
-        $this->view->actorLinks = [];
-        $this->view->eventLinks = [];
-        $this->view->placeLinks = [];
-        foreach (Model_LinkMapper::getLinks($source, 'P67') as $link) {
-            $code = $link->getRange()->getClass()->code;
-            if ($code == 'E18') {
-                $this->view->placeLinks[] = $link;
-            } else if (in_array($code, Zend_Registry::get('config')->get('codeEvent')->toArray())) {
-                $this->view->eventLinks[] = $link;
-            } else if (in_array($code, Zend_Registry::get('config')->get('codeActor')->toArray())) {
-                $this->view->actorLinks[] = $link;
-            }
-        }
-        $referenceLinks = [];
-        foreach (Model_LinkMapper::getLinks($source, 'P67', true) as $link) {
-            switch ($link->getDomain()->getClass()->code) {
-                case 'E31':
-                    $referenceLinks[] = $link;
-                    break;
-            }
-        }
-        foreach (Model_LinkMapper::getLinks($source, 'P128', true) as $link) {
-            $referenceLinks[] = $link;
-        }
-        $this->view->referenceLinks = $referenceLinks;
-        $this->view->source = $source;
-        $this->view->textLinks = Model_LinkMapper::getLinks($source, 'P73');
-        $this->view->sourceType = Model_NodeMapper::getNodeByEntity('type', 'Source', $source);
+    public function indexAction() {
+        $this->view->sources = Model_EntityMapper::getByCodes('Source', 'Source Content');
+        $this->view->places = [];
     }
 
     public function insertAction() {
@@ -170,8 +96,56 @@ class Admin_SourceController extends Zend_Controller_Action {
         if ($object) {
             return $this->_helper->redirector->gotoUrl('/admin/place/view/id/' . $object->id . '/#tabSource');
         }
-        return $this->_helper->redirector->gotoUrl('/admin/source/view/id/' . $source->id);
         // @codeCoverageIgnoreEnd
+        return $this->_helper->redirector->gotoUrl('/admin/source/view/id/' . $source->id);
+    }
+
+    public function textAddAction() {
+        $source = Model_EntityMapper::getById($this->_getParam('id'));
+        $form = new Admin_Form_Text();
+        if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
+            $this->view->form = $form;
+            $this->view->source = $source;
+            return;
+        }
+        $text = Model_EntityMapper::insert('E33', $form->getValue('name'), $form->getValue('description'));
+        Model_LinkMapper::insert('P2', $text, Model_EntityMapper::getById($form->getValue('type')));
+        Model_LinkMapper::insert('P73', $source, $text);
+        $this->_helper->message('info_insert');
+        return $this->_helper->redirector->gotoUrl('/admin/source/view/id/' . $source->id . '#tabText');
+    }
+
+    public function textDeleteAction() {
+        $link = Model_LinkMapper::getById($this->_getParam('linkId'));
+        $link->getRange()->delete();
+        $this->_helper->message('info_delete');
+        return $this->_helper->redirector->gotoUrl('/admin/source/view/id/' . $link->getDomain()->id . '#tabText');
+    }
+
+    public function textUpdateAction() {
+        $link = Model_LinkMapper::getById($this->_getParam('linkId'));
+        $text = Model_EntityMapper::getById($link->getRange()->id);
+        $source = Model_EntityMapper::getById($link->getDomain()->id);
+        $form = new Admin_Form_Text();
+        foreach (Model_LinkMapper::getLinks($text, 'P2') as $link) {
+            if (array_key_exists($link->getRange()->id, $form->getElement('type')->getMultiOptions())) {
+                $typeLink = $link;
+            }
+        }
+        if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
+            $form->populate(['type' => $typeLink->getRange()->id, 'name' => $text->name, 'description' => $text->description]);
+            $this->view->text = $text;
+            $this->view->source = $source;
+            $this->view->form = $form;
+            return;
+        }
+        $text->name = $form->getValue('name');
+        $text->description = $form->getValue('description');
+        $text->update();
+        $typeLink->delete();
+        Model_LinkMapper::insert('P2', $text, Model_EntityMapper::getById($form->getValue('type')));
+        $this->_helper->message('info_update');
+        return $this->_helper->redirector->gotoUrl('/admin/source/view/id/' . $source->id . '#tabText');
     }
 
     public function updateAction() {
@@ -218,10 +192,36 @@ class Admin_SourceController extends Zend_Controller_Action {
         return $this->_helper->redirector->gotoUrl('/admin/source/view/id/' . $source->id);
     }
 
-    public function deleteAction() {
-        Model_EntityMapper::getById($this->_getParam('id'))->delete();
-        $this->_helper->message('info_delete');
-        return $this->_helper->redirector->gotoUrl('/admin/source');
+    public function viewAction() {
+        $source = Model_EntityMapper::getById($this->_getParam('id'));
+        $this->view->actorLinks = [];
+        $this->view->eventLinks = [];
+        $this->view->placeLinks = [];
+        foreach (Model_LinkMapper::getLinks($source, 'P67') as $link) {
+            $code = $link->getRange()->getClass()->code;
+            if ($code == 'E18') {
+                $this->view->placeLinks[] = $link;
+            } else if (in_array($code, Zend_Registry::get('config')->get('codeEvent')->toArray())) {
+                $this->view->eventLinks[] = $link;
+            } else if (in_array($code, Zend_Registry::get('config')->get('codeActor')->toArray())) {
+                $this->view->actorLinks[] = $link;
+            }
+        }
+        $referenceLinks = [];
+        foreach (Model_LinkMapper::getLinks($source, 'P67', true) as $link) {
+            switch ($link->getDomain()->getClass()->code) {
+                case 'E31':
+                    $referenceLinks[] = $link;
+                    break;
+            }
+        }
+        foreach (Model_LinkMapper::getLinks($source, 'P128', true) as $link) {
+            $referenceLinks[] = $link;
+        }
+        $this->view->referenceLinks = $referenceLinks;
+        $this->view->source = $source;
+        $this->view->textLinks = Model_LinkMapper::getLinks($source, 'P73');
+        $this->view->sourceType = Model_NodeMapper::getNodeByEntity('type', 'Source', $source);
     }
 
 }

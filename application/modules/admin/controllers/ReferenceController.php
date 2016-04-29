@@ -4,6 +4,13 @@
 
 class Admin_ReferenceController extends Zend_Controller_Action {
 
+
+    public function deleteAction() {
+        Model_EntityMapper::getById($this->_getParam('id'))->delete();
+        $this->_helper->message('info_delete');
+        return $this->_helper->redirector->gotoUrl('/admin/reference');
+    }
+
     public function indexAction() {
         $this->view->references = Model_EntityMapper::getByCodes('Reference');
     }
@@ -92,12 +99,6 @@ class Admin_ReferenceController extends Zend_Controller_Action {
         $this->view->sourceLinks = $sourceLinks;
         $this->view->eventLinks = $eventLinks;
         $this->view->placeLinks = $placeLinks;
-    }
-
-    public function deleteAction() {
-        Model_EntityMapper::getById($this->_getParam('id'))->delete();
-        $this->_helper->message('info_delete');
-        return $this->_helper->redirector->gotoUrl('/admin/reference');
     }
 
 }

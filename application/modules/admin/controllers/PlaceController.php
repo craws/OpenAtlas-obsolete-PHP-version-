@@ -63,8 +63,8 @@ class Admin_PlaceController extends Zend_Controller_Action {
         if ($source) {
             return $this->_helper->redirector->gotoUrl('/admin/source/view/id/' . $source->id . '/#tabPlace');
         }
-        return $this->_helper->redirector->gotoUrl('/admin/place/view/id/' . $object->id);
         // @codeCoverageIgnoreEnd
+        return $this->_helper->redirector->gotoUrl('/admin/place/view/id/' . $object->id);
     }
 
     public function linkAction() {
@@ -238,8 +238,5 @@ class Admin_PlaceController extends Zend_Controller_Action {
         // @codeCoverageIgnoreEnd
 
     }
-
-
-
 
 }
