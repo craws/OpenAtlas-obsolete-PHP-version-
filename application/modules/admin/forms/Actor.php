@@ -19,7 +19,7 @@ class Admin_Form_Actor extends Craws\Form\Table {
             'uncheckedValue' => 0,
         ]);
         $this->addElement('text', 'name', [
-            //'class' => 'required',
+            'class' => 'required',
             'required' => true,
             'label' => $this->getView()->ucstring('name'),
         ]);
