@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenATLAS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-04-25 17:08+0100\n"
+"POT-Creation-Date: 2016-05-02 14:14+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Alexander Watzinger <alexander.watzinger@craws.net>\n"
 "Language-Team: craws.net <alexander.watzinger@craws.net>\n"
@@ -16,96 +16,100 @@ msgstr ""
 "X-Generator: Poedit 1.6.10\n"
 "X-Poedit-SearchPath-0: ../../..\n"
 
-#: ../../../application/modules/admin/controllers/ActorController.php:25
-#: ../../../application/modules/admin/controllers/EventController.php:29
-#: ../../../application/modules/admin/controllers/PlaceController.php:11
-msgid "error_link_exists"
-msgstr "Dieser Link existiert bereits."
-
-#: ../../../application/modules/admin/controllers/ActorController.php:28
-#: ../../../application/modules/admin/controllers/ActorController.php:139
-#: ../../../application/modules/admin/controllers/BiblioController.php:29
-#: ../../../application/modules/admin/controllers/CarrierController.php:28
-#: ../../../application/modules/admin/controllers/EventController.php:32
-#: ../../../application/modules/admin/controllers/EventController.php:102
-#: ../../../application/modules/admin/controllers/HierarchyController.php:36
-#: ../../../application/modules/admin/controllers/InvolvementController.php:59
-#: ../../../application/modules/admin/controllers/MemberController.php:27
-#: ../../../application/modules/admin/controllers/MemberController.php:59
-#: ../../../application/modules/admin/controllers/PlaceController.php:14
-#: ../../../application/modules/admin/controllers/PlaceController.php:226
-#: ../../../application/modules/admin/controllers/ReferenceController.php:22
-#: ../../../application/modules/admin/controllers/RelationController.php:28
-#: ../../../application/modules/admin/controllers/SourceController.php:43
-#: ../../../application/modules/admin/controllers/SourceController.php:150
-#: ../../../application/modules/admin/controllers/UserController.php:90
-msgid "info_insert"
-msgstr "Neuer Eintrag angelegt"
-
-#: ../../../application/modules/admin/controllers/ActorController.php:100
-#: ../../../application/modules/admin/controllers/EventController.php:43
-msgid "error_missing_class"
-msgstr "Fehlende Klasse"
-
-#: ../../../application/modules/admin/controllers/ActorController.php:172
-msgid "error_modified"
-msgstr "Änderung fehlgeschlagen."
-
-#: ../../../application/modules/admin/controllers/ActorController.php:202
-#: ../../../application/modules/admin/controllers/ActorController.php:252
-#: ../../../application/modules/admin/controllers/BiblioController.php:67
-#: ../../../application/modules/admin/controllers/CarrierController.php:87
-#: ../../../application/modules/admin/controllers/ContentController.php:28
-#: ../../../application/modules/admin/controllers/EventController.php:269
-#: ../../../application/modules/admin/controllers/HierarchyController.php:101
-#: ../../../application/modules/admin/controllers/InvolvementController.php:101
-#: ../../../application/modules/admin/controllers/MemberController.php:98
-#: ../../../application/modules/admin/controllers/PlaceController.php:169
-#: ../../../application/modules/admin/controllers/ProfileController.php:32
-#: ../../../application/modules/admin/controllers/ProfileController.php:63
-#: ../../../application/modules/admin/controllers/ReferenceController.php:53
-#: ../../../application/modules/admin/controllers/RelationController.php:69
-#: ../../../application/modules/admin/controllers/SettingsController.php:23
-#: ../../../application/modules/admin/controllers/SourceController.php:76
-#: ../../../application/modules/admin/controllers/SourceController.php:205
-#: ../../../application/modules/admin/controllers/UserController.php:58
-msgid "info_update"
-msgstr "Die Änderungen wurden gespeichert."
-
-#: ../../../application/modules/admin/controllers/ActorController.php:258
-#: ../../../application/modules/admin/controllers/CarrierController.php:108
-#: ../../../application/modules/admin/controllers/EventController.php:277
-#: ../../../application/modules/admin/controllers/FunctionController.php:19
-#: ../../../application/modules/admin/controllers/HierarchyController.php:120
-#: ../../../application/modules/admin/controllers/PlaceController.php:245
-#: ../../../application/modules/admin/controllers/PlaceController.php:251
-#: ../../../application/modules/admin/controllers/ReferenceController.php:87
-#: ../../../application/modules/admin/controllers/SourceController.php:50
-#: ../../../application/modules/admin/controllers/SourceController.php:211
-#: ../../../application/modules/admin/controllers/UserController.php:103
+#: ../../../application/modules/admin/controllers/ActorController.php:19
+#: ../../../application/modules/admin/controllers/CarrierController.php:10
+#: ../../../application/modules/admin/controllers/EventController.php:25
+#: ../../../application/modules/admin/controllers/FunctionController.php:26
+#: ../../../application/modules/admin/controllers/HierarchyController.php:23
+#: ../../../application/modules/admin/controllers/PlaceController.php:19
+#: ../../../application/modules/admin/controllers/ReferenceController.php:10
+#: ../../../application/modules/admin/controllers/SourceController.php:29
+#: ../../../application/modules/admin/controllers/SourceController.php:121
+#: ../../../application/modules/admin/controllers/UserController.php:16
 msgid "info_delete"
 msgstr "Der Eintrag wurde gelöscht."
 
-#: ../../../application/modules/admin/controllers/HierarchyController.php:27
-#: ../../../application/modules/admin/views/scripts/hierarchy/index.phtml:27
-msgid "error_name_empty"
-msgstr "Der Name darf nicht leer sein."
+#: ../../../application/modules/admin/controllers/ActorController.php:31
+#: ../../../application/modules/admin/controllers/EventController.php:38
+msgid "error_missing_class"
+msgstr "Fehlende Klasse"
 
+#: ../../../application/modules/admin/controllers/ActorController.php:70
+#: ../../../application/modules/admin/controllers/ActorController.php:96
+#: ../../../application/modules/admin/controllers/BiblioController.php:26
+#: ../../../application/modules/admin/controllers/CarrierController.php:26
+#: ../../../application/modules/admin/controllers/EventController.php:72
+#: ../../../application/modules/admin/controllers/EventController.php:98
+#: ../../../application/modules/admin/controllers/HierarchyController.php:56
+#: ../../../application/modules/admin/controllers/InvolvementController.php:59
+#: ../../../application/modules/admin/controllers/MemberController.php:27
+#: ../../../application/modules/admin/controllers/MemberController.php:59
+#: ../../../application/modules/admin/controllers/PlaceController.php:55
+#: ../../../application/modules/admin/controllers/PlaceController.php:77
+#: ../../../application/modules/admin/controllers/ReferenceController.php:29
+#: ../../../application/modules/admin/controllers/RelationController.php:28
+#: ../../../application/modules/admin/controllers/SourceController.php:76
+#: ../../../application/modules/admin/controllers/SourceController.php:114
+#: ../../../application/modules/admin/controllers/UserController.php:103
+msgid "info_insert"
+msgstr "Neuer Eintrag angelegt"
+
+#: ../../../application/modules/admin/controllers/ActorController.php:93
+#: ../../../application/modules/admin/controllers/EventController.php:95
+#: ../../../application/modules/admin/controllers/PlaceController.php:74
+msgid "error_link_exists"
+msgstr "Dieser Link existiert bereits."
+
+#: ../../../application/modules/admin/controllers/ActorController.php:125
+#: ../../../application/modules/admin/controllers/CarrierController.php:74
+#: ../../../application/modules/admin/controllers/EventController.php:132
+#: ../../../application/modules/admin/controllers/PlaceController.php:120
+#: ../../../application/modules/admin/controllers/ReferenceController.php:64
+#: ../../../application/modules/admin/controllers/SourceController.php:178
+msgid "error_modified"
+msgstr "Änderung fehlgeschlagen."
+
+#: ../../../application/modules/admin/controllers/ActorController.php:138
+#: ../../../application/modules/admin/controllers/ActorController.php:248
+#: ../../../application/modules/admin/controllers/BiblioController.php:60
+#: ../../../application/modules/admin/controllers/CarrierController.php:84
+#: ../../../application/modules/admin/controllers/ContentController.php:24
+#: ../../../application/modules/admin/controllers/EventController.php:142
+#: ../../../application/modules/admin/controllers/HierarchyController.php:98
+#: ../../../application/modules/admin/controllers/InvolvementController.php:101
+#: ../../../application/modules/admin/controllers/MemberController.php:97
+#: ../../../application/modules/admin/controllers/PlaceController.php:140
+#: ../../../application/modules/admin/controllers/ProfileController.php:32
+#: ../../../application/modules/admin/controllers/ProfileController.php:84
+#: ../../../application/modules/admin/controllers/ReferenceController.php:72
+#: ../../../application/modules/admin/controllers/RelationController.php:69
+#: ../../../application/modules/admin/controllers/SettingsController.php:23
+#: ../../../application/modules/admin/controllers/SourceController.php:147
+#: ../../../application/modules/admin/controllers/SourceController.php:191
+#: ../../../application/modules/admin/controllers/UserController.php:71
+msgid "info_update"
+msgstr "Die Änderungen wurden gespeichert."
+
+#: ../../../application/modules/admin/controllers/HierarchyController.php:11
 #: ../../../application/modules/admin/controllers/HierarchyController.php:65
-#: ../../../application/modules/admin/controllers/HierarchyController.php:108
-#: ../../../application/modules/admin/controllers/UserController.php:20
-#: ../../../application/modules/admin/controllers/UserController.php:98
+#: ../../../application/modules/admin/controllers/UserController.php:11
+#: ../../../application/modules/admin/controllers/UserController.php:33
 #: ../../../application/modules/default/controllers/ErrorController.php:8
 msgid "error_forbidden"
 msgstr "Zugriff verweigert"
 
-#: ../../../application/modules/admin/controllers/HierarchyController.php:112
+#: ../../../application/modules/admin/controllers/HierarchyController.php:15
 msgid "error_links_exists"
 msgstr "Löschen nicht möglich da noch Links existieren."
 
-#: ../../../application/modules/admin/controllers/HierarchyController.php:116
+#: ../../../application/modules/admin/controllers/HierarchyController.php:19
 msgid "error_subs_exists"
 msgstr "Löschen nicht möglich da Untertypen existieren."
+
+#: ../../../application/modules/admin/controllers/HierarchyController.php:47
+#: ../../../application/modules/admin/views/scripts/hierarchy/index.phtml:27
+msgid "error_name_empty"
+msgstr "Der Name darf nicht leer sein."
 
 #: ../../../application/modules/admin/controllers/IndexController.php:21
 #: ../../../application/modules/admin/controllers/IndexController.php:50
@@ -118,65 +122,65 @@ msgstr ""
 "Zu viele Anmeldeversuche mit diesem Usernamen. Nach ein paar Minuten kannst "
 "du es wieder probieren."
 
-#: ../../../application/modules/admin/controllers/IndexController.php:118
-msgid "error_nonexist_email"
-msgstr "Diese E-Mail Adresse ist uns leider nicht bekannt."
-
-#: ../../../application/modules/admin/controllers/IndexController.php:131
-msgid "mail_reset_password_subject"
-msgstr "Passwort Zurücksetzung"
-
-#: ../../../application/modules/admin/controllers/IndexController.php:136
-msgid "info_mail_password_confirmed_send"
-msgstr "Eine Passwort Bestätigungsmail wurde an %s geschickt."
-
-#: ../../../application/modules/admin/controllers/IndexController.php:140
-#: ../../../application/modules/admin/controllers/IndexController.php:179
-#: ../../../application/modules/admin/controllers/OverviewController.php:47
-msgid "error_mail_send"
-msgstr "Die E-Mail konnte nicht verschickt werden."
-
-#: ../../../application/modules/admin/controllers/IndexController.php:149
+#: ../../../application/modules/admin/controllers/IndexController.php:115
 msgid "error_invalid_request"
 msgstr "Ungültige Anfrage"
 
-#: ../../../application/modules/admin/controllers/IndexController.php:156
+#: ../../../application/modules/admin/controllers/IndexController.php:122
 msgid "error_reset_outdated"
 msgstr "Dieser Link ist leider nicht mehr gültig."
 
-#: ../../../application/modules/admin/controllers/IndexController.php:171
+#: ../../../application/modules/admin/controllers/IndexController.php:137
 msgid "mail_new_password_subject"
 msgstr "Neues Passwort"
 
-#: ../../../application/modules/admin/controllers/IndexController.php:176
+#: ../../../application/modules/admin/controllers/IndexController.php:142
 msgid "info_mail_new_password_send"
 msgstr "Eine neues Passwort wurde an %s geschickt."
 
-#: ../../../application/modules/admin/controllers/OverviewController.php:42
+#: ../../../application/modules/admin/controllers/IndexController.php:145
+#: ../../../application/modules/admin/controllers/IndexController.php:180
+#: ../../../application/modules/admin/controllers/OverviewController.php:40
+msgid "error_mail_send"
+msgstr "Die E-Mail konnte nicht verschickt werden."
+
+#: ../../../application/modules/admin/controllers/IndexController.php:158
+msgid "error_nonexist_email"
+msgstr "Diese E-Mail Adresse ist uns leider nicht bekannt."
+
+#: ../../../application/modules/admin/controllers/IndexController.php:171
+msgid "mail_reset_password_subject"
+msgstr "Passwort Zurücksetzung"
+
+#: ../../../application/modules/admin/controllers/IndexController.php:176
+msgid "info_mail_password_confirmed_send"
+msgstr "Eine Passwort Bestätigungsmail wurde an %s geschickt."
+
+#: ../../../application/modules/admin/controllers/OverviewController.php:35
 msgid "info_feedback_thanks"
 msgstr "Danke für das Feedback."
 
-#: ../../../application/modules/admin/controllers/ProfileController.php:52
-#: ../../../application/modules/admin/controllers/UserController.php:45
-#: ../../../application/modules/admin/controllers/UserController.php:75
-msgid "error_email_exists"
-msgstr "Diese E-Mail Adresse existiert bereits."
-
-#: ../../../application/modules/admin/controllers/ProfileController.php:73
+#: ../../../application/modules/admin/controllers/ProfileController.php:42
 msgid "error_wrong_password"
 msgstr "Falsches Passwort"
 
-#: ../../../application/modules/admin/controllers/ProfileController.php:77
-#: ../../../application/modules/admin/controllers/UserController.php:69
+#: ../../../application/modules/admin/controllers/ProfileController.php:46
+#: ../../../application/modules/admin/controllers/UserController.php:82
 msgid "error_password_retype"
 msgstr "Die Passwörter stimmen nicht überein."
 
-#: ../../../application/modules/admin/controllers/ProfileController.php:83
+#: ../../../application/modules/admin/controllers/ProfileController.php:52
 msgid "info_password_update"
 msgstr "Das Passwort wurde geändert."
 
-#: ../../../application/modules/admin/controllers/UserController.php:41
-#: ../../../application/modules/admin/controllers/UserController.php:72
+#: ../../../application/modules/admin/controllers/ProfileController.php:73
+#: ../../../application/modules/admin/controllers/UserController.php:58
+#: ../../../application/modules/admin/controllers/UserController.php:88
+msgid "error_email_exists"
+msgstr "Diese E-Mail Adresse existiert bereits."
+
+#: ../../../application/modules/admin/controllers/UserController.php:54
+#: ../../../application/modules/admin/controllers/UserController.php:85
 msgid "error_username_exists"
 msgstr "Dieser Username existiert bereits."
 
@@ -222,15 +226,15 @@ msgstr "Tod"
 #: ../../../application/modules/admin/views/scripts/actor/index.phtml:9
 #: ../../../application/modules/admin/views/scripts/actor/view.phtml:254
 #: ../../../application/modules/admin/views/scripts/biblio/form.phtml:22
-#: ../../../application/modules/admin/views/scripts/carrier/form.phtml:28
+#: ../../../application/modules/admin/views/scripts/carrier/form.phtml:29
 #: ../../../application/modules/admin/views/scripts/class/index.phtml:9
 #: ../../../application/modules/admin/views/scripts/class/view.phtml:11
 #: ../../../application/modules/admin/views/scripts/event/add.phtml:9
-#: ../../../application/modules/admin/views/scripts/event/form.phtml:39
-#: ../../../application/modules/admin/views/scripts/event/form.phtml:61
-#: ../../../application/modules/admin/views/scripts/event/form.phtml:79
-#: ../../../application/modules/admin/views/scripts/event/form.phtml:97
-#: ../../../application/modules/admin/views/scripts/event/form.phtml:115
+#: ../../../application/modules/admin/views/scripts/event/form.phtml:40
+#: ../../../application/modules/admin/views/scripts/event/form.phtml:62
+#: ../../../application/modules/admin/views/scripts/event/form.phtml:80
+#: ../../../application/modules/admin/views/scripts/event/form.phtml:98
+#: ../../../application/modules/admin/views/scripts/event/form.phtml:116
 #: ../../../application/modules/admin/views/scripts/event/index.phtml:8
 #: ../../../application/modules/admin/views/scripts/event/view.phtml:139
 #: ../../../application/modules/admin/views/scripts/hierarchy/index.phtml:33
@@ -262,7 +266,7 @@ msgstr "Name"
 #: ../../../application/modules/admin/forms/Feedback.php:19
 #: ../../../application/modules/admin/forms/Involvement.php:36
 #: ../../../application/modules/admin/forms/Member.php:26
-#: ../../../application/modules/admin/forms/Place.php:32
+#: ../../../application/modules/admin/forms/Place.php:40
 #: ../../../application/modules/admin/forms/Reference.php:27
 #: ../../../application/modules/admin/forms/Relation.php:33
 #: ../../../application/modules/admin/forms/Type.php:21
@@ -279,9 +283,9 @@ msgstr "Beschreibung"
 #: ../../../application/modules/admin/forms/Carrier.php:31
 #: ../../../application/modules/admin/forms/Event.php:23
 #: ../../../application/modules/admin/forms/Event.php:32
-#: ../../../application/modules/admin/forms/Event.php:58
-#: ../../../application/modules/admin/forms/Event.php:67
-#: ../../../application/modules/admin/forms/Event.php:76
+#: ../../../application/modules/admin/forms/Event.php:59
+#: ../../../application/modules/admin/forms/Event.php:68
+#: ../../../application/modules/admin/forms/Event.php:77
 #: ../../../application/modules/admin/forms/Involvement.php:17
 #: ../../../application/modules/admin/forms/Involvement.php:32
 #: ../../../application/modules/admin/forms/Member.php:17
@@ -312,13 +316,13 @@ msgid "appears_last"
 msgstr "Letztes Erscheinen"
 
 #: ../../../application/modules/admin/forms/Actor.php:73
-#: ../../../application/modules/admin/forms/Carrier.php:43
-#: ../../../application/modules/admin/forms/Event.php:43
+#: ../../../application/modules/admin/forms/Carrier.php:44
+#: ../../../application/modules/admin/forms/Event.php:44
 #: ../../../application/modules/admin/forms/Member.php:35
-#: ../../../application/modules/admin/forms/Place.php:40
-#: ../../../application/modules/admin/forms/Reference.php:38
+#: ../../../application/modules/admin/forms/Place.php:49
+#: ../../../application/modules/admin/forms/Reference.php:39
 #: ../../../application/modules/admin/forms/Relation.php:42
-#: ../../../application/modules/admin/forms/Source.php:33
+#: ../../../application/modules/admin/forms/Source.php:34
 msgid "insert_and_continue"
 msgstr "Anlegen und weiter"
 
@@ -365,10 +369,10 @@ msgstr "Typ"
 #: ../../../application/modules/admin/forms/Event.php:28
 #: ../../../library/Craws/View/Helper/Link.php:28
 #: ../../../application/layouts/scripts/admin.phtml:8
-#: ../../../application/modules/admin/views/scripts/carrier/form.phtml:45
+#: ../../../application/modules/admin/views/scripts/carrier/form.phtml:46
 #: ../../../application/modules/admin/views/scripts/carrier/view.phtml:20
-#: ../../../application/modules/admin/views/scripts/event/form.phtml:133
-#: ../../../application/modules/admin/views/scripts/event/form.phtml:137
+#: ../../../application/modules/admin/views/scripts/event/form.phtml:134
+#: ../../../application/modules/admin/views/scripts/event/form.phtml:138
 #: ../../../application/modules/admin/views/scripts/event/view.phtml:28
 #: ../../../application/modules/admin/views/scripts/place/add.phtml:6
 #: ../../../application/modules/admin/views/scripts/place/index.phtml:1
@@ -395,6 +399,7 @@ msgid "theme"
 msgstr "Farbschema"
 
 #: ../../../application/modules/admin/forms/Display.php:25
+#: ../../../application/modules/admin/views/scripts/profile/index.phtml:42
 msgid "layout"
 msgstr "Layout"
 
@@ -407,6 +412,7 @@ msgid "advanced"
 msgstr "erweitert"
 
 #: ../../../application/modules/admin/forms/Display.php:32
+#: ../../../application/modules/admin/views/scripts/profile/index.phtml:49
 msgid "table_rows"
 msgstr "Tabellenreihen"
 
@@ -416,17 +422,17 @@ msgstr "Tabellenreihen"
 msgid "super"
 msgstr "Super"
 
-#: ../../../application/modules/admin/forms/Event.php:54
-#: ../../../application/modules/admin/views/scripts/event/form.phtml:135
+#: ../../../application/modules/admin/forms/Event.php:55
+#: ../../../application/modules/admin/views/scripts/event/form.phtml:136
 msgid "recipient"
 msgstr "Empfänger"
 
-#: ../../../application/modules/admin/forms/Event.php:63
-#: ../../../application/modules/admin/views/scripts/event/form.phtml:136
+#: ../../../application/modules/admin/forms/Event.php:64
+#: ../../../application/modules/admin/views/scripts/event/form.phtml:137
 msgid "donor"
 msgstr "Geber"
 
-#: ../../../application/modules/admin/forms/Event.php:72
+#: ../../../application/modules/admin/forms/Event.php:73
 msgid "given_place"
 msgstr "Gegebener Ort"
 
@@ -453,7 +459,7 @@ msgstr "senden"
 #: ../../../application/modules/admin/forms/Involvement.php:27
 #: ../../../application/layouts/scripts/admin.phtml:8
 #: ../../../application/modules/admin/views/scripts/actor/view.phtml:77
-#: ../../../application/modules/admin/views/scripts/event/form.phtml:132
+#: ../../../application/modules/admin/views/scripts/event/form.phtml:133
 #: ../../../application/modules/admin/views/scripts/event/index.phtml:1
 #: ../../../application/modules/admin/views/scripts/event/view.phtml:166
 #: ../../../application/modules/admin/views/scripts/involvement/form.phtml:78
@@ -533,6 +539,7 @@ msgstr "Neues wiederholen"
 #: ../../../application/modules/admin/forms/PasswordReset.php:12
 #: ../../../application/modules/admin/forms/Profile.php:14
 #: ../../../application/modules/admin/forms/User.php:52
+#: ../../../application/modules/admin/views/scripts/profile/update.phtml:11
 #: ../../../application/modules/admin/views/scripts/user/index.phtml:6
 #: ../../../application/modules/admin/views/scripts/user/view.phtml:21
 msgid "email"
@@ -546,21 +553,23 @@ msgstr "Abschicken"
 msgid "site"
 msgstr "Anlage"
 
-#: ../../../application/modules/admin/forms/Place.php:30
+#: ../../../application/modules/admin/forms/Place.php:31
 #: ../../../application/modules/admin/views/scripts/place/view.phtml:64
 msgid "easting"
 msgstr "Rechtswert"
 
-#: ../../../application/modules/admin/forms/Place.php:31
+#: ../../../application/modules/admin/forms/Place.php:36
 #: ../../../application/modules/admin/views/scripts/place/view.phtml:65
 msgid "northing"
 msgstr "Hochwert"
 
 #: ../../../application/modules/admin/forms/Profile.php:19
+#: ../../../application/modules/admin/views/scripts/profile/update.phtml:18
 msgid "show_email"
 msgstr "E-Mail anzeigen"
 
 #: ../../../application/modules/admin/forms/Profile.php:25
+#: ../../../application/modules/admin/views/scripts/profile/update.phtml:25
 #: ../../../application/modules/admin/views/scripts/user/index.phtml:6
 msgid "newsletter"
 msgstr "Newsletter"
@@ -767,7 +776,7 @@ msgstr "Quelle"
 #: ../../../application/modules/admin/views/scripts/place/view.phtml:148
 #: ../../../application/modules/admin/views/scripts/profile/index.phtml:4
 #: ../../../application/modules/admin/views/scripts/profile/update.phtml:1
-#: ../../../application/modules/admin/views/scripts/reference/update.phtml:6
+#: ../../../application/modules/admin/views/scripts/reference/update.phtml:1
 #: ../../../application/modules/admin/views/scripts/reference/view.phtml:39
 #: ../../../application/modules/admin/views/scripts/reference/view.phtml:62
 #: ../../../application/modules/admin/views/scripts/reference/view.phtml:87
@@ -802,9 +811,9 @@ msgstr "%s löschen?"
 #: ../../../application/modules/admin/views/scripts/biblio/form.phtml:22
 #: ../../../application/modules/admin/views/scripts/class/index.phtml:5
 #: ../../../application/modules/admin/views/scripts/event/add.phtml:9
-#: ../../../application/modules/admin/views/scripts/event/form.phtml:39
-#: ../../../application/modules/admin/views/scripts/event/form.phtml:79
-#: ../../../application/modules/admin/views/scripts/event/form.phtml:97
+#: ../../../application/modules/admin/views/scripts/event/form.phtml:40
+#: ../../../application/modules/admin/views/scripts/event/form.phtml:80
+#: ../../../application/modules/admin/views/scripts/event/form.phtml:98
 #: ../../../application/modules/admin/views/scripts/event/index.phtml:8
 #: ../../../application/modules/admin/views/scripts/event/view.phtml:74
 #: ../../../application/modules/admin/views/scripts/event/view.phtml:166
@@ -956,13 +965,13 @@ msgstr "hinzufügen"
 #: ../../../application/modules/admin/views/scripts/actor/view.phtml:112
 #: ../../../application/modules/admin/views/scripts/actor/view.phtml:187
 #: ../../../application/modules/admin/views/scripts/actor/view.phtml:221
-#: ../../../application/modules/admin/views/scripts/carrier/form.phtml:28
+#: ../../../application/modules/admin/views/scripts/carrier/form.phtml:29
 #: ../../../application/modules/admin/views/scripts/event/add.phtml:9
-#: ../../../application/modules/admin/views/scripts/event/form.phtml:39
-#: ../../../application/modules/admin/views/scripts/event/form.phtml:61
-#: ../../../application/modules/admin/views/scripts/event/form.phtml:79
-#: ../../../application/modules/admin/views/scripts/event/form.phtml:97
-#: ../../../application/modules/admin/views/scripts/event/form.phtml:115
+#: ../../../application/modules/admin/views/scripts/event/form.phtml:40
+#: ../../../application/modules/admin/views/scripts/event/form.phtml:62
+#: ../../../application/modules/admin/views/scripts/event/form.phtml:80
+#: ../../../application/modules/admin/views/scripts/event/form.phtml:98
+#: ../../../application/modules/admin/views/scripts/event/form.phtml:116
 #: ../../../application/modules/admin/views/scripts/event/index.phtml:8
 #: ../../../application/modules/admin/views/scripts/event/view.phtml:74
 #: ../../../application/modules/admin/views/scripts/event/view.phtml:166
@@ -996,13 +1005,13 @@ msgstr "Erstes"
 #: ../../../application/modules/admin/views/scripts/actor/view.phtml:112
 #: ../../../application/modules/admin/views/scripts/actor/view.phtml:187
 #: ../../../application/modules/admin/views/scripts/actor/view.phtml:221
-#: ../../../application/modules/admin/views/scripts/carrier/form.phtml:28
+#: ../../../application/modules/admin/views/scripts/carrier/form.phtml:29
 #: ../../../application/modules/admin/views/scripts/event/add.phtml:9
-#: ../../../application/modules/admin/views/scripts/event/form.phtml:39
-#: ../../../application/modules/admin/views/scripts/event/form.phtml:61
-#: ../../../application/modules/admin/views/scripts/event/form.phtml:79
-#: ../../../application/modules/admin/views/scripts/event/form.phtml:97
-#: ../../../application/modules/admin/views/scripts/event/form.phtml:115
+#: ../../../application/modules/admin/views/scripts/event/form.phtml:40
+#: ../../../application/modules/admin/views/scripts/event/form.phtml:62
+#: ../../../application/modules/admin/views/scripts/event/form.phtml:80
+#: ../../../application/modules/admin/views/scripts/event/form.phtml:98
+#: ../../../application/modules/admin/views/scripts/event/form.phtml:116
 #: ../../../application/modules/admin/views/scripts/event/index.phtml:8
 #: ../../../application/modules/admin/views/scripts/event/view.phtml:74
 #: ../../../application/modules/admin/views/scripts/event/view.phtml:166
@@ -1028,13 +1037,23 @@ msgstr "Erstes"
 msgid "last"
 msgstr "Letztes"
 
-#: ../../../application/modules/admin/views/scripts/actor/update.phtml:4
+#: ../../../application/modules/admin/views/scripts/actor/update.phtml:3
+#: ../../../application/modules/admin/views/scripts/carrier/update.phtml:3
+#: ../../../application/modules/admin/views/scripts/event/update.phtml:3
+#: ../../../application/modules/admin/views/scripts/place/update.phtml:3
+#: ../../../application/modules/admin/views/scripts/reference/update.phtml:3
+#: ../../../application/modules/admin/views/scripts/source/update.phtml:3
 msgid "error_modified_info"
 msgstr ""
 "Der Eintrag wurde von %s inzwischen geändert. Bitte die Änderungen kopieren "
 "oder merken, auf \"Neu laden\" klicken und es noch einmal probieren."
 
-#: ../../../application/modules/admin/views/scripts/actor/update.phtml:5
+#: ../../../application/modules/admin/views/scripts/actor/update.phtml:4
+#: ../../../application/modules/admin/views/scripts/carrier/update.phtml:4
+#: ../../../application/modules/admin/views/scripts/event/update.phtml:4
+#: ../../../application/modules/admin/views/scripts/place/update.phtml:4
+#: ../../../application/modules/admin/views/scripts/reference/update.phtml:4
+#: ../../../application/modules/admin/views/scripts/source/update.phtml:4
 msgid "reload"
 msgstr "Neu laden"
 
@@ -1234,13 +1253,19 @@ msgstr "Zielklasse für"
 msgid "title"
 msgstr "Titel"
 
-#: ../../../application/modules/admin/views/scripts/dateForm.phtml:3
+#: ../../../application/modules/admin/views/scripts/dateForm.phtml:4
 #: ../../../application/modules/admin/views/scripts/log/index.phtml:9
 #: ../../../application/modules/admin/views/scripts/overview/index.phtml:41
 msgid "date"
 msgstr "Datum"
 
 #: ../../../application/modules/admin/views/scripts/dateForm.phtml:5
+msgid "tip_date"
+msgstr ""
+"Es kann ein Beginn, ein Ende Datum oder Zeitspannen für jedes angegeben "
+"werden."
+
+#: ../../../application/modules/admin/views/scripts/dateForm.phtml:8
 msgid "show"
 msgstr "Anzeigen"
 
@@ -1422,9 +1447,38 @@ msgstr "Ja"
 msgid "display"
 msgstr "Anzeige"
 
+#: ../../../application/modules/admin/views/scripts/profile/index.phtml:43
+msgid "tip_layout"
+msgstr ""
+"Bei Layout Erweitert werden zusätzliche Informationen gezeigt, z.B. "
+"Informationen wer, wann einen Eintrag angelegt hat."
+
+#: ../../../application/modules/admin/views/scripts/profile/index.phtml:50
+msgid "tip_tablerows"
+msgstr ""
+"Wie viele Tabellenreihen in Listen angezeigt werden sollen. Möglicherweise "
+"erst nach Neustart des Browsers wirksam."
+
 #: ../../../application/modules/admin/views/scripts/profile/password.phtml:3
 msgid "password_strength_rules"
 msgstr "Das Passwort muss mindestens 8 Zeichen lang sein."
+
+#: ../../../application/modules/admin/views/scripts/profile/update.phtml:12
+msgid "tip_email"
+msgstr ""
+"Eine E-Mail Adresse ist für das Passwort Zurücksetzten und Newsletter "
+"erforderlich."
+
+#: ../../../application/modules/admin/views/scripts/profile/update.phtml:19
+msgid "tip_show_email"
+msgstr ""
+"Wenn markiert, kann die E-Mail Adresse für andere Benutzer sichtbar sein."
+
+#: ../../../application/modules/admin/views/scripts/profile/update.phtml:26
+msgid "tip_newsletter"
+msgstr ""
+"Wenn markiert wird ungefähr einmal im Monat ein Newsletter bezüglich "
+"Neuerungen und Wartungsarbeiten verschickt."
 
 #: ../../../application/modules/admin/views/scripts/search/form.phtml:8
 #: ../../../application/modules/admin/views/scripts/search/form.phtml:34
