@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenATLAS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-05-02 14:14+0100\n"
+"POT-Creation-Date: 2016-05-04 14:59+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Alexander Watzinger <alexander.watzinger@craws.net>\n"
 "Language-Team: craws.net <alexander.watzinger@craws.net>\n"
@@ -70,7 +70,6 @@ msgid "error_modified"
 msgstr "Änderung fehlgeschlagen."
 
 #: ../../../application/modules/admin/controllers/ActorController.php:138
-#: ../../../application/modules/admin/controllers/ActorController.php:248
 #: ../../../application/modules/admin/controllers/BiblioController.php:60
 #: ../../../application/modules/admin/controllers/CarrierController.php:84
 #: ../../../application/modules/admin/controllers/ContentController.php:24
@@ -366,19 +365,8 @@ msgid "type"
 msgstr "Typ"
 
 #: ../../../application/modules/admin/forms/Carrier.php:27
-#: ../../../application/modules/admin/forms/Event.php:28
-#: ../../../library/Craws/View/Helper/Link.php:28
-#: ../../../application/layouts/scripts/admin.phtml:8
-#: ../../../application/modules/admin/views/scripts/carrier/form.phtml:46
-#: ../../../application/modules/admin/views/scripts/carrier/view.phtml:20
-#: ../../../application/modules/admin/views/scripts/event/form.phtml:134
-#: ../../../application/modules/admin/views/scripts/event/form.phtml:138
-#: ../../../application/modules/admin/views/scripts/event/view.phtml:28
-#: ../../../application/modules/admin/views/scripts/place/add.phtml:6
-#: ../../../application/modules/admin/views/scripts/place/index.phtml:1
-#: ../../../application/modules/admin/views/scripts/place/insert.phtml:5
-msgid "place"
-msgstr "Ort"
+msgid "place_of_issue"
+msgstr "Ausstellungsort"
 
 #: ../../../application/modules/admin/forms/Content.php:20
 #: ../../../application/modules/admin/forms/Password.php:26
@@ -421,6 +409,20 @@ msgstr "Tabellenreihen"
 #: ../../../application/modules/admin/views/scripts/event/view.phtml:25
 msgid "super"
 msgstr "Super"
+
+#: ../../../application/modules/admin/forms/Event.php:28
+#: ../../../library/Craws/View/Helper/Link.php:28
+#: ../../../application/layouts/scripts/admin.phtml:8
+#: ../../../application/modules/admin/views/scripts/carrier/form.phtml:46
+#: ../../../application/modules/admin/views/scripts/carrier/view.phtml:20
+#: ../../../application/modules/admin/views/scripts/event/form.phtml:134
+#: ../../../application/modules/admin/views/scripts/event/form.phtml:138
+#: ../../../application/modules/admin/views/scripts/event/view.phtml:28
+#: ../../../application/modules/admin/views/scripts/place/add.phtml:6
+#: ../../../application/modules/admin/views/scripts/place/index.phtml:1
+#: ../../../application/modules/admin/views/scripts/place/insert.phtml:5
+msgid "place"
+msgstr "Ort"
 
 #: ../../../application/modules/admin/forms/Event.php:55
 #: ../../../application/modules/admin/views/scripts/event/form.phtml:136
@@ -1266,6 +1268,7 @@ msgstr ""
 "werden."
 
 #: ../../../application/modules/admin/views/scripts/dateForm.phtml:8
+#: ../../../application/modules/admin/views/scripts/place/form.phtml:18
 msgid "show"
 msgstr "Anzeigen"
 
@@ -1407,7 +1410,11 @@ msgstr "Neueste Einträge"
 msgid "bookmarks"
 msgstr "Bookmarks"
 
-#: ../../../application/modules/admin/views/scripts/place/form.phtml:22
+#: ../../../application/modules/admin/views/scripts/place/form.phtml:15
+msgid "label_location_switch"
+msgstr "Verortung"
+
+#: ../../../application/modules/admin/views/scripts/place/form.phtml:30
 msgid "situated_within"
 msgstr "liegt in"
 
