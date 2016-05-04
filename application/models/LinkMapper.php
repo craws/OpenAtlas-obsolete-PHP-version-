@@ -11,7 +11,7 @@ class Model_LinkMapper extends Model_AbstractMapper {
         return self::populate($row);
     }
 
-    public static function getLinkedEntity(Model_Entity $entity, $code, $inverse = false) {
+    public static function getLinkedEntity($entity, $code, $inverse = false) {
         $linkedEntity = self::getLink($entity, $code, $inverse);
         if (!$linkedEntity) {
             return false;
@@ -22,7 +22,7 @@ class Model_LinkMapper extends Model_AbstractMapper {
         return $linkedEntity->getRange();
     }
 
-    public static function getLinkedEntities(Model_Entity $entity, $code, $inverse = false) {
+    public static function getLinkedEntities($entity, $code, $inverse = false) {
         $entities = [];
         foreach (self::getLinks($entity, $code, $inverse) as $link) {
             if ($inverse) {
@@ -34,7 +34,7 @@ class Model_LinkMapper extends Model_AbstractMapper {
         return $entities;
     }
 
-    public static function getLink(Model_Entity $entity, $code, $inverse = false) {
+    public static function getLink($entity, $code, $inverse = false) {
         $links = self::getLinks($entity, $code, $inverse);
         switch (count($links)) {
             case 0:
@@ -43,12 +43,15 @@ class Model_LinkMapper extends Model_AbstractMapper {
                 return $links[0];
                 // @codeCoverageIgnoreStart
         }
-        $error = 'Found ' . count($links) . ' ' . $code . ' links for (' . $entity->id . ')' . ' instead one.';
+        $error = 'Found ' . count($links) . ' ' . $code . ' links for (' . $entity->name . ')' . ' instead one.';
+        if (is_a($entity, 'Model_Entity')) {
+            $error = 'Found ' . count($links) . ' ' . $code . ' links for (' . $entity->id . ')' . ' instead one.';
+        }
         Model_LogMapper::log('error', 'crm', $error);
     }
     // @codeCoverageIgnoreEnd
 
-    public static function getLinks(Model_Entity $entity, $codes, $inverse = false) {
+    public static function getLinks($entity, $codes, $inverse = false) {
         if (!is_array($codes)) {
             $codes = [$codes];
         }
@@ -59,7 +62,11 @@ class Model_LinkMapper extends Model_AbstractMapper {
         return $objects;
     }
 
-    private static function getLinksByCode(Model_Entity $entity, $code, $inverse) {
+    private static function getLinksByCode($entity, $code, $inverse) {
+        $entity_id = $entity;
+        if (is_a($entity, 'Model_Entity')) {
+            $entity_id = $entity->id;
+        }
         $sql = self::$sqlSelect . ', e.name FROM crm.link l JOIN crm.entity e ON l.range_id = e.id
             WHERE l.property_id = :property_id AND l.domain_id = :entity_id ORDER BY e.name;';
         if ($inverse) {
@@ -68,7 +75,7 @@ class Model_LinkMapper extends Model_AbstractMapper {
         }
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->bindValue(':property_id', Model_PropertyMapper::getByCode($code)->id);
-        $statement->bindValue(':entity_id', $entity->id);
+        $statement->bindValue(':entity_id', $entity_id);
         $statement->execute();
         $objects = [];
         foreach ($statement->fetchAll() as $row) {

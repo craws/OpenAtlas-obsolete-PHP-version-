@@ -19,8 +19,8 @@ class Craws_View_Helper_DisplayTreeSelectMulti extends Zend_View_Helper_Abstract
         if ($name == 'type') {
             $displayName = $this->view->ucstring($name);
         }
-        $html = '<div class="tableRow">';
-        $html = '<div class="tableRow">
+        $class = (in_array($name, ['administrative', 'historical'])) ? ' placeSwitch display-none' : '';
+        $html = '<div class="tableRow' . $class . '">
             <div id="' . $this->view->ucstring($name) . '-label">
                 <label class="optional">' . $displayName . '</label>
                 <span class="tooltip" title="' . $this->view->ucstring('tip_hierarchy') . '">i</span>
@@ -30,8 +30,7 @@ class Craws_View_Helper_DisplayTreeSelectMulti extends Zend_View_Helper_Abstract
         $elementId = $name . 'Id';
         $form->$elementId->setValue($htmlIds);
         $html .= $form->$elementId->renderViewHelper();
-        $html .= '<div id="' . $name . 'Selection" style="text-align:left;">' . $htmlNames . '</div>';
-        $html .= '</div></div>';
+        $html .= '<div id="' . $name . 'Selection" style="text-align:left;">' . $htmlNames . '</div></div></div>';
         return $html;
     }
 

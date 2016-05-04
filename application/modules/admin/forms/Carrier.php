@@ -24,7 +24,7 @@ class Admin_Form_Carrier extends Craws\Form\Table {
         ]);
         $this->addElement('hidden', 'objectId', ['decorators' => ['ViewHelper']]);
         $this->addElement('text', 'objectButton', [
-            'label' => $this->getView()->ucstring('place'),
+            'label' => $this->getView()->ucstring('place_of_issue'),
             'class' => 'tableSelect',
             'readonly' => true,
             'onfocus' => 'this.blur()',
@@ -36,6 +36,7 @@ class Admin_Form_Carrier extends Craws\Form\Table {
         if (Zend_Controller_Front::getInstance()->getRequest()->getActionName() == 'insert') {
             $submitLabel = 'insert';
         }
+        $this->addElement('hidden', 'modified');
         $this->addElement('button', 'formSubmit', ['label' => $this->getView()->ucstring($submitLabel), 'type' => 'submit']);
         if (Zend_Controller_Front::getInstance()->getRequest()->getActionName() == 'insert') {
             $this->addElement('hidden', 'continue', ['decorators' => ['ViewHelper'], 'value' => 0]);

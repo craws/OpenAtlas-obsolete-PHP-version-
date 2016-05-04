@@ -26,7 +26,32 @@ $this->buttonBar = '
 </div>
 <div style="float:left;padding-left:2em;">
     <h1><?= $this->ucstring('display') ?></h1>
-    <?= $this->form->setAction($this->url());?>
+    <? $form = $this->form; ?>
+    <?= $this->displayErrors($form); ?>
+    <?= $form->renderForm(false); ?>
+    <div class="tableRow">
+        <?= $form->language->renderLabel() ?>
+        <div class="tableCell"><?= $form->language->renderViewHelper() ?></div>
+    </div>
+    <div class="tableRow">
+        <?= $form->theme->renderLabel() ?>
+        <div class="tableCell"><?= $form->theme->renderViewHelper() ?></div>
+    </div>
+    <div class="tableRow">
+        <div>
+            <label><?= $this->ucstring('layout') ?></label>
+            <span class="tooltip" title="<?= $this->ucstring('tip_layout') ?>">i</span>
+        </div>
+        <div class="tableCell"><?= $form->layout->renderViewHelper() ?></div>
+    </div>
+    <div class="tableRow">
+        <div>
+            <label><?= $this->ucstring('table_rows') ?></label>
+            <span class="tooltip" title="<?= $this->ucstring('tip_tablerows') ?>">i</span>
+        </div>
+        <div class="tableCell"><?= $form->tableRows->renderViewHelper() ?></div>
+    </div>
+    <?= "</form>" ?>
 </div>
 <script type="text/javascript">
     $('#displayForm').change(function () {

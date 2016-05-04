@@ -18,7 +18,11 @@ class Admin_SourceControllerTest extends ControllerTestCase {
     }
 
     public function testAdd() {
-        $this->dispatch('admin/source/add/id/' . $this->eventId);
+        $this->dispatch('admin/source/add/id/' . $this->actorId);
+        $this->request->setMethod('POST')->setPost([$this->sourceId => '']);
+        $this->dispatch('admin/source/add/id/' . $this->actorId);
+        $this->resetRequest()->resetResponse();
+        $this->dispatch('admin/source/view/id/' . $this->sourceId);
     }
 
     public function testCrud() {
@@ -41,16 +45,6 @@ class Admin_SourceControllerTest extends ControllerTestCase {
         $this->dispatch('admin/source/delete/id/' . $this->sourceId);
     }
 
-    public function testLink() {
-        $this->dispatch('admin/source/link/sourceId/' . $this->sourceId . '/rangeId/' . $this->actorId);
-        $this->resetRequest()->resetResponse();
-        $this->dispatch('admin/source/link/sourceId/' . $this->sourceId . '/rangeId/' . $this->actorId); // test existing
-        $this->resetRequest()->resetResponse();
-        $this->dispatch('admin/source/link/sourceId/' . $this->sourceId . '/rangeId/' . $this->eventId);
-        $this->resetRequest()->resetResponse();
-        $this->dispatch('admin/source/view/id/' . $this->sourceId);
-    }
-
     public function testText() {
         $original = Model_NodeMapper::getByNodeCategoryName(
             'type',
@@ -63,7 +57,7 @@ class Admin_SourceControllerTest extends ControllerTestCase {
         $this->request->setMethod('POST')->setPost($formValues);
         $this->dispatch('admin/source/text-add/id/' . $this->sourceId);
         $this->resetRequest()->resetResponse();
-        $textLink = Model_LinkMapper::getLink(Model_EntityMapper::getById($this->sourceId), 'P73');
+        $textLink = Model_LinkMapper::getLink($this->sourceId, 'P73');
         $this->dispatch('admin/source/text-update/linkId/' . $textLink->id);
         $this->resetRequest()->resetResponse();
         $this->request->setMethod('POST')->setPost($formValues);

@@ -33,6 +33,27 @@ class Admin_ProfileController extends Zend_Controller_Action {
         return $this->_helper->redirector->gotoUrl('/admin/profile');
     }
 
+    public function passwordAction() {
+        $form = new Admin_Form_Password();
+        $this->view->form = $form;
+        if ($this->getRequest()->isPost() && $form->isValid($this->getRequest()->getPost())) {
+            $user = Zend_Registry::get('user');
+            if (!Model_User::hasher($form->getValue('passwordCurrent'), $user->password)) {
+                $this->_helper->message('error_wrong_password');
+                return;
+            }
+            if ($form->getValue('password') != $form->getValue('passwordRetype')) {
+                $this->_helper->message('error_password_retype');
+                return;
+            }
+            $user->password = Model_User::hasher($form->getValue('password'));
+            Model_UserMapper::updatePassword($user);
+            $this->_helper->log('info', 'user', 'Updated password');
+            $this->_helper->message('info_password_update');
+            return $this->_helper->redirector->gotoUrl('/admin/profile');
+        }
+    }
+
     public function updateAction() {
         $user = Zend_Registry::get('user');
         $form = new Admin_Form_Profile();
@@ -62,27 +83,6 @@ class Admin_ProfileController extends Zend_Controller_Action {
         $this->_helper->log('info', 'user', 'Updated profile');
         $this->_helper->message('info_update');
         return $this->_helper->redirector->gotoUrl('/admin/profile');
-    }
-
-    public function passwordAction() {
-        $form = new Admin_Form_Password();
-        $this->view->form = $form;
-        if ($this->getRequest()->isPost() && $form->isValid($this->getRequest()->getPost())) {
-            $user = Zend_Registry::get('user');
-            if (!Model_User::hasher($form->getValue('passwordCurrent'), $user->password)) {
-                $this->_helper->message('error_wrong_password');
-                return;
-            }
-            if ($form->getValue('password') != $form->getValue('passwordRetype')) {
-                $this->_helper->message('error_password_retype');
-                return;
-            }
-            $user->password = Model_User::hasher($form->getValue('password'));
-            Model_UserMapper::updatePassword($user);
-            $this->_helper->log('info', 'user', 'Updated password');
-            $this->_helper->message('info_password_update');
-            return $this->_helper->redirector->gotoUrl('/admin/profile');
-        }
     }
 
 }

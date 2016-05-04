@@ -8,10 +8,6 @@ class Admin_ContentController extends Zend_Controller_Action {
         $this->view->contents = Model_ContentMapper::getAll();
     }
 
-    public function viewAction() {
-        $this->view->content = Model_ContentMapper::getById($this->_getParam('id'));
-    }
-
     public function updateAction() {
         $content = Model_ContentMapper::getById($this->_getParam('id'));
         $form = new Admin_Form_Content();
@@ -31,6 +27,10 @@ class Admin_ContentController extends Zend_Controller_Action {
         $this->view->form = $form;
         $this->view->content = $content;
         $this->renderScript('content/update.phtml');
+    }
+
+    public function viewAction() {
+        $this->view->content = Model_ContentMapper::getById($this->_getParam('id'));
     }
 
 }

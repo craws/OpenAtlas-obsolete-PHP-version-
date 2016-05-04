@@ -43,6 +43,13 @@ $(document).ready(function () {
         }
     });
 
+    $("#placeForm").validate({
+        rules: {
+            easting: {number: true},
+            northing: {number: true}
+        }
+    });
+
     $("#profileForm").validate({
         rules: {
             email: {email: true}

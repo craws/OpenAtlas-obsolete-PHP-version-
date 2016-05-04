@@ -1,2 +1,33 @@
 <? $this->breadcrumb = [$this->link('profile'), $this->ucstring('edit')]; ?>
-<?= $this->form->setAction($this->url()); ?>
+<? $form = $this->form; ?>
+<?= $this->displayErrors($form); ?>
+<?= $form->renderForm(false); ?>
+    <div class="tableRow">
+        <?= $form->realName->renderLabel() ?>
+        <div class="tableCell"><?= $form->realName->renderViewHelper() ?></div>
+    </div>
+    <div class="tableRow">
+        <div>
+            <label><?= $this->ucstring('email') ?></label>
+            <span class="tooltip" title="<?= $this->ucstring('tip_email') ?>">i</span>
+        </div>
+        <div class="tableCell"><?= $form->email->renderViewHelper() ?></div>
+    </div>
+    <div class="tableRow">
+        <div>
+            <label><?= $this->ucstring('show_email') ?></label>
+            <span class="tooltip" title="<?= $this->ucstring('tip_show_email') ?>">i</span>
+        </div>
+        <div class="tableCell"><?= $form->show_email->renderViewHelper() ?></div>
+    </div>
+    <div class="tableRow">
+        <div>
+            <label><?= $this->ucstring('newsletter') ?></label>
+            <span class="tooltip" title="<?= $this->ucstring('tip_newsletter') ?>">i</span>
+        </div>
+        <div class="tableCell"><?= $form->newsletter->renderViewHelper() ?></div>
+    </div>
+<div style="margin-top:1em;margin-bottom:1em;">
+    <?= $form->formSubmit->renderViewHelper() ?>
+</div>
+<?= '</form>' ?>

@@ -76,14 +76,13 @@ class Admin_MemberController extends Zend_Controller_Action {
         if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
             Admin_Form_Abstract::populateDates($form, $link, ['OA5' => 'begin', 'OA6' => 'end']);
             $type = Model_LinkPropertyMapper::getLinkedEntity($link, 'P2');
-            $form->populate(['typeId' => $type->id]);
+            $form->populate(['typeId' => $type->id, 'description' => $link->description]);
             if ($type->rootId) {
                 $form->populate(['typeButton' => $type->name]);
             }
-            $form->populate(['description' => $link->description]);
             $this->view->actor = $originActor;
-            $this->view->relatedActor = $relatedActor;
             $this->view->form = $form;
+            $this->view->relatedActor = $relatedActor;
             $this->view->typeTreeData = Model_NodeMapper::getTreeData('type', 'actor function', $type);
             return;
         }
@@ -96,10 +95,7 @@ class Admin_MemberController extends Zend_Controller_Action {
         Model_LinkPropertyMapper::insert('P2', $newLink, $type);
         Model_DateMapper::saveLinkDates($newLink, $form);
         $this->_helper->message('info_update');
-        $tab = '#tabMember';
-        if ($originActor->id == $relatedActor->id) {
-            $tab = '#tabMemberOf';
-        }
+        $tab = ($originActor->id == $relatedActor->id) ? '#tabMemberOf' : '#tabMember';
         return $this->_helper->redirector->gotoUrl('/admin/actor/view/id/' . $originActor->id . $tab);
     }
 

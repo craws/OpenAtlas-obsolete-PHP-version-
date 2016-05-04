@@ -78,19 +78,8 @@ class Admin_Form_Abstract {
     }
 
     public static function preValidation($form, array $data) {
-        if (!function_exists('findFields')) {
-
-            function findFields($field) {
-                foreach (['alias'] as $fieldName) {
-                    if (strpos($field, $fieldName) !== false) {
-                        return $field;
-                    }
-                }
-            }
-
-        }
-        foreach (array_filter(array_keys($data), 'findFields') as $name) {
-            $form->addElement($form->createElement('text', $name));
+        foreach ($data['alias'] as $key => $name) {
+            $form->addElement('text', $key, ['belongsTo' => 'alias']);
         }
     }
 

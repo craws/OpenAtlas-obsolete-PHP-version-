@@ -37,6 +37,7 @@ class Admin_Form_Event extends Craws\Form\Table {
         if (Zend_Controller_Front::getInstance()->getRequest()->getActionName() == 'insert') {
             $submitLabel = 'insert';
         }
+        $this->addElement('hidden', 'modified');
         $this->addElement('button', 'formSubmit', ['label' => $this->getView()->ucstring($submitLabel), 'type' => 'submit']);
         $this->addElement('hidden', 'continue', ['decorators' => ['ViewHelper'], 'value' => 0]);
         $this->addElement('button', 'continueButton', [

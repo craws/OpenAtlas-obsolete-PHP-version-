@@ -2,40 +2,33 @@
 
 /* Copyright 2016 by Alexander Watzinger and others. Please see the file README.md for licensing information */
 
-class Model_EntityMapper extends Model_AbstractMapper {
+class Model_EntityMapper extends \Model_AbstractMapper {
 
-    private static $sqlWithDates = "
+    private static $sql = "
         SELECT e.id, e.class_id, e.name, e.description, e.created, e.modified, c.code,
             e.value_timestamp, e.value_integer,
-            (SELECT min(date_part('year', d.value_timestamp))
-                FROM crm.entity e2
-                JOIN crm.link l ON e2.id = l.domain_id
-                JOIN crm.entity d ON l.range_id = d.id
-                JOIN crm.property p ON l.property_id = p.id
-                WHERE p.code IN ('OA1', 'OA3', 'OA5') AND e2.id = e.id) AS first,
-            (SELECT max(date_part('year', d.value_timestamp))
-                FROM crm.entity e3
-                JOIN crm.link l ON e3.id = l.domain_id
-                JOIN crm.entity d ON l.range_id = d.id
-                JOIN crm.property p ON l.property_id = p.id
-                WHERE p.code IN ('OA2', 'OA4', 'OA6') AND e3.id = e.id) AS last
+            min(date_part('year', d1.value_timestamp)) AS first,
+            max(date_part('year', d2.value_timestamp)) AS last
         FROM crm.entity e
         JOIN crm.class c ON e.class_id = c.id
+        LEFT OUTER JOIN crm.link l ON e.id = l.domain_id
+        LEFT OUTER JOIN crm.entity d1 ON l.range_id = d1.id
+        LEFT OUTER JOIN crm.entity d2 ON l.range_id = d2.id
     ";
 
     public static function search($term, $codes, $description = false, $own = false) {
         if ($own) {
-            self::$sqlWithDates .= " LEFT JOIN web.user_log ul ON e.id = ul.table_id AND ul.table_name LIKE 'entity'";
+            self::$sql .= " LEFT JOIN web.user_log ul ON e.id = ul.table_id AND ul.table_name LIKE 'entity'";
         }
-        $sql = self::$sqlWithDates . " WHERE lower(e.name) LIKE :term AND ";
+        $sql = self::$sql . " WHERE lower(e.name) LIKE :term AND ";
         if ($description) {
-            $sql = self::$sqlWithDates . " WHERE (lower(e.name) LIKE :term OR lower(e.description) LIKE :term) AND ";
+            $sql = self::$sql . " WHERE (lower(e.name) LIKE :term OR lower(e.description) LIKE :term) AND ";
         }
         if ($own) {
             $sql .= " ul.user_id = :user_id AND ";
         }
         $sql .= "e.class_id IN (SELECT id from crm.class WHERE code IN ('" . implode("', '", $codes) . "'))";
-        $sql .= " ORDER BY e.name";
+        $sql .= " GROUP BY e.id, c.code ORDER BY e.name";
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->bindValue(':term', '%' . mb_strtolower($term) . '%');
         if ($own) {
@@ -74,7 +67,8 @@ class Model_EntityMapper extends Model_AbstractMapper {
             Zend_Registry::get('config')->get('code' . 'PhysicalObject')->toArray(),
             Zend_Registry::get('config')->get('code' . 'Reference')->toArray()
         );
-        $sql = self::$sqlWithDates . "WHERE c.code IN ('" . implode("', '", $codes) . "') ORDER BY e.created DESC LIMIT :limit;";
+        $sql = self::$sql . "WHERE c.code IN ('" . implode("', '", $codes) . "') GROUP BY e.id, c.code
+            ORDER BY e.created DESC LIMIT :limit;";
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->bindValue(':limit', $limit);
         $statement->execute();
@@ -86,14 +80,15 @@ class Model_EntityMapper extends Model_AbstractMapper {
     }
 
     public static function getById($id) {
-        $sql = self::$sqlWithDates . ' WHERE e.id = :id;';
+        $sql = self::$sql . ' WHERE e.id = :id GROUP BY e.id, c.code;';
         $row = parent::getRowById($sql, $id);
         return self::populate(new Model_Entity(), $row);
     }
 
     public static function getByCodes($code, $nodeRoot = false) {
         $codes = Zend_Registry::get('config')->get('code' . $code)->toArray();
-        $sql = self::$sqlWithDates . "WHERE c.code IN ('" . implode("', '", $codes) . "') ORDER BY e.name;";
+        $sql = self::$sql . " WHERE c.code IN ('" . implode("', '", $codes) . "') GROUP BY e.id, c.code
+            ORDER BY e.name;";
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->execute();
         $entitites = [];
@@ -111,6 +106,16 @@ class Model_EntityMapper extends Model_AbstractMapper {
 
         }
         return $entitites;
+    }
+
+    public static function countByCodes($code) {
+        $codes = Zend_Registry::get('config')->get('code' . $code)->toArray();
+        $sql = "SELECT COUNT(*) AS count FROM crm.entity e JOIN crm.class c ON e.class_id = c.id
+            WHERE c.code IN ('" . implode("', '", $codes) . "');";
+        $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
+        $statement->execute();
+        $row = $statement->fetch();
+        return $row['count'];
     }
 
     protected static function populate(Model_Entity $entity, array $row) {
@@ -177,23 +182,22 @@ class Model_EntityMapper extends Model_AbstractMapper {
 
     public static function delete(Model_Entity $entity) {
         self::deleteDates($entity);
-        self::deleteLinkedObjects($entity, ['P1', 'P53', 'P73', 'P131']);
+        foreach (Model_LinkMapper::getLinks($entity, ['P1', 'P53', 'P73', 'P131']) as $link) {
+            parent::deleteAbstract('crm.entity', $link->getRange()->id);
+        }
         parent::deleteAbstract('crm.entity', $entity->id);
     }
 
-    private static function deleteLinkedObjects($entity, $codes) {
-        foreach ($codes as $code) {
-            foreach (Model_LinkMapper::getLinks($entity, $code) as $link) {
-                parent::deleteAbstract('crm.entity', $link->getRange()->id);
-            }
+    public static function deleteDates(Model_Entity $entity) {
+        foreach (Model_LinkMapper::getLinks($entity, ['OA1', 'OA2', 'OA3', 'OA4', 'OA5', 'OA6']) as $link) {
+            parent::deleteAbstract('crm.entity', $link->getRange()->id);
         }
     }
 
-    public static function deleteDates(Model_Entity $entity) {
-        foreach (['OA1', 'OA2', 'OA3', 'OA4', 'OA5', 'OA6'] as $code) {
-            foreach (Model_LinkMapper::getLinks($entity, $code) as $link) {
-                parent::deleteAbstract('crm.entity', $link->getRange()->id);
-            }
+    /* checks if an entry was modified since opening the update form */
+    public static function checkIfModified(Model_Entity $entity, $modified) {
+        if ($entity->modified && $entity->modified->getTimestamp() > $modified) {
+            return true;
         }
     }
 

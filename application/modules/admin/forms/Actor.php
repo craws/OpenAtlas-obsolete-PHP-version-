@@ -60,14 +60,13 @@ class Admin_Form_Actor extends Craws\Form\Table {
             'placeholder' => $this->getView()->ucstring('select'),
             'attribs' => ['readonly' => 'true'],
         ]);
-        foreach (['alias'] as $field) {
-            $this->addElement('button', $field . 'ElementAdd', ['label' => '+']);
-            $this->addElement('hidden', $field . 'ElementId', ['value' => 1]);
-        }
+        $this->addElement('button', 'aliasAdd', ['label' => '+']);
+        $this->addElement('hidden', 'aliasId', ['value' => 1]);
         $submitLabel = 'save';
         if (Zend_Controller_Front::getInstance()->getRequest()->getActionName() == 'insert') {
             $submitLabel = 'insert';
         }
+        $this->addElement('hidden', 'modified');
         $this->addElement('button', 'formSubmit', ['label' => $this->getView()->ucstring($submitLabel), 'type' => 'submit']);
         $this->addElement('hidden', 'continue', ['decorators' => ['ViewHelper'], 'value' => 0]);
         $this->addElement('button', 'continueButton', [
@@ -76,6 +75,30 @@ class Admin_Form_Actor extends Craws\Form\Table {
             'onclick' => "$('#continue').val(1);$('#actorForm').submit();return false;"
         ]);
         $this->setElementFilters(['StringTrim']);
+    }
+
+    public function prepareUpdate(Model_Entity $actor) {
+        $aliasIndex = 0;
+        $aliasElements = Model_LinkMapper::getLinkedEntities($actor, 'P131');
+        if ($aliasElements) {
+            foreach ($aliasElements as $alias) {
+                $element = $this->createElement('text', 'alias' . $aliasIndex, ['belongsTo' => 'alias']);
+                $element->setValue($alias->name);
+                $this->addElement($element);
+                $aliasIndex++;
+            }
+        } else {
+            $element = $this->createElement('text', 'alias0', ['belongsTo' => 'alias']);
+            $this->addElement($element);
+            $aliasIndex++;
+        }
+        $this->populate(['aliasId' => $aliasIndex]);
+        if ($actor->getClass()->code != 'E21') {
+            $this->removeElement('birth');
+            $this->removeElement('death');
+            $this->removeElement('genderId');
+            $this->removeElement('genderButton');
+        }
     }
 
 }

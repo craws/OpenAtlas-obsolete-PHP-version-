@@ -24,16 +24,25 @@ class Admin_Form_Place extends Craws\Form\Table {
         ]);
         $this->addElement('hidden', 'administrativeId', ['decorators' => ['ViewHelper']]);
         $this->addElement('hidden', 'historicalId', ['decorators' => ['ViewHelper']]);
-        $this->addElement('button', 'aliasElementAdd', ['label' => '+']);
-        $this->addElement('hidden', 'aliasElementId', ['value' => 1]);
+        $this->addElement('button', 'aliasAdd', ['label' => '+']);
+        $this->addElement('hidden', 'aliasId', ['value' => 1]);
         Admin_Form_Abstract::addDates($this, ['begin', 'begin2', 'end', 'end2']);
-        $this->addElement('text', 'easting', ['label' => $this->getView()->ucstring('easting')]);
-        $this->addElement('text', 'northing', ['label' => $this->getView()->ucstring('northing')]);
+        $this->addElement('text', 'easting', [
+            'label' => $this->getView()->ucstring('easting'),
+            'validators' => array('Float'),
+            'placeholder' => '16.371568'
+        ]);
+        $this->addElement('text', 'northing', [
+            'label' => $this->getView()->ucstring('northing'),
+            'validators' => array('Float'),
+            'placeholder' => '48.208121'
+        ]);
         $this->addElement('textarea', 'description', ['label' => $this->getView()->ucstring('description')]);
         $submitLabel = 'save';
         if (Zend_Controller_Front::getInstance()->getRequest()->getActionName() == 'insert') {
             $submitLabel = 'insert';
         }
+        $this->addElement('hidden', 'modified');
         $this->addElement('button', 'formSubmit', ['label' => $this->getView()->ucstring($submitLabel), 'type' => 'submit']);
         $this->addElement('hidden', 'continue', ['decorators' => ['ViewHelper'], 'value' => 0]);
         $this->addElement('button', 'continueButton', [
