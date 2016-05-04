@@ -655,6 +655,11 @@ table .button {
     font-size: 0.9em;
 }
 
+.placeSwitch .button {
+    border-width: 1px;
+    border-style: solid;
+}
+
 div.tableCell button {
     min-height:  1.7em;
     min-width:  1.9em;

@@ -155,6 +155,9 @@ $(document).ready(function () {
     $("#dateSwitcher").click(function () {
         $(".dateSwitch").toggleClass('display-none');
     });
+    $("#placeSwitcher").click(function () {
+        $(".placeSwitch").toggleClass('display-none');
+    });
 });
 
 function resizeText(multiplier) {

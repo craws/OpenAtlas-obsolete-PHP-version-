@@ -245,8 +245,6 @@ class Admin_ActorController extends Zend_Controller_Action {
                 Model_LinkMapper::insert('P131', $actor, $alias);
             }
         }
-        $this->_helper->message('info_update');
-        return $this->_helper->redirector->gotoUrl('/admin/actor/view/id/' . $actor->id);
     }
 
 }

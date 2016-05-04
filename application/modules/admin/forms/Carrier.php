@@ -24,7 +24,7 @@ class Admin_Form_Carrier extends Craws\Form\Table {
         ]);
         $this->addElement('hidden', 'objectId', ['decorators' => ['ViewHelper']]);
         $this->addElement('text', 'objectButton', [
-            'label' => $this->getView()->ucstring('place'),
+            'label' => $this->getView()->ucstring('place_of_issue'),
             'class' => 'tableSelect',
             'readonly' => true,
             'onfocus' => 'this.blur()',
