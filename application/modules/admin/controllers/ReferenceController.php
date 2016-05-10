@@ -4,7 +4,6 @@
 
 class Admin_ReferenceController extends Zend_Controller_Action {
 
-
     public function deleteAction() {
         Model_EntityMapper::getById($this->_getParam('id'))->delete();
         $this->_helper->message('info_delete');
