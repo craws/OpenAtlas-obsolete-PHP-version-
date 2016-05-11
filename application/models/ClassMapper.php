@@ -29,9 +29,10 @@ class Model_ClassMapper extends Model_AbstractMapper {
         foreach ($rows as $row) {
             $classes[$row['id']] = self::populate($row);
         }
-        $statement2 = Zend_Db_Table::getDefaultAdapter()->prepare('SELECT super_id, sub_id FROM crm.class_inheritance;');
-        $statement2->execute();
-        foreach ($statement2->fetchAll() as $row) {
+        $sqlInheritance = 'SELECT super_id, sub_id FROM crm.class_inheritance;';
+        $statementInheritance = Zend_Db_Table::getDefaultAdapter()->prepare($sqlInheritance);
+        $statementInheritance->execute();
+        foreach ($statementInheritance->fetchAll() as $row) {
             $classes[$row['super_id']]->addSub($classes[$row['sub_id']]);
             $classes[$row['sub_id']]->addSuper($classes[$row['super_id']]);
         }
