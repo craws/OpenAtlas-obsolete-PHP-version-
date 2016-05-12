@@ -4,6 +4,13 @@
 
 class Admin_ReferenceController extends Zend_Controller_Action {
 
+
+    public function deleteAction() {
+        Model_EntityMapper::getById($this->_getParam('id'))->delete();
+        $this->_helper->message('info_delete');
+        return $this->_helper->redirector->gotoUrl('/admin/reference');
+    }
+
     public function indexAction() {
         $this->view->references = Model_EntityMapper::getByCodes('Reference');
     }
@@ -30,19 +37,31 @@ class Admin_ReferenceController extends Zend_Controller_Action {
 
     public function updateAction() {
         $reference = Model_EntityMapper::getById($this->_getParam('id'));
+        $this->view->reference = $reference;
+        $form = new Admin_Form_Reference();
+        $this->view->form = $form;
         $type = Model_LinkMapper::getLinkedEntity($reference, 'P2');
         $rootType = Model_EntityMapper::getById($type->rootId);
-        $form = new Admin_Form_Reference();
-        if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
+        if (!$this->getRequest()->isPost()) {
             $form->populate([
                 'name' => $reference->name,
                 'description' => $reference->description,
                 'typeId' => $type->id,
-                'typeButton' => $type->name
+                'typeButton' => $type->name,
+                'modified' => ($reference->modified) ? $reference->modified->getTimestamp() : 0
             ]);
-            $this->view->form = $form;
-            $this->view->reference = $reference;
             $this->view->typeTreeData = Model_NodeMapper::getTreeData('type', $rootType->name, $type);
+            return;
+        }
+        $formValid = $form->isValid($this->getRequest()->getPost());
+        $modified = Model_EntityMapper::checkIfModified($reference, $form->modified->getValue());
+        if ($modified) {
+            $log = Model_UserLogMapper::getLogForView('entity', $reference->id);
+            $this->view->modifier = $log['modifier_name'];
+        }
+        if (!$formValid || $modified) {
+            $this->view->typeTreeData = Model_NodeMapper::getTreeData('type', $rootType->name);
+            $this->_helper->message('error_modified');
             return;
         }
         $reference->name = $form->getValue('name');
@@ -80,12 +99,6 @@ class Admin_ReferenceController extends Zend_Controller_Action {
         $this->view->sourceLinks = $sourceLinks;
         $this->view->eventLinks = $eventLinks;
         $this->view->placeLinks = $placeLinks;
-    }
-
-    public function deleteAction() {
-        Model_EntityMapper::getById($this->_getParam('id'))->delete();
-        $this->_helper->message('info_delete');
-        return $this->_helper->redirector->gotoUrl('/admin/reference');
     }
 
 }

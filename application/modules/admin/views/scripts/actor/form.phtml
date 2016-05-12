@@ -12,7 +12,7 @@
         <?= $form->name->renderLabel() ?>
         <div class="tableCell"><?= $form->name->renderViewHelper() ?></div>
     </div>
-    <?= $this->multipleSelect($form, 'alias') ?>
+    <?= $this->displayAliasForm($form) ?>
     <? if ($form->genderId): ?>
         <?= $this->displayTreeSelect('gender', $form) ?>
     <? endif ?>
@@ -25,6 +25,7 @@
         <div><?= $form->description->renderViewHelper() ?></div>
     </div>
     <div style="margin-top:1em;">
+        <?= $form->modified->renderViewHelper() ?>
         <?= $form->formSubmit->renderViewHelper() ?>
         <? if (!$this->event && Zend_Controller_Front::getInstance()->getRequest()->getActionName() == 'insert'): ?>
             <?= $form->continue ?>
@@ -61,8 +62,8 @@
         createOverlay("residence", "<?= $this->ucstring('residence') ?>");
         createOverlay("appearsFirst", "<?= $this->ucstring('appears_first') ?>");
         createOverlay("appearsLast", "<?= $this->ucstring('appears_last') ?>");
-        $("#aliasElementAdd").click(function () {
-            ajaxAddField("alias", $("#aliasElementId").val());
+        $("#aliasAdd").click(function () {
+            ajaxAddField("alias", $("#aliasId").val());
         });
     });
 </script>

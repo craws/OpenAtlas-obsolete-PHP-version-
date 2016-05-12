@@ -1,6 +1,9 @@
 <? $form = $this->form; ?>
 <div class="tableRow">
-    <div><label><?= $this->ucstring('date') ?></label></div>
+    <div>
+        <label><?= $this->ucstring('date') ?></label>
+        <span class="tooltip" title="<?= $this->ucstring('tip_date') ?>">i</span>
+    </div>
     <div class="tableCell dateSwitcher">
         <span id="dateSwitcher" class="button"><?= $this->ucstring('show') ?></span>
     </div>

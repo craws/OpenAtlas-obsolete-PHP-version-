@@ -83,7 +83,6 @@ class Acl extends \Zend_Acl {
 
         $this->add(new \Zend_Acl_Resource('admin:place:add'));
         $this->add(new \Zend_Acl_Resource('admin:place:delete'));
-        $this->add(new \Zend_Acl_Resource('admin:place:delete-name'));
         $this->add(new \Zend_Acl_Resource('admin:place:index'));
         $this->add(new \Zend_Acl_Resource('admin:place:insert'));
         $this->add(new \Zend_Acl_Resource('admin:place:link'));
@@ -116,7 +115,6 @@ class Acl extends \Zend_Acl {
         $this->add(new \Zend_Acl_Resource('admin:source:delete'));
         $this->add(new \Zend_Acl_Resource('admin:source:index'));
         $this->add(new \Zend_Acl_Resource('admin:source:insert'));
-        $this->add(new \Zend_Acl_Resource('admin:source:link'));
         $this->add(new \Zend_Acl_Resource('admin:source:text-add'));
         $this->add(new \Zend_Acl_Resource('admin:source:text-delete'));
         $this->add(new \Zend_Acl_Resource('admin:source:text-update'));
@@ -227,7 +225,6 @@ class Acl extends \Zend_Acl {
 
         $this->allow('editor', 'admin:place:add');
         $this->allow('editor', 'admin:place:delete');
-        $this->allow('editor', 'admin:place:delete-name');
         $this->allow('editor', 'admin:place:insert');
         $this->allow('editor', 'admin:place:link');
         $this->allow('editor', 'admin:place:update');
@@ -243,7 +240,6 @@ class Acl extends \Zend_Acl {
         $this->allow('editor', 'admin:source:add');
         $this->allow('editor', 'admin:source:delete');
         $this->allow('editor', 'admin:source:insert');
-        $this->allow('editor', 'admin:source:link');
         $this->allow('editor', 'admin:source:text-add');
         $this->allow('editor', 'admin:source:text-delete');
         $this->allow('editor', 'admin:source:text-update');

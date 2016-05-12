@@ -7,15 +7,22 @@ $this->breadcrumb = [
 ];
 $table = ['id' => 'source', 'pager' => true, 'filter' => true];
 $table['header'] = [_('name'), _('type'), ''];
-
+?>
+<form id="addSourceForm" name="addSourceForm" class="table" method="post">
+<?
 foreach ($this->sources as $source) {
-    $table['data'][] = [
-        $this->link($source),
-        Model_NodeMapper::getNodeByEntity('type', 'Source', $source)->name,
-        '<a class="button" href="/admin/source/link/sourceId/' . $source->id . '/rangeId/' . $this->origin->id . '">' .
-        $this->ucstring('add') . '</a>'
-    ];
+    if (!Model_LinkMapper::linkExists('P67', $source, $this->origin)) {
+        $table['data'][] = [
+            $source->name,
+            Model_NodeMapper::getNodeByEntity('type', 'Source', $source)->name,
+            '<input id="' . $source->id . '" name="' . $source->id . '" type="checkbox" value="' . $source->id . '">'
+        ];
+    }
 }
 ?>
 <? $this->table = $table; ?>
 <?= $this->render('tableSorter.phtml'); ?>
+<? if(isset($table['data'])): ?>
+    <button name="formSubmit" id="formSubmit" type="submit"><?= $this->ucstring('add') ?></button>
+<? endif ?>
+</form>

@@ -274,7 +274,6 @@ class Model_NodeMapper extends Model_EntityMapper {
                 return $node;
             }
         }
-        return false;
     }
 
 }

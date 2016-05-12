@@ -19,7 +19,7 @@ class Admin_MemberControllerTest extends ControllerTestCase {
         $this->dispatch('admin/member/insert/id/' . $this->groupId);
         $this->request->setMethod('POST')->setPost($formValues);
         $this->dispatch('admin/member/insert/id/' . $this->groupId);
-        $links = Model_LinkMapper::getLinks(Model_EntityMapper::getById($this->groupId), 'P107');
+        $links = Model_LinkMapper::getLinks($this->groupId, 'P107');
         $this->resetRequest()->resetResponse();
         $this->dispatch('admin/member/update/id/' . $links[0]->id . '/originActorId/' . $this->actorId);
         $this->resetRequest()->resetResponse();

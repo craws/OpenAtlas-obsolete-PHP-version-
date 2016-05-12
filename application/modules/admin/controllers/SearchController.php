@@ -41,6 +41,7 @@ class Admin_SearchController extends Zend_Controller_Action {
             'searchOwn' => $own
         ]);
         $this->view->optionToggle = $this->_getParam('optionToggle');
+        $this->view->term = $term;
         $this->view->form = $form;
     }
 

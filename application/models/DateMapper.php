@@ -30,49 +30,22 @@ class Model_DateMapper {
         return Model_NodeMapper::getByNodeCategoryName('type', 'Date value type', $name);
     }
 
-    public static function getDateRange(Model_Entity $entity) {
+    public static function getLinkDateRange(Model_Link $link) {
         $sql = "
             SELECT
-            (SELECT min(date_part('year', d.value_timestamp)) FROM crm.entity e
-            JOIN crm.link l ON e.id = l.domain_id
-            JOIN crm.entity d ON l.range_id = d.id
-            JOIN crm.property p ON l.property_id = p.id
-            WHERE p.code IN ('OA1', 'OA3', 'OA5') AND e.id = :entity_id) AS first,
-            max(date_part('year', d.value_timestamp)) AS last
-            FROM crm.entity e
-            JOIN crm.link l ON e.id = l.domain_id
-            JOIN crm.entity d ON l.range_id = d.id
-            JOIN crm.property p ON l.property_id = p.id
-            WHERE p.code IN ('OA2', 'OA4', 'OA6') AND e.id = :entity_id";
+            (SELECT min(date_part('year', e.value_timestamp)) FROM crm.entity e
+            JOIN crm.link_property lp ON e.id = lp.range_id
+            JOIN crm.link l ON lp.domain_id = l.id
+            WHERE l.id = :link_id) AS first,
+            max(date_part('year', e.value_timestamp)) AS last FROM crm.entity e
+            JOIN crm.link_property lp ON e.id = lp.range_id
+            JOIN crm.link l ON lp.domain_id = l.id
+            WHERE l.id = :link_id;";
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
-        $statement->bindValue(':entity_id', $entity->id);
+        $statement->bindValue(':link_id', $link->id);
         $statement->execute();
         $row = $statement->fetch();
         return ['first' => $row['first'], 'last' => $row['last']];
-    }
-
-    public static function getLinkDateRange(Model_Link $link) {
-        $sqlFirst = "
-            SELECT min(date_part('year', e.value_timestamp)) AS first FROM crm.entity e
-            JOIN crm.link_property lp ON e.id = lp.range_id
-            JOIN crm.link l ON lp.domain_id = l.id
-            JOIN crm.property p ON lp.property_id = p.id
-            WHERE p.code IN ('OA5') AND l.id = :link_id";
-        $statementFirst = Zend_Db_Table::getDefaultAdapter()->prepare($sqlFirst);
-        $statementFirst->bindValue(':link_id', $link->id);
-        $statementFirst->execute();
-        $rowFirst = $statementFirst->fetch();
-        $sqlLast = "
-            SELECT max(date_part('year', e.value_timestamp)) AS last FROM crm.entity e
-            JOIN crm.link_property lp ON e.id = lp.range_id
-            JOIN crm.link l ON lp.domain_id = l.id
-            JOIN crm.property p ON lp.property_id = p.id
-            WHERE p.code IN ('OA6') AND l.id = :link_id";
-        $statementLast = Zend_Db_Table::getDefaultAdapter()->prepare($sqlLast);
-        $statementLast->bindValue(':link_id', $link->id);
-        $statementLast->execute();
-        $rowLast = $statementLast->fetch();
-        return ['first' => $rowFirst['first'], 'last' => $rowLast['last']];
     }
 
     public static function saveDates(Model_Entity $entity, Zend_Form $form) {

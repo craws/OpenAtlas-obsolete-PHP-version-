@@ -4,19 +4,13 @@
 
 class Admin_OverviewController extends Zend_Controller_Action {
 
-    public function indexAction() {
-        $count['source'] = count(Model_EntityMapper::getByCodes('Source', 'Source Content'));
-        $count['event'] = count(Model_EntityMapper::getByCodes('Event'));
-        $count['actor'] = count(Model_EntityMapper::getByCodes('Actor'));
-        $count['place'] = count(Model_EntityMapper::getByCodes('PhysicalObject'));
-        $count['reference'] = count(Model_EntityMapper::getByCodes('Reference'));
-        $this->view->count = $count;
-        $this->view->latestEntries = Model_EntityMapper::getLatest(5);
-        $bookmarks = [];
-        foreach (Zend_Registry::get('user')->bookmarks as $id) {
-            $bookmarks[] = Model_EntityMapper::getById($id);
-        }
-        $this->view->bookmarks = $bookmarks;
+
+    public function changelogAction() {
+
+    }
+
+    public function creditsAction() {
+
     }
 
     public function feedbackAction() {
@@ -31,8 +25,7 @@ class Admin_OverviewController extends Zend_Controller_Action {
             foreach($receivers as $receiver) {
                 $mail->addTo($receiver);
             }
-            $mail->setSubject($form->getValue('subject') . ' from ' .
-                Model_SettingsMapper::getSetting('general', 'sitename'));
+            $mail->setSubject($form->getValue('subject') . ' from ' . Model_SettingsMapper::getSetting('general', 'sitename'));
             $user = Zend_Registry::get('user');
             $body = $form->getValue('subject') . ' from ' . $user->username . ' (' . $user->id . ') ' . $user->email .
                 ' at ' . $this->getRequest()->getHttpHost() . "\n\n" . $form->getValue('description');
@@ -50,12 +43,19 @@ class Admin_OverviewController extends Zend_Controller_Action {
         // @codeCoverageIgnoreEnd
     }
 
-    public function changelogAction() {
-
-    }
-
-    public function creditsAction() {
-
+    public function indexAction() {
+        $count['source'] = count(Model_EntityMapper::getByCodes('Source', 'Source Content'));
+        $count['event'] = Model_EntityMapper::countByCodes('Event');
+        $count['actor'] = Model_EntityMapper::countByCodes('Actor');
+        $count['place'] = Model_EntityMapper::countByCodes('PhysicalObject');
+        $count['reference'] = Model_EntityMapper::countByCodes('Reference');
+        $this->view->count = $count;
+        $this->view->latestEntries = Model_EntityMapper::getLatest(5);
+        $bookmarks = [];
+        foreach (Zend_Registry::get('user')->bookmarks as $id) {
+            $bookmarks[] = Model_EntityMapper::getById($id);
+        }
+        $this->view->bookmarks = $bookmarks;
     }
 
     public function modelAction() {

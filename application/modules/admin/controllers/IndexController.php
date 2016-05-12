@@ -96,8 +96,8 @@ class Admin_IndexController extends Zend_Controller_Action {
 
     public function logoutAction() {
         // @codeCoverageIgnoreStart
-        if (!Zend_Registry::get('user')->username) { // not logged in anymore
-            return $this->_helper->redirector->gotoUrl('/admin');
+        if (!Zend_Registry::get('user')->username) {
+            return $this->_helper->redirector->gotoUrl('/admin');  // not logged in anymore
         }
         // @codeCoverageIgnoreEnd
         $this->_helper->log('info', 'logout', Zend_Registry::get('user')->username);
@@ -107,40 +107,6 @@ class Admin_IndexController extends Zend_Controller_Action {
     }
 
     // @codeCoverageIgnoreStart
-    public function resetPasswordAction() {
-        $form = new Admin_Form_PasswordReset();
-        $this->view->form = $form;
-        if ($this->getRequest()->isPost() && $form->isValid($this->getRequest()->getPost())) {
-            $email = mb_strtolower($form->getValue('email'));
-            $user = Model_UserMapper::getByEmail($email);
-            if (!$user) {
-                $this->_helper->log('error', 'password', 'Requested password reset for nonexisting email ' . $email);
-                $this->_helper->message('error_nonexist_email');
-                return;
-            }
-            $resetCode = Model_User::randomPassword(Model_SettingsMapper::getSetting('authentication', 'random_password_length'));
-            $user->passwordResetCode = $resetCode;
-            $user->passwordResetDate = new Zend_Date();
-            $user->update();
-            $this->view->mailLink = 'http://' . $this->getRequest()->getHttpHost() . "/admin/index/reset-confirm/code/" . $resetCode;
-            $this->view->mailUsername = $user->username;
-            $this->view->mailHost = $this->getRequest()->getHttpHost();
-            $this->view->mailResetConfirmHours = Model_SettingsMapper::getSetting('authentication', 'reset_confirm_hours');
-            $mail = new Zend_Mail('utf-8');
-            $mail->addTo($email);
-            $mail->setSubject($this->view->translate('mail_reset_password_subject'));
-            $mail->setBodyHtml($this->view->render('mail/reset-password.phtml'));
-            $mail->setBodyText(strip_tags($this->view->render('mail/reset-password.phtml')));
-            if ($mail->send()) {
-                $this->_helper->log('info', 'mail', 'Password reset confirm mail send to ' . $user->username);
-                $this->_helper->message($this->view->translate('info_mail_password_confirmed_send', $email));
-                $this->_helper->redirector->gotoUrl('/admin');
-            } else {
-                $this->_helper->log('error', 'mail', 'Failed to send password reset confirmation mail to ' . $email);
-                $this->_helper->message('error_mail_send');
-            }
-        }
-    }
 
     public function resetConfirmAction() {
         $user = Model_UserMapper::getByResetCode($this->_getParam('code'));
@@ -181,5 +147,39 @@ class Admin_IndexController extends Zend_Controller_Action {
         return $this->_helper->redirector->gotoUrl('/admin');
     }
 
+    public function resetPasswordAction() {
+        $form = new Admin_Form_PasswordReset();
+        $this->view->form = $form;
+        if ($this->getRequest()->isPost() && $form->isValid($this->getRequest()->getPost())) {
+            $email = mb_strtolower($form->getValue('email'));
+            $user = Model_UserMapper::getByEmail($email);
+            if (!$user) {
+                $this->_helper->log('error', 'password', 'Requested password reset for nonexisting email ' . $email);
+                $this->_helper->message('error_nonexist_email');
+                return;
+            }
+            $resetCode = Model_User::randomPassword(Model_SettingsMapper::getSetting('authentication', 'random_password_length'));
+            $user->passwordResetCode = $resetCode;
+            $user->passwordResetDate = new Zend_Date();
+            $user->update();
+            $this->view->mailLink = 'http://' . $this->getRequest()->getHttpHost() . "/admin/index/reset-confirm/code/" . $resetCode;
+            $this->view->mailUsername = $user->username;
+            $this->view->mailHost = $this->getRequest()->getHttpHost();
+            $this->view->mailResetConfirmHours = Model_SettingsMapper::getSetting('authentication', 'reset_confirm_hours');
+            $mail = new Zend_Mail('utf-8');
+            $mail->addTo($email);
+            $mail->setSubject($this->view->translate('mail_reset_password_subject'));
+            $mail->setBodyHtml($this->view->render('mail/reset-password.phtml'));
+            $mail->setBodyText(strip_tags($this->view->render('mail/reset-password.phtml')));
+            if ($mail->send()) {
+                $this->_helper->log('info', 'mail', 'Password reset confirm mail send to ' . $user->username);
+                $this->_helper->message($this->view->translate('info_mail_password_confirmed_send', $email));
+                $this->_helper->redirector->gotoUrl('/admin');
+            } else {
+                $this->_helper->log('error', 'mail', 'Failed to send password reset confirmation mail to ' . $email);
+                $this->_helper->message('error_mail_send');
+            }
+        }
+    }
     // @codeCoverageIgnoreEnd
 }

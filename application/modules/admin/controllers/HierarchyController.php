@@ -4,6 +4,26 @@
 
 class Admin_HierarchyController extends Zend_Controller_Action {
 
+
+    public function deleteAction() {
+        $type = Model_NodeMapper::getById($this->_getParam('id'));
+        if (!$type->superId || !$type->expandable) {
+            $this->_helper->message('error_forbidden');
+            return $this->_helper->redirector->gotoUrl('/admin/hierarchy');
+        }
+        if (Model_LinkMapper::getLinks($type, 'P2', true) || Model_LinkMapper::getLinks($type, 'P89', true)) {
+            $this->_helper->message('error_links_exists');
+            return $this->_helper->redirector->gotoUrl('/admin/hierarchy/view/id/' . $type->id);
+        }
+        if (!empty($type->subs)) {
+            $this->_helper->message('error_subs_exists');
+            return $this->_helper->redirector->gotoUrl('/admin/hierarchy/view/id/' . $type->id);
+        }
+        $type->delete();
+        $this->_helper->message('info_delete');
+        return $this->_helper->redirector->gotoUrl('/admin/hierarchy#tab' . $type->rootId);
+    }
+
     public function indexAction() {
         $types = [];
         foreach (['place', 'type'] as $hierarchy) {
@@ -35,28 +55,8 @@ class Admin_HierarchyController extends Zend_Controller_Action {
             Model_LinkMapper::insert($super->propertyToSuper, $type, $super);
             $this->_helper->message('info_insert');
         }
-        $tabId = $super->rootId;
-        if (!$tabId) {
-            $tabId = $super->id;
-        }
+        $tabId = ($super->rootId) ? $super->rootId : $super->id;
         return $this->_helper->redirector->gotoUrl('/admin/hierarchy/#tab' . $tabId);
-    }
-
-    public function viewAction() {
-        $type = Model_NodeMapper::getById($this->_getParam('id'));
-        $linksEntitites = Model_LinkMapper::getLinkedEntities($type, $type->propertyToEntity, true);
-        if ($type->getClass()->code == 'E53') {
-            $linksEntitites = [];
-            foreach (Model_LinkMapper::getLinkedEntities($type, $type->propertyToEntity, true) as $object) {
-                $linkedEntity = Model_LinkMapper::getLinkedEntity($object, 'P53', true);
-                if ($linkedEntity) { // needed to remove node subs
-                    $linksEntitites[] = $linkedEntity;
-                }
-            }
-        }
-        $this->view->type = $type;
-        $this->view->linksEntities = $linksEntitites;
-        $this->view->linksProperties = Model_LinkPropertyMapper::getByEntity($type);
     }
 
     public function updateAction() {
@@ -74,16 +74,13 @@ class Admin_HierarchyController extends Zend_Controller_Action {
         $superElement->addMultiOptions($options);
         if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
             $array = explode('(', $type->name);
-            $inverse = '';
-            if (isset($array[1])) {
-                $inverse = trim(str_replace(['(', ')'], '', $array[1]));
-            }
+            $inverse = (isset($array[1])) ? trim(str_replace(['(', ')'], '', $array[1])) : '';
             $form->populate([
-                'super' => $type->superId,
-                'name' => trim($array[0]),
-                'inverse' => $inverse,
                 'description' => $type->description,
-            ]);
+                'inverse' => $inverse,
+                'name' => trim($array[0]),
+                'super' => $type->superId,
+             ]);
             $this->view->form = $form;
             $this->view->type = $type;
             return;
@@ -102,23 +99,21 @@ class Admin_HierarchyController extends Zend_Controller_Action {
         return $this->_helper->redirector->gotoUrl('/admin/hierarchy/#tab' . $type->rootId);
     }
 
-    public function deleteAction() {
+    public function viewAction() {
         $type = Model_NodeMapper::getById($this->_getParam('id'));
-        if (!$type->superId || !$type->expandable) {
-            $this->_helper->message('error_forbidden');
-            return $this->_helper->redirector->gotoUrl('/admin/hierarchy');
+        $linksEntitites = Model_LinkMapper::getLinkedEntities($type, $type->propertyToEntity, true);
+        if ($type->getClass()->code == 'E53') {
+            $linksEntitites = [];
+            foreach (Model_LinkMapper::getLinkedEntities($type, $type->propertyToEntity, true) as $object) {
+                $linkedEntity = Model_LinkMapper::getLinkedEntity($object, 'P53', true);
+                if ($linkedEntity) { // needed to remove node subs
+                    $linksEntitites[] = $linkedEntity;
+                }
+            }
         }
-        if (Model_LinkMapper::getLinks($type, 'P2', true) || Model_LinkMapper::getLinks($type, 'P89', true)) {
-            $this->_helper->message('error_links_exists');
-            return $this->_helper->redirector->gotoUrl('/admin/hierarchy/view/id/' . $type->id);
-        }
-        if (!empty($type->subs)) {
-            $this->_helper->message('error_subs_exists');
-            return $this->_helper->redirector->gotoUrl('/admin/hierarchy/view/id/' . $type->id);
-        }
-        $type->delete();
-        $this->_helper->message('info_delete');
-        return $this->_helper->redirector->gotoUrl('/admin/hierarchy#tab' . $type->rootId);
+        $this->view->type = $type;
+        $this->view->linksEntities = $linksEntitites;
+        $this->view->linksProperties = Model_LinkPropertyMapper::getByEntity($type);
     }
 
 }

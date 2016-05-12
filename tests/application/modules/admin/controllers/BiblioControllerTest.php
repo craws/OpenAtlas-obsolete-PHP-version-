@@ -19,7 +19,7 @@ class Admin_BiblioControllerTest extends ControllerTestCase {
         ]);
         $this->dispatch('admin/biblio/insert/id/' . $this->sourceId);
         $this->resetRequest()->resetResponse();
-        $links = Model_LinkMapper::getLinks(Model_EntityMapper::getById($this->carrierId), 'P128');
+        $links = Model_LinkMapper::getLinks($this->carrierId, 'P128');
         $this->dispatch('admin/biblio/update/id/' . $links[0]->id . '/origin/reference');
         $this->resetRequest()->resetResponse();
         $this->request->setMethod('POST')->setPost(['description' => 'desc']);

@@ -43,7 +43,7 @@
         $tableSource['header'] = [_('source'), _('type'), _('page'), '', ''];
         foreach ($this->sourceLinks as $link) {
             $text = $this->translate('refers_to') . ': ' . $link->getRange()->name;
-            $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_delete', $text)) .
+            $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_remove', $text)) .
                 "')\" ";
             $deleteLink = '<div><a href="/admin/function/unlink/id/' . $link->id . '/entityId/' . $carrier->id .
                 '/#tabSource' . '" class="button"' . $confirm . '>' . $this->ucstring('remove') . '</a></div>';
