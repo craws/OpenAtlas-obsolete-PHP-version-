@@ -939,7 +939,7 @@ CREATE TABLE i18n (
     item_id integer NOT NULL,
     language_id integer NOT NULL,
     created timestamp without time zone DEFAULT now() NOT NULL,
-    modified timestamp with time zone
+    modified timestamp without time zone
 );
 
 
