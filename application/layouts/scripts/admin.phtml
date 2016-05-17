@@ -57,7 +57,23 @@
                 menubar: false,
                 toolbar_items_size : 'small',
                 relative_urls : false
-             });
+            });
+            $(document).ready(function () {
+                show = '<?= $this->ucstring('show') ?>';
+                hide = '<?= $this->ucstring('hide') ?>';
+                $("#dateSwitcher").click(function () {
+                    $(".dateSwitch").toggleClass('display-none');
+                    $(this).text(function(i, text){
+                        return text === show ? hide : show;
+                    })
+                });
+                $("#placeSwitcher").click(function () {
+                    $(".placeSwitch").toggleClass('display-none');
+                    $(this).text(function(i, text){
+                        return text === show ? hide : show;
+                    })
+                });
+            });
         </script>
         <? foreach (['admin_style.css', 'admin_color.css', 'admin_images.css'] as $css): ?>
             <link rel="stylesheet" href="/css/<?= $css ?>?v=<?= $version ?>" />
