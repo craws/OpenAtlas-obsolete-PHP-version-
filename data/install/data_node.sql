@@ -1,4 +1,4 @@
-SET search_path = crm;
+SET search_path = model;
 
 INSERT INTO entity (class_id, name) VALUES ((SELECT id FROM class WHERE code='E7'), 'History of the World');
 

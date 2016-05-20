@@ -49,17 +49,13 @@ class Admin_ReferenceControllerTest extends ControllerTestCase {
         foreach ($references as $reference) {
             $type = Model_LinkMapper::getLinkedEntity($reference, 'P2');
             $typeRoot = Model_NodeMapper::getById($type->rootId);
-            if ($typeRoot->name == 'Edition') {
-                $referenceId = $reference->id;
-                break;
-            }
         }
         $this->resetRequest()->resetResponse();
-        $this->dispatch('admin/reference/update/id/' . $referenceId);
+        $this->dispatch('admin/reference/update/id/' . $reference->id);
         $this->request->setMethod('POST')->setPost($this->formValues);
-        $this->dispatch('admin/reference/update/id/' . $referenceId);
+        $this->dispatch('admin/reference/update/id/' . $reference->id);
         $this->resetRequest()->resetResponse();
-        $this->dispatch('admin/reference/delete/id/' . $referenceId);
+        $this->dispatch('admin/reference/delete/id/' . $reference->id);
     }
 
 }

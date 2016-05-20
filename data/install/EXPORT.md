@@ -4,13 +4,13 @@ Some examples to extract data from the database
 
 ### Database Structure
 
-    pg_dump -sc --if-exists -n crm -n gis -n log -n web openatlas_master > structure.sql
+    pg_dump -sc --if-exists -n model -n gis -n log -n web openatlas_master > structure.sql
 
 add "CREATE EXTENSION postgis;" and uncomment after installation for unittests
 
-### CRM Data
+### Model Data
 
-    pg_dump -a -n crm openatlas_master > data/install/data_crm.sql
+    pg_dump -a -n model openatlas_master > data/install/data_model.sql
 
 ### Web Schema
 
@@ -18,10 +18,10 @@ add "CREATE EXTENSION postgis;" and uncomment after installation for unittests
 
 ### CSV Export
 
-    COPY crm.class TO '/tmp/crm_class.csv' DELIMITER ',' CSV HEADER FORCE QUOTE *;
-    COPY crm.entity TO '/tmp/crm_entity.csv' DELIMITER ',' CSV HEADER FORCE QUOTE *;
-    COPY crm.link TO '/tmp/crm_link.csv' DELIMITER ',' CSV HEADER FORCE QUOTE *;
-    COPY crm.link_property TO '/tmp/crm_link_property.csv' DELIMITER ',' CSV HEADER FORCE QUOTE *;
-    COPY crm.property TO '/tmp/crm_property.csv' DELIMITER ',' CSV HEADER FORCE QUOTE *;
-    COPY crm.property TO '/tmp/crm_property.csv' DELIMITER ',' CSV HEADER FORCE QUOTE *;
+    COPY model.class TO '/tmp/model_class.csv' DELIMITER ',' CSV HEADER FORCE QUOTE *;
+    COPY model.entity TO '/tmp/model_entity.csv' DELIMITER ',' CSV HEADER FORCE QUOTE *;
+    COPY model.link TO '/tmp/model_link.csv' DELIMITER ',' CSV HEADER FORCE QUOTE *;
+    COPY model.link_property TO '/tmp/model_link_property.csv' DELIMITER ',' CSV HEADER FORCE QUOTE *;
+    COPY model.property TO '/tmp/model_property.csv' DELIMITER ',' CSV HEADER FORCE QUOTE *;
+    COPY model.property TO '/tmp/model_property.csv' DELIMITER ',' CSV HEADER FORCE QUOTE *;
     COPY gis.centerpoint TO '/tmp/gis_centerpoint.csv' DELIMITER ',' CSV HEADER FORCE QUOTE *;

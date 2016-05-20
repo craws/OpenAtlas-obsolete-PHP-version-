@@ -53,7 +53,7 @@ as postgres
     $ createuser openatlas_master -P
     $ createdb -O openatlas_master openatlas_master
     $ cd data/install
-    $ cat structure.sql data_web.sql data_crm.sql data_node.sql | psql -d openatlas_master -f -
+    $ cat structure.sql data_web.sql data_model.sql data_node.sql | psql -d openatlas_master -f -
 
 optional - create database openatlas_master_test for unittests
 

@@ -18,10 +18,10 @@ class Model_NodeMapper extends Model_EntityMapper {
                 $sql = "
                     SELECT e.id, e.class_id, e.name, e.description, e.created, e.modified, c.code,
                       e.value_timestamp, e.value_integer, l.range_id, l2.property_id
-                    FROM crm.entity e
-                    LEFT OUTER JOIN crm.link l ON e.id = l.domain_id
-                    LEFT OUTER JOIN crm.link l2 ON e.id = l2.domain_id
-                    JOIN crm.class c ON e.class_id = c.id
+                    FROM model.entity e
+                    LEFT OUTER JOIN model.link l ON e.id = l.domain_id
+                    LEFT OUTER JOIN model.link l2 ON e.id = l2.domain_id
+                    JOIN model.class c ON e.class_id = c.id
                     WHERE c.code = 'E53' AND e.name NOT LIKE 'Location of%'
                     ORDER BY e.name;";
                 break;
@@ -31,9 +31,9 @@ class Model_NodeMapper extends Model_EntityMapper {
                 $sql = "
                     SELECT e.id, e.class_id, e.name, e.description, e.created, e.modified, c.code,
                       e.value_timestamp, e.value_integer, l.range_id
-                    FROM crm.entity e
-                    LEFT JOIN crm.link l ON e.id = l.domain_id AND l.property_id = :property_id
-                    JOIN crm.class c ON e.class_id = c.id
+                    FROM model.entity e
+                    LEFT JOIN model.link l ON e.id = l.domain_id AND l.property_id = :property_id
+                    JOIN model.class c ON e.class_id = c.id
                     WHERE c.code IN ('" . implode("', '", Zend_Registry::get('config')->get('codeEvent')->toArray()) . "')
                     ORDER BY e.name;";
                 break;
@@ -43,9 +43,9 @@ class Model_NodeMapper extends Model_EntityMapper {
                 $sql = "
                     SELECT e.id, e.class_id, e.name, e.description, e.created, e.modified, c.code,
                       e.value_timestamp, e.value_integer, l.range_id
-                    FROM crm.entity e
-                    LEFT JOIN crm.link l ON e.id = l.domain_id
-                    JOIN crm.class c ON e.class_id = c.id
+                    FROM model.entity e
+                    LEFT JOIN model.link l ON e.id = l.domain_id
+                    JOIN model.class c ON e.class_id = c.id
                     WHERE c.code = 'E55'
                     ORDER BY e.name;";
                 break;
@@ -85,7 +85,7 @@ class Model_NodeMapper extends Model_EntityMapper {
             // @codeCoverageIgnoreStart
         }
         $error = 'Found ' . count($nodes) . ' ' . $rootName . ' nodes for Entity (' . $entity->id . ') instead of one.';
-        Model_LogMapper::log('error', 'crm', $error);
+        Model_LogMapper::log('error', 'model', $error);
     }
 
     // @codeCoverageIgnoreEnd

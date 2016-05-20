@@ -8,18 +8,18 @@ class Model_ClassMapper extends Model_AbstractMapper {
         $sql = "
             SELECT c.id, c.code, c.name, c.created, c.modified,
               COALESCE (
-                (SELECT text FROM crm.i18n WHERE table_name LIKE 'class' AND table_field LIKE 'name' AND
+                (SELECT text FROM model.i18n WHERE table_name LIKE 'class' AND table_field LIKE 'name' AND
                   table_id = c.id AND language_code LIKE :language_code),
-                (SELECT text FROM crm.i18n WHERE table_name LIKE 'class' AND table_field LIKE 'name' AND
+                (SELECT text FROM model.i18n WHERE table_name LIKE 'class' AND table_field LIKE 'name' AND
                   table_id = c.id AND language_code LIKE :language_default_code)
               ) as name_i18n,
               COALESCE (
-                (SELECT text FROM crm.i18n WHERE table_name LIKE 'class' AND table_field LIKE 'comment' AND
+                (SELECT text FROM model.i18n WHERE table_name LIKE 'class' AND table_field LIKE 'comment' AND
                   table_id = c.id AND language_code LIKE :language_code),
-                (SELECT text FROM crm.i18n WHERE table_name LIKE 'class' AND table_field LIKE 'comment' AND
+                (SELECT text FROM model.i18n WHERE table_name LIKE 'class' AND table_field LIKE 'comment' AND
                   table_id = c.id AND language_code LIKE :language_default_code)
               ) as comment_i18n
-            FROM crm.class c";
+            FROM model.class c";
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->bindValue(':language_code', Zend_Registry::get('Zend_Locale'));
         $statement->bindValue(':language_default_code', Zend_Registry::get('Default_Locale'));
@@ -29,7 +29,7 @@ class Model_ClassMapper extends Model_AbstractMapper {
         foreach ($rows as $row) {
             $classes[$row['id']] = self::populate($row);
         }
-        $sqlInheritance = 'SELECT super_id, sub_id FROM crm.class_inheritance;';
+        $sqlInheritance = 'SELECT super_id, sub_id FROM model.class_inheritance;';
         $statementInheritance = Zend_Db_Table::getDefaultAdapter()->prepare($sqlInheritance);
         $statementInheritance->execute();
         foreach ($statementInheritance->fetchAll() as $row) {

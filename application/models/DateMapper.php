@@ -33,13 +33,13 @@ class Model_DateMapper {
     public static function getLinkDateRange(Model_Link $link) {
         $sql = "
             SELECT
-            (SELECT min(date_part('year', e.value_timestamp)) FROM crm.entity e
-            JOIN crm.link_property lp ON e.id = lp.range_id
-            JOIN crm.link l ON lp.domain_id = l.id
+            (SELECT min(date_part('year', e.value_timestamp)) FROM model.entity e
+            JOIN model.link_property lp ON e.id = lp.range_id
+            JOIN model.link l ON lp.domain_id = l.id
             WHERE l.id = :link_id) AS first,
-            max(date_part('year', e.value_timestamp)) AS last FROM crm.entity e
-            JOIN crm.link_property lp ON e.id = lp.range_id
-            JOIN crm.link l ON lp.domain_id = l.id
+            max(date_part('year', e.value_timestamp)) AS last FROM model.entity e
+            JOIN model.link_property lp ON e.id = lp.range_id
+            JOIN model.link l ON lp.domain_id = l.id
             WHERE l.id = :link_id;";
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->bindValue(':link_id', $link->id);

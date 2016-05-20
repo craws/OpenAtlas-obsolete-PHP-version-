@@ -7,7 +7,7 @@ class Model_LinkPropertyMapper extends Model_AbstractMapper {
     private static $sqlSelect = 'SELECT l.id, l.property_id, l.domain_id, l.range_id, l.created, l.modified ';
 
     public static function getById($id) {
-        $row = parent::getRowById(self::$sqlSelect . ' FROM crm.link_property l WHERE l.id = :id;', $id);
+        $row = parent::getRowById(self::$sqlSelect . ' FROM model.link_property l WHERE l.id = :id;', $id);
         return self::populate($row);
     }
 
@@ -41,12 +41,12 @@ class Model_LinkPropertyMapper extends Model_AbstractMapper {
             // @codeCoverageIgnoreStart
         }
         $error = 'Found ' . count($links) . ' ' . $code . ' property links for link(' . $link->id . ') instead one.';
-        Model_LogMapper::log('error', 'crm', $error);
+        Model_LogMapper::log('error', 'model', $error);
     }
     // @codeCoverageIgnoreEnd
 
     public static function getLinks(Model_Link $link, $code) {
-        $sql = self::$sqlSelect . ', e.name FROM crm.link_property l JOIN crm.entity e ON l.range_id = e.id
+        $sql = self::$sqlSelect . ', e.name FROM model.link_property l JOIN model.entity e ON l.range_id = e.id
             WHERE l.property_id = :property_id AND l.domain_id = :domain_id ORDER BY e.name;';
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->bindValue(':property_id', Model_PropertyMapper::getByCode($code)->id);
@@ -62,7 +62,7 @@ class Model_LinkPropertyMapper extends Model_AbstractMapper {
     public static function getByEntity(Model_Entity $entity) {
         $objects = [];
         $sql = 'SELECT l.id, l.property_id, l.domain_id, l.range_id, l.created, l.modified, e.name FROM
-            crm.link_property l JOIN crm.entity e ON l.range_id = e.id WHERE l.range_id = :range_id ORDER BY e.name;';
+            model.link_property l JOIN model.entity e ON l.range_id = e.id WHERE l.range_id = :range_id ORDER BY e.name;';
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->bindValue(':range_id', $entity->id);
         $statement->execute();
@@ -82,7 +82,7 @@ class Model_LinkPropertyMapper extends Model_AbstractMapper {
     }
 
     public static function insert($code, Model_Link $domain, Model_Entity $range) {
-        $sql = 'INSERT INTO crm.link_property (property_id, domain_id, range_id)
+        $sql = 'INSERT INTO model.link_property (property_id, domain_id, range_id)
       VALUES (:property_id, :domain_id, :range_id) RETURNING id;';
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->bindValue(':property_id', Model_PropertyMapper::getByCode($code)->id);
@@ -97,7 +97,7 @@ class Model_LinkPropertyMapper extends Model_AbstractMapper {
     }
 
     public static function delete(Model_Link $link) {
-        parent::deleteAbstract('crm.link', $link->id);
+        parent::deleteAbstract('model.link', $link->id);
     }
 
 }

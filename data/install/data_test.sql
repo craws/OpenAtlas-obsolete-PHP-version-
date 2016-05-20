@@ -1,4 +1,4 @@
-SET search_path = crm, web;
+SET search_path = model, web;
 
 INSERT INTO "user" (username, password, active, email, group_id) VALUES
 ('testUser', '$2a$08$cVEBAnh6MIp/KEcEoMcYAOOK9B70eeq9FVQ6pNxKJK8UBfsKQeW5ycVEBAnh6MIp/KEcEoMcYAQ', 1, 'nobody@craws.net', 2);

@@ -44,7 +44,6 @@ class Admin_ActorControllerTest extends ControllerTestCase {
         $this->dispatch('admin/actor/insert/code/E21/');
         $this->request->setMethod('POST')->setPost($this->formValues);
         $this->dispatch('admin/actor/insert/code/E21/sourceId/' . $this->sourceId);
-        $this->dispatch('admin/actor/insert/code/E21/sourceId/' . $this->sourceId);
         $this->resetRequest()->resetResponse();
         $actors = Model_EntityMapper::getByCodes('Person');
         $actorId = $actors[0]->id;

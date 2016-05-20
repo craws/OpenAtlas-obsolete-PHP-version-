@@ -7,24 +7,24 @@ class Model_PropertyMapper extends Model_AbstractMapper {
     public static function getAll() {
         $sql = "SELECT p.id, p.code, p.domain_class_id, p.range_class_id, p.name, p.name_inverse, p.created, p.modified,
                 COALESCE (
-                  (SELECT text FROM crm.i18n WHERE table_name LIKE 'property' AND table_field LIKE 'name' AND
+                  (SELECT text FROM model.i18n WHERE table_name LIKE 'property' AND table_field LIKE 'name' AND
                     table_id = p.id AND language_code LIKE :language_code),
-                  (SELECT text FROM crm.i18n WHERE table_name LIKE 'property' AND table_field LIKE 'name' AND
+                  (SELECT text FROM model.i18n WHERE table_name LIKE 'property' AND table_field LIKE 'name' AND
                     table_id = p.id AND language_code LIKE :language_default_code)
                 ) as name_i18n,
                 COALESCE (
-                  (SELECT text FROM crm.i18n WHERE table_name LIKE 'property' AND table_field LIKE 'name_inverse' AND
+                  (SELECT text FROM model.i18n WHERE table_name LIKE 'property' AND table_field LIKE 'name_inverse' AND
                     table_id = p.id AND language_code LIKE :language_code),
-                  (SELECT text FROM crm.i18n WHERE table_name LIKE 'property' AND table_field LIKE 'name_inverse' AND
+                  (SELECT text FROM model.i18n WHERE table_name LIKE 'property' AND table_field LIKE 'name_inverse' AND
                     table_id = p.id AND language_code LIKE :language_default_code)
                 ) as name_inverse_i18n,
                 COALESCE (
-                  (SELECT text FROM crm.i18n WHERE table_name LIKE 'property' AND table_field LIKE 'comment' AND
+                  (SELECT text FROM model.i18n WHERE table_name LIKE 'property' AND table_field LIKE 'comment' AND
                     table_id = p.id AND language_code LIKE :language_code),
-                  (SELECT text FROM crm.i18n WHERE table_name LIKE 'property' AND table_field LIKE 'comment' AND
+                  (SELECT text FROM model.i18n WHERE table_name LIKE 'property' AND table_field LIKE 'comment' AND
                     table_id = p.id AND language_code LIKE :language_default_code)
                 ) as comment_i18n
-                FROM crm.property p";
+                FROM model.property p";
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->bindValue(':language_code', Zend_Registry::get('Zend_Locale'));
         $statement->bindValue(':language_default_code', Zend_Registry::get('Default_Locale'));
@@ -37,7 +37,7 @@ class Model_PropertyMapper extends Model_AbstractMapper {
             $properties[$row['id']]->setDomain($classes[$row['domain_class_id']]);
             $properties[$row['id']]->setRange($classes[$row['range_class_id']]);
         }
-        $sqlInheritance = 'SELECT super_id, sub_id FROM crm.property_inheritance;';
+        $sqlInheritance = 'SELECT super_id, sub_id FROM model.property_inheritance;';
         $statementInheritance = Zend_Db_Table::getDefaultAdapter()->prepare($sqlInheritance);
         $statementInheritance->execute();
         foreach ($statementInheritance->fetchAll() as $row) {

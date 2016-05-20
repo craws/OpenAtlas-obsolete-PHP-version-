@@ -111,6 +111,7 @@ class Admin_SourceController extends Zend_Controller_Action {
         $text = Model_EntityMapper::insert('E33', $form->getValue('name'), $form->getValue('description'));
         Model_LinkMapper::insert('P2', $text, Model_EntityMapper::getById($form->getValue('type')));
         Model_LinkMapper::insert('P73', $source, $text);
+
         $this->_helper->message('info_insert');
         return $this->_helper->redirector->gotoUrl('/admin/source/view/id/' . $source->id . '#tabText');
     }
