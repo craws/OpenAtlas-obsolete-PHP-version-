@@ -1,6 +1,6 @@
 <? $carrier = $this->carrier; ?>
 <? $this->breadcrumb = [$this->link('reference'), $carrier->name]; ?>
-<div id="tabs">
+<div id="tabs" class="tabsContainer">
     <ul>
         <li><a href="#tabInfo"><?= $this->ucstring('info') ?></a></li>
         <li><a href="#tabSource"><?= $this->ucstring('sources') ?> (<?= count($this->sourceLinks) ?>)</a></li>

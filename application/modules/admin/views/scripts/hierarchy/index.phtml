@@ -12,12 +12,25 @@
     <? endif ?>
     <? $tabDiv .= '</div>'; ?>
 <? endforeach ?>
-<div id="tabs">
-    <ul><?= $tabUl ?></ul>
-    <?= $tabDiv ?>
+
+<div id="tabsMenu" class="tabsContainer">
+    <ul>
+        <li><a href="#menuTabActor"><?= $this->ucstring('actor') ?></a></li>
+        <li><a href="#menuTabPlace"><?= $this->ucstring('place') ?></a></li>
+    </ul>
+    <div id="menuTabActor" style="padding: 0;">
+        <div id="tabs" class="tabsContainer">
+            <ul><?= $tabUl ?></ul>
+            <?= $tabDiv ?>
+        </div>
+    </div>
+    <div id="menuTabPlace" class="tabsContainer">
+        hello
+    </div>
 </div>
 <script type="text/javascript">
     $(function () {
+        $("#tabsMenu").tabs();
         $("#tabs").tabs().addClass("ui-tabs-vertical");
     });
     function validateName() {

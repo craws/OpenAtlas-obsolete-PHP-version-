@@ -1,6 +1,6 @@
 <? $reference = $this->reference; ?>
 <? $this->breadcrumb = [$this->link('reference', null, 'reference'), $reference->name]; ?>
-<div id="tabs">
+<div id="tabs" class="tabsContainer">
     <ul>
         <li><a href="#tabInfo"><?= $this->ucstring('info') ?></a></li>
         <li><a href="#tabEvent"><?= $this->ucstring('events') ?> (<?= count($this->eventLinks) ?>)</a></li>

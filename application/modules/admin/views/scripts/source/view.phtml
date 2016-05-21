@@ -1,7 +1,7 @@
 <? $source = $this->source; ?>
 <? $this->breadcrumb = [$this->link('source'), $source->name]; ?>
 <div style="clear:both;"></div>
-<div id="tabs">
+<div id="tabs" class="tabsContainer">
     <ul>
         <li><a href="#tabInfo"><?= $this->ucstring('info') ?></a></li>
         <li><a href="#tabActor"><?= $this->ucstring('actors') ?> (<?= count($this->actorLinks) ?>)</a></li>

@@ -1,6 +1,6 @@
 <? $object = $this->object; ?>
 <? $this->breadcrumb = [$this->link('place'), $object->name]; ?>
-<div id="tabs">
+<div id="tabs" class="tabsContainer">
     <ul>
         <li><a href="#tabInfo"><?= $this->ucstring('info') ?></a></li>
         <? if ($this->jsonData): ?>
