@@ -4,8 +4,108 @@ Watch out for database role in SQLs and change "openatlas_master" if needed.
 
 1.6.0 to 2.0.0 Upgrade
 ======================
+
+SET search_path = web;
+
 ALTER SCHEMA crm RENAME TO model;
 
+CREATE TABLE web.form (
+    id integer NOT NULL,
+    name text NOT NULL,
+    created timestamp without time zone DEFAULT now() NOT NULL,
+    modified timestamp without time zone
+);
+ALTER TABLE web.form OWNER TO openatlas_master;
+CREATE SEQUENCE form_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+ALTER TABLE form_id_seq OWNER TO openatlas_master;
+ALTER SEQUENCE form_id_seq OWNED BY form.id;
+
+CREATE TABLE type (
+    id integer NOT NULL,
+    entity_id integer NOT NULL,
+    name text NOT NULL,
+    multiple integer DEFAULT 0 NOT NULL,
+    is_extendable integer DEFAULT 0 NOT NULL,
+    is_directional integer DEFAULT 0 NOT NULL,
+    created timestamp without time zone DEFAULT now() NOT NULL,
+    modified timestamp without time zone,
+    system integer DEFAULT 0 NOT NULL
+);
+ALTER TABLE type OWNER TO openatlas_master;
+COMMENT ON COLUMN type.name IS 'same as model.entity.name, to ensure unique root type names';
+COMMENT ON COLUMN type.multiple IS 'if 1 multiple selection is possible';
+COMMENT ON COLUMN type.system IS 'if 1 it is a non deleteable predefined type';
+CREATE SEQUENCE type_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+ALTER TABLE type_id_seq OWNER TO openatlas_master;
+ALTER SEQUENCE type_id_seq OWNED BY type.id;
+
+CREATE TABLE type_form (
+    id integer NOT NULL,
+    type_id integer NOT NULL,
+    form_id integer NOT NULL,
+    created timestamp without time zone DEFAULT now() NOT NULL,
+    modified timestamp without time zone
+);
+ALTER TABLE type_form OWNER TO openatlas_master;
+CREATE SEQUENCE type_form_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+ALTER TABLE type_form_id_seq OWNER TO openatlas_master;
+ALTER SEQUENCE type_form_id_seq OWNED BY type_form.id;
+
+ALTER TABLE ONLY type ALTER COLUMN id SET DEFAULT nextval('type_id_seq'::regclass);
+ALTER TABLE ONLY form ALTER COLUMN id SET DEFAULT nextval('form_id_seq'::regclass);
+ALTER TABLE ONLY type_form ALTER COLUMN id SET DEFAULT nextval('type_form_id_seq'::regclass);
+ALTER TABLE ONLY form ADD CONSTRAINT form_name_key UNIQUE (name);
+ALTER TABLE ONLY form ADD CONSTRAINT form_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY type_form ADD CONSTRAINT type_form_pkey PRIMARY KEY (id);
+CREATE TRIGGER update_modified BEFORE UPDATE ON type FOR EACH ROW EXECUTE PROCEDURE model.update_modified();
+CREATE TRIGGER update_modified BEFORE UPDATE ON form FOR EACH ROW EXECUTE PROCEDURE model.update_modified();
+CREATE TRIGGER update_modified BEFORE UPDATE ON type_form FOR EACH ROW EXECUTE PROCEDURE model.update_modified();
+ALTER TABLE ONLY type ADD CONSTRAINT type_entity_id_fkey FOREIGN KEY (entity_id) REFERENCES model.entity(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY type_form ADD CONSTRAINT type_form_form_id_fkey FOREIGN KEY (form_id) REFERENCES form(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY type_form ADD CONSTRAINT type_form_type_id_fkey FOREIGN KEY (type_id) REFERENCES type(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+SET search_path = model, pg_catalog;
+
+INSERT INTO web.type (entity_id, name, multiple, system, is_extendable, is_directional) VALUES
+((SELECT id FROM entity WHERE name='Original Document'), 'Original Document', 0, 1, 1, 0),
+((SELECT id FROM entity WHERE name='Source'), 'Source', 0, 1, 1, 0),
+((SELECT id FROM entity WHERE name='Event'), 'Event', 0, 1, 1, 0),
+((SELECT id FROM entity WHERE name='Actor Actor Relation'), 'Actor Actor Relation', 0, 1, 1, 1),
+((SELECT id FROM entity WHERE name='Actor Function'), 'Actor Function', 0, 1, 1, 0),
+((SELECT id FROM entity WHERE name='Involvement'), 'Involvement', 0, 1, 1, 0),
+((SELECT id FROM entity WHERE name='Gender'), 'Gender', 0, 1, 1, 0),
+((SELECT id FROM entity WHERE name='Site'), 'Site', 0, 1, 1, 0),
+((SELECT id FROM entity WHERE name='Information Carrier'), 'Information Carrier ', 0, 1, 1, 0),
+((SELECT id FROM entity WHERE name='Bibliography'), 'Bibliography', 0, 1, 1, 0),
+((SELECT id FROM entity WHERE name='Edition'), 'Edition', 0, 1, 1, 0),
+((SELECT id FROM entity WHERE name='Date value type'), 'Date value type ', 0, 1, 0, 0),
+((SELECT id FROM entity WHERE name='Linguistic object classification'), 'Linguistic object classification', 0, 1, 0, 0);
+
+INSERT INTO web.form (name) VALUES
+('Source'),
+('Event'),
+('Person'),
+('Group'),
+('Legal Body'),
+('Place'),
+('Bibliography'),
+('Edition'),
+('Information Carrier');
 
 1.4.0 to 1.5.0 Upgrade
 ======================
