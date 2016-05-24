@@ -21,7 +21,7 @@ class Admin_ReferenceControllerTest extends ControllerTestCase {
         $this->dispatch('admin/reference/insert/type/edition');
         $this->formValues = [
             'name' => 'Cryptonomicum',
-            'typeId' => Model_NodeMapper::getByNodeCategoryName('type', 'Bibliography', 'Book')->id,
+            'typeId' => Model_NodeMapper::getByNodeCategoryName('Bibliography', 'Book')->id,
             'desc' => 'desc',
             'typeButton' => 'Placeholder',
         ];
@@ -39,7 +39,7 @@ class Admin_ReferenceControllerTest extends ControllerTestCase {
         $this->dispatch('admin/reference/insert/type/edition');
         $this->formValues = [
             'name' => 'Cryptonomicum Edition',
-            'typeId' => Model_NodeMapper::getByNodeCategoryName('type', 'Edition', 'Charter Edition')->id,
+            'typeId' => Model_NodeMapper::getByNodeCategoryName('Edition', 'Charter Edition')->id,
             'typeButton' => 'Placeholder',
             'desc' => 'desc'
         ];

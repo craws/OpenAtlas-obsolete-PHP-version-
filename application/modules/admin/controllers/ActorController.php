@@ -58,7 +58,7 @@ class Admin_ActorController extends Zend_Controller_Action {
             $this->view->objects = Model_EntityMapper::getByCodes('PhysicalObject');
             $this->view->source = $source;
             if ($class->code == 'E21') {
-                $this->view->genderTreeData = Model_NodeMapper::getTreeData('type', 'gender');
+                $this->view->genderTreeData = Model_NodeMapper::getTreeData('gender');
             }
             return;
         }
@@ -119,7 +119,7 @@ class Admin_ActorController extends Zend_Controller_Action {
         }
         if (!$formValid || $modified) {
             if ($actor->getClass()->code == 'E21') {
-                $this->view->genderTreeData = Model_NodeMapper::getTreeData('type', 'gender');
+                $this->view->genderTreeData = Model_NodeMapper::getTreeData('gender');
             }
             $this->view->objects = Model_EntityMapper::getByCodes('PhysicalObject');
             $this->_helper->message('error_modified');
@@ -144,7 +144,7 @@ class Admin_ActorController extends Zend_Controller_Action {
         $this->view->actor = $actor;
         $this->view->aliases = Model_LinkMapper::getLinkedEntities($actor, 'P131');
         $this->view->dates = Model_DateMapper::getDates($actor);
-        $this->view->gender = Model_NodeMapper::getNodeByEntity('type', 'Gender', $actor);
+        $this->view->gender = Model_NodeMapper::getNodeByEntity('Gender', $actor);
         $this->view->relationInverseLinks = Model_LinkMapper::getLinks($actor, 'OA7', true);
         $this->view->relationLinks = Model_LinkMapper::getLinks($actor, 'OA7');
         $sourceLinks = [];
@@ -218,12 +218,13 @@ class Admin_ActorController extends Zend_Controller_Action {
         }
         Admin_Form_Abstract::populateDates($form, $actor, ['OA1' => 'begin', 'OA3' => 'begin', 'OA2' => 'end', 'OA4' => 'end']);
         if ($actor->getClass()->code == 'E21') {
-            $gender = Model_NodeMapper::getNodeByEntity('type', 'Gender', $actor);
+            $gender = Model_NodeMapper::getNodeByEntity('Gender', $actor);
             if ($gender) {
                 $form->populate(['genderId' => $gender->id, 'genderButton' => $gender->name]);
             }
-            $this->view->genderTreeData = Model_NodeMapper::getTreeData('type', 'gender', $gender);
+            $this->view->genderTreeData = Model_NodeMapper::getTreeData('gender', $gender);
         }
+
         $this->view->objects = Model_EntityMapper::getByCodes('PhysicalObject');
     }
 

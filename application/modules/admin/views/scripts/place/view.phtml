@@ -118,7 +118,7 @@
                 '" class="button"' . $confirm . '>' . $this->ucstring('remove') . '</a></div>';
             $tableSource['data'][] = [
                 $this->link($source),
-                Model_NodeMapper::getNodeByEntity('type', 'Source', $source)->name,
+                Model_NodeMapper::getNodeByEntity('Source', $source)->name,
                 $deleteLink
             ];
         }

@@ -15,7 +15,7 @@ class Admin_CarrierControllerTest extends ControllerTestCase {
 
     public function testCrudCarrier() {
         $this->dispatch('admin/carrier/insert');
-        $type = Model_NodeMapper::getByNodeCategoryName('type', 'Information Carrier', 'Original Document');
+        $type = Model_NodeMapper::getByNodeCategoryName('Information Carrier', 'Original Document');
         $this->formValues = [
             'name' => 'Cryptonomicum',
             'typeId' => $type->id,

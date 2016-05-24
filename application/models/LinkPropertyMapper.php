@@ -17,9 +17,6 @@ class Model_LinkPropertyMapper extends Model_AbstractMapper {
             return false;
         }
         $entity = $linkedEntity->getRange();
-        if ($code == 'P2') {
-            $entity = Model_NodeMapper::getById($entity->id);
-        }
         return $entity;
     }
 

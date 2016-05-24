@@ -14,13 +14,13 @@ class Admin_HierarchyControllerTest extends ControllerTestCase {
     }
 
     public function testView() {
-        $id = Model_NodeMapper::getByNodeCategoryName('place', 'Administrative Unit', 'Austria')->id;
+        $id = Model_NodeMapper::getByNodeCategoryName('Administrative Unit', 'Austria')->id;
         $this->dispatch('admin/hierarchy/view/id/' . $id);
-        Model_NodeMapper::getByNodeCategoryName('place', 'You shall not be', 'found'); // test not found
+        Model_NodeMapper::getByNodeCategoryName('You shall not be', 'found'); // test not found
     }
 
     public function testCrud() {
-        $kindredship = Model_NodeMapper::getByNodeCategoryName('type', 'Actor Actor Relation', 'Parent of (Child of)');
+        $kindredship = Model_NodeMapper::getByNodeCategoryName('Actor Actor Relation', 'Parent of (Child of)');
         $this->request->setMethod('POST')->setPost([]);
         $this->dispatch('admin/hierarchy/insert/superId/' . $kindredship->superId);
         $this->resetRequest()->resetResponse();
@@ -42,7 +42,7 @@ class Admin_HierarchyControllerTest extends ControllerTestCase {
         $this->resetRequest()->resetResponse();
         $this->dispatch('admin/hierarchy/delete/id/' . $kindredship->id);
         $this->resetRequest()->resetResponse();
-        $battle = Model_NodeMapper::getByNodeCategoryName('type', 'Event', 'Battle');
+        $battle = Model_NodeMapper::getByNodeCategoryName('Event', 'Battle');
         $formValues['super'] = $battle->superId;
         $this->request->setMethod('POST')->setPost($formValues);
         $this->dispatch('admin/hierarchy/update/id/' . $battle->id);
@@ -53,7 +53,7 @@ class Admin_HierarchyControllerTest extends ControllerTestCase {
     }
 
     public function testDeleteDenied() {
-        $charter = Model_NodeMapper::getByNodeCategoryName('type', 'Source', 'Charter');
+        $charter = Model_NodeMapper::getByNodeCategoryName('Source', 'Charter');
         $this->dispatch('admin/hierarchy/delete/id/' . $charter->id);
     }
 

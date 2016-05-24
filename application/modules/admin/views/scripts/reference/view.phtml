@@ -56,7 +56,7 @@
                 '/#tabSource' . '" class="button"' . $confirm . '>' . $this->ucstring('remove') . '</a></div>';
             $tableSource['data'][] = [
                 $this->link($link->getRange()),
-                Model_NodeMapper::getNodeByEntity('type', 'Source', $link->getRange())->name,
+                Model_NodeMapper::getNodeByEntity('Source', $link->getRange())->name,
                 $link->description,
                 '<a class="button" href="/admin/biblio/update/origin/reference/id/' . $link->id . '">' .
                     $this->ucstring('edit') . '</a>',
@@ -105,7 +105,7 @@
             $tablePlace['data'][] = [
                 $link->description,
                 $this->link($link->getRange()),
-                Model_NodeMapper::getNodeByEntity('type', 'Site', $link->getRange())->name,
+                Model_NodeMapper::getNodeByEntity('Site', $link->getRange())->name,
                 $link->getRange()->first,
                 $link->getRange()->last,
                 '<a class="button" href="/admin/biblio/update/origin/reference/id/' .

@@ -35,6 +35,7 @@
             }
             $infoTable['data'][_('alias')] = implode('<br/>', $aliasArray);
         }
+        //var_dump($this->gender);die;
         if ($this->gender) {
             $infoTable['data']['Gender'] = $this->link($this->gender);
         }
@@ -113,13 +114,15 @@
             foreach ($this->relationLinks as $link) {
                 $type = Model_LinkPropertyMapper::getLinkedEntity($link, 'P2');
                 $dates = Model_DateMapper::getLinkDateRange($link);
-                $text = $this->translate('relation') . ': ' . $type->getNameDirected() . ' ' . $link->getRange()->name;
+                //$text = $this->translate('relation') . ': ' . $type->getNameDirected() . ' ' . $link->getRange()->name;
+                $text = $this->translate('relation') . ': ' . $type->name . ' ' . $link->getRange()->name;
                 $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_remove', $text)) .
                     "')\" ";
                 $deleteLink = '<div><a href="/admin/function/unlink/id/' . $link->id . '/entityId/' . $actor->id .
                     '/#tabRelation' . '" class="button"' . $confirm . '>' . $this->ucstring('remove') . '</a></div>';
                 $relationTable['data'][] = [
-                    $type->getNameDirected(),
+                    $type->name,
+                    //$type->getNameDirected(),
                     $this->link($link->getRange()),
                     $dates['first'],
                     $dates['last'],
@@ -169,7 +172,7 @@
                 '/#tabSource' . '" class="button"' . $confirm . '>' . $this->ucstring('remove') . '</a></div>';
             $sourceTable['data'][] = [
                 $this->link($source),
-                Model_NodeMapper::getNodeByEntity('type', 'Source', $source)->name,
+                Model_NodeMapper::getNodeByEntity('Source', $source)->name,
                 $deleteLink
             ];
         }
@@ -222,11 +225,9 @@
         foreach ($this->memberOfLinks as $link) {
             $typeName = '';
             $type = Model_LinkPropertyMapper::getLinkedEntity($link, 'P2');
-            if ($type && $type->rootId) {
-                $typeName = $type->getNameDirected();
-            }
             $dates = Model_DateMapper::getLinkDateRange($link);
-            $text = $this->translate('membership') . ': ' . $type->getNameDirected() . ' ' . $link->getRange()->name;
+            //$text = $this->translate('membership') . ': ' . $type->getNameDirected() . ' ' . $link->getRange()->name;
+            $text = $this->translate('membership') . ': ' . $type->name . ' ' . $link->getRange()->name;
             $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_remove', $text)) .
                 "')\" ";
             $deleteLink = '<div><a href="/admin/function/unlink/id/' . $link->id . '/entityId/' . $actor->id .

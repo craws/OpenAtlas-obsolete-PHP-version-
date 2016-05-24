@@ -11,7 +11,7 @@ class Admin_RelationController extends Zend_Controller_Action {
             $this->view->actors = Model_EntityMapper::getByCodes('Actor');
             $this->view->actor = $actor;
             $this->view->form = $form;
-            $this->view->typeTreeData = Model_NodeMapper::getTreeData('type', 'actor actor relation');
+            $this->view->typeTreeData = Model_NodeMapper::getTreeData('actor actor relation');
             return;
         }
         $relation = Model_EntityMapper::getById($this->_getParam('typeId'));
@@ -50,7 +50,7 @@ class Admin_RelationController extends Zend_Controller_Action {
             }
             $this->view->actor = $originActor;
             $this->view->form = $form;
-            $this->view->typeTreeData = Model_NodeMapper::getTreeData('type', 'actor actor relation', $type);
+            $this->view->typeTreeData = Model_NodeMapper::getTreeData('actor actor relation', $type);
             return;
         }
         $actor = $link->getDomain();

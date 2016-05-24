@@ -39,9 +39,9 @@ class Admin_PlaceController extends Zend_Controller_Action {
         if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
             $this->view->form = $form;
             $this->view->source = $source;
-            $this->view->siteTreeData = Model_NodeMapper::getTreeData('type', 'site');
-            $this->view->administrativeTreeData = Model_NodeMapper::getTreeData('place', 'administrative unit');
-            $this->view->historicalTreeData = Model_NodeMapper::getTreeData('place', 'historical place');
+            $this->view->siteTreeData = Model_NodeMapper::getTreeData('site');
+            $this->view->administrativeTreeData = Model_NodeMapper::getTreeData('administrative unit');
+            $this->view->historicalTreeData = Model_NodeMapper::getTreeData('historical place');
             return;
         }
         $object = Model_EntityMapper::insert('E18', $form->getValue('name'), $form->getValue('description'));
@@ -114,9 +114,9 @@ class Admin_PlaceController extends Zend_Controller_Action {
             $this->view->modifier = $log['modifier_name'];
         }
         if (!$formValid || $modified) {
-            $this->view->siteTreeData = Model_NodeMapper::getTreeData('type', 'site');
-            $this->view->administrativeTreeData = Model_NodeMapper::getTreeData('place', 'administrative unit');
-            $this->view->historicalTreeData = Model_NodeMapper::getTreeData('place', 'historical place');
+            $this->view->siteTreeData = Model_NodeMapper::getTreeData('site');
+            $this->view->administrativeTreeData = Model_NodeMapper::getTreeData('administrative unit');
+            $this->view->historicalTreeData = Model_NodeMapper::getTreeData('historical place');
             $this->_helper->message('error_modified');
             return;
         }
@@ -153,9 +153,9 @@ class Admin_PlaceController extends Zend_Controller_Action {
         $this->view->object = $object;
         $this->view->events = Model_LinkMapper::getLinkedEntities($place, 'P7', true);
         $this->view->aliases = Model_LinkMapper::getLinkedEntities($object, 'P1');
-        $this->view->site = Model_NodeMapper::getNodeByEntity('type', 'Site', $object);
-        $this->view->administrative = Model_NodeMapper::getNodesByEntity('place', 'Administrative Unit', $place);
-        $this->view->historicals = Model_NodeMapper::getNodesByEntity('place', 'Historical Place', $place);
+        $this->view->site = Model_NodeMapper::getNodeByEntity('Site', $object);
+        $this->view->administrative = Model_NodeMapper::getNodesByEntity('Administrative Unit', $place);
+        $this->view->historicals = Model_NodeMapper::getNodesByEntity('Historical Place', $place);
         $this->view->dates = Model_DateMapper::getDates($object);
         $this->view->events = array_merge(
             Model_LinkMapper::getLinkedEntities($place, 'P7', true), Model_LinkMapper::getLinkedEntities($object, 'P24', true)
@@ -182,7 +182,7 @@ class Admin_PlaceController extends Zend_Controller_Action {
     }
 
     private function prepareDefaultUpdate(Zend_Form $form, Model_Entity $object, Model_Entity $place) {
-        $site = Model_NodeMapper::getNodeByEntity('type', 'Site', $object);
+        $site = Model_NodeMapper::getNodeByEntity('Site', $object);
         $form->populate([
             'name' => $object->name,
             'description' => $object->description,
@@ -197,13 +197,13 @@ class Admin_PlaceController extends Zend_Controller_Action {
         }
         // @codeCoverageIgnoreEnd
         Admin_Form_Abstract::populateDates($form, $object, ['OA1' => 'begin', 'OA2' => 'end']);
-        $this->view->siteTreeData = Model_NodeMapper::getTreeData('type', 'site', $site);
-        $administratives = Model_NodeMapper::getNodesByEntity('place', 'Administrative Unit', $place);
+        $this->view->siteTreeData = Model_NodeMapper::getTreeData('site', $site);
+        $administratives = Model_NodeMapper::getNodesByEntity('Administrative Unit', $place);
         $this->view->administratives = $administratives;
-        $this->view->administrativeTreeData = Model_NodeMapper::getTreeData('place', 'administrative unit', $administratives);
-        $historicals = Model_NodeMapper::getNodesByEntity('place', 'Historical Place', $place);
+        $this->view->administrativeTreeData = Model_NodeMapper::getTreeData('administrative unit', $administratives);
+        $historicals = Model_NodeMapper::getNodesByEntity('Historical Place', $place);
         $this->view->historicals = $historicals;
-        $this->view->historicalTreeData = Model_NodeMapper::getTreeData('place', 'historical place', $historicals);
+        $this->view->historicalTreeData = Model_NodeMapper::getTreeData('historical place', $historicals);
         $this->view->object = $object;
         return;
     }

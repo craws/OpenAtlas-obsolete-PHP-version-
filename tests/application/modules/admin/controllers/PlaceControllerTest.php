@@ -21,12 +21,12 @@ class Admin_PlaceControllerTest extends ControllerTestCase {
     public function setUp() {
         parent::setUp();
         $this->login();
-        $type = Model_NodeMapper::getByNodeCategoryName('type', 'site', 'ritual site');
+        $type = Model_NodeMapper::getByNodeCategoryName('site', 'ritual site');
         $this->formValues['siteId'] = $type->id;
         $this->formValues['siteButton'] = $type->name;
-        $administrative = Model_NodeMapper::getByNodeCategoryName('place', 'administrative unit', 'austria');
+        $administrative = Model_NodeMapper::getByNodeCategoryName('administrative unit', 'austria');
         $this->formValues['administrativeId'] = $administrative->id;
-        $historical = Model_NodeMapper::getByNodeCategoryName('place', 'historical place', 'carantania');
+        $historical = Model_NodeMapper::getByNodeCategoryName('historical place', 'carantania');
         $this->formValues['historicalId'] = $historical->id;
     }
 

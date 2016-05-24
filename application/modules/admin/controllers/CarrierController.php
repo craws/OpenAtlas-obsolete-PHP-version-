@@ -18,7 +18,7 @@ class Admin_CarrierController extends Zend_Controller_Action {
             $this->view->label = Model_ClassMapper::getByCode('E84')->nameTranslated;
             $this->view->menuHighlight = 'reference';
             $this->view->objects = Model_EntityMapper::getByCodes('PhysicalObject');
-            $this->view->typeTreeData = Model_NodeMapper::getTreeData('type', 'information carrier');
+            $this->view->typeTreeData = Model_NodeMapper::getTreeData('information carrier');
             return;
         }
         $carrier = Model_EntityMapper::insert('E84', $form->getValue('name'), $form->getValue('description'));
@@ -38,12 +38,12 @@ class Admin_CarrierController extends Zend_Controller_Action {
         $this->view->form = $form;
         $this->view->carrier = $carrier;
         $this->view->menuHighlight = 'reference';
-        $type = Model_NodeMapper::getNodeByEntity('type', 'Information Carrier', $carrier);
+        $type = Model_NodeMapper::getNodeByEntity('Information Carrier', $carrier);
         if (!$this->getRequest()->isPost()) {
             $form->populate([
                 'name' => $carrier->name,
                 'description' => $carrier->description,
-                'typeId' => Model_NodeMapper::getNodeByEntity('type', 'Information Carrier', $carrier)->id,
+                'typeId' => Model_NodeMapper::getNodeByEntity('Information Carrier', $carrier)->id,
                 'modified' => ($carrier->modified) ? $carrier->modified->getTimestamp() : 0
             ]);
             if ($type->rootId) {
@@ -58,7 +58,7 @@ class Admin_CarrierController extends Zend_Controller_Action {
                     'objectId' => $object->id
                 ]);
             }
-            $this->view->typeTreeData = Model_NodeMapper::getTreeData('type', 'information carrier', $type);
+            $this->view->typeTreeData = Model_NodeMapper::getTreeData('information carrier', $type);
             $this->view->objects = Model_EntityMapper::getByCodes('PhysicalObject');
             return;
         }
@@ -70,7 +70,7 @@ class Admin_CarrierController extends Zend_Controller_Action {
         }
         if (!$formValid || $modified) {
             $this->view->objects = Model_EntityMapper::getByCodes('PhysicalObject');
-            $this->view->typeTreeData = Model_NodeMapper::getTreeData('type', 'information carrier');
+            $this->view->typeTreeData = Model_NodeMapper::getTreeData('information carrier');
             $this->_helper->message('error_modified');
             return;
         }
@@ -89,7 +89,7 @@ class Admin_CarrierController extends Zend_Controller_Action {
         $carrier = Model_EntityMapper::getById($this->_getParam('id'));
         $sourceLinks = Model_LinkMapper::getLinks($carrier, 'P128');
         $this->view->carrier = $carrier;
-        $this->view->carrierType = Model_NodeMapper::getNodeByEntity('type', 'Information Carrier', $carrier);
+        $this->view->carrierType = Model_NodeMapper::getNodeByEntity('Information Carrier', $carrier);
         $this->view->dates = Model_DateMapper::getDates($carrier);
         $this->view->menuHighlight = 'reference';
         $this->view->sourceLinks = $sourceLinks;
@@ -100,7 +100,7 @@ class Admin_CarrierController extends Zend_Controller_Action {
     }
 
     private function save(Zend_Form $form, Model_Entity $carrier) {
-        $type = Model_NodeMapper::getRootType('type', 'information carrier');
+        $type = Model_NodeMapper::getRootType('information carrier');
         if ($this->_getParam('typeId')) {
             $type = Model_EntityMapper::getById($this->_getParam('typeId'));
         }

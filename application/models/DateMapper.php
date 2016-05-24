@@ -27,7 +27,7 @@ class Model_DateMapper {
     }
 
     private static function getTypeByName($name) {
-        return Model_NodeMapper::getByNodeCategoryName('type', 'Date value type', $name);
+        return Model_NodeMapper::getByNodeCategoryName('Date value type', $name);
     }
 
     public static function getLinkDateRange(Model_Link $link) {

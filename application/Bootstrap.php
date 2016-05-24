@@ -102,7 +102,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         Zend_Registry::set('properties', Model_PropertyMapper::getAll());
         Model_NodeMapper::setAll();
         // @codeCoverageIgnoreStart
-        if (count(Zend_Registry::get('type')) < 1) {
+        if (count(Zend_Registry::get('nodes')) < 1) {
             echo ('<p class="error">Warning: nodes are missing (import data_node.sql)</p>');
         }
         // @codeCoverageIgnoreEnd

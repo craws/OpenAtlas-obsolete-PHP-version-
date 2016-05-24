@@ -20,7 +20,7 @@ class Admin_ReferenceController extends Zend_Controller_Action {
         if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
             $this->view->form = $form;
             $this->view->rootType = $rootType;
-            $this->view->typeTreeData = Model_NodeMapper::getTreeData('type', $rootType);
+            $this->view->typeTreeData = Model_NodeMapper::getTreeData($rootType);
             return;
         }
         $reference = Model_EntityMapper::insert('E31', $form->getValue('name'), $form->getValue('description'));
@@ -49,7 +49,7 @@ class Admin_ReferenceController extends Zend_Controller_Action {
                 'typeButton' => $type->name,
                 'modified' => ($reference->modified) ? $reference->modified->getTimestamp() : 0
             ]);
-            $this->view->typeTreeData = Model_NodeMapper::getTreeData('type', $rootType->name, $type);
+            $this->view->typeTreeData = Model_NodeMapper::getTreeData($rootType->name, $type);
             return;
         }
         $formValid = $form->isValid($this->getRequest()->getPost());
@@ -59,7 +59,7 @@ class Admin_ReferenceController extends Zend_Controller_Action {
             $this->view->modifier = $log['modifier_name'];
         }
         if (!$formValid || $modified) {
-            $this->view->typeTreeData = Model_NodeMapper::getTreeData('type', $rootType->name);
+            $this->view->typeTreeData = Model_NodeMapper::getTreeData($rootType->name);
             $this->_helper->message('error_modified');
             return;
         }
@@ -93,7 +93,7 @@ class Admin_ReferenceController extends Zend_Controller_Action {
             }
         }
         $this->view->reference = $reference;
-        $this->view->referenceType = Model_NodeMapper::getNodeByEntity('type', $typeRoot->name, $reference);
+        $this->view->referenceType = Model_NodeMapper::getNodeByEntity($typeRoot->name, $reference);
         $this->view->actorLinks = $actorLinks;
         $this->view->sourceLinks = $sourceLinks;
         $this->view->eventLinks = $eventLinks;

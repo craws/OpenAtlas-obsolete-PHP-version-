@@ -10,7 +10,7 @@ class Admin_RelationControllerTest extends ControllerTestCase {
     }
 
     public function testCrud() {
-        $socialId = Model_NodeMapper::getByNodeCategoryName('type', 'Actor Actor Relation', 'Social')->id;
+        $socialId = Model_NodeMapper::getByNodeCategoryName('Actor Actor Relation', 'Social')->id;
         $this->dispatch('admin/relation/insert/id/' . $this->actorId);
         $this->request->setMethod('POST')->setPost([
             'relatedActorIds' => $this->actorId,

@@ -4,10 +4,11 @@
 
 class Model_Node extends Model_Entity {
 
-    public $directed = false;
-    public $expandable = false;
+    public $directional = false;
+    public $extendable = false;
     public $rootId = null;
     public $superId = null;
+    public $system = null;
     public $subs = [];
     public $propertyToEntity;
     public $propertyToSuper;

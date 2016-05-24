@@ -7,7 +7,7 @@ $table['header'] = [_('name'), _('type')];
 foreach ($this->sources as $source) {
     $table['data'][] = [
         $this->link($source),
-        Model_NodeMapper::getNodeByEntity('type', 'Source', $source)->name
+        Model_NodeMapper::getNodeByEntity('Source', $source)->name
     ];
 }
 ?>

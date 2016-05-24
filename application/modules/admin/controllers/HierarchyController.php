@@ -4,10 +4,9 @@
 
 class Admin_HierarchyController extends Zend_Controller_Action {
 
-
     public function deleteAction() {
         $type = Model_NodeMapper::getById($this->_getParam('id'));
-        if (!$type->superId || !$type->expandable) {
+        if (!$type->superId || !$type->extendable) {
             $this->_helper->message('error_forbidden');
             return $this->_helper->redirector->gotoUrl('/admin/hierarchy');
         }
@@ -25,18 +24,16 @@ class Admin_HierarchyController extends Zend_Controller_Action {
     }
 
     public function indexAction() {
-        $types = [];
-        foreach (['place', 'type'] as $hierarchy) {
-            foreach (Zend_Registry::get($hierarchy) as $type) {
-                if ($type->expandable) {
-                    $types[] = $type;
-                }
+        $nodes = [];
+        foreach (Zend_Registry::get('nodes') as $node) {
+            if ($node->extendable) {
+                $nodes[] = $node;
             }
         }
-        usort($types, function($a, $b) {
+        usort($nodes, function($a, $b) {
             return strcmp($a->name, $b->name);
         });
-        $this->view->types = $types;
+        $this->view->types = $nodes;
     }
 
     public function insertAction() {
@@ -61,12 +58,12 @@ class Admin_HierarchyController extends Zend_Controller_Action {
 
     public function updateAction() {
         $type = Model_NodeMapper::getById($this->_getParam('id'));
-        if (!$type->superId || !$type->expandable) {
+        if (!$type->superId || !$type->extendable) {
             $this->_helper->message('error_forbidden');
             return $this->_helper->redirector->gotoUrl('/admin/hierarchy');
         }
         $form = new Admin_Form_Type();
-        if (!$type->directed) {
+        if (!$type->directional) {
             $form->removeElement('inverse');
         }
         $superElement = $form->getElement('super');
@@ -80,7 +77,7 @@ class Admin_HierarchyController extends Zend_Controller_Action {
                 'inverse' => $inverse,
                 'name' => trim($array[0]),
                 'super' => $type->superId,
-             ]);
+            ]);
             $this->view->form = $form;
             $this->view->type = $type;
             return;

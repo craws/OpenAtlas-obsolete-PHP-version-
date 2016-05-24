@@ -99,7 +99,7 @@
                 '/#tabPlace' . '" class="button"' . $confirm . '>' . $this->ucstring('remove') . '</a></div>';
             $tablePlace['data'][] = [
                 $this->link($link->getRange()),
-                Model_NodeMapper::getNodeByEntity('type', 'Site', $link->getRange())->name,
+                Model_NodeMapper::getNodeByEntity('Site', $link->getRange())->name,
                 $link->getRange()->first,
                 $link->getRange()->last,
                 $deleteLink

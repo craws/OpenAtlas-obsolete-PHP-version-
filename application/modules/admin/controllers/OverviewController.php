@@ -65,7 +65,7 @@ class Admin_OverviewController extends Zend_Controller_Action {
         $types = [];
         foreach (['place', 'type'] as $typeName) {
             foreach (Zend_Registry::get($typeName) as $type) {
-                if ($type->expandable) {
+                if ($type->extendable) {
                     $types[] = $type;
                 }
             }

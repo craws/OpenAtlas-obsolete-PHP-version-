@@ -31,7 +31,7 @@ class Admin_InvolvementController extends Zend_Controller_Action {
                 $this->view->events = Model_EntityMapper::getByCodes('Event');
             }
             $this->view->form = $form;
-            $this->view->involvementTreeData = Model_NodeMapper::getTreeData('type', 'involvement');
+            $this->view->involvementTreeData = Model_NodeMapper::getTreeData('involvement');
             $this->view->origin = $this->_getParam('origin');
             return;
         }
@@ -83,7 +83,7 @@ class Admin_InvolvementController extends Zend_Controller_Action {
             $this->view->actor = $actor;
             $this->view->event = $event;
             $this->view->form = $form;
-            $this->view->involvementTreeData = Model_NodeMapper::getTreeData('type', 'involvement', $involvement);
+            $this->view->involvementTreeData = Model_NodeMapper::getTreeData('involvement', $involvement);
             $this->view->origin = 'event';
             return;
         }

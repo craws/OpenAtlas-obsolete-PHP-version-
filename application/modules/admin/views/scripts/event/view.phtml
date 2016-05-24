@@ -111,7 +111,7 @@
             $sourceTable['header'] = [_('source'), _('type'), ''];
             foreach ($this->sourceLinks as $link) {
                 $type = '';
-                $sourceType = Model_NodeMapper::getNodeByEntity('type', 'Source', $link->getDomain());
+                $sourceType = Model_NodeMapper::getNodeByEntity('Source', $link->getDomain());
                 if ($sourceType) {
                     $type = $sourceType->name;
                 }

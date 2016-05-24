@@ -31,7 +31,7 @@ class Model_GisMapper extends Model_AbstractMapper {
             if ($gis) {
                 $name = str_replace('"', '\"', $object->name);
                 // $type names deactivated because of performance issues
-                //$type = Model_NodeMapper::getNodeByEntity('type', 'Site', $object);
+                //$type = Model_NodeMapper::getNodeByEntity('Site', $object);
                 $typeName = str_replace('"', '\"', '');
                 $description = str_replace('"', '\"', $object->description);
                 $json['marker'] .= '{"type": "Feature","geometry":{"type": "Point","coordinates": [' . $gis->easting .

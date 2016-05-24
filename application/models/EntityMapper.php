@@ -124,7 +124,9 @@ class Model_EntityMapper extends \Model_AbstractMapper {
         $entity->setClass($classes[$row['class_id']]);
         $entity->name = $row['name'];
         $entity->description = $row['description'];
-        $entity->date = parent::toZendDate($row['value_timestamp']);
+        if (isset($row['value_timestamp'])) {
+            $entity->date = parent::toZendDate($row['value_timestamp']);
+        }
         $entity->created = parent::toZendDate($row['created']);
         $entity->modified = parent::toZendDate($row['modified']);
         if (isset($row['first'])) {
@@ -137,8 +139,6 @@ class Model_EntityMapper extends \Model_AbstractMapper {
     }
 
     public static function insert($class, $name, $description = null, $date = null) {
-        var_dump();
-        var_dump();
         if (!is_numeric($class)) { // if $class was a string (code) get the id
             $class = Model_ClassMapper::getByCode($class)->id;
         }

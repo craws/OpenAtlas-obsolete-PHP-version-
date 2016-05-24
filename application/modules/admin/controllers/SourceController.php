@@ -57,11 +57,11 @@ class Admin_SourceController extends Zend_Controller_Action {
             $this->view->event = $event;
             $this->view->actor = $actor;
             $this->view->object = $object;
-            $this->view->typeTreeData = Model_NodeMapper::getTreeData('type', 'source');
+            $this->view->typeTreeData = Model_NodeMapper::getTreeData('source');
             return;
         }
         $source = Model_EntityMapper::insert('E33', $form->getValue('name'), $form->getValue('description'));
-        $type = Model_NodeMapper::getByNodeCategoryName('type', 'Linguistic object classification', 'Source Content');
+        $type = Model_NodeMapper::getByNodeCategoryName('Linguistic object classification', 'Source Content');
         Model_LinkMapper::insert('P2', $source, $type);
         Model_LinkMapper::insert('P2', $source, Model_EntityMapper::getById($form->getValue('typeId')));
         if ($event) {
@@ -161,12 +161,12 @@ class Admin_SourceController extends Zend_Controller_Action {
                 'description' => $source->description,
                 'modified' => ($source->modified) ? $source->modified->getTimestamp() : 0
             ]);
-            $type = Model_NodeMapper::getNodeByEntity('type', 'Source', $source);
+            $type = Model_NodeMapper::getNodeByEntity('Source', $source);
             if ($type) {
                 $form->populate(['typeId' => $type->id, 'typeButton' => $type->name]);
                 $this->view->type = $type;
             }
-            $this->view->typeTreeData = Model_NodeMapper::getTreeData('type', 'source', [$type]);
+            $this->view->typeTreeData = Model_NodeMapper::getTreeData('source', [$type]);
             return;
         }
         $formValid = $form->isValid($this->getRequest()->getPost());
@@ -177,7 +177,7 @@ class Admin_SourceController extends Zend_Controller_Action {
         }
         if (!$formValid || $modified) {
             $this->_helper->message('error_modified');
-            $this->view->typeTreeData = Model_NodeMapper::getTreeData('type', 'source');
+            $this->view->typeTreeData = Model_NodeMapper::getTreeData('source');
             return;
         }
         $source->name = $form->getValue('name');
@@ -222,7 +222,7 @@ class Admin_SourceController extends Zend_Controller_Action {
         $this->view->referenceLinks = $referenceLinks;
         $this->view->source = $source;
         $this->view->textLinks = Model_LinkMapper::getLinks($source, 'P73');
-        $this->view->sourceType = Model_NodeMapper::getNodeByEntity('type', 'Source', $source);
+        $this->view->sourceType = Model_NodeMapper::getNodeByEntity('Source', $source);
     }
 
 }

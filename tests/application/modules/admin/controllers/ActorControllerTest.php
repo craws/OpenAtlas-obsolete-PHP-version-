@@ -26,7 +26,7 @@ class Admin_ActorControllerTest extends ControllerTestCase {
         $this->formValues['residenceId'] = $this->objectId;
         $this->formValues['appearsFirstId'] = $this->objectId;
         $this->formValues['appearsLastId'] = $this->objectId;
-        $this->formValues['genderId'] = Model_NodeMapper::getByNodeCategoryName('type', 'Gender', 'Female')->id;
+        $this->formValues['genderId'] = Model_NodeMapper::getByNodeCategoryName('Gender', 'Female')->id;
     }
 
     public function testIndex() {
@@ -81,7 +81,7 @@ class Admin_ActorControllerTest extends ControllerTestCase {
 
     public function testRelation() {
         $this->dispatch('admin/actor/insert-relation/id/' . $this->actorId);
-        $relation = Model_NodeMapper::getByNodeCategoryName('type', 'Actor Actor Relation', 'Kindredship');
+        $relation = Model_NodeMapper::getByNodeCategoryName('Actor Actor Relation', 'Kindredship');
         $this->request->setMethod('POST')->setPost([
             'typeId' => $relation->id,
             'typeButton' => $relation->name,

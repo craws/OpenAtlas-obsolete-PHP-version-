@@ -12,7 +12,7 @@ class Admin_SourceControllerTest extends ControllerTestCase {
     public function setUp() {
         parent::setUp();
         $this->login();
-        $type = Model_NodeMapper::getByNodeCategoryName('type', 'source', 'letter');
+        $type = Model_NodeMapper::getByNodeCategoryName('source', 'letter');
         $this->formValues['typeId'] = $type->id;
         $this->formValues['typeButton'] = $type->name;
     }
@@ -46,11 +46,7 @@ class Admin_SourceControllerTest extends ControllerTestCase {
     }
 
     public function testText() {
-        $original = Model_NodeMapper::getByNodeCategoryName(
-            'type',
-            'Linguistic object classification',
-            'Source Original Text'
-        );
+        $original = Model_NodeMapper::getByNodeCategoryName('Linguistic object classification', 'Source Original Text');
         $this->dispatch('admin/source/text-add/id/' . $this->sourceId);
         $this->resetRequest()->resetResponse();
         $formValues = ['type' => $original->id, 'name' => 'original', 'description' => 'description'];

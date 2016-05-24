@@ -11,10 +11,10 @@ class Admin_MemberController extends Zend_Controller_Action {
             $this->view->actors = Model_EntityMapper::getByCodes('Actor');
             $this->view->actor = $group;
             $this->view->form = $form;
-            $this->view->typeTreeData = Model_NodeMapper::getTreeData('type', 'actor function');
+            $this->view->typeTreeData = Model_NodeMapper::getTreeData('actor function');
             return;
         }
-        $type = Model_NodeMapper::getRootType('type', 'actor function');
+        $type = Model_NodeMapper::getRootType('actor function');
         if ($this->_getParam('typeId')) {
             $type = Model_EntityMapper::getById($this->_getParam('typeId'));
         }
@@ -43,10 +43,10 @@ class Admin_MemberController extends Zend_Controller_Action {
             );
             $this->view->actor = $member;
             $this->view->form = $form;
-            $this->view->typeTreeData = Model_NodeMapper::getTreeData('type', 'actor function');
+            $this->view->typeTreeData = Model_NodeMapper::getTreeData('actor function');
             return;
         }
-        $type = Model_NodeMapper::getRootType('type', 'actor function');
+        $type = Model_NodeMapper::getRootType('actor function');
         if ($this->_getParam('typeId')) {
             $type = Model_EntityMapper::getById($this->_getParam('typeId'));
         }
@@ -83,11 +83,11 @@ class Admin_MemberController extends Zend_Controller_Action {
             $this->view->actor = $originActor;
             $this->view->form = $form;
             $this->view->relatedActor = $relatedActor;
-            $this->view->typeTreeData = Model_NodeMapper::getTreeData('type', 'actor function', $type);
+            $this->view->typeTreeData = Model_NodeMapper::getTreeData('actor function', $type);
             return;
         }
         $link->delete();
-        $type = Model_NodeMapper::getRootType('type', 'actor function');
+        $type = Model_NodeMapper::getRootType('actor function');
         if ($this->_getParam('typeId')) {
             $type = Model_EntityMapper::getById($this->_getParam('typeId'));
         }
