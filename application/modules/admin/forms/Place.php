@@ -29,12 +29,12 @@ class Admin_Form_Place extends Craws\Form\Table {
         Admin_Form_Abstract::addDates($this, ['begin', 'begin2', 'end', 'end2']);
         $this->addElement('text', 'easting', [
             'label' => $this->getView()->ucstring('easting'),
-            'validators' => array('Float'),
+            'validators' => array(array('Float', true, array('locale' => 'en'))),
             'placeholder' => '16.371568'
         ]);
         $this->addElement('text', 'northing', [
             'label' => $this->getView()->ucstring('northing'),
-            'validators' => array('Float'),
+            'validators' => array(array('Float', true, array('locale' => 'en'))),
             'placeholder' => '48.208121'
         ]);
         $this->addElement('textarea', 'description', ['label' => $this->getView()->ucstring('description')]);
