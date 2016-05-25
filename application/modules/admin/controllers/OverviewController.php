@@ -62,18 +62,9 @@ class Admin_OverviewController extends Zend_Controller_Action {
         $form = new Admin_Form_Test();
         $classes = Zend_Registry::get('classes');
         $properties = Zend_Registry::get('properties');
-        $types = [];
-        foreach (['place', 'type'] as $typeName) {
-            foreach (Zend_Registry::get($typeName) as $type) {
-                if ($type->extendable) {
-                    $types[] = $type;
-                }
-            }
-        }
         $this->view->count = [];
         $this->view->count['classes'] = count($classes);
         $this->view->count['properties'] = count($properties);
-        $this->view->count['types'] = count($types);
         $this->view->form = $form;
         if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
             return;

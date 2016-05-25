@@ -61,10 +61,14 @@ class Model_NodeMapper extends Model_EntityMapper {
     public static function getByNodeCategoryName($rootName, $name) {
         foreach (Zend_Registry::get('nodes') as $node) {
             if (mb_strtolower($node->name) == mb_strtolower($rootName)) {
+                var_dump($rootName);
+                var_dump($node);
+                die('here1');
                 return self::getByNameRecursive($node, $name);
             }
         }
-        Model_LogMapper::log('error', 'found no node for: ' . $hierarchy . ', ' . $rootName . ', ' . $name);
+        die('here');
+        Model_LogMapper::log('error', 'found no node for: ' . $rootName . ', ' . $name);
     }
 
     public static function getNodeByEntity($rootName, Model_Entity $entity) {
