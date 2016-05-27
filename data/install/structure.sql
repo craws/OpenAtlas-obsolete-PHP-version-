@@ -21,9 +21,9 @@ ALTER TABLE IF EXISTS ONLY web.user_settings DROP CONSTRAINT IF EXISTS user_sett
 ALTER TABLE IF EXISTS ONLY web."user" DROP CONSTRAINT IF EXISTS user_group_id_fkey;
 ALTER TABLE IF EXISTS ONLY web.user_bookmarks DROP CONSTRAINT IF EXISTS user_bookmarks_user_id_fkey;
 ALTER TABLE IF EXISTS ONLY web.user_bookmarks DROP CONSTRAINT IF EXISTS user_bookmarks_entity_id_fkey;
-ALTER TABLE IF EXISTS ONLY web.type_form DROP CONSTRAINT IF EXISTS type_form_type_id_fkey;
-ALTER TABLE IF EXISTS ONLY web.type_form DROP CONSTRAINT IF EXISTS type_form_form_id_fkey;
-ALTER TABLE IF EXISTS ONLY web.type DROP CONSTRAINT IF EXISTS type_entity_id_fkey;
+ALTER TABLE IF EXISTS ONLY web.node_form DROP CONSTRAINT IF EXISTS type_form_type_id_fkey;
+ALTER TABLE IF EXISTS ONLY web.node_form DROP CONSTRAINT IF EXISTS type_form_form_id_fkey;
+ALTER TABLE IF EXISTS ONLY web.node DROP CONSTRAINT IF EXISTS type_entity_id_fkey;
 ALTER TABLE IF EXISTS ONLY web.i18n DROP CONSTRAINT IF EXISTS i18n_language_id_fkey;
 ALTER TABLE IF EXISTS ONLY web.i18n DROP CONSTRAINT IF EXISTS i18n_item_id_fkey;
 SET search_path = model, pg_catalog;
@@ -53,8 +53,8 @@ ALTER TABLE IF EXISTS ONLY gis.centerpoint DROP CONSTRAINT IF EXISTS centerpoint
 SET search_path = web, pg_catalog;
 
 DROP TRIGGER IF EXISTS update_modified ON web.form;
-DROP TRIGGER IF EXISTS update_modified ON web.type;
-DROP TRIGGER IF EXISTS update_modified ON web.type_form;
+DROP TRIGGER IF EXISTS update_modified ON web.node;
+DROP TRIGGER IF EXISTS update_modified ON web.node_form;
 DROP TRIGGER IF EXISTS update_modified ON web.user_bookmarks;
 DROP TRIGGER IF EXISTS update_modified ON web.user_settings;
 DROP TRIGGER IF EXISTS update_modified ON web.content;
@@ -89,10 +89,10 @@ ALTER TABLE IF EXISTS ONLY web.user_log DROP CONSTRAINT IF EXISTS user_log_pkey;
 ALTER TABLE IF EXISTS ONLY web."user" DROP CONSTRAINT IF EXISTS user_email_key;
 ALTER TABLE IF EXISTS ONLY web.user_bookmarks DROP CONSTRAINT IF EXISTS user_bookmarks_user_id_entity_id_key;
 ALTER TABLE IF EXISTS ONLY web.user_bookmarks DROP CONSTRAINT IF EXISTS user_bookmarks_pkey;
-ALTER TABLE IF EXISTS ONLY web.type DROP CONSTRAINT IF EXISTS type_pkey;
-ALTER TABLE IF EXISTS ONLY web.type DROP CONSTRAINT IF EXISTS type_name_key;
-ALTER TABLE IF EXISTS ONLY web.type_form DROP CONSTRAINT IF EXISTS type_form_pkey;
-ALTER TABLE IF EXISTS ONLY web.type DROP CONSTRAINT IF EXISTS type_entity_id_key;
+ALTER TABLE IF EXISTS ONLY web.node DROP CONSTRAINT IF EXISTS type_pkey;
+ALTER TABLE IF EXISTS ONLY web.node DROP CONSTRAINT IF EXISTS type_name_key;
+ALTER TABLE IF EXISTS ONLY web.node_form DROP CONSTRAINT IF EXISTS type_form_pkey;
+ALTER TABLE IF EXISTS ONLY web.node DROP CONSTRAINT IF EXISTS type_entity_id_key;
 ALTER TABLE IF EXISTS ONLY web.settings DROP CONSTRAINT IF EXISTS settings_pkey;
 ALTER TABLE IF EXISTS ONLY web.settings DROP CONSTRAINT IF EXISTS settings_name_group_key;
 ALTER TABLE IF EXISTS ONLY web.language DROP CONSTRAINT IF EXISTS language_shortform_key;
@@ -136,9 +136,9 @@ ALTER TABLE IF EXISTS web.user_settings ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE IF EXISTS web.user_log ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE IF EXISTS web.user_bookmarks ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE IF EXISTS web."user" ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE IF EXISTS web.type_form ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE IF EXISTS web.type ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE IF EXISTS web.settings ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE IF EXISTS web.node_form ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE IF EXISTS web.node ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE IF EXISTS web.language ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE IF EXISTS web.i18n ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE IF EXISTS web."group" ALTER COLUMN id DROP DEFAULT;
@@ -176,10 +176,10 @@ DROP TABLE IF EXISTS web.user_bookmarks;
 DROP TABLE IF EXISTS web."user";
 DROP SEQUENCE IF EXISTS web.type_id_seq;
 DROP SEQUENCE IF EXISTS web.type_form_id_seq;
-DROP TABLE IF EXISTS web.type_form;
-DROP TABLE IF EXISTS web.type;
 DROP SEQUENCE IF EXISTS web.settings_id_seq;
 DROP TABLE IF EXISTS web.settings;
+DROP TABLE IF EXISTS web.node_form;
+DROP TABLE IF EXISTS web.node;
 DROP SEQUENCE IF EXISTS web.language_id_seq;
 DROP TABLE IF EXISTS web.language;
 DROP SEQUENCE IF EXISTS web.item_id_seq;
@@ -1087,6 +1087,61 @@ ALTER SEQUENCE language_id_seq OWNED BY language.id;
 
 
 --
+-- Name: node; Type: TABLE; Schema: web; Owner: openatlas_master
+--
+
+CREATE TABLE node (
+    id integer NOT NULL,
+    entity_id integer NOT NULL,
+    name text NOT NULL,
+    multiple integer DEFAULT 0 NOT NULL,
+    created timestamp without time zone DEFAULT now() NOT NULL,
+    modified timestamp without time zone,
+    system integer DEFAULT 0 NOT NULL,
+    is_extendable integer DEFAULT 0 NOT NULL,
+    is_directional integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE node OWNER TO openatlas_master;
+
+--
+-- Name: COLUMN node.name; Type: COMMENT; Schema: web; Owner: openatlas_master
+--
+
+COMMENT ON COLUMN node.name IS 'same as model.entity.name, to ensure unique root type names';
+
+
+--
+-- Name: COLUMN node.multiple; Type: COMMENT; Schema: web; Owner: openatlas_master
+--
+
+COMMENT ON COLUMN node.multiple IS 'if 1 multiple selection is possible';
+
+
+--
+-- Name: COLUMN node.system; Type: COMMENT; Schema: web; Owner: openatlas_master
+--
+
+COMMENT ON COLUMN node.system IS 'if 1 it is a non deleteable predefined type';
+
+
+--
+-- Name: node_form; Type: TABLE; Schema: web; Owner: openatlas_master
+--
+
+CREATE TABLE node_form (
+    id integer NOT NULL,
+    node_id integer NOT NULL,
+    form_id integer NOT NULL,
+    created timestamp without time zone DEFAULT now() NOT NULL,
+    modified timestamp without time zone
+);
+
+
+ALTER TABLE node_form OWNER TO openatlas_master;
+
+--
 -- Name: settings; Type: TABLE; Schema: web; Owner: openatlas_master
 --
 
@@ -1122,61 +1177,6 @@ ALTER SEQUENCE settings_id_seq OWNED BY settings.id;
 
 
 --
--- Name: type; Type: TABLE; Schema: web; Owner: openatlas_master
---
-
-CREATE TABLE type (
-    id integer NOT NULL,
-    entity_id integer NOT NULL,
-    name text NOT NULL,
-    multiple integer DEFAULT 0 NOT NULL,
-    is_extendable integer DEFAULT 0 NOT NULL,
-    is_directional integer DEFAULT 0 NOT NULL,
-    created timestamp without time zone DEFAULT now() NOT NULL,
-    modified timestamp without time zone,
-    system integer DEFAULT 0 NOT NULL
-);
-
-
-ALTER TABLE type OWNER TO openatlas_master;
-
---
--- Name: COLUMN type.name; Type: COMMENT; Schema: web; Owner: openatlas_master
---
-
-COMMENT ON COLUMN type.name IS 'same as model.entity.name, to ensure unique root type names';
-
-
---
--- Name: COLUMN type.multiple; Type: COMMENT; Schema: web; Owner: openatlas_master
---
-
-COMMENT ON COLUMN type.multiple IS 'if 1 multiple selection is possible';
-
-
---
--- Name: COLUMN type.system; Type: COMMENT; Schema: web; Owner: openatlas_master
---
-
-COMMENT ON COLUMN type.system IS 'if 1 it is a non deleteable predefined type';
-
-
---
--- Name: type_form; Type: TABLE; Schema: web; Owner: openatlas_master
---
-
-CREATE TABLE type_form (
-    id integer NOT NULL,
-    type_id integer NOT NULL,
-    form_id integer NOT NULL,
-    created timestamp without time zone DEFAULT now() NOT NULL,
-    modified timestamp without time zone
-);
-
-
-ALTER TABLE type_form OWNER TO openatlas_master;
-
---
 -- Name: type_form_id_seq; Type: SEQUENCE; Schema: web; Owner: openatlas_master
 --
 
@@ -1194,7 +1194,7 @@ ALTER TABLE type_form_id_seq OWNER TO openatlas_master;
 -- Name: type_form_id_seq; Type: SEQUENCE OWNED BY; Schema: web; Owner: openatlas_master
 --
 
-ALTER SEQUENCE type_form_id_seq OWNED BY type_form.id;
+ALTER SEQUENCE type_form_id_seq OWNED BY node_form.id;
 
 
 --
@@ -1215,7 +1215,7 @@ ALTER TABLE type_id_seq OWNER TO openatlas_master;
 -- Name: type_id_seq; Type: SEQUENCE OWNED BY; Schema: web; Owner: openatlas_master
 --
 
-ALTER SEQUENCE type_id_seq OWNED BY type.id;
+ALTER SEQUENCE type_id_seq OWNED BY node.id;
 
 
 --
@@ -1519,21 +1519,21 @@ ALTER TABLE ONLY language ALTER COLUMN id SET DEFAULT nextval('language_id_seq':
 -- Name: id; Type: DEFAULT; Schema: web; Owner: openatlas_master
 --
 
+ALTER TABLE ONLY node ALTER COLUMN id SET DEFAULT nextval('type_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: web; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY node_form ALTER COLUMN id SET DEFAULT nextval('type_form_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: web; Owner: openatlas_master
+--
+
 ALTER TABLE ONLY settings ALTER COLUMN id SET DEFAULT nextval('settings_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: web; Owner: openatlas_master
---
-
-ALTER TABLE ONLY type ALTER COLUMN id SET DEFAULT nextval('type_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: web; Owner: openatlas_master
---
-
-ALTER TABLE ONLY type_form ALTER COLUMN id SET DEFAULT nextval('type_form_id_seq'::regclass);
 
 
 --
@@ -1824,7 +1824,7 @@ ALTER TABLE ONLY settings
 -- Name: type_entity_id_key; Type: CONSTRAINT; Schema: web; Owner: openatlas_master
 --
 
-ALTER TABLE ONLY type
+ALTER TABLE ONLY node
     ADD CONSTRAINT type_entity_id_key UNIQUE (entity_id);
 
 
@@ -1832,7 +1832,7 @@ ALTER TABLE ONLY type
 -- Name: type_form_pkey; Type: CONSTRAINT; Schema: web; Owner: openatlas_master
 --
 
-ALTER TABLE ONLY type_form
+ALTER TABLE ONLY node_form
     ADD CONSTRAINT type_form_pkey PRIMARY KEY (id);
 
 
@@ -1840,7 +1840,7 @@ ALTER TABLE ONLY type_form
 -- Name: type_name_key; Type: CONSTRAINT; Schema: web; Owner: openatlas_master
 --
 
-ALTER TABLE ONLY type
+ALTER TABLE ONLY node
     ADD CONSTRAINT type_name_key UNIQUE (name);
 
 
@@ -1848,7 +1848,7 @@ ALTER TABLE ONLY type
 -- Name: type_pkey; Type: CONSTRAINT; Schema: web; Owner: openatlas_master
 --
 
-ALTER TABLE ONLY type
+ALTER TABLE ONLY node
     ADD CONSTRAINT type_pkey PRIMARY KEY (id);
 
 
@@ -2066,14 +2066,14 @@ CREATE TRIGGER update_modified BEFORE UPDATE ON user_bookmarks FOR EACH ROW EXEC
 -- Name: update_modified; Type: TRIGGER; Schema: web; Owner: openatlas_master
 --
 
-CREATE TRIGGER update_modified BEFORE UPDATE ON type_form FOR EACH ROW EXECUTE PROCEDURE model.update_modified();
+CREATE TRIGGER update_modified BEFORE UPDATE ON node_form FOR EACH ROW EXECUTE PROCEDURE model.update_modified();
 
 
 --
 -- Name: update_modified; Type: TRIGGER; Schema: web; Owner: openatlas_master
 --
 
-CREATE TRIGGER update_modified BEFORE UPDATE ON type FOR EACH ROW EXECUTE PROCEDURE model.update_modified();
+CREATE TRIGGER update_modified BEFORE UPDATE ON node FOR EACH ROW EXECUTE PROCEDURE model.update_modified();
 
 
 --
@@ -2255,7 +2255,7 @@ ALTER TABLE ONLY i18n
 -- Name: type_entity_id_fkey; Type: FK CONSTRAINT; Schema: web; Owner: openatlas_master
 --
 
-ALTER TABLE ONLY type
+ALTER TABLE ONLY node
     ADD CONSTRAINT type_entity_id_fkey FOREIGN KEY (entity_id) REFERENCES model.entity(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
@@ -2263,7 +2263,7 @@ ALTER TABLE ONLY type
 -- Name: type_form_form_id_fkey; Type: FK CONSTRAINT; Schema: web; Owner: openatlas_master
 --
 
-ALTER TABLE ONLY type_form
+ALTER TABLE ONLY node_form
     ADD CONSTRAINT type_form_form_id_fkey FOREIGN KEY (form_id) REFERENCES form(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
@@ -2271,8 +2271,8 @@ ALTER TABLE ONLY type_form
 -- Name: type_form_type_id_fkey; Type: FK CONSTRAINT; Schema: web; Owner: openatlas_master
 --
 
-ALTER TABLE ONLY type_form
-    ADD CONSTRAINT type_form_type_id_fkey FOREIGN KEY (type_id) REFERENCES type(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY node_form
+    ADD CONSTRAINT type_form_type_id_fkey FOREIGN KEY (node_id) REFERENCES node(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --

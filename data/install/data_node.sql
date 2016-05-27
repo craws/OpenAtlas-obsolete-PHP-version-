@@ -175,9 +175,9 @@ INSERT INTO entity (class_id, name) VALUES
 ((SELECT id FROM class WHERE code='E55'), 'To date value');
 
 INSERT INTO link (property_id, range_id, domain_id) VALUES
-((SELECT id FROM property WHERE code='P86'), (SELECT id FROM entity WHERE name='Date value type'), (SELECT id FROM entity WHERE name='Exact date value')),
-((SELECT id FROM property WHERE code='P86'), (SELECT id FROM entity WHERE name='Date value type'), (SELECT id FROM entity WHERE name='From date value')),
-((SELECT id FROM property WHERE code='P86'), (SELECT id FROM entity WHERE name='Date value type'), (SELECT id FROM entity WHERE name='To date value'));
+((SELECT id FROM property WHERE code='P127'), (SELECT id FROM entity WHERE name='Date value type'), (SELECT id FROM entity WHERE name='Exact date value')),
+((SELECT id FROM property WHERE code='P127'), (SELECT id FROM entity WHERE name='Date value type'), (SELECT id FROM entity WHERE name='From date value')),
+((SELECT id FROM property WHERE code='P127'), (SELECT id FROM entity WHERE name='Date value type'), (SELECT id FROM entity WHERE name='To date value'));
 
 INSERT INTO entity (class_id, name) VALUES
 ((SELECT id FROM class WHERE code='E53'), 'Administrative Unit'),

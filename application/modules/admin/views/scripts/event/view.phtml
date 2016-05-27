@@ -3,7 +3,7 @@
 <div id="tabs" class="tabsContainer">
     <ul>
         <li><a href="#tabInfo"><?= $this->ucstring('info') ?></a></li>
-        <? if ($event->rootId): ?>
+        <? if ($event->name != $this->eventRootName): ?>
             <li><a href="#tabActor"><?= $this->ucstring('actors') ?> (<?= count($this->actorLinks) ?>)</a></li>
             <li><a href="#tabSource"><?= $this->ucstring('sources') ?> (<?= count($this->sourceLinks) ?>)</a></li>
             <li><a href="#tabReference"><?= $this->ucstring('references') ?> (<?= count($this->referenceLinks) ?>)</a></li>
@@ -11,7 +11,7 @@
         <li><a href="#tabSub"><?= $this->ucstring('subs') ?> (<?= count($this->subs) ?>)</a></li>
     </ul>
     <div id="tabInfo">
-        <? if ($event->rootId): ?>
+        <? if ($event->name != $this->eventRootName): ?>
             <div class="buttonBar">
                 <?= $this->link($event, 'update') ?>
                 <?= $this->link($event, 'delete') ?>
@@ -21,9 +21,9 @@
         <h1><?= $event->name ?></h1>
         <?
         $table = [];
-        if ($this->super && $this->super->id != $this->event->rootId) {
+        /*if ($this->super && $this->super->id != $this->event->rootId) {
             $table['data'][_('super')] = $this->link($this->super);
-        }
+        }*/
         if ($this->place) {
             $table['data'][_('place')] = $this->link($this->place);
         }
@@ -61,7 +61,7 @@
         <?= $this->render('tableDataItem.phtml'); ?>
         <?= $this->description($event) ?>
     </div>
-    <? if ($event->rootId): ?>
+    <? if ($event->name != $this->eventRootName): ?>
         <div id="tabActor">
             <div class="buttonBar">
                 <a class="button" href="/admin/involvement/insert/origin/event/eventId/<?= $event->id ?>"><?= $this->ucstring('add') ?></a>
@@ -140,6 +140,7 @@
             foreach ($this->referenceLinks as $link) {
                 $reference = $link->getDomain();
                 $type = Model_LinkMapper::getLinkedEntity($reference, 'P2');
+                $node = Model_NodeMapper::getById($type->id);
                 $text = $this->ucstring('referred_by') . ': ' . $reference->name;
                 $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_remove', $text)) .
                     "')\" ";
@@ -148,8 +149,8 @@
                 $table['data'][] = [
                     $this->link($reference),
                     $link->description,
-                    Model_NodeMapper::getById($type->rootId)->name,
-                    $type->name,
+                    Model_NodeMapper::getById($node->rootId)->name,
+                    $node->name,
                         '<a class="button" href="/admin/biblio/update/origin/actor/id/' . $link->id . '">' .
                     $this->ucstring('edit') . '</a>',
                     $deleteLink

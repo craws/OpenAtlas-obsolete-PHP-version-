@@ -40,13 +40,14 @@ class Admin_ReferenceController extends Zend_Controller_Action {
         $form = new Admin_Form_Reference();
         $this->view->form = $form;
         $type = Model_LinkMapper::getLinkedEntity($reference, 'P2');
-        $rootType = Model_EntityMapper::getById($type->rootId);
+        $node = Model_NodeMapper::getById($type->id);
+        $rootType = Model_EntityMapper::getById($node->rootId);
         if (!$this->getRequest()->isPost()) {
             $form->populate([
                 'name' => $reference->name,
                 'description' => $reference->description,
-                'typeId' => $type->id,
-                'typeButton' => $type->name,
+                'typeId' => $node->id,
+                'typeButton' => $node->name,
                 'modified' => ($reference->modified) ? $reference->modified->getTimestamp() : 0
             ]);
             $this->view->typeTreeData = Model_NodeMapper::getTreeData($rootType->name, $type);
@@ -75,7 +76,8 @@ class Admin_ReferenceController extends Zend_Controller_Action {
     public function viewAction() {
         $reference = Model_EntityMapper::getById($this->_getParam('id'));
         $type = Model_LinkMapper::getLinkedEntity($reference, 'P2');
-        $typeRoot = Model_NodeMapper::getById($type->rootId);
+        $node = Model_NodeMapper::getById($type->id);
+        $typeRoot = Model_NodeMapper::getById($node->rootId);
         $actorLinks = [];
         $sourceLinks = [];
         $eventLinks = [];

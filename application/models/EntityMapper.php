@@ -103,7 +103,6 @@ class Model_EntityMapper extends \Model_AbstractMapper {
                 continue;
             }
             $entitites[] = $entity;
-
         }
         return $entitites;
     }

@@ -38,7 +38,10 @@ class Model_NodeMapper extends Model_EntityMapper {
     private static function addSubs(Model_Node $node) {
         $sql = "SELECT e.id, e.name, e.description, e.class_id, e.created, e.modified
             FROM model.entity e JOIN model.link l ON e.id = l.domain_id
-            WHERE l.range_id = :range_id AND l.property_id = :property_id;";
+            WHERE
+                l.range_id = :range_id AND
+                l.property_id = :property_id AND
+                e.name NOT LIKE 'Location of%';";
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->bindValue(':range_id', $node->id);
         $statement->bindValue(':property_id', Model_PropertyMapper::getByCode($node->propertyToSuper)->id);
@@ -61,13 +64,9 @@ class Model_NodeMapper extends Model_EntityMapper {
     public static function getByNodeCategoryName($rootName, $name) {
         foreach (Zend_Registry::get('nodes') as $node) {
             if (mb_strtolower($node->name) == mb_strtolower($rootName)) {
-                var_dump($rootName);
-                var_dump($node);
-                die('here1');
                 return self::getByNameRecursive($node, $name);
             }
         }
-        die('here');
         Model_LogMapper::log('error', 'found no node for: ' . $rootName . ', ' . $name);
     }
 
@@ -91,9 +90,9 @@ class Model_NodeMapper extends Model_EntityMapper {
             if (mb_strtolower($node->name) == mb_strtolower($rootName)) {
                 foreach (Model_LinkMapper::getLinkedEntities($entity, $node->propertyToEntity) as $linkedEntity) {
                     $linkedNode = Model_NodeMapper::getById($linkedEntity->id);
-                    //if ($linkedNode->rootId == $node->id || $linkedNode->id == $node->id) {
+                    if ($linkedNode->rootId == $node->id || $linkedNode->id == $node->id) {
                         $nodes[] = $linkedNode;
-                    //}
+                    }
                 }
             }
         }
@@ -197,12 +196,11 @@ class Model_NodeMapper extends Model_EntityMapper {
         return $text;
     }
 
-    public static function getOptionsForSelect($hierarchy, $rootName) {
+    public static function getOptionsForSelect($rootName) {
         global $returnCandidates;
         $returnCandidates = [];
-        foreach (Zend_Registry::get($hierarchy) as $node) {
-            if (mb_strtolower($node->name) == mb_strtolower($rootName) ||
-                mb_strtolower($node->name) == mb_strtolower(Zend_Registry::get('event')[0]->name)) {
+        foreach (Zend_Registry::get('nodes') as $node) {
+            if (mb_strtolower($node->name) == mb_strtolower($rootName)) {
                 $rootNode = $node;
                 break;
             }
