@@ -46,7 +46,7 @@
             foreach ($this->linksEntities as $entity) {
                 $table['data'][] = [
                     $this->link($entity),
-                    $this->link($entity->getClass()),
+                    $this->link($entity->class),
                     $entity->first,
                     $entity->last
                 ];
@@ -64,8 +64,8 @@
                 $table['header'] = [_('domain'), _('range')];
                 foreach ($this->linksProperties as $link) {
                     $table['data'][] = [
-                        $this->link($link->getDomain()->getDomain()),
-                        $this->link($link->getDomain()->getRange())
+                        $this->link($link->domain->domain),
+                        $this->link($link->domain->range)
                     ];
                 }
                 ?>

@@ -93,7 +93,7 @@ class Admin_Form_Actor extends Craws\Form\Table {
             $aliasIndex++;
         }
         $this->populate(['aliasId' => $aliasIndex]);
-        if ($actor->getClass()->code != 'E21') {
+        if ($actor->class->code != 'E21') {
             $this->removeElement('birth');
             $this->removeElement('death');
             $this->removeElement('genderId');

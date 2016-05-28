@@ -29,13 +29,13 @@ class Craws_View_Helper_Link extends Zend_View_Helper_Abstract {
         }
         $relatedParam = '';
         if ($relatedObject) {
-            if (in_array($relatedObject->getClass()->code, Zend_Registry::get('config')->get('codeEvent')->toArray())) {
+            if (in_array($relatedObject->class->code, Zend_Registry::get('config')->get('codeEvent')->toArray())) {
                 $relatedParam = '/origin/event/eventId';
-            } else if (in_array($relatedObject->getClass()->code, Zend_Registry::get('config')->get('codeActor')->toArray())) {
+            } else if (in_array($relatedObject->class->code, Zend_Registry::get('config')->get('codeActor')->toArray())) {
                 $relatedParam = '/origin/actor/actorId';
-            } else if (in_array($relatedObject->getClass()->code, Zend_Registry::get('config')->get('codeSource')->toArray())) {
+            } else if (in_array($relatedObject->class->code, Zend_Registry::get('config')->get('codeSource')->toArray())) {
                 $relatedParam = '/origin/source/sourceId';
-            } else if (in_array($relatedObject->getClass()->code, Zend_Registry::get('config')->get('codePhysicalObject')->toArray())) {
+            } else if (in_array($relatedObject->class->code, Zend_Registry::get('config')->get('codePhysicalObject')->toArray())) {
                 $relatedParam = '/origin/source/objectId';
             }
             $relatedParam .= '/' . $relatedObject->id;
@@ -79,11 +79,11 @@ class Craws_View_Helper_Link extends Zend_View_Helper_Abstract {
         }
         $array = Zend_Registry::get('config')->get('codeView')->toArray();
         // @codeCoverageIgnoreStart
-        if (!$array[$object->getClass()->code]) {
-            return '"</a><span style="color:red;">undefined code ' . $object->getClass()->code . ' for link <';
+        if (!$array[$object->class->code]) {
+            return '"</a><span style="color:red;">undefined code ' . $object->class->code . ' for link <';
         }
         // @codeCoverageIgnoreEnd
-        return $array[$object->getClass()->code];
+        return $array[$object->class->code];
     }
 
 }

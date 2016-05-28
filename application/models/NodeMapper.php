@@ -17,7 +17,7 @@ class Model_NodeMapper extends Model_EntityMapper {
             $node->system = $row['system'];
             $node->extendable = $row['is_extendable'];
             $node->directional = $row['is_directional'];
-            switch ($node->getClass()->code) {
+            switch ($node->class->code) {
                 case 'E55':
                     $node->propertyToEntity = 'P2';
                     $node->propertyToSuper = 'P127';

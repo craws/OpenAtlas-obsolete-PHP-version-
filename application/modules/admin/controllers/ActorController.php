@@ -7,7 +7,7 @@ class Admin_ActorController extends Zend_Controller_Action {
     public function addAction() {
         $origin = Model_EntityMapper::getById($this->_getParam('id'));
         $array = Zend_Registry::get('config')->get('codeView')->toArray();
-        $controller = $array[$origin->getClass()->code];
+        $controller = $array[$origin->class->code];
         $this->view->actors = Model_EntityMapper::getByCodes('Actor');
         $this->view->controller = $controller;
         $this->view->menuHighlight = $controller;
@@ -96,7 +96,7 @@ class Admin_ActorController extends Zend_Controller_Action {
             $this->_helper->message('info_insert');
         }
         $array = Zend_Registry::get('config')->get('codeView')->toArray();
-        $controller = $array[$entity->getClass()->code];
+        $controller = $array[$entity->class->code];
         return $this->_helper->redirector->gotoUrl('/admin/' . $controller . '/view/id/' . $entity->id . '/#tabActor');
     }
 
@@ -118,7 +118,7 @@ class Admin_ActorController extends Zend_Controller_Action {
             $this->view->modifier = $log['modifier_name'];
         }
         if (!$formValid || $modified) {
-            if ($actor->getClass()->code == 'E21') {
+            if ($actor->class->code == 'E21') {
                 $this->view->genderTreeData = Model_NodeMapper::getTreeData('gender');
             }
             $this->view->objects = Model_EntityMapper::getByCodes('PhysicalObject');
@@ -150,7 +150,7 @@ class Admin_ActorController extends Zend_Controller_Action {
         $sourceLinks = [];
         $referenceLinks = [];
         foreach (Model_LinkMapper::getLinks($actor, 'P67', true) as $link) {
-            switch ($link->getDomain()->getClass()->code) {
+            switch ($link->domain->class->code) {
                 case 'E31':
                     $referenceLinks[] = $link;
                     break;
@@ -164,7 +164,7 @@ class Admin_ActorController extends Zend_Controller_Action {
         $eventLinks = Model_LinkMapper::getLinks($actor, ['P11', 'P14', 'P22', 'P23'], true);
         $this->view->eventLinks = $eventLinks;
         $this->view->memberOfLinks = Model_LinkMapper::getLinks($actor, 'P107', true);
-        if ($actor->getClass()->code != 'E21') {
+        if ($actor->class->code != 'E21') {
             $this->view->memberLinks = Model_LinkMapper::getLinks($actor, 'P107');
         }
         $objects = [];
@@ -187,7 +187,7 @@ class Admin_ActorController extends Zend_Controller_Action {
             $this->view->last = $object;
         }
         foreach ($eventLinks as $link) {
-            $event = $link->getDomain();
+            $event = $link->domain;
             $place = Model_LinkMapper::getLinkedEntity($event, 'P7');
             if ($place) {
                 $objects[] = Model_LinkMapper::getLinkedEntity($place, 'P53', true);
@@ -217,7 +217,7 @@ class Admin_ActorController extends Zend_Controller_Action {
             }
         }
         Admin_Form_Abstract::populateDates($form, $actor, ['OA1' => 'begin', 'OA3' => 'begin', 'OA2' => 'end', 'OA4' => 'end']);
-        if ($actor->getClass()->code == 'E21') {
+        if ($actor->class->code == 'E21') {
             $gender = Model_NodeMapper::getNodeByEntity('Gender', $actor);
             if ($gender) {
                 $form->populate(['genderId' => $gender->id, 'genderButton' => $gender->name]);

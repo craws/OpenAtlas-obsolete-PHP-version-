@@ -39,7 +39,7 @@ class Model_EntityMapper extends \Model_AbstractMapper {
         $entitites = [];
         foreach ($rows as $row) {
             $entity = self::populate(new Model_Entity(), $row);
-            switch ($entity->getClass()->code) {
+            switch ($entity->class->code) {
                 case 'E82':
                     $entityForAlias = Model_LinkMapper::getLinkedEntity($entity, 'P131', true);
                     if (!isset($entitites[$entityForAlias->id])) { // otherwise the one with dates would be overwriten
@@ -120,7 +120,7 @@ class Model_EntityMapper extends \Model_AbstractMapper {
     protected static function populate(Model_Entity $entity, array $row) {
         $classes = Zend_Registry::get('classes');
         $entity->id = $row['id'];
-        $entity->setClass($classes[$row['class_id']]);
+        $entity->class = $classes[$row['class_id']];
         $entity->name = $row['name'];
         $entity->description = $row['description'];
         if (isset($row['value_timestamp'])) {
@@ -184,14 +184,14 @@ class Model_EntityMapper extends \Model_AbstractMapper {
     public static function delete(Model_Entity $entity) {
         self::deleteDates($entity);
         foreach (Model_LinkMapper::getLinks($entity, ['P1', 'P53', 'P73', 'P131']) as $link) {
-            parent::deleteAbstract('model.entity', $link->getRange()->id);
+            parent::deleteAbstract('model.entity', $link->range->id);
         }
         parent::deleteAbstract('model.entity', $entity->id);
     }
 
     public static function deleteDates(Model_Entity $entity) {
         foreach (Model_LinkMapper::getLinks($entity, ['OA1', 'OA2', 'OA3', 'OA4', 'OA5', 'OA6']) as $link) {
-            parent::deleteAbstract('model.entity', $link->getRange()->id);
+            parent::deleteAbstract('model.entity', $link->range->id);
         }
     }
 

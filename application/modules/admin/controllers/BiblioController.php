@@ -7,7 +7,7 @@ class Admin_BiblioController extends Zend_Controller_Action {
     public function insertAction() {
         $entity = Model_EntityMapper::getById($this->_getParam('id'));
         $array = Zend_Registry::get('config')->get('codeView')->toArray();
-        $controller = $array[$entity->getClass()->code];
+        $controller = $array[$entity->class->code];
         $form = new Admin_Form_Biblio();
         if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
             $this->view->controller = $controller;
@@ -15,13 +15,13 @@ class Admin_BiblioController extends Zend_Controller_Action {
             $this->view->form = $form;
             $this->view->menuHighlight = $controller;
             $this->view->references = Model_EntityMapper::getByCodes('Bibliography');
-            if ($entity->getClass()->code == 'E33') {
+            if ($entity->class->code == 'E33') {
                 $this->view->references = Model_EntityMapper::getByCodes('Reference');
             }
             return;
         }
         $reference = Model_EntityMapper::getById($this->_getParam('referenceId'));
-        $propertyCode = ($reference->getClass()->code == 'E84') ? 'P128' : 'P67';
+        $propertyCode = ($reference->class->code == 'E84') ? 'P128' : 'P67';
         Model_LinkMapper::insert($propertyCode, $reference, $entity, $form->getValue('page'));
         $this->_helper->message('info_insert');
         return $this->_helper->redirector->gotoUrl('/admin/' . $controller . '/view/id/' . $entity->id . '/#tabReference');
@@ -29,18 +29,18 @@ class Admin_BiblioController extends Zend_Controller_Action {
 
     public function updateAction() {
         $link = Model_LinkMapper::getById($this->_getParam('id'));
-        $entity = $link->getRange();
-        $reference = $link->getDomain();
+        $entity = $link->range;
+        $reference = $link->domain;
         $array = Zend_Registry::get('config')->get('codeView')->toArray();
-        $controller = $array[$entity->getClass()->code];
+        $controller = $array[$entity->class->code];
         $tab = 'Reference';
-        $this->view->object = $link->getRange();
+        $this->view->object = $link->range;
         $this->view->relatedObject = $reference;
         if ($this->_getParam('origin') == 'reference') {
-            $controller = ($reference->getClass()->code == 'E84') ? 'carrier' : 'reference';
+            $controller = ($reference->class->code == 'E84') ? 'carrier' : 'reference';
             $tab = ucfirst($controller);
             $this->view->object = $reference;
-            $this->view->relatedObject = $link->getRange();
+            $this->view->relatedObject = $link->range;
         }
         $form = new Admin_Form_Biblio();
         $form->removeElement('referenceButton');

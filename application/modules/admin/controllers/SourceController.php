@@ -7,7 +7,7 @@ class Admin_SourceController extends Zend_Controller_Action {
     public function addAction() {
         $origin = Model_EntityMapper::getById($this->_getParam('id'));
         $array = Zend_Registry::get('config')->get('codeView')->toArray();
-        $controller = $array[$origin->getClass()->code];
+        $controller = $array[$origin->class->code];
         if (!$this->getRequest()->isPost()) {
             $this->view->menuHighlight = $controller;
             $this->view->controller = $controller;
@@ -118,23 +118,23 @@ class Admin_SourceController extends Zend_Controller_Action {
 
     public function textDeleteAction() {
         $link = Model_LinkMapper::getById($this->_getParam('linkId'));
-        $link->getRange()->delete();
+        $link->range->delete();
         $this->_helper->message('info_delete');
-        return $this->_helper->redirector->gotoUrl('/admin/source/view/id/' . $link->getDomain()->id . '#tabText');
+        return $this->_helper->redirector->gotoUrl('/admin/source/view/id/' . $link->domain->id . '#tabText');
     }
 
     public function textUpdateAction() {
         $link = Model_LinkMapper::getById($this->_getParam('linkId'));
-        $text = Model_EntityMapper::getById($link->getRange()->id);
-        $source = Model_EntityMapper::getById($link->getDomain()->id);
+        $text = Model_EntityMapper::getById($link->range->id);
+        $source = Model_EntityMapper::getById($link->domain->id);
         $form = new Admin_Form_Text();
         foreach (Model_LinkMapper::getLinks($text, 'P2') as $link) {
-            if (array_key_exists($link->getRange()->id, $form->getElement('type')->getMultiOptions())) {
+            if (array_key_exists($link->range->id, $form->getElement('type')->getMultiOptions())) {
                 $typeLink = $link;
             }
         }
         if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
-            $form->populate(['type' => $typeLink->getRange()->id, 'name' => $text->name, 'description' => $text->description]);
+            $form->populate(['type' => $typeLink->range->id, 'name' => $text->name, 'description' => $text->description]);
             $this->view->text = $text;
             $this->view->source = $source;
             $this->view->form = $form;
@@ -156,7 +156,7 @@ class Admin_SourceController extends Zend_Controller_Action {
         $this->view->source = $source;
         if (!$this->getRequest()->isPost()) {
             $form->populate([
-                'class' => $source->getClass()->id,
+                'class' => $source->class->id,
                 'name' => $source->name,
                 'description' => $source->description,
                 'modified' => ($source->modified) ? $source->modified->getTimestamp() : 0
@@ -184,7 +184,7 @@ class Admin_SourceController extends Zend_Controller_Action {
         $source->description = $form->getValue('description');
         $source->update();
         foreach (Model_LinkMapper::getLinks($source, 'P2') as $link) {
-            if ($link->getRange()->name != "Source Content") {
+            if ($link->range->name != "Source Content") {
                 $link->delete();
             }
         }
@@ -199,7 +199,7 @@ class Admin_SourceController extends Zend_Controller_Action {
         $this->view->eventLinks = [];
         $this->view->placeLinks = [];
         foreach (Model_LinkMapper::getLinks($source, 'P67') as $link) {
-            $code = $link->getRange()->getClass()->code;
+            $code = $link->range->class->code;
             if ($code == 'E18') {
                 $this->view->placeLinks[] = $link;
             } else if (in_array($code, Zend_Registry::get('config')->get('codeEvent')->toArray())) {
@@ -210,7 +210,7 @@ class Admin_SourceController extends Zend_Controller_Action {
         }
         $referenceLinks = [];
         foreach (Model_LinkMapper::getLinks($source, 'P67', true) as $link) {
-            switch ($link->getDomain()->getClass()->code) {
+            switch ($link->domain->class->code) {
                 case 'E31':
                     $referenceLinks[] = $link;
                     break;

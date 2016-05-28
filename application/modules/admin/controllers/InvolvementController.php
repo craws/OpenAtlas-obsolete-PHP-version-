@@ -35,7 +35,7 @@ class Admin_InvolvementController extends Zend_Controller_Action {
             $this->view->origin = $this->_getParam('origin');
             return;
         }
-        if ($event && $event->getClass()->code == 'E6') {
+        if ($event && $event->class->code == 'E6') {
             $activity = Model_PropertyMapper::getByCode('P11');
         } else {
             $activity = Model_PropertyMapper::getById($this->_getParam('activity'));
@@ -65,8 +65,8 @@ class Admin_InvolvementController extends Zend_Controller_Action {
 
     public function updateAction() {
         $link = Model_LinkMapper::getById($this->_getParam('id'));
-        $actor = $link->getRange();
-        $event = $link->getDomain();
+        $actor = $link->range;
+        $event = $link->domain;
         $form = new Admin_Form_Involvement();
         $form->removeElement('actorIds');
         $form->removeElement('eventId');
@@ -74,7 +74,7 @@ class Admin_InvolvementController extends Zend_Controller_Action {
         $form->addActivity($event);
         if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
             Admin_Form_Abstract::populateDates($form, $link, ['OA5' => 'begin', 'OA6' => 'end']);
-            $form->populate(['activity' => $link->getProperty()->id]);
+            $form->populate(['activity' => $link->property->id]);
             $form->populate(['description' => $link->description]);
             $involvement = Model_LinkPropertyMapper::getLinkedEntity($link, 'P2');
             if ($involvement) {
@@ -88,7 +88,7 @@ class Admin_InvolvementController extends Zend_Controller_Action {
             return;
         }
         Model_LinkMapper::delete($link);
-        if ($event->getClass()->code == 'E6') {
+        if ($event->class->code == 'E6') {
             $activity = Model_PropertyMapper::getByCode('P11');
         } else {
             $activity = Model_PropertyMapper::getById($this->_getParam('activity'));

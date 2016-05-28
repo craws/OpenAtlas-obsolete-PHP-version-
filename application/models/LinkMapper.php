@@ -17,18 +17,18 @@ class Model_LinkMapper extends Model_AbstractMapper {
             return false;
         }
         if ($inverse) {
-            return $linkedEntity->getDomain();
+            return $linkedEntity->domain;
         }
-        return $linkedEntity->getRange();
+        return $linkedEntity->range;
     }
 
     public static function getLinkedEntities($entity, $code, $inverse = false) {
         $entities = [];
         foreach (self::getLinks($entity, $code, $inverse) as $link) {
             if ($inverse) {
-                $entities[$link->getDomain()->id] = $link->getDomain();
+                $entities[$link->domain->id] = $link->domain;
             } else {
-                $entities[$link->getRange()->id] = $link->getRange();
+                $entities[$link->range->id] = $link->range;
             }
         }
         return $entities;
@@ -89,8 +89,8 @@ class Model_LinkMapper extends Model_AbstractMapper {
         $link->id = $row['id'];
         $link->description = $row['description'];
         $property = Model_PropertyMapper::getById($row['property_id']);
-        $link->setProperty($property);
-        $link->setDomain(Model_EntityMapper::getById($row['domain_id']));
+        $link->property = $property;
+        $link->domain = Model_EntityMapper::getById($row['domain_id']);
        /* if (in_array($property->code, ['P2', 'P89'])) {
             $entity = Model_NodeMapper::getById($row['range_id']);
             if (!$entity) {
@@ -100,7 +100,7 @@ class Model_LinkMapper extends Model_AbstractMapper {
             }
             $link->setRange(Model_NodeMapper::getById($row['range_id']));
         } else {*/
-            $link->setRange(Model_EntityMapper::getById($row['range_id']));
+            $link->range = Model_EntityMapper::getById($row['range_id']);
         //}
         return $link;
     }
@@ -124,9 +124,9 @@ class Model_LinkMapper extends Model_AbstractMapper {
             (:property_id, :domain_id, :range_id, :description) WHERE id = :id;';
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->bindValue(':id', $link->id);
-        $statement->bindValue(':property_id', $link->getProperty()->id);
-        $statement->bindValue(':domain_id', $link->getDomain()->id);
-        $statement->bindValue(':range_id', $link->getRange()->id);
+        $statement->bindValue(':property_id', $link->property->id);
+        $statement->bindValue(':domain_id', $link->domain->id);
+        $statement->bindValue(':range_id', $link->range->id);
         $statement->bindValue(':description', $link->description);
         $statement->execute();
         Model_UserLogMapper::insert('link', $link->id, 'update');
@@ -135,15 +135,15 @@ class Model_LinkMapper extends Model_AbstractMapper {
     public static function insert($code, Model_Entity $domain, Model_Entity $range, $description = null) {
         $property = Model_PropertyMapper::getByCode($code);
         $whitelistDomains = Zend_Registry::get('config')->get('linkcheckIgnoreDomains')->toArray();
-        if (!in_array($domain->getClass()->code, $whitelistDomains)) {
+        if (!in_array($domain->class->code, $whitelistDomains)) {
             // @codeCoverageIgnoreStart
-            if (!in_array($domain->getClass()->code, $property->getDomain()->getSubRecursive())) {
-                $error = 'Wrong domain ' . $domain->getClass()->code . ' for ' . $property->code;
+            if (!in_array($domain->class->code, $property->domain->getSubRecursive())) {
+                $error = 'Wrong domain ' . $domain->class->code . ' for ' . $property->code;
                 Model_LogMapper::log('error', 'model', $error);
                 echo $error;
                 exit;
-            } else if (!in_array($range->getClass()->code, $property->getRange()->getSubRecursive())) {
-                $error = 'Wrong range ' . $range->getClass()->code . ' for ' . $property->code;
+            } else if (!in_array($range->class->code, $property->range->getSubRecursive())) {
+                $error = 'Wrong range ' . $range->class->code . ' for ' . $property->code;
                 Model_LogMapper::log('error', 'model', $error);
                 echo $error;
                 exit;
@@ -177,7 +177,7 @@ class Model_LinkMapper extends Model_AbstractMapper {
     public static function deleteDates(Model_Link $link) {
         foreach (['OA1', 'OA2'] as $code) {
             foreach (Model_LinkPropertyMapper::getLinks($link, $code) as $dateLink) {
-                parent::deleteAbstract('model.entity', $dateLink->getRange()->id);
+                parent::deleteAbstract('model.entity', $dateLink->range->id);
             }
         }
     }

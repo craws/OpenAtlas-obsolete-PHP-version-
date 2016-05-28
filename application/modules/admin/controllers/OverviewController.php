@@ -74,10 +74,10 @@ class Admin_OverviewController extends Zend_Controller_Action {
         $property = $properties[$this->_getParam('property')];
         $whitelistDomains = Zend_Registry::get('config')->get('linkcheckIgnoreDomains')->toArray();
         $this->view->testResult = [];
-        if (!in_array($domain->code, $property->getDomain()->getSubRecursive())) {
+        if (!in_array($domain->code, $property->domain->getSubRecursive())) {
             $this->view->testResult['domainError'] = true;
         }
-        if (!in_array($range->code, $property->getRange()->getSubRecursive())) {
+        if (!in_array($range->code, $property->range->getSubRecursive())) {
             $this->view->testResult['rangeError'] = true;
         }
         if (in_array($domain->code, $whitelistDomains)) {

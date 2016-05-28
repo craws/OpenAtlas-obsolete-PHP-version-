@@ -44,7 +44,7 @@
             }
             $superTable['data'][] = [
                 '<a onclick="selectFromTable(this, \'super\', ' . $super->id . ')">' . $super->name . '</a>',
-                $super->getClass()->nameTranslated,
+                $super->class->nameTranslated,
                 $super->first,
                 $super->last,
             ];
@@ -80,7 +80,7 @@
             foreach ($this->actors as $actor) {
                 $recipientTable['data'][] = [
                     '<a onclick="selectFromTable(this, \'recipient\', ' . $actor->id . ')">' . $actor->name . '</a>',
-                    $actor->getClass()->nameTranslated,
+                    $actor->class->nameTranslated,
                     $actor->first,
                     $actor->last,
                 ];
@@ -98,7 +98,7 @@
             foreach ($this->actors as $actor) {
                 $donorTable['data'][] = [
                     '<a onclick="selectFromTable(this, \'donor\', ' . $actor->id . ')">' . $actor->name . '</a>',
-                    $actor->getClass()->nameTranslated,
+                    $actor->class->nameTranslated,
                     $actor->first,
                     $actor->last,
                 ];

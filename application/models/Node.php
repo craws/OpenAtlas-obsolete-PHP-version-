@@ -17,12 +17,4 @@ class Model_Node extends Model_Entity {
         $this->subs[] = $sub;
     }
 
-    public function getNameDirected($inverse = false) {
-        $array = explode('(', $this->name);
-        if ($inverse && isset($array[1])) {
-            return trim(str_replace(['(', ')'], '', $array[1]));
-        }
-        return trim($array[0]);
-    }
-
 }

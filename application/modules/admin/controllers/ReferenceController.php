@@ -83,7 +83,7 @@ class Admin_ReferenceController extends Zend_Controller_Action {
         $eventLinks = [];
         $placeLinks = [];
         foreach (Model_LinkMapper::getLinks($reference, 'P67') as $link) {
-            $code = $link->getRange()->getClass()->code;
+            $code = $link->range->class->code;
             if ($code == 'E33') {
                 $sourceLinks[] = $link;
             } else if ($code == 'E18') {

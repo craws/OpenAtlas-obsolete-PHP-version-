@@ -45,14 +45,14 @@ class Admin_Form_Involvement extends Craws\Form\Table {
     }
 
     public function addActivity($event) {
-        if ($event && $event->getClass()->code == 'E6') {
+        if ($event && $event->class->code == 'E6') {
             return;
         }
         $activity = $this->createElement('select', 'activity', ['required' => true, 'class' => 'required']);
         $activity->setLabel($this->getView()->ucstring('activity'));
         $activity->addMultiOptions(['' => html_entity_decode('&nbsp;')]);
         $options = ['P11', 'P14'];
-        if (!$event || $event->getClass()->code == 'E8') {
+        if (!$event || $event->class->code == 'E8') {
             $options[] = 'P22';
             $options[] = 'P23';
         }

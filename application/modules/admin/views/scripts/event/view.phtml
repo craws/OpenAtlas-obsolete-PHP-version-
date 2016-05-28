@@ -78,21 +78,20 @@
                 if ($involvementType) {
                     $involvement = $involvementType->name;
                 }
-                $text = 'Involvement: ' . $link->getRange()->name . ' ' .
-                    $link->getProperty()->nameInverseTranslated;
+                $text = 'Involvement: ' . $link->range->name . ' ' . $link->property->nameInverseTranslated;
                 $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_remove', $text)) .
                     "')\" ";
                 $deleteButton = '<a href="/admin/function/unlink/id/' . $link->id . '/entityId/' . $event->id .
                     '/#tabActor' . '" class="button"' . $confirm . '>' . $this->ucstring('remove') . '</a>';
                 $dates = Model_DateMapper::getLinkDateRange($link);
                 $actorTable['data'][] = [
-                    $this->link($link->getRange()),
-                    $link->getRange()->getClass()->nameTranslated,
-                    $link->getProperty()->nameInverseTranslated,
+                    $this->link($link->range),
+                    $link->range->class->nameTranslated,
+                    $link->property->nameInverseTranslated,
                     $involvement,
                     $dates['first'],
                     $dates['last'],
-                        '<a class="button" href="/admin/involvement/update/origin/event/id/' . $link->id . '">' .
+                    '<a class="button" href="/admin/involvement/update/origin/event/id/' . $link->id . '">' .
                     $this->ucstring('edit') . '</a>',
                     $deleteButton,
                 ];
@@ -111,17 +110,17 @@
             $sourceTable['header'] = [_('source'), _('type'), ''];
             foreach ($this->sourceLinks as $link) {
                 $type = '';
-                $sourceType = Model_NodeMapper::getNodeByEntity('Source', $link->getDomain());
+                $sourceType = Model_NodeMapper::getNodeByEntity('Source', $link->domain);
                 if ($sourceType) {
                     $type = $sourceType->name;
                 }
-                $text = $link->getProperty()->nameInverseTranslated . ': ' . $link->getDomain()->name;
+                $text = $link->property->nameInverseTranslated . ': ' . $link->domain->name;
                 $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_remove', $text)) .
                     "')\" ";
                 $deleteButton = '<a href="/admin/function/unlink/id/' . $link->id . '/entityId/' . $event->id .
                     '/#tabSource' . '" class="button"' . $confirm . '>' . $this->ucstring('remove') . '</a>';
                 $sourceTable['data'][] = [
-                    $this->link($link->getDomain()),
+                    $this->link($link->domain),
                     $type,
                     $deleteButton
                 ];
@@ -138,7 +137,7 @@
             $table = ['id' => 'reference', 'pager' => true, 'filter' => true];
             $table['header'] = [_('name'), _('page'), 'class', 'type', '', ''];
             foreach ($this->referenceLinks as $link) {
-                $reference = $link->getDomain();
+                $reference = $link->domain;
                 $type = Model_LinkMapper::getLinkedEntity($reference, 'P2');
                 $node = Model_NodeMapper::getById($type->id);
                 $text = $this->ucstring('referred_by') . ': ' . $reference->name;
@@ -169,7 +168,7 @@
             foreach ($this->subs as $sub) {
                 $table['data'][] = [
                     $this->link($sub),
-                    $sub->getClass()->nameTranslated,
+                    $sub->class->nameTranslated,
                     $sub->first,
                     $sub->last
                 ];

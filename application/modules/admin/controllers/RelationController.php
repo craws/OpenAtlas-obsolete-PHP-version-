@@ -45,7 +45,7 @@ class Admin_RelationController extends Zend_Controller_Action {
             $form->populate(['typeId' => $type->id, 'typeButton' => $type->name]);
             $form->populate(['description' => $link->description]);
             $form->populate(['inverse' => true]);
-            if ($originActor->id == $link->getDomain()->id) {
+            if ($originActor->id == $link->domain->id) {
                 $form->populate(['inverse' => false]);
             }
             $this->view->actor = $originActor;
@@ -53,8 +53,8 @@ class Admin_RelationController extends Zend_Controller_Action {
             $this->view->typeTreeData = Model_NodeMapper::getTreeData('actor actor relation', $type);
             return;
         }
-        $actor = $link->getDomain();
-        $relatedActor = $link->getRange();
+        $actor = $link->domain;
+        $relatedActor = $link->range;
         $link->delete();
         $relation = Model_EntityMapper::getById($this->_getParam('typeId'));
         $form->getValue('inverse');

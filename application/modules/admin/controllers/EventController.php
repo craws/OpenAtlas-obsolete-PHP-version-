@@ -12,7 +12,7 @@ class Admin_EventController extends Zend_Controller_Action {
     public function addAction() {
         $origin = Model_EntityMapper::getById($this->_getParam('id'));
         $array = Zend_Registry::get('config')->get('codeView')->toArray();
-        $controller = $array[$origin->getClass()->code];
+        $controller = $array[$origin->class->code];
         $this->view->controller = $controller;
         $this->view->events = Model_EntityMapper::getByCodes('Event');
         $this->view->menuHighlight = $controller;
@@ -96,7 +96,7 @@ class Admin_EventController extends Zend_Controller_Action {
             $this->_helper->message('info_insert');
         }
         $array = Zend_Registry::get('config')->get('codeView')->toArray();
-        $controller = $array[$entity->getClass()->code];
+        $controller = $array[$entity->class->code];
         return $this->_helper->redirector->gotoUrl('/admin/' . $controller . '/view/id/' . $entity->id . '/#tabEvent');
     }
 
@@ -109,7 +109,7 @@ class Admin_EventController extends Zend_Controller_Action {
         }
         // @codeCoverageIgnoreEnd
         $form = new Admin_Form_Event();
-        $form->addFields($event->getClass());
+        $form->addFields($event->class);
         $this->view->form = $form;
         if (!$this->getRequest()->isPost()) {
             self::prepareDefaultUpdate($event, $form);
@@ -122,7 +122,7 @@ class Admin_EventController extends Zend_Controller_Action {
             $this->view->modifier = $log['modifier_name'];
         }
         if (!$formValid || $modified) {
-            $this->view->class = $event->getClass();
+            $this->view->class = $event->class;
             $this->view->actors = Model_EntityMapper::getByCodes('Actor');
             $this->view->objects = Model_EntityMapper::getByCodes('PhysicalObject');
             $this->view->events = Model_EntityMapper::getByCodes('Event');
@@ -149,7 +149,7 @@ class Admin_EventController extends Zend_Controller_Action {
         $this->view->dates = Model_DateMapper::getDates($event);
         $this->view->subs = Model_LinkMapper::getLinkedEntities($event, 'P117', true);
         $this->view->super = Model_LinkMapper::getLinkedEntity($event, 'P117');
-        if ($event->getClass()->name == 'Acquisition') {
+        if ($event->class->name == 'Acquisition') {
             $this->view->acquisitionRecipient = Model_LinkMapper::getLinkedEntity($event, 'P22');
             $this->view->acquisitionDonor = Model_LinkMapper::getLinkedEntity($event, 'P23');
             $this->view->acquisitionPlace = Model_LinkMapper::getLinkedEntity($event, 'P24');
@@ -157,7 +157,7 @@ class Admin_EventController extends Zend_Controller_Action {
         $sourceLinks = [];
         $referenceLinks = [];
         foreach (Model_LinkMapper::getLinks($event, 'P67', true) as $link) {
-            switch ($link->getDomain()->getClass()->code) {
+            switch ($link->domain->class->code) {
                 case 'E31':
                     $referenceLinks[] = $link;
                     break;
@@ -189,7 +189,7 @@ class Admin_EventController extends Zend_Controller_Action {
                 ]);
             }
         }*/
-        if ($event->getClass()->name == 'Acquisition') {
+        if ($event->class->name == 'Acquisition') {
             $recipient = Model_LinkMapper::getLinkedEntity($event, 'P22');
             if ($recipient) {
                 $form->populate([
@@ -221,7 +221,7 @@ class Admin_EventController extends Zend_Controller_Action {
             ]);
         }
         Admin_Form_Abstract::populateDates($form, $event, ['OA5' => 'begin', 'OA6' => 'end']);
-        $this->view->class = $event->getClass();
+        $this->view->class = $event->class;
         $this->view->actors = Model_EntityMapper::getByCodes('Actor');
         $this->view->objects = Model_EntityMapper::getByCodes('PhysicalObject');
         $this->view->events = Model_EntityMapper::getByCodes('Event');
@@ -246,7 +246,7 @@ class Admin_EventController extends Zend_Controller_Action {
             $superEvent = Model_EntityMapper::getById($form->getValue('superId'));
         }
         Model_LinkMapper::insert('P117', $event, $superEvent);
-        if ($event->getClass()->name == 'Acquisition') {
+        if ($event->class->name == 'Acquisition') {
             if ($this->_getParam('recipientId')) {
                 Model_LinkMapper::insert('P22', $event, Model_EntityMapper::getById($this->_getParam('recipientId')));
             }

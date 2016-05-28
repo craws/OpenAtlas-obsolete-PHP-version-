@@ -68,8 +68,8 @@ class Admin_MemberController extends Zend_Controller_Action {
     public function updateAction() {
         $link = Model_LinkMapper::getById($this->_getParam('id'));
         $originActor = Model_EntityMapper::getById($this->_getParam('originActorId'));
-        $actor = $link->getDomain();
-        $relatedActor = $link->getRange();
+        $actor = $link->domain;
+        $relatedActor = $link->range;
         $form = new Admin_Form_Member();
         $form->removeElement('relatedActorButton');
         $form->removeElement('relatedActorIds');

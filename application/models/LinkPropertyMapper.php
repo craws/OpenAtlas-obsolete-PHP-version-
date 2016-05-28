@@ -16,14 +16,14 @@ class Model_LinkPropertyMapper extends Model_AbstractMapper {
         if (!$linkedEntity) {
             return false;
         }
-        $entity = $linkedEntity->getRange();
+        $entity = $linkedEntity->range;
         return $entity;
     }
 
     public static function getLinkedEntities(Model_Link $link, $code) {
         $entities = [];
         foreach (self::getLinks($link, $code) as $link) {
-            $entities[] = $link->getRange();
+            $entities[] = $link->range;
         }
         return $entities;
     }
@@ -72,9 +72,9 @@ class Model_LinkPropertyMapper extends Model_AbstractMapper {
     private static function populate(array $row) {
         $link = new Model_LinkProperty();
         $link->id = $row['id'];
-        $link->setProperty(Model_PropertyMapper::getById($row['property_id']));
-        $link->setDomain(Model_LinkMapper::getById($row['domain_id']));
-        $link->setRange(Model_EntityMapper::getById($row['range_id']));
+        $link->property = Model_PropertyMapper::getById($row['property_id']);
+        $link->domain = Model_LinkMapper::getById($row['domain_id']);
+        $link->range = Model_EntityMapper::getById($row['range_id']);
         return $link;
     }
 

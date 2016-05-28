@@ -50,7 +50,7 @@ class Model_DateMapper {
 
     public static function saveDates(Model_Entity $entity, Zend_Form $form) {
         Model_EntityMapper::deleteDates($entity);
-        switch ($entity->getClass()->name) {
+        switch ($entity->class->name) {
             case 'Person':
                 if ($form->getValue('birth')) {
                     self::insert($entity, $form, 'begin', 'OA3', 'Model_LinkMapper');

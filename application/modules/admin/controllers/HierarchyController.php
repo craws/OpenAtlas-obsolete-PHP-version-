@@ -48,7 +48,7 @@ class Admin_HierarchyController extends Zend_Controller_Action {
             if ($inverse) {
                 $name .= ' (' . $inverse . ')';
             }
-            $type = Model_EntityMapper::insert($super->getClass()->code, $name);
+            $type = Model_EntityMapper::insert($super->class->code, $name);
             Model_LinkMapper::insert($super->propertyToSuper, $type, $super);
             $this->_helper->message('info_insert');
         }
@@ -90,7 +90,7 @@ class Admin_HierarchyController extends Zend_Controller_Action {
         $type->description = $this->_getParam('description');
         $type->update();
         $superLink = Model_LinkMapper::getLink($type, $type->propertyToSuper);
-        $superLink->setRange(Model_EntityMapper::getById($form->getValue('super')));
+        $superLink->range = Model_EntityMapper::getById($form->getValue('super'));
         $superLink->update();
         $this->_helper->message('info_update');
         return $this->_helper->redirector->gotoUrl('/admin/hierarchy/#tab' . $type->rootId);
@@ -99,7 +99,7 @@ class Admin_HierarchyController extends Zend_Controller_Action {
     public function viewAction() {
         $type = Model_NodeMapper::getById($this->_getParam('id'));
         $linksEntitites = Model_LinkMapper::getLinkedEntities($type, $type->propertyToEntity, true);
-        if ($type->getClass()->code == 'E53') {
+        if ($type->class->code == 'E53') {
             $linksEntitites = [];
             foreach (Model_LinkMapper::getLinkedEntities($type, $type->propertyToEntity, true) as $object) {
                 $linkedEntity = Model_LinkMapper::getLinkedEntity($object, 'P53', true);

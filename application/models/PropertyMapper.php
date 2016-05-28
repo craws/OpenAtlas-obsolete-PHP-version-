@@ -34,8 +34,8 @@ class Model_PropertyMapper extends Model_AbstractMapper {
         $properties = [];
         foreach ($rows as $row) {
             $properties[$row['id']] = self::populate($row);
-            $properties[$row['id']]->setDomain($classes[$row['domain_class_id']]);
-            $properties[$row['id']]->setRange($classes[$row['range_class_id']]);
+            $properties[$row['id']]->domain = $classes[$row['domain_class_id']];
+            $properties[$row['id']]->range = $classes[$row['range_class_id']];
         }
         $sqlInheritance = 'SELECT super_id, sub_id FROM model.property_inheritance;';
         $statementInheritance = Zend_Db_Table::getDefaultAdapter()->prepare($sqlInheritance);

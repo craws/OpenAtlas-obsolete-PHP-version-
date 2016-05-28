@@ -4,19 +4,20 @@
 
 class Model_Entity extends Model_AbstractObject {
 
+    public $class;
     public $date;
     public $description;
     public $first; // for list views
     public $last; // for list views
     public $name;
-    private $class;
 
-    public function getClass() {
-        return $this->class;
-    }
-
-    public function setClass(Model_Class $class) {
-        $this->class = $class;
+    /* for getting part of a direced type e.g. Actor Actor relation: "Parent of (Child of)" */
+    public function getNameDirected($inverse = false) {
+        $array = explode('(', $this->name);
+        if ($inverse && isset($array[1])) {
+            return trim(str_replace(['(', ')'], '', $array[1]));
+        }
+        return trim($array[0]);
     }
 
 }

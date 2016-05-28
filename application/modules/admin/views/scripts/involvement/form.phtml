@@ -34,7 +34,7 @@
             foreach ($this->actors as $actor) {
                 $actorTable['data'][] = [
                     $actor->name,
-                    $actor->getClass()->nameTranslated,
+                    $actor->class->nameTranslated,
                     $actor->first,
                     $actor->last,
                     '<input class="multiTableSelect" type="checkbox" id="' . $actor->id . '" value="' .
@@ -58,7 +58,7 @@
                 }
                 $eventTable['data'][] = [
                     '<a onclick="selectFromTable(this, \'event\', ' . $event->id . ')">' . $event->name . '</a>',
-                    $event->getClass()->nameTranslated,
+                    $event->class->nameTranslated,
                     $event->first,
                     $event->last
                 ];

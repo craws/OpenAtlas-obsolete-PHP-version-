@@ -42,14 +42,14 @@
         $tableSource = ['id' => 'source', 'pager' => true, 'filter' => true];
         $tableSource['header'] = [_('source'), _('type'), _('page'), '', ''];
         foreach ($this->sourceLinks as $link) {
-            $text = $this->translate('refers_to') . ': ' . $link->getRange()->name;
+            $text = $this->translate('refers_to') . ': ' . $link->range->name;
             $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_remove', $text)) .
                 "')\" ";
             $deleteLink = '<div><a href="/admin/function/unlink/id/' . $link->id . '/entityId/' . $carrier->id .
                 '/#tabSource' . '" class="button"' . $confirm . '>' . $this->ucstring('remove') . '</a></div>';
             $tableSource['data'][] = [
-                $this->link($link->getRange()),
-                Model_NodeMapper::getNodeByEntity('Source', $link->getRange())->name,
+                $this->link($link->range),
+                Model_NodeMapper::getNodeByEntity('Source', $link->range)->name,
                 $link->description,
                 '<a class="button" href="/admin/biblio/update/origin/reference/id/' . $link->id . '">' .
                 $this->ucstring('edit') . '</a>',

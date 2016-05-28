@@ -19,9 +19,9 @@ class Admin_ClassController extends Zend_Controller_Action {
         $domains = [];
         $ranges = [];
         foreach (Zend_Registry::get('properties') as $property) {
-            if ($class->id == $property->getDomain()->id) {
+            if ($class->id == $property->domain->id) {
                 $domains[] = $property;
-            } else if ($class->id == $property->getRange()->id) {
+            } else if ($class->id == $property->range->id) {
                 $ranges[] = $property;
             }
         }
