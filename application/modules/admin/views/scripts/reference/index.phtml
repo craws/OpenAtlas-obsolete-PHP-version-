@@ -8,11 +8,10 @@ $table = ['id' => 'reference', 'pager' => true, 'filter' => true];
 $table['header'] = [_('name'), _('class'), _('type')];
 foreach ($this->references as $reference) {
     $type = Model_LinkMapper::getLinkedEntity($reference, 'P2');
-    $node = Model_NodeMapper::getById($type->id);
     $className = $type->name;
     $typeName = '';
-    if ($node->rootId) {
-        $className = Model_NodeMapper::getById($node->rootId)->name;
+    if ($type->rootId) {
+        $className = Model_NodeMapper::getById($type->rootId)->name;
         $typeName = $type->name;
     }
     $table['data'][] = [

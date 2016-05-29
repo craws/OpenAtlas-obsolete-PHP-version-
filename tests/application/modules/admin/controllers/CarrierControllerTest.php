@@ -29,8 +29,6 @@ class Admin_CarrierControllerTest extends ControllerTestCase {
         $this->dispatch('admin/carrier/update/id/' . $this->carrierId);
         $this->request->setMethod('POST')->setPost($this->formValues);
         $this->dispatch('admin/carrier/update/id/' . $this->carrierId);
-        $this->resetRequest()->resetResponse();
-        $this->dispatch('admin/carrier/update/id/' . $this->carrierId);
         $this->dispatch('admin/carrier/delete/id/' . $this->carrierId);
     }
 

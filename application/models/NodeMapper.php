@@ -11,6 +11,7 @@ class Model_NodeMapper extends Model_EntityMapper {
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->execute();
         $nodes = [];
+        $nodeIds = [];
         foreach ($statement->fetchAll() as $row) {
             $node = Model_EntityMapper::populate(new Model_Node(), $row);
             $node->multiple = $row['multiple'];
@@ -28,14 +29,16 @@ class Model_NodeMapper extends Model_EntityMapper {
                     break;
             }
             $nodes[$row['name']] = $node;
+            $nodeIds[] = $node->id;
         }
         foreach ($nodes as $node) {
-            self::addSubs($node);
+            self::addSubs($node, $nodeIds);
         }
         Zend_Registry::set('nodes', $nodes);
+        Zend_Registry::set('nodesIds', $nodeIds); // nodeIds array to identify nodes in LinkMapper
     }
 
-    private static function addSubs(Model_Node $node) {
+    private static function addSubs(Model_Node $node, &$nodeIds) {
         $sql = "SELECT e.id, e.name, e.description, e.class_id, e.created, e.modified
             FROM model.entity e JOIN model.link l ON e.id = l.domain_id
             WHERE
@@ -57,7 +60,8 @@ class Model_NodeMapper extends Model_EntityMapper {
             $sub->propertyToEntity = $node->propertyToEntity;
             $sub->propertyToSuper = $node->propertyToSuper;
             $node->subs[] = $sub;
-            self::addSubs($sub);
+            $nodeIds[] = $sub->id;
+            self::addSubs($sub, $nodeIds);
         }
     }
 
@@ -88,8 +92,7 @@ class Model_NodeMapper extends Model_EntityMapper {
         $nodes = [];
         foreach (Zend_Registry::get('nodes') as $node) {
             if (mb_strtolower($node->name) == mb_strtolower($rootName)) {
-                foreach (Model_LinkMapper::getLinkedEntities($entity, $node->propertyToEntity) as $linkedEntity) {
-                    $linkedNode = Model_NodeMapper::getById($linkedEntity->id);
+                foreach (Model_LinkMapper::getLinkedEntities($entity, $node->propertyToEntity) as $linkedNode) {
                     if ($linkedNode->rootId == $node->id || $linkedNode->id == $node->id) {
                         $nodes[] = $linkedNode;
                     }

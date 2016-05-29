@@ -43,7 +43,7 @@ class Admin_CarrierController extends Zend_Controller_Action {
             $form->populate([
                 'name' => $carrier->name,
                 'description' => $carrier->description,
-                'typeId' => Model_NodeMapper::getNodeByEntity('Information Carrier', $carrier)->id,
+                'typeId' => $type->id,
                 'modified' => ($carrier->modified) ? $carrier->modified->getTimestamp() : 0
             ]);
             if ($type->rootId) {

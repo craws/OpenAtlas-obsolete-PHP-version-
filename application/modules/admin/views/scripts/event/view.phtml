@@ -139,7 +139,6 @@
             foreach ($this->referenceLinks as $link) {
                 $reference = $link->domain;
                 $type = Model_LinkMapper::getLinkedEntity($reference, 'P2');
-                $node = Model_NodeMapper::getById($type->id);
                 $text = $this->ucstring('referred_by') . ': ' . $reference->name;
                 $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_remove', $text)) .
                     "')\" ";
@@ -148,8 +147,8 @@
                 $table['data'][] = [
                     $this->link($reference),
                     $link->description,
-                    Model_NodeMapper::getById($node->rootId)->name,
-                    $node->name,
+                    Model_NodeMapper::getById($type->rootId)->name,
+                    $type->name,
                         '<a class="button" href="/admin/biblio/update/origin/actor/id/' . $link->id . '">' .
                     $this->ucstring('edit') . '</a>',
                     $deleteLink
