@@ -51,7 +51,7 @@ class Model_NodeMapper extends Model_EntityMapper {
         $statement->execute();
         foreach ($statement->fetchAll() as $row) {
             $sub = Model_EntityMapper::populate(new Model_Node(), $row);
-            $sub->superId = $node->superId ? $node->superId : $node->id;
+            $sub->superId = $node->id;
             $sub->rootId = $node->rootId ? $node->rootId : $node->id;
             $sub->multiple = $node->multiple;
             $sub->system = $node->system;
@@ -65,6 +65,7 @@ class Model_NodeMapper extends Model_EntityMapper {
         }
     }
 
+    /* This method is not reliable for types which are editable, use only for system types and tests! */
     public static function getByNodeCategoryName($rootName, $name) {
         foreach (Zend_Registry::get('nodes') as $node) {
             if (mb_strtolower($node->name) == mb_strtolower($rootName)) {

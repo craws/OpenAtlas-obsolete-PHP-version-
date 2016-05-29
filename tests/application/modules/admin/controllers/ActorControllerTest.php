@@ -70,6 +70,10 @@ class Admin_ActorControllerTest extends ControllerTestCase {
         $this->request->setMethod('POST')->setPost($this->formValues);
         $this->dispatch('admin/actor/update/id/' . $legalBodies[0]->id);
         $this->resetRequest()->resetResponse();
+        $this->formValues['name'] = '';
+        $this->request->setMethod('POST')->setPost($this->formValues);
+        $this->dispatch('admin/actor/update/id/' . $legalBodies[0]->id); // test invalid form
+        $this->resetRequest()->resetResponse();
         $this->dispatch('admin/actor/view/id/' . $legalBodies[0]->id);
     }
 

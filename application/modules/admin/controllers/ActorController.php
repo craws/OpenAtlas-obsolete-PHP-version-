@@ -113,10 +113,12 @@ class Admin_ActorController extends Zend_Controller_Action {
         Admin_Form_Abstract::preValidation($form, $this->getRequest()->getPost());
         $formValid = $form->isValid($this->getRequest()->getPost());
         $modified = Model_EntityMapper::checkIfModified($actor, $form->modified->getValue());
+        // @codeCoverageIgnoreStart
         if ($modified) {
             $log = Model_UserLogMapper::getLogForView('entity', $actor->id);
             $this->view->modifier = $log['modifier_name'];
         }
+        // @codeCoverageIgnoreEnd
         if (!$formValid || $modified) {
             if ($actor->class->code == 'E21') {
                 $this->view->genderTreeData = Model_NodeMapper::getTreeData('gender');

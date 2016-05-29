@@ -31,11 +31,13 @@ class ErrorController extends Zend_Controller_Action {
                 // @codeCoverageIgnoreEnd
                 if ($exception->getMessage() == "invalidId") {
                     $this->_helper->message('error_non_existing_id');
+                    // @codeCoverageIgnoreStart
                 } else {
                     $this->_helper->log('critical', 'error', 'error_application' . ': ' . $exception);
                     $this->_helper->message('error_application');
                     break;
                 }
+                // @codeCoverageIgnoreStart
         }
         if ($this->getInvokeArg('displayExceptions') == true) {
             $this->view->exception = $errors->exception;

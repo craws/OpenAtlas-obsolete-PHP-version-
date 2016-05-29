@@ -19,7 +19,7 @@ class Admin_SourceControllerTest extends ControllerTestCase {
 
     public function testAdd() {
         $this->dispatch('admin/source/add/id/' . $this->actorId);
-        $this->request->setMethod('POST')->setPost([$this->sourceId => '']);
+        $this->request->setMethod('POST')->setPost(['' => $this->sourceId ]);
         $this->dispatch('admin/source/add/id/' . $this->actorId);
         $this->resetRequest()->resetResponse();
         $this->dispatch('admin/source/view/id/' . $this->sourceId);
@@ -41,6 +41,10 @@ class Admin_SourceControllerTest extends ControllerTestCase {
         $this->dispatch('admin/source/update/id/' . $this->sourceId);
         $this->request->setMethod('POST')->setPost($this->formValues);
         $this->dispatch('admin/source/update/id/' . $this->sourceId);
+        $this->resetRequest()->resetResponse();
+        $this->formValues['name'] = '';
+        $this->request->setMethod('POST')->setPost($this->formValues);
+        $this->dispatch('admin/source/update/id/' . $this->sourceId); // test invalid form
         $this->resetRequest()->resetResponse();
         $this->dispatch('admin/source/delete/id/' . $this->sourceId);
     }

@@ -100,6 +100,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
     protected function _initModel() {
         Zend_Registry::set('classes', Model_ClassMapper::getAll());
         Zend_Registry::set('properties', Model_PropertyMapper::getAll());
+        Zend_Registry::set('rootEvent', Model_EntityMapper::getRootEvent());
         Model_NodeMapper::setAll();
         // @codeCoverageIgnoreStart
         if (count(Zend_Registry::get('nodes')) < 1) {

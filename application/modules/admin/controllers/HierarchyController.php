@@ -91,6 +91,7 @@ class Admin_HierarchyController extends Zend_Controller_Action {
         $type->update();
         $superLink = Model_LinkMapper::getLink($type, $type->propertyToSuper);
         $superLink->range = Model_EntityMapper::getById($form->getValue('super'));
+        //var_dump($superLink);die;
         $superLink->update();
         $this->_helper->message('info_update');
         return $this->_helper->redirector->gotoUrl('/admin/hierarchy/#tab' . $type->rootId);

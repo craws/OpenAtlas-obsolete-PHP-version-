@@ -53,7 +53,7 @@
             $eventTable = ['id' => 'event', 'pager' => true, 'filter' => true];
             $eventTable['header'] = [_('name'), _('class'), _('first'), _('last')];
             foreach ($this->events as $event) {
-                if ($event->name == $this->eventRootName) {
+                if ($event->id == $this->rootEvent->id) {
                     continue; // dont show root event
                 }
                 $eventTable['data'][] = [

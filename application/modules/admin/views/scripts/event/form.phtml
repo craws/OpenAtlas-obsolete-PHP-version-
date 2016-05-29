@@ -39,7 +39,7 @@
         $superTable = ['id' => 'super', 'pager' => true, 'filter' => true];
         $superTable['header'] = [_('name'), _('class'), _('first'), _('last')];
         foreach ($this->events as $super) {
-            if ((isset($this->event) && $this->event->id == $super->id) || $super->name == $this->eventRootName) {
+            if ((isset($this->event) && $this->event->id == $super->id) || $super->id == $this->rootEvent->id) {
                 continue;  // dont show root or same event
             }
             $superTable['data'][] = [

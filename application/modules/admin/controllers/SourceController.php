@@ -96,8 +96,8 @@ class Admin_SourceController extends Zend_Controller_Action {
         if ($object) {
             return $this->_helper->redirector->gotoUrl('/admin/place/view/id/' . $object->id . '/#tabSource');
         }
-        // @codeCoverageIgnoreEnd
         return $this->_helper->redirector->gotoUrl('/admin/source/view/id/' . $source->id);
+        // @codeCoverageIgnoreEnd
     }
 
     public function textAddAction() {
@@ -111,7 +111,6 @@ class Admin_SourceController extends Zend_Controller_Action {
         $text = Model_EntityMapper::insert('E33', $form->getValue('name'), $form->getValue('description'));
         Model_LinkMapper::insert('P2', $text, Model_EntityMapper::getById($form->getValue('type')));
         Model_LinkMapper::insert('P73', $source, $text);
-
         $this->_helper->message('info_insert');
         return $this->_helper->redirector->gotoUrl('/admin/source/view/id/' . $source->id . '#tabText');
     }
@@ -171,10 +170,12 @@ class Admin_SourceController extends Zend_Controller_Action {
         }
         $formValid = $form->isValid($this->getRequest()->getPost());
         $modified = Model_EntityMapper::checkIfModified($source, $form->modified->getValue());
+        // @codeCoverageIgnoreStart
         if ($modified) {
             $log = Model_UserLogMapper::getLogForView('entity', $source->id);
             $this->view->modifier = $log['modifier_name'];
         }
+        // @codeCoverageIgnoreEnd
         if (!$formValid || $modified) {
             $this->_helper->message('error_modified');
             $this->view->typeTreeData = Model_NodeMapper::getTreeData('source');

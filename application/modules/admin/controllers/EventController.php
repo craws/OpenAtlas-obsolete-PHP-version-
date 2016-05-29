@@ -5,8 +5,8 @@
 class Admin_EventController extends Zend_Controller_Action {
 
     public function init() {
-        $this->eventRootName = Zend_Registry::get('config')->get('eventRootName');
-        $this->view->eventRootName = $this->eventRootName;
+        $this->rootEvent = Zend_Registry::get('rootEvent');
+        $this->view->rootEvent = $this->rootEvent;
     }
 
     public function addAction() {
@@ -21,7 +21,7 @@ class Admin_EventController extends Zend_Controller_Action {
 
     public function deleteAction() {
         $event = Model_EntityMapper::getById($this->_getParam('id'));
-        if ($event->name != $this->eventRootName) {
+        if ($event->id != $this->rootEvent->id) {
             $event->delete();
             $this->_helper->message('info_delete');
         }
@@ -104,7 +104,7 @@ class Admin_EventController extends Zend_Controller_Action {
         $event = Model_EntityMapper::getById($this->_getParam('id'));
         $this->view->event = $event;
         // @codeCoverageIgnoreStart
-        if ($event->name == $this->eventRootName) { // prevent update of root event
+        if ($event->id == $this->rootEvent->id) { // prevent update of root event
             return $this->_helper->redirector->gotoUrl('/admin/event/view/id/' . $event->id);
         }
         // @codeCoverageIgnoreEnd
@@ -180,15 +180,11 @@ class Admin_EventController extends Zend_Controller_Action {
             'description' => $event->description,
             'modified' => ($event->modified) ? $event->modified->getTimestamp() : 0,
         ]);
-        /*if ($event->superId) {
-            $superEvent = Model_NodeMapper::getById($event->superId);
-            if ($superEvent->name != $this->eventRootName) {
-                $form->populate([
-                    'superButton' => $superEvent->name,
-                    'superId' => $superEvent->id
-                ]);
-            }
-        }*/
+        $superEvent = Model_LinkMapper::getLinkedEntity($event, 'P117');
+        if ($superEvent->id != $this->rootEvent->id) {
+            $form->populate(['superId' => $superEvent->id]);
+            $form->populate(['superButton' => $superEvent->name]);
+        }
         if ($event->class->name == 'Acquisition') {
             $recipient = Model_LinkMapper::getLinkedEntity($event, 'P22');
             if ($recipient) {
@@ -241,7 +237,7 @@ class Admin_EventController extends Zend_Controller_Action {
             $place = Model_LinkMapper::getLinkedEntity($form->getValue('placeId'), 'P53');
             Model_LinkMapper::insert('P7', $event, $place);
         }
-        $superEvent = Zend_Registry::get('event')[0];
+        $superEvent = $this->rootEvent;
         if ($form->getValue('superId')) {
             $superEvent = Model_EntityMapper::getById($form->getValue('superId'));
         }

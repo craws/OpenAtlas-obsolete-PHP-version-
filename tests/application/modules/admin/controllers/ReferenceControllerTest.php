@@ -46,15 +46,15 @@ class Admin_ReferenceControllerTest extends ControllerTestCase {
         $this->request->setMethod('POST')->setPost($this->formValues);
         $this->dispatch('admin/reference/insert/type/edition');
         $references = Model_EntityMapper::getByCodes('Bibliography');
-        /* a reference is needed but why the loop? */
-        foreach ($references as $reference) {
-            //$type = Model_LinkMapper::getLinkedEntity($reference, 'P2');
-            //$typeRoot = Model_NodeMapper::getById($type->rootId);
-        }
+        $reference = $references[0];
         $this->resetRequest()->resetResponse();
         $this->dispatch('admin/reference/update/id/' . $reference->id);
         $this->request->setMethod('POST')->setPost($this->formValues);
         $this->dispatch('admin/reference/update/id/' . $reference->id);
+        $this->resetRequest()->resetResponse();
+        $this->formValues['name'] = '';
+        $this->request->setMethod('POST')->setPost($this->formValues);
+        $this->dispatch('admin/reference/delete/id/' . $reference->id); // test invalid form
         $this->resetRequest()->resetResponse();
         $this->dispatch('admin/reference/delete/id/' . $reference->id);
     }

@@ -54,10 +54,12 @@ class Admin_ReferenceController extends Zend_Controller_Action {
         }
         $formValid = $form->isValid($this->getRequest()->getPost());
         $modified = Model_EntityMapper::checkIfModified($reference, $form->modified->getValue());
+        // @codeCoverageIgnoreStart
         if ($modified) {
             $log = Model_UserLogMapper::getLogForView('entity', $reference->id);
             $this->view->modifier = $log['modifier_name'];
         }
+        // @codeCoverageIgnoreEnd
         if (!$formValid || $modified) {
             $this->view->typeTreeData = Model_NodeMapper::getTreeData($rootType->name);
             $this->_helper->message('error_modified');

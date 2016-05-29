@@ -202,4 +202,15 @@ class Model_EntityMapper extends \Model_AbstractMapper {
         }
     }
 
+    public static function getRootEvent() {
+        $sql = "
+            SELECT e.id, e.class_id, e.name, e.description, e.created, e.modified, c.code
+            FROM model.entity e JOIN model.class c ON e.class_id = c.id
+            WHERE e.name LIKE :name ORDER BY id ASC LIMIT 1;";
+        $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
+        $statement->bindValue(':name', Zend_Registry::get('config')->get('eventRootName'));
+        $statement->execute();
+        return self::populate(new Model_Entity(), $statement->fetch());
+    }
+
 }

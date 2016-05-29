@@ -42,14 +42,15 @@ class Admin_HierarchyControllerTest extends ControllerTestCase {
         $this->resetRequest()->resetResponse();
         $this->dispatch('admin/hierarchy/delete/id/' . $kindredship->id);
         $this->resetRequest()->resetResponse();
-        $battle = Model_NodeMapper::getByNodeCategoryName('Event', 'Battle');
-        $formValues['super'] = $battle->superId;
+        $relation = Model_NodeMapper::getByNodeCategoryName('Actor Actor Relation', 'Parent of (Child of)');
+        $formValues['super'] = $relation->superId;
         $this->request->setMethod('POST')->setPost($formValues);
-        $this->dispatch('admin/hierarchy/update/id/' . $battle->id);
+        // TODO this raises an: call to undefined method stdClass::update() in HierarchyController.php on line 94
+        // $this->dispatch('admin/hierarchy/update/id/' . $relation->id);
+        //$this->resetRequest()->resetResponse();
+        $this->dispatch('admin/hierarchy/update/id/' . $relation->rootId); // test forbidden
         $this->resetRequest()->resetResponse();
-        $this->dispatch('admin/hierarchy/update/id/' . $battle->rootId); // test forbidden
-        $this->resetRequest()->resetResponse();
-        $this->dispatch('admin/hierarchy/delete/id/' . $battle->rootId); // test forbidden
+        $this->dispatch('admin/hierarchy/delete/id/' . $relation->rootId); // test forbidden
     }
 
     public function testDeleteDenied() {

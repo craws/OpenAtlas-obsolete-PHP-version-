@@ -64,10 +64,12 @@ class Admin_CarrierController extends Zend_Controller_Action {
         }
         $formValid = $form->isValid($this->getRequest()->getPost());
         $modified = Model_EntityMapper::checkIfModified($carrier, $form->modified->getValue());
+        // @codeCoverageIgnoreStart
         if ($modified) {
             $log = Model_UserLogMapper::getLogForView('entity', $carrier->id);
             $this->view->modifier = $log['modifier_name'];
         }
+        // @codeCoverageIgnoreEnd
         if (!$formValid || $modified) {
             $this->view->objects = Model_EntityMapper::getByCodes('PhysicalObject');
             $this->view->typeTreeData = Model_NodeMapper::getTreeData('information carrier');

@@ -4,6 +4,11 @@
 
 class Admin_InvolvementController extends Zend_Controller_Action {
 
+    public function init() {
+        $this->rootEvent = Zend_Registry::get('rootEvent');
+        $this->view->rootEvent = $this->rootEvent;
+    }
+
     public function insertAction() {
         /* Only multiple actors. Multiple events not viable because of different activity possiblities */
         $form = new Admin_Form_Involvement();
