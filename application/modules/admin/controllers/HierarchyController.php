@@ -23,6 +23,10 @@ class Admin_HierarchyController extends Zend_Controller_Action {
         return $this->_helper->redirector->gotoUrl('/admin/hierarchy#tab' . $type->rootId);
     }
 
+    public function deleteTypeAction() {
+
+    }
+
     public function indexAction() {
         $nodes = [];
         foreach (Zend_Registry::get('nodes') as $node) {
@@ -54,6 +58,10 @@ class Admin_HierarchyController extends Zend_Controller_Action {
         }
         $tabId = ($super->rootId) ? $super->rootId : $super->id;
         return $this->_helper->redirector->gotoUrl('/admin/hierarchy/#tab' . $tabId);
+    }
+
+    public function insertTypeAction() {
+
     }
 
     public function updateAction() {
@@ -95,6 +103,10 @@ class Admin_HierarchyController extends Zend_Controller_Action {
         $superLink->update();
         $this->_helper->message('info_update');
         return $this->_helper->redirector->gotoUrl('/admin/hierarchy/#tab' . $type->rootId);
+    }
+
+    public function updateTypeAction() {
+
     }
 
     public function viewAction() {
