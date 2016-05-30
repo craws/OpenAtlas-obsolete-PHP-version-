@@ -15,8 +15,7 @@ class Admin_Form_Place extends Craws\Form\Table {
         $this->addElement('hidden', 'siteId', ['decorators' => ['ViewHelper']]);
         $this->addElement('text', 'siteButton', [
             'label' => $this->getView()->ucstring('site'),
-            'required' => true,
-            'class' => 'tableSelect required',
+            'class' => 'tableSelect',
             'readonly' => true,
             'onfocus' => 'this.blur()',
             'placeholder' => $this->getView()->ucstring('select'),

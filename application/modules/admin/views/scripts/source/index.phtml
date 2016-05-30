@@ -5,9 +5,11 @@ $this->buttonBar = $this->link('E33', 'insert');
 $table = ['id' => 'source', 'filter' => true, 'pager' => true];
 $table['header'] = [_('name'), _('type')];
 foreach ($this->sources as $source) {
+    $type = Model_NodeMapper::getNodeByEntity('Source', $source);
+    $typeName = ($type->rootId) ? $type->name : '';
     $table['data'][] = [
         $this->link($source),
-        Model_NodeMapper::getNodeByEntity('Source', $source)->name
+        $typeName
     ];
 }
 ?>

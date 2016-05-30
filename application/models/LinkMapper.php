@@ -63,10 +63,7 @@ class Model_LinkMapper extends Model_AbstractMapper {
     }
 
     private static function getLinksByCode($entity, $code, $inverse) {
-        $entity_id = $entity;
-        if (is_a($entity, 'Model_Entity')) {
-            $entity_id = $entity->id;
-        }
+        $entity_id = (is_a($entity, 'Model_Entity')) ? $entity->id : $entity;
         $sql = self::$sqlSelect . ', e.name FROM model.link l JOIN model.entity e ON l.range_id = e.id
             WHERE l.property_id = :property_id AND l.domain_id = :entity_id ORDER BY e.name;';
         if ($inverse) {

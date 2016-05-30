@@ -25,6 +25,7 @@
         </div>
         <h1><?= $object->name ?></h1>
         <?
+        $table['data'] = [];
         if ($this->aliases) {
             $aliasArray = [];
             foreach ($this->aliases as $alias) {
@@ -32,7 +33,9 @@
             }
             $table['data'][_('alias')] = implode('<br/>', $aliasArray);
         }
-        $table['data'][_('type')] = $this->link($this->site);
+        if ($this->site->superId) {
+            $table['data'][_('type')] = $this->link($this->site);
+        }
         if ($this->administrative) {
             $array = [];
             foreach ($this->administrative as $element) {

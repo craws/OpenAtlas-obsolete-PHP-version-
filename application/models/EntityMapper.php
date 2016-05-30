@@ -118,6 +118,13 @@ class Model_EntityMapper extends \Model_AbstractMapper {
     }
 
     protected static function populate(Model_Entity $entity, array $row) {
+        if (
+            APPLICATION_ENV == 'development' &&
+            Zend_Registry::isRegistered('nodesIds') &&
+            is_a($entity, 'Model_entity') &&
+            in_array($row['id'], Zend_Registry::get('nodesIds'))) {
+            throw new \Zend_Application_Bootstrap_Exception("Entity populate instead of using existing node");
+        }
         $classes = Zend_Registry::get('classes');
         $entity->id = $row['id'];
         $entity->class = $classes[$row['class_id']];

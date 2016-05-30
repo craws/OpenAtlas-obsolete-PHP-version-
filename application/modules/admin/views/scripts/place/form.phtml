@@ -11,12 +11,8 @@
         <?= $this->displayAliasForm($form) ?>
         <?= $this->render('dateForm.phtml'); ?>
         <div class="tableRow">
-            <div>
-                <label><?= $this->ucstring('label_location_switch') ?></label>
-            </div>
-            <div class="tableCell">
-                <span id="placeSwitcher" class="button"><?= $this->ucstring('show') ?></span>
-            </div>
+            <div><label><?= $this->ucstring('label_location_switch') ?></label></div>
+            <div class="tableCell"><span id="placeSwitcher" class="button"><?= $this->ucstring('show') ?></span></div>
         </div>
         <div class="tableRow placeSwitch display-none">
             <?= $form->easting->renderLabel() ?>

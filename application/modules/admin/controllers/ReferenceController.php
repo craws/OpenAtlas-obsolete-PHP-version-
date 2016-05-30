@@ -16,15 +16,16 @@ class Admin_ReferenceController extends Zend_Controller_Action {
 
     public function insertAction() {
         $form = new Admin_Form_Reference();
-        $rootType = $this->_getParam('type');
+        $rootType = Model_NodeMapper::getRootType($this->_getParam('type'));
         if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
             $this->view->form = $form;
-            $this->view->rootType = $rootType;
-            $this->view->typeTreeData = Model_NodeMapper::getTreeData($rootType);
+            $this->view->rootType = $rootType->name;
+            $this->view->typeTreeData = Model_NodeMapper::getTreeData($rootType->name);
             return;
         }
         $reference = Model_EntityMapper::insert('E31', $form->getValue('name'), $form->getValue('description'));
-        Model_LinkMapper::insert('P2', $reference, Model_EntityMapper::getById($this->_getParam('typeId')));
+        $typeId = ($this->_getParam('typeId')) ? $this->_getParam('typeId') : $rootType->id;
+        Model_LinkMapper::insert('P2', $reference, Model_NodeMapper::getById($typeId));
         $this->_helper->message('info_insert');
         // @codeCoverageIgnoreStart
         if ($form->getElement('continue')->getValue()) {
@@ -39,17 +40,35 @@ class Admin_ReferenceController extends Zend_Controller_Action {
         $this->view->reference = $reference;
         $form = new Admin_Form_Reference();
         $this->view->form = $form;
-        $type = Model_LinkMapper::getLinkedEntity($reference, 'P2');
-        $rootType = Model_NodeMapper::getById($type->rootId);
+        $types = Model_LinkMapper::getLinkedEntities($reference, 'P2');
+        // find out if has a bibliography or edition type
+        $referenceRootType = null;
+        $referenceType = null;
+        foreach ($types as $type) {
+            if (!$type->system) {
+                continue;
+            }
+            $rootType = ($type->rootId) ? Model_NodeMapper::getById($type->rootId) : $type;
+            switch ($rootType->name) {
+                case 'Bibliography':
+                case 'Edition':
+                    $referenceType = $type;
+                    $referenceRootType = $rootType;
+
+                    break 2;
+            }
+        }
         if (!$this->getRequest()->isPost()) {
             $form->populate([
                 'name' => $reference->name,
                 'description' => $reference->description,
-                'typeId' => $type->id,
-                'typeButton' => $type->name,
+                'typeId' => $referenceType->id,
                 'modified' => ($reference->modified) ? $reference->modified->getTimestamp() : 0
             ]);
-            $this->view->typeTreeData = Model_NodeMapper::getTreeData($rootType->name, $type);
+            if ($referenceType->rootId) {
+                $form->populate(['typeButton' => $referenceType->name]);
+            }
+            $this->view->typeTreeData = Model_NodeMapper::getTreeData($referenceRootType->name, $referenceType);
             return;
         }
         $formValid = $form->isValid($this->getRequest()->getPost());
@@ -61,7 +80,7 @@ class Admin_ReferenceController extends Zend_Controller_Action {
         }
         // @codeCoverageIgnoreEnd
         if (!$formValid || $modified) {
-            $this->view->typeTreeData = Model_NodeMapper::getTreeData($rootType->name);
+            $this->view->typeTreeData = Model_NodeMapper::getTreeData($referenceRootType->name);
             $this->_helper->message('error_modified');
             return;
         }
@@ -69,15 +88,14 @@ class Admin_ReferenceController extends Zend_Controller_Action {
         $reference->description = $form->getValue('description');
         $reference->update();
         Model_LinkMapper::getLink($reference, 'P2')->delete();
-        Model_LinkMapper::insert('P2', $reference, Model_EntityMapper::getById($this->_getParam('typeId')));
+        $type = ($this->_getParam('typeId')) ? Model_NodeMapper::getById($this->_getParam('typeId')) : $referenceRootType;
+        Model_LinkMapper::insert('P2', $reference, $type);
         $this->_helper->message('info_update');
         return $this->_helper->redirector->gotoUrl('/admin/reference/view/id/' . $reference->id);
     }
 
     public function viewAction() {
         $reference = Model_EntityMapper::getById($this->_getParam('id'));
-        $type = Model_LinkMapper::getLinkedEntity($reference, 'P2');
-        $typeRoot = Model_NodeMapper::getById($type->rootId);
         $actorLinks = [];
         $sourceLinks = [];
         $eventLinks = [];
@@ -95,7 +113,7 @@ class Admin_ReferenceController extends Zend_Controller_Action {
             }
         }
         $this->view->reference = $reference;
-        $this->view->referenceType = Model_NodeMapper::getNodeByEntity($typeRoot->name, $reference);
+        $this->view->referenceType = Model_LinkMapper::getLinkedEntity($reference, 'P2');
         $this->view->actorLinks = $actorLinks;
         $this->view->sourceLinks = $sourceLinks;
         $this->view->eventLinks = $eventLinks;

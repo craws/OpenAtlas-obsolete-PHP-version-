@@ -63,7 +63,7 @@ class Admin_SourceController extends Zend_Controller_Action {
         $source = Model_EntityMapper::insert('E33', $form->getValue('name'), $form->getValue('description'));
         $type = Model_NodeMapper::getByNodeCategoryName('Linguistic object classification', 'Source Content');
         Model_LinkMapper::insert('P2', $source, $type);
-        Model_LinkMapper::insert('P2', $source, Model_EntityMapper::getById($form->getValue('typeId')));
+        self::save($form, $source);
         if ($event) {
             Model_LinkMapper::insert('P67', $source, $event);
         }
@@ -161,7 +161,7 @@ class Admin_SourceController extends Zend_Controller_Action {
                 'modified' => ($source->modified) ? $source->modified->getTimestamp() : 0
             ]);
             $type = Model_NodeMapper::getNodeByEntity('Source', $source);
-            if ($type) {
+            if ($type && $type->rootId) {
                 $form->populate(['typeId' => $type->id, 'typeButton' => $type->name]);
                 $this->view->type = $type;
             }
@@ -189,9 +189,17 @@ class Admin_SourceController extends Zend_Controller_Action {
                 $link->delete();
             }
         }
-        Model_LinkMapper::insert('P2', $source, Model_EntityMapper::getById($form->getValue('typeId')));
+        self::save($form, $source);
         $this->_helper->message('info_update');
         return $this->_helper->redirector->gotoUrl('/admin/source/view/id/' . $source->id);
+    }
+
+    private function save(Zend_Form $form, Model_Entity $source) {
+        $sourceType = Model_NodeMapper::getRootType('source');
+        if ($this->_getParam('typeId')) {
+            $sourceType = Model_NodeMapper::getById($this->_getParam('typeId'));
+        };
+        Model_LinkMapper::insert('P2', $source, $sourceType);
     }
 
     public function viewAction() {

@@ -10,8 +10,7 @@ class Admin_Form_Source extends Craws\Form\Table {
         $this->addElement('hidden', 'typeId', ['decorators' => ['ViewHelper']]);
         $this->addElement('text', 'typeButton', [
             'label' => $this->getView()->ucstring('type'),
-            'required' => true,
-            'class' => 'tableSelect required',
+            'class' => 'tableSelect',
             'readonly' => true,
             'onfocus' => 'this.blur()',
             'placeholder' => $this->getView()->ucstring('select'),

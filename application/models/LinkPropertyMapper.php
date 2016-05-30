@@ -74,7 +74,11 @@ class Model_LinkPropertyMapper extends Model_AbstractMapper {
         $link->id = $row['id'];
         $link->property = Model_PropertyMapper::getById($row['property_id']);
         $link->domain = Model_LinkMapper::getById($row['domain_id']);
-        $link->range = Model_EntityMapper::getById($row['range_id']);
+        if (in_array($row['range_id'], Zend_Registry::get('nodesIds'))) {
+            $link->range = Model_NodeMapper::getById($row['range_id']);
+        } else {
+            $link->range = Model_EntityMapper::getById($row['range_id']);
+        }
         return $link;
     }
 

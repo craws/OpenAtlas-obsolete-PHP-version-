@@ -45,7 +45,6 @@ class Admin_PlaceController extends Zend_Controller_Action {
             return;
         }
         $object = Model_EntityMapper::insert('E18', $form->getValue('name'), $form->getValue('description'));
-        Model_LinkMapper::insert('P2', $object, Model_EntityMapper::getById($form->getValue('siteId')));
         $place = Model_EntityMapper::insert('E53', 'Location of ' . $form->getValue('name'));
         Model_LinkMapper::insert('P53', $object, $place);
         self::save($form, $object, $place);
@@ -126,7 +125,6 @@ class Admin_PlaceController extends Zend_Controller_Action {
         foreach (Model_LinkMapper::getLinks($object, 'P2') as $objectLink) {
             $objectLink->delete();
         }
-        Model_LinkMapper::insert('P2', $object, Model_EntityMapper::getById($form->getValue('siteId')));
         $place->name = 'Location of ' . $form->getValue('name');
         $place->update();
         Model_GisMapper::deleteByEntity($place);
@@ -187,9 +185,11 @@ class Admin_PlaceController extends Zend_Controller_Action {
             'name' => $object->name,
             'description' => $object->description,
             'siteId' => $site->id,
-            'siteButton' => $site->name,
             'modified' => ($object->modified) ? $object->modified->getTimestamp() : 0
         ]);
+        if ($site->rootId) {
+            $form->populate(['siteButton' => $site->name]);
+        }
         $gis = Model_GisMapper::getByEntity($place);
         // @codeCoverageIgnoreStart
         if ($gis) {
@@ -209,6 +209,11 @@ class Admin_PlaceController extends Zend_Controller_Action {
     }
 
     private function save(Zend_Form $form, Model_Entity $object, Model_Entity $place) {
+        $type = Model_NodeMapper::getRootType('site');
+        if ($this->_getParam('siteId')) {
+            $type = Model_NodeMapper::getById($this->_getParam('siteId'));
+        }
+        Model_LinkMapper::insert('P2', $object, $type);
         Model_DateMapper::saveDates($object, $form);
         if ($form->getValue('administrativeId')) {
             foreach (explode(",", $form->getValue('administrativeId')) as $id) {

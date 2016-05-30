@@ -83,7 +83,7 @@ class Admin_MemberController extends Zend_Controller_Action {
             }
             $this->view->actor = $originActor;
             $this->view->form = $form;
-            $this->view->relatedActor = $relatedActor;
+            $this->view->relatedActor = ($relatedActor->id == $originActor->id) ? $actor : $relatedActor;
             $this->view->typeTreeData = Model_NodeMapper::getTreeData('actor function', $type);
             return;
         }
