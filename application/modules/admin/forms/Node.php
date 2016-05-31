@@ -2,11 +2,11 @@
 
 /* Copyright 2016 by Alexander Watzinger and others. Please see the file README.md for licensing information */
 
-class Admin_Form_Type extends Craws\Form\Table {
+class Admin_Form_Node extends Craws\Form\Table {
 
     public function init() {
         $this->setAction($this->getView()->url());
-        $this->setName('typeForm')->setMethod('post');
+        $this->setName('nodeForm')->setMethod('post');
         $this->addElement('select', 'super', [
             'label' => $this->getView()->ucstring('super'),
             'required' => true,

@@ -23,7 +23,7 @@ class Admin_HierarchyController extends Zend_Controller_Action {
         return $this->_helper->redirector->gotoUrl('/admin/hierarchy#tab' . $type->rootId);
     }
 
-    public function deleteTypeAction() {
+    public function deleteHierarchyAction() {
 
     }
 
@@ -60,7 +60,9 @@ class Admin_HierarchyController extends Zend_Controller_Action {
         return $this->_helper->redirector->gotoUrl('/admin/hierarchy/#tab' . $tabId);
     }
 
-    public function insertTypeAction() {
+    public function insertHierarchyAction() {
+        $form = new Admin_Form_Hierarchy();
+        $this->view->form = $form;
 
     }
 
@@ -70,7 +72,7 @@ class Admin_HierarchyController extends Zend_Controller_Action {
             $this->_helper->message('error_forbidden');
             return $this->_helper->redirector->gotoUrl('/admin/hierarchy');
         }
-        $form = new Admin_Form_Type();
+        $form = new Admin_Form_Node();
         if (!$type->directional) {
             $form->removeElement('inverse');
         }
@@ -99,13 +101,12 @@ class Admin_HierarchyController extends Zend_Controller_Action {
         $type->update();
         $superLink = Model_LinkMapper::getLink($type, $type->propertyToSuper);
         $superLink->range = Model_EntityMapper::getById($form->getValue('super'));
-        //var_dump($superLink);die;
         $superLink->update();
         $this->_helper->message('info_update');
         return $this->_helper->redirector->gotoUrl('/admin/hierarchy/#tab' . $type->rootId);
     }
 
-    public function updateTypeAction() {
+    public function updateHierarchyAction() {
 
     }
 

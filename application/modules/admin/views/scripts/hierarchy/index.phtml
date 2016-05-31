@@ -25,7 +25,9 @@
     </div>
     <div id="menuTabPlace" class="tabsContainer">
         <? if (in_array(Zend_Registry::get('user')->group, ['admin', 'manager'])): ?>
-        <div class="buttonBar"><a href="/admin/hierarchy/insert-type">+ <?= $this->ucstring('type') ?></a></div>
+            <div class="buttonBar">
+                <a href="/admin/hierarchy/insert-hierarchy">+ <?= $this->ucstring('hierarchy') ?></a>
+            </div>
         <? endif ?>
     </div>
 </div>

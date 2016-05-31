@@ -4,10 +4,19 @@
 
 class Model_NodeMapper extends Model_EntityMapper {
 
-    public static function setAll() {
-        $sql = "SELECT n.id, n.entity_id as id, n.multiple, n.system, n.is_extendable, n.is_directional,
+    public static function registerHierarchies() {
+
+        $sqlForms = "SELECT id, name FROM web.form ORDER BY name ASC;";
+        $statementForms = Zend_Db_Table::getDefaultAdapter()->prepare($sqlForms);
+        $statementForms->execute();
+        $forms = [];
+        foreach ($statementForms->fetchAll() as $row) {
+            $forms[] = $row['name'];
+        }
+        Zend_Registry::set('forms', $forms);
+        $sql = "SELECT h.id, h.entity_id as id, h.multiple, h.system, h.is_extendable, h.is_directional,
             e.name, e.description, e.class_id, e.created, e.modified
-            FROM web.node n JOIN model.entity e ON n.entity_id = e.id;";
+            FROM web.hierarchy h JOIN model.entity e ON h.entity_id = e.id;";
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->execute();
         $nodes = [];

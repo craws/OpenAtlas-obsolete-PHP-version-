@@ -25,7 +25,7 @@ CREATE SEQUENCE web.form_id_seq
 ALTER TABLE web.form_id_seq OWNER TO openatlas_master;
 ALTER SEQUENCE web.form_id_seq OWNED BY web.form.id;
 
-CREATE TABLE web.node (
+CREATE TABLE web.hierarchy (
     id integer NOT NULL,
     entity_id integer NOT NULL,
     name text NOT NULL,
@@ -36,51 +36,51 @@ CREATE TABLE web.node (
     modified timestamp without time zone,
     system integer DEFAULT 0 NOT NULL
 );
-ALTER TABLE web.node OWNER TO openatlas_master;
-COMMENT ON COLUMN web.node.name IS 'same as model.entity.name, to ensure unique root node names';
-COMMENT ON COLUMN web.node.multiple IS 'if 1 multiple selection is possible';
-COMMENT ON COLUMN web.node.system IS 'if 1 it is a non deleteable predefined node';
-CREATE SEQUENCE web.node_id_seq
+ALTER TABLE web.hierarchy OWNER TO openatlas_master;
+COMMENT ON COLUMN web.hierarchy.name IS 'same as model.entity.name, to ensure unique root hierarchy names';
+COMMENT ON COLUMN web.hierarchy.multiple IS 'if 1 multiple selection is possible';
+COMMENT ON COLUMN web.hierarchy.system IS 'if 1 it is a non deleteable predefined hierarchy';
+CREATE SEQUENCE web.hierarchy_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-ALTER TABLE web.node_id_seq OWNER TO openatlas_master;
-ALTER SEQUENCE web.node_id_seq OWNED BY web.node.id;
+ALTER TABLE web.hierarchy_id_seq OWNER TO openatlas_master;
+ALTER SEQUENCE web.hierarchy_id_seq OWNED BY web.hierarchy.id;
 
-CREATE TABLE web.node_form (
+CREATE TABLE web.hierarchy_form (
     id integer NOT NULL,
-    node_id integer NOT NULL,
+    hierarchy_id integer NOT NULL,
     form_id integer NOT NULL,
     created timestamp without time zone DEFAULT now() NOT NULL,
     modified timestamp without time zone
 );
-ALTER TABLE web.node_form OWNER TO openatlas_master;
-CREATE SEQUENCE web.node_form_id_seq
+ALTER TABLE web.hierarchy_form OWNER TO openatlas_master;
+CREATE SEQUENCE web.hierarchy_form_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-ALTER TABLE web.node_form_id_seq OWNER TO openatlas_master;
-ALTER SEQUENCE web.node_form_id_seq OWNED BY web.node_form.id;
+ALTER TABLE web.hierarchy_form_id_seq OWNER TO openatlas_master;
+ALTER SEQUENCE web.hierarchy_form_id_seq OWNED BY web.hierarchy_form.id;
 
-ALTER TABLE ONLY web.node ALTER COLUMN id SET DEFAULT nextval('web."node_id_seq"'::regclass);
+ALTER TABLE ONLY web.hierarchy ALTER COLUMN id SET DEFAULT nextval('web."hierarchy_id_seq"'::regclass);
 ALTER TABLE ONLY web.form ALTER COLUMN id SET DEFAULT nextval('web."form_id_seq"'::regclass);
-ALTER TABLE ONLY web.node_form ALTER COLUMN id SET DEFAULT nextval('web."node_form_id_seq"'::regclass);
+ALTER TABLE ONLY web.hierarchy_form ALTER COLUMN id SET DEFAULT nextval('web."hierarchy_form_id_seq"'::regclass);
 ALTER TABLE ONLY web.form ADD CONSTRAINT form_name_key UNIQUE (name);
 ALTER TABLE ONLY web.form ADD CONSTRAINT form_pkey PRIMARY KEY (id);
-ALTER TABLE ONLY web.node ADD CONSTRAINT node_pkey PRIMARY KEY (id);
-ALTER TABLE ONLY web.node_form ADD CONSTRAINT node_form_pkey PRIMARY KEY (id);
-CREATE TRIGGER update_modified BEFORE UPDATE ON web.node FOR EACH ROW EXECUTE PROCEDURE model.update_modified();
+ALTER TABLE ONLY web.hierarchy ADD CONSTRAINT hierarchy_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY web.hierarchy_form ADD CONSTRAINT hierarchy_form_pkey PRIMARY KEY (id);
+CREATE TRIGGER update_modified BEFORE UPDATE ON web.hierarchy FOR EACH ROW EXECUTE PROCEDURE model.update_modified();
 CREATE TRIGGER update_modified BEFORE UPDATE ON web.form FOR EACH ROW EXECUTE PROCEDURE model.update_modified();
-CREATE TRIGGER update_modified BEFORE UPDATE ON web.node_form FOR EACH ROW EXECUTE PROCEDURE model.update_modified();
-ALTER TABLE ONLY web.node ADD CONSTRAINT node_entity_id_fkey FOREIGN KEY (entity_id) REFERENCES model.entity(id) ON UPDATE CASCADE ON DELETE CASCADE;
-ALTER TABLE ONLY web.node_form ADD CONSTRAINT node_form_form_id_fkey FOREIGN KEY (form_id) REFERENCES web.form(id) ON UPDATE CASCADE ON DELETE CASCADE;
-ALTER TABLE ONLY web.node_form ADD CONSTRAINT node_form_node_id_fkey FOREIGN KEY (node_id) REFERENCES web.node(id) ON UPDATE CASCADE ON DELETE CASCADE;
+CREATE TRIGGER update_modified BEFORE UPDATE ON web.hierarchy_form FOR EACH ROW EXECUTE PROCEDURE model.update_modified();
+ALTER TABLE ONLY web.hierarchy ADD CONSTRAINT hierarchy_entity_id_fkey FOREIGN KEY (entity_id) REFERENCES model.entity(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY web.hierarchy_form ADD CONSTRAINT hierarchy_form_form_id_fkey FOREIGN KEY (form_id) REFERENCES web.form(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY web.hierarchy_form ADD CONSTRAINT hierarchy_form_hierarchy_id_fkey FOREIGN KEY (hierarchy_id) REFERENCES web.hierarchy(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
-INSERT INTO web.node (entity_id, name, multiple, system, is_extendable, is_directional) VALUES
+INSERT INTO web.hierarchy (entity_id, name, multiple, system, is_extendable, is_directional) VALUES
 ((SELECT id FROM model.entity WHERE name='Original Document'), 'Original Document', 0, 1, 1, 0),
 ((SELECT id FROM model.entity WHERE name='Source'), 'Source', 0, 1, 1, 0),
 ((SELECT id FROM model.entity WHERE name='Event'), 'Event', 0, 1, 1, 0),
