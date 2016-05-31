@@ -14,16 +14,16 @@
 <? endforeach ?>
 <div id="tabsMenu" class="tabsContainer">
     <ul>
-        <li><a href="#menuTabActor"><?= $this->ucstring('system') ?></a></li>
-        <li><a href="#menuTabPlace"><?= $this->ucstring('custom') ?></a></li>
+        <li><a href="#menuTabSystem"><?= $this->ucstring('system') ?></a></li>
+        <li><a href="#menuTabCustom"><?= $this->ucstring('custom') ?></a></li>
     </ul>
-    <div id="menuTabActor" style="padding: 0;">
+    <div id="menuTabSystem" style="padding: 0;">
         <div id="tabs" class="tabsContainer">
             <ul><?= $tabUl ?></ul>
             <?= $tabDiv ?>
         </div>
     </div>
-    <div id="menuTabPlace" class="tabsContainer">
+    <div id="menuTabCustom" class="tabsContainer">
         <? if (in_array(Zend_Registry::get('user')->group, ['admin', 'manager'])): ?>
             <div class="buttonBar">
                 <a href="/admin/hierarchy/insert-hierarchy">+ <?= $this->ucstring('hierarchy') ?></a>

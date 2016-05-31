@@ -123,7 +123,17 @@ class Model_EntityMapper extends \Model_AbstractMapper {
             Zend_Registry::isRegistered('nodesIds') &&
             is_a($entity, 'Model_entity') &&
             in_array($row['id'], Zend_Registry::get('nodesIds'))) {
-            throw new \Zend_Application_Bootstrap_Exception("Entity populate instead of using existing node");
+
+            $trace = debug_backtrace();
+            $caller = $trace[2];
+            if (!in_array($caller['function'], ['tablelog'])) {
+                echo "Entity populate called by {$caller['function']}";
+                if (isset($caller['class'])) {
+                    echo " in {$caller['class']}";
+                }
+                die;
+                throw new \Zend_Application_Bootstrap_Exception("Entity populate instead of using existing node");
+            }
         }
         $classes = Zend_Registry::get('classes');
         $entity->id = $row['id'];

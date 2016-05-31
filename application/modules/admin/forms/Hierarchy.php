@@ -20,8 +20,8 @@ class Admin_Form_Hierarchy extends Craws\Form\Table {
         ]);
         $this->addElement('textarea', 'description', ['label' => $this->getView()->ucstring('description')]);
         $formsElement = new Zend_Form_Element_MultiCheckbox('forms');
-        foreach (Zend_Registry::get('forms') as $form) {
-            $formsElement->addMultiOption($form, $form);
+        foreach (Zend_Registry::get('forms') as $formName => $form) {
+            $formsElement->addMultiOption($form['id'], $formName);
         }
         $this->addElement($formsElement);
         $this->addElement('textarea', 'description', ['label' => $this->getView()->ucstring('description')]);

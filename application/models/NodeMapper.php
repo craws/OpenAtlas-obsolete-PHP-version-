@@ -5,13 +5,12 @@
 class Model_NodeMapper extends Model_EntityMapper {
 
     public static function registerHierarchies() {
-
         $sqlForms = "SELECT id, name FROM web.form ORDER BY name ASC;";
         $statementForms = Zend_Db_Table::getDefaultAdapter()->prepare($sqlForms);
         $statementForms->execute();
         $forms = [];
         foreach ($statementForms->fetchAll() as $row) {
-            $forms[] = $row['name'];
+            $forms[$row['name']] = ['id' => $row['id']];
         }
         Zend_Registry::set('forms', $forms);
         $sql = "SELECT h.id, h.entity_id as id, h.multiple, h.system, h.is_extendable, h.is_directional,
@@ -228,6 +227,25 @@ class Model_NodeMapper extends Model_EntityMapper {
             if (mb_strtolower($node->name) == mb_strtolower($rootName)) {
                 return $node;
             }
+        }
+    }
+
+    public static function insertHierarchy($form, $hierarchy) {
+        $sql = "INSERT INTO web.hierarchy (entity_id, name, multiple, is_extendable)
+            VALUES (:entity_id, :name, :multiple, 1) RETURNING id";
+        $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
+        $statement->bindValue(':entity_id', $hierarchy->id);
+        $statement->bindValue(':name', $hierarchy->id);
+        $statement->bindValue(':multiple', $form->getValue('multiple'));
+        $statement->execute();
+        $result = $statement->fetch(PDO::FETCH_ASSOC);
+        if ($form->getValue('forms')) {
+            foreach ($form->getValue('forms') as $formId) {
+                $values[] = '(' . $result['id'] . ',' . (int) $formId . ')';
+            }
+            $sqlForms = "INSERT INTO web.hierarchy_form (hierarchy_id, form_id) VALUES " . implode(',', $values) ;
+            $statementForms = Zend_Db_Table::getDefaultAdapter()->prepare($sqlForms . ';');
+            $statementForms->execute();
         }
     }
 
