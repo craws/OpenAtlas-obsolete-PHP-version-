@@ -228,7 +228,6 @@ INSERT INTO link (property_id, range_id, domain_id) VALUES
 ((SELECT id FROM property WHERE code='P89'), (SELECT id FROM entity WHERE name='Historical Place'), (SELECT id FROM entity WHERE name='Kingdom of Serbia'));
 
 INSERT INTO web.node (entity_id, name, multiple, system, is_extendable, is_directional) VALUES
-((SELECT id FROM entity WHERE name='Original Document'), 'Original Document', 0, 1, 1, 0),
 ((SELECT id FROM entity WHERE name='Source'), 'Source', 0, 1, 1, 0),
 ((SELECT id FROM entity WHERE name='Event'), 'Event', 0, 1, 1, 0),
 ((SELECT id FROM entity WHERE name='Actor Actor Relation'), 'Actor Actor Relation', 0, 1, 1, 1),

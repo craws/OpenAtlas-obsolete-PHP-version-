@@ -81,7 +81,6 @@ ALTER TABLE ONLY web.hierarchy_form ADD CONSTRAINT hierarchy_form_form_id_fkey F
 ALTER TABLE ONLY web.hierarchy_form ADD CONSTRAINT hierarchy_form_hierarchy_id_fkey FOREIGN KEY (hierarchy_id) REFERENCES web.hierarchy(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 INSERT INTO web.hierarchy (entity_id, name, multiple, system, is_extendable, is_directional) VALUES
-((SELECT id FROM model.entity WHERE name='Original Document'), 'Original Document', 0, 1, 1, 0),
 ((SELECT id FROM model.entity WHERE name='Source'), 'Source', 0, 1, 1, 0),
 ((SELECT id FROM model.entity WHERE name='Event'), 'Event', 0, 1, 1, 0),
 ((SELECT id FROM model.entity WHERE name='Actor Actor Relation'), 'Actor Actor Relation', 0, 1, 1, 1),

@@ -1,40 +1,54 @@
-<? $this->breadcrumb = [$this->ucstring('hierarchy')]; ?>
-<? $tabUl = ''; ?>
-<? $tabDiv = ''; ?>
-<? foreach ($this->types as $id => $type): ?>
-    <? $tabUl .= '<li><a href="#tab' . $type->id . '">' . $type->name . '</a></li>' ?>
-    <? $tabDiv .= '<div id="tab' . $type->id . '"><p><a id="add' . $type->id . '" class="button add" onclick="addForm('; ?>
-    <? $tabDiv .= $type->id . ', ' . (int) $type->directional . ');">+</a></p><div id="form' . $type->id . '"></div>'; ?>
-    <? if ($type->subs): ?>
-        <? global $printRecursiveTypes; ?>
-        <? $printRecursiveTypes = ''; ?>
-        <? $tabDiv .= recursiveTypes($type); ?>
-    <? endif ?>
-    <? $tabDiv .= '</div>'; ?>
-<? endforeach ?>
+<?
+$this->breadcrumb = [$this->ucstring('hierarchy')];
+$tabUl['system'] = '';
+$tabDiv['system'] = '';
+$tabUl['custom'] = '';
+$tabDiv['custom'] = '';
+foreach ($this->types as $id => $type) {
+    $menu = ($type->system) ? 'system' : 'custom';
+    $tabUl[$menu] .= '<li><a href="#tab' . $type->id . '">' . $type->name . '</a></li>';
+    $tabDiv[$menu] .= '<div id="tab' . $type->id . '"><div class="buttonBar"><a id="add' . $type->id . '"
+        onclick="addForm(' . $type->id . ', ' . (int) $type->directional . ');">+</a>';
+    if (!$type->system && (in_array(Zend_Registry::get('user')->group, ['admin', 'manager']))) {
+        $tabDiv[$menu] .= '
+            <a href="/admin/hierarchy/update-hierarchy/id/' . $type->id . '">' . $this->ucstring('edit') . '</a>
+            <a href="/admin/hierarchy/delete/id/' . $type->id . '">' . $this->ucstring('delete') . '</a>';
+    }
+    $tabDiv[$menu] .= '</div><div id="form' . $type->id . '"></div>';
+    if ($type->subs) {
+        global $printRecursiveTypes;
+        $printRecursiveTypes = '';
+        $tabDiv[$menu] .= recursiveTypes($type);
+    }
+    $tabDiv[$menu] .= '</div>';
+}
+if (in_array(Zend_Registry::get('user')->group, ['admin', 'manager'])) {
+    $tabUl['custom'] .= '<a class="button" href="/admin/hierarchy/insert-hierarchy">+ ' . $this->ucstring('hierarchy') . '</a>';
+}
+?>
 <div id="tabsMenu" class="tabsContainer">
     <ul>
         <li><a href="#menuTabSystem"><?= $this->ucstring('system') ?></a></li>
         <li><a href="#menuTabCustom"><?= $this->ucstring('custom') ?></a></li>
     </ul>
     <div id="menuTabSystem" style="padding: 0;">
-        <div id="tabs" class="tabsContainer">
-            <ul><?= $tabUl ?></ul>
-            <?= $tabDiv ?>
+        <div id="tabsSystem" class="tabsContainer">
+            <ul><?= $tabUl['system'] ?></ul>
+            <?= $tabDiv['system'] ?>
         </div>
     </div>
-    <div id="menuTabCustom" class="tabsContainer">
-        <? if (in_array(Zend_Registry::get('user')->group, ['admin', 'manager'])): ?>
-            <div class="buttonBar">
-                <a href="/admin/hierarchy/insert-hierarchy">+ <?= $this->ucstring('hierarchy') ?></a>
-            </div>
-        <? endif ?>
+    <div id="menuTabCustom" style="padding: 0;" >
+        <div id="tabsCustom" class="tabsContainer">
+            <ul><?= $tabUl['custom'] ?></ul>
+            <?= $tabDiv['custom'] ?>
+        </div>
     </div>
 </div>
 <script type="text/javascript">
-    $(function () {
+    $(document).ready(function() {
         $("#tabsMenu").tabs();
-        $("#tabs").tabs().addClass("ui-tabs-vertical");
+        $("#tabsSystem").tabs().addClass("ui-tabs-vertical");
+        $("#tabsCustom").tabs().addClass("ui-tabs-vertical");
     });
     function validateName() {
         if ($.trim($("#name").val()).length > 0) {

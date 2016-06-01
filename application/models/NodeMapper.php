@@ -235,7 +235,7 @@ class Model_NodeMapper extends Model_EntityMapper {
             VALUES (:entity_id, :name, :multiple, 1) RETURNING id";
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->bindValue(':entity_id', $hierarchy->id);
-        $statement->bindValue(':name', $hierarchy->id);
+        $statement->bindValue(':name', $hierarchy->name);
         $statement->bindValue(':multiple', $form->getValue('multiple'));
         $statement->execute();
         $result = $statement->fetch(PDO::FETCH_ASSOC);

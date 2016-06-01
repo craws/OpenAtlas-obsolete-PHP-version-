@@ -6,7 +6,8 @@ class Admin_HierarchyController extends Zend_Controller_Action {
 
     public function deleteAction() {
         $type = Model_NodeMapper::getById($this->_getParam('id'));
-        if (!$type->superId || !$type->extendable) {
+        if (!$type->extendable ||
+            (!$type->superId && ($type->system ||in_array(Zend_Registry::get('user')->group, ['admin', 'manager'])))) {
             $this->_helper->message('error_forbidden');
             return $this->_helper->redirector->gotoUrl('/admin/hierarchy');
         }
@@ -21,10 +22,6 @@ class Admin_HierarchyController extends Zend_Controller_Action {
         $type->delete();
         $this->_helper->message('info_delete');
         return $this->_helper->redirector->gotoUrl('/admin/hierarchy#tab' . $type->rootId);
-    }
-
-    public function deleteHierarchyAction() {
-
     }
 
     public function indexAction() {
@@ -65,6 +62,13 @@ class Admin_HierarchyController extends Zend_Controller_Action {
         if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
             $this->view->form = $form;
             return;
+        }
+        foreach (Zend_Registry::get('nodes') as $node) {
+            if (mb_strtolower($node->name) == mb_strtolower($form->getValue('name'))) {
+                $this->view->form = $form;
+                $this->_helper->message('error_name_exists');
+                return;
+            }
         }
         $hierarchy = Model_EntityMapper::insert('E55', $form->getValue('name'), $form->getValue('description'));
         Model_NodeMapper::insertHierarchy($form, $hierarchy);
