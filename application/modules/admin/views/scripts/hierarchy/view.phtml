@@ -1,18 +1,18 @@
-<? $type = $this->type; ?>
+<? $node = $this->node; ?>
 <? $this->breadcrumb = [$this->link('hierarchy')]; ?>
-<? if ($type->superId): ?>
-    <? $this->breadcrumb[] = $this->link(Model_NodeMapper::getById($type->rootId)); ?>
-    <? $this->buttonBar = $this->link($type, 'update'); ?>
-    <? if (!$this->linksEntities && !$this->linksProperties && empty($type->subs)): ?>
-        <? $this->buttonBar .= $this->link($type, 'delete'); ?>
+<? if ($node->superId): ?>
+    <? $this->breadcrumb[] = $this->link(Model_NodeMapper::getById($node->rootId)); ?>
+    <? $this->buttonBar = $this->link($node, 'update'); ?>
+    <? if (!$this->linksEntities && !$this->linksProperties && empty($node->subs)): ?>
+        <? $this->buttonBar .= $this->link($node, 'delete'); ?>
     <? endif ?>
 <? endif ?>
-<? $this->breadcrumb[] = $type->name; ?>
+<? $this->breadcrumb[] = $node->name; ?>
 <div id="tabs" class="tabsContainer">
     <ul>
         <li><a href="#tabInfo"><?= $this->ucstring('info') ?></a></li>
-        <? if ($type->subs): ?>
-            <li><a href="#tabSub"><?= $this->ucstring('subs') ?> (<?= count($type->subs) ?>)</a></li>
+        <? if ($node->subs): ?>
+            <li><a href="#tabSub"><?= $this->ucstring('subs') ?> (<?= count($node->subs) ?>)</a></li>
         <? endif ?>
         <? if ($this->linksEntities): ?>
             <li><a href="#tabEntity"><?= $this->ucstring('entities') ?> (<?= count($this->linksEntities) ?>)</a></li>
@@ -22,18 +22,18 @@
         <? endif ?>
     </ul>
     <div id="tabInfo">
-        <h1><?= $type->name ?></h1>
+        <h1><?= $node->name ?></h1>
         <? $table = []; ?>
-        <? if ($type->superId): ?>
-            <? $table['data']['super'] = $this->link(Model_NodeMapper::getById($type->superId)); ?>
+        <? if ($node->superId): ?>
+            <? $table['data']['super'] = $this->link(Model_NodeMapper::getById($node->superId)); ?>
         <? endif ?>
-        <? $this->table = $this->tableLog($table, 'entity', $type->id); ?>
+        <? $this->table = $this->tableLog($table, 'entity', $node->id); ?>
         <?= $this->render('tableDataItem.phtml'); ?>
-        <? $this->description($type); ?>
+        <? $this->description($node); ?>
     </div>
-    <? if ($type->subs): ?>
+    <? if ($node->subs): ?>
         <div id="tabSub">
-            <? foreach ($type->subs as $sub): ?>
+            <? foreach ($node->subs as $sub): ?>
                 <p><?= $this->link($sub) ?></p>
             <? endforeach ?>
         </div>

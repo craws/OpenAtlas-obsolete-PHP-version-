@@ -6,12 +6,13 @@ class Model_Node extends Model_Entity {
 
     public $directional = false;
     public $extendable = false;
+    public $forms = [];
+    public $propertyToEntity;
+    public $propertyToSuper;
     public $rootId = null;
     public $superId = null;
     public $system = null;
     public $subs = [];
-    public $propertyToEntity;
-    public $propertyToSuper;
 
     public function addSub(Model_Node $sub) {
         $this->subs[] = $sub;
