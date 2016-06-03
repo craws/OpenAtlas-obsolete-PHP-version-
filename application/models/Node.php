@@ -7,6 +7,7 @@ class Model_Node extends Model_Entity {
     public $directional = false;
     public $extendable = false;
     public $forms = [];
+    public $multiple = 0;
     public $propertyToEntity;
     public $propertyToSuper;
     public $rootId = null;

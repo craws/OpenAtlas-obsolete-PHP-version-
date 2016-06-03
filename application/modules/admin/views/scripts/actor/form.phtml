@@ -16,6 +16,9 @@
     <? if ($form->genderId): ?>
         <?= $this->displayTreeSelect('gender', $form) ?>
     <? endif ?>
+    <? foreach ($this->hierarchies as $hierarchy) : ?>
+        <?= $this->displayTreeSelect($hierarchy, $form) ?>
+    <? endforeach ?>
     <?= $this->displayTableSelect('residence', $form) ?>
     <?= $this->displayTableSelect('appearsFirst', $form) ?>
     <?= $this->displayTableSelect('appearsLast', $form) ?>
@@ -37,6 +40,10 @@
 <? if ($form->genderId): ?>
     <?= $this->displayTreeOverlay('gender', $this->genderTreeData) ?>
 <? endif ?>
+<? foreach ($this->hierarchies as $hierarchy) : ?>
+    <? $dataVariable = $hierarchy->nameClean . 'TreeData'; ?>
+    <?= $this->displayTreeOverlay($hierarchy->nameClean, $this->$dataVariable); ?>
+<? endforeach ?>
 <? foreach (['residence', 'appearsFirst', 'appearsLast'] as $placeTable): ?>
     <div id="<?= $placeTable ?>Overlay" class="overlay">
         <div id='<?= $placeTable ?>Dialog' class="overlayContainer">

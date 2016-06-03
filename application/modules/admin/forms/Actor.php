@@ -2,12 +2,12 @@
 
 /* Copyright 2016 by Alexander Watzinger and others. Please see the file README.md for licensing information */
 
-class Admin_Form_Actor extends Craws\Form\Table {
+class Admin_Form_Actor extends Admin_Form_Abstract {
 
     public function init() {
         $this->setName('actorForm')->setMethod('post');
         $this->setAction($this->getView()->url());
-        Admin_Form_Abstract::addDates($this, ['begin', 'begin2', 'end', 'end2']);
+        $this->addDates($this, ['begin', 'begin2', 'end', 'end2']);
         $this->addElement('checkbox', 'birth', [
             'label' => $this->getView()->ucstring('birth'),
             'checkedValue' => 1,

@@ -31,6 +31,7 @@ class Model_NodeMapper extends Model_EntityMapper {
             $node->system = $row['system'];
             $node->extendable = $row['is_extendable'];
             $node->directional = $row['is_directional'];
+            $node->nameClean = \Craws\FilterInput::filter($row['name'], 'node');
             foreach ($forms as $form) {
                 if (in_array($node->id, $form['hierarchyIds'])) {
                     $node->forms[] = $form;
@@ -110,7 +111,7 @@ class Model_NodeMapper extends Model_EntityMapper {
     public static function getNodesByEntity($rootName, Model_Entity $entity) {
         $nodes = [];
         foreach (Zend_Registry::get('nodes') as $node) {
-            if (mb_strtolower($node->name) == mb_strtolower($rootName)) {
+            if (\Craws\FilterInput::filter($node->name, 'node') == \Craws\FilterInput::filter($rootName, 'node')) {
                 foreach (Model_LinkMapper::getLinkedEntities($entity, $node->propertyToEntity) as $linkedNode) {
                     if ($linkedNode->rootId == $node->id || $linkedNode->id == $node->id) {
                         $nodes[] = $linkedNode;
@@ -193,7 +194,7 @@ class Model_NodeMapper extends Model_EntityMapper {
         return $data;
     }
 
-    private static function walkTree($item, $selectedIds) {
+    private static function walkTree(Model_Node $item, $selectedIds) {
         $text = '';
         if ($item->rootId) { // only if not root item
             $text = "{'text':'" . str_replace("'", "\'", $item->name) . "', 'id':'" . $item->id . "',";
@@ -222,7 +223,7 @@ class Model_NodeMapper extends Model_EntityMapper {
         global $returnCandidates;
         $returnCandidates = [];
         foreach (Zend_Registry::get('nodes') as $node) {
-            if (mb_strtolower($node->name) == mb_strtolower($rootName)) {
+            if (\Craws\FilterInput::filter($node->name, 'node') == \Craws\FilterInput::filter($rootName, 'node')) {
                 $rootNode = $node;
                 break;
             }
@@ -234,7 +235,7 @@ class Model_NodeMapper extends Model_EntityMapper {
 
     public static function getRootType($rootName) {
         foreach (Zend_Registry::get('nodes') as $node) {
-            if (mb_strtolower($node->name) == mb_strtolower($rootName)) {
+            if (\Craws\FilterInput::filter($node->name, 'node') == \Craws\FilterInput::filter($rootName, 'node')) {
                 return $node;
             }
         }

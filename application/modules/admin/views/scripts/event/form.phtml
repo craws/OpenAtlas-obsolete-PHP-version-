@@ -6,7 +6,7 @@
         <?= $form->name->renderLabel() ?>
         <div class="tableCell"><?= $form->name->renderViewHelper() ?></div>
     </div>
-    <?= $this->displayTreeSelectMulti('type', $form, $this->types) ?>
+    <?= $this->displayTreeSelect('event', $form, $this->types) ?>
     <?= $this->displayTableSelect('super', $form); ?>
     <?= $this->displayTableSelect('place', $form); ?>
     <?= $this->render('dateForm.phtml'); ?>

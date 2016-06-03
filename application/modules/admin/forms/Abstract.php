@@ -2,9 +2,9 @@
 
 /* Copyright 2016 by Alexander Watzinger and others. Please see the file README.md for licensing information */
 
-class Admin_Form_Abstract {
+class Admin_Form_Abstract extends Craws\Form\Table {
 
-    public static function addDates(Zend_Form $form, $names) {
+    public function addDates(Zend_Form $form, $names) {
         foreach ($names as $name) {
             $label = (strpos($name, '2') == TRUE) ? "" : $form->getView()->ucstring($name);
             $year = $form->createElement('text', $name . 'Year', [
@@ -77,10 +77,25 @@ class Admin_Form_Abstract {
         }
     }
 
-    public static function preValidation($form, array $data) {
+    public static function preValidation(Zend_Form $form, array $data) {
         foreach ($data['alias'] as $key => $name) {
             $form->addElement('text', $key, ['belongsTo' => 'alias']);
         }
+    }
+
+    public function addHierarchies(Zend_Form $form, $hierarchies) {
+        foreach ($hierarchies as $hierarchy) {
+            $form->addElement('hidden', $hierarchy->nameClean . 'Id', ['decorators' => ['ViewHelper']]);
+            $form->addElement('text', $hierarchy->nameClean . 'Button', [
+                'label' => $hierarchy->name,
+                'class' => 'tableSelect',
+                'readonly' => true,
+                'onfocus' => 'this.blur()',
+                'placeholder' => $this->getView()->ucstring('select'),
+                'attribs' => ['readonly' => 'true'],
+            ]);
+        }
+
     }
 
 }

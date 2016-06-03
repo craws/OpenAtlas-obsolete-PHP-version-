@@ -11,6 +11,9 @@ class FilterInput extends \Zend_Controller_Action_Helper_Abstract {
             case 'crm':
                 $string = trim(preg_replace('/\s+/', ' ', $string)); // remove newlines
                 return trim(strip_tags($string));
+            case 'node':
+                $string = preg_replace('/\s+/', '_', $string);  // replace whitespace with _
+                return trim(mb_strtolower($string));
         // @codeCoverageIgnoreStart
         }
     }

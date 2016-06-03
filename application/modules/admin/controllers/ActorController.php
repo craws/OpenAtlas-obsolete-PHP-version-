@@ -25,12 +25,22 @@ class Admin_ActorController extends Zend_Controller_Action {
     }
 
     public function insertAction() {
-        $class = Model_ClassMapper::getByCode($this->_getParam('code'));
-        if (!$class) {
-            $this->getHelper('viewRenderer')->setNoRender(true);
-            $this->_helper->message('error_missing_class');
-            return;
+        switch ($this->_getParam('code')) {
+            case 'E21':
+                $formName = 'Person';
+                break;
+            case 'E40':
+                $formName = 'Group';
+                break;
+            case 'E71':
+                $formName = 'Legal Body';
+                break;
+            default:
+                $this->getHelper('viewRenderer')->setNoRender(true);
+                $this->_helper->message('error_missing_class');
+                return;
         }
+        $class = Model_ClassMapper::getByCode($this->_getParam('code'));
         $source = null;
         $event = null;
         if ($this->_getParam('sourceId')) {
@@ -48,6 +58,15 @@ class Admin_ActorController extends Zend_Controller_Action {
             $form->removeElement('genderButton');
         }
         $form->addElement($form->createElement('text', 'alias0', ['belongsTo' => 'alias']));
+        $hierarchies = [];
+        $forms = Zend_Registry::get('forms');
+        foreach ($forms[$formName]['hierarchyIds'] as $hierarchyId) {
+            $hierarchy = Model_NodeMapper::getById($hierarchyId);
+            $hierarchies[] = $hierarchy;
+            $dataVariable = $hierarchy->nameClean . 'TreeData';
+            $this->view->$dataVariable = Model_NodeMapper::getTreeData($hierarchy->name);
+        }
+        $form->addHierarchies($form, $hierarchies);
         if ($this->getRequest()->isPost()) {
             Admin_Form_Abstract::preValidation($form, $this->getRequest()->getPost());
         }
@@ -55,6 +74,7 @@ class Admin_ActorController extends Zend_Controller_Action {
             $this->view->className = $class->nameTranslated;
             $this->view->event = $event;
             $this->view->form = $form;
+            $this->view->hierarchies = $hierarchies;
             $this->view->objects = Model_EntityMapper::getByCodes('PhysicalObject');
             $this->view->source = $source;
             if ($class->code == 'E21') {
