@@ -49,7 +49,7 @@ class Admin_CarrierController extends Zend_Controller_Action {
             if ($type->rootId) {
                 $form->populate(['typeButton' => $type->name]);
             }
-            Admin_Form_Abstract::populateDates($form, $carrier, ['OA1' => 'begin', 'OA2' => 'end']);
+            $form->populateDates($carrier, ['OA1' => 'begin', 'OA2' => 'end']);
             $place = Model_LinkMapper::getLinkedEntity($carrier, ['OA8']);
             if ($place) {
                 $object = Model_LinkMapper::getLinkedEntity($place, 'P53', true);

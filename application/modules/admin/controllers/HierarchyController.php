@@ -64,7 +64,7 @@ class Admin_HierarchyController extends Zend_Controller_Action {
             return;
         }
         foreach (Zend_Registry::get('nodes') as $node) {
-            if (mb_strtolower($node->name) == mb_strtolower($form->getValue('name'))) {
+            if ($node->nameClean == \Craws\FilterInput::filter($form->getValue('name'), 'node')) {
                 $this->view->form = $form;
                 $this->_helper->message('error_name_exists');
                 return;
@@ -134,7 +134,7 @@ class Admin_HierarchyController extends Zend_Controller_Action {
         }
         if ($hierarchy->name != $form->getValue('name')) {
             foreach (Zend_Registry::get('nodes') as $node) {
-                if (mb_strtolower($node->name) == mb_strtolower($form->getValue('name'))) {
+                if ($node->nameClean == \Craws\FilterInput::filter($form->getValue('name'), 'node')) {
                     $this->view->form = $form;
                     $this->_helper->message('error_name_exists');
                     return;

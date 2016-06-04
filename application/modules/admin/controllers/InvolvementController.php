@@ -78,7 +78,7 @@ class Admin_InvolvementController extends Zend_Controller_Action {
         $form->removeElement('eventButton');
         $form->addActivity($event);
         if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
-            Admin_Form_Abstract::populateDates($form, $link, ['OA5' => 'begin', 'OA6' => 'end']);
+            $form->populateDates($link, ['OA5' => 'begin', 'OA6' => 'end']);
             $form->populate(['activity' => $link->property->id]);
             $form->populate(['description' => $link->description]);
             $involvement = Model_LinkPropertyMapper::getLinkedEntity($link, 'P2');

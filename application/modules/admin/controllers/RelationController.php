@@ -40,7 +40,7 @@ class Admin_RelationController extends Zend_Controller_Action {
         $form = new Admin_Form_Relation();
         $form->removeElement('relatedActorIds');
         if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
-            Admin_Form_Abstract::populateDates($form, $link, ['OA5' => 'begin', 'OA6' => 'end']);
+            $form->populateDates($link, ['OA5' => 'begin', 'OA6' => 'end']);
             $type = Model_LinkPropertyMapper::getLinkedEntity($link, 'P2');
             $form->populate(['typeId' => $type->id, 'typeButton' => $type->name]);
             $form->populate(['description' => $link->description]);

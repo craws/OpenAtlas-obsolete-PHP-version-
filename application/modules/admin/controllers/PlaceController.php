@@ -34,7 +34,7 @@ class Admin_PlaceController extends Zend_Controller_Action {
         $form = new Admin_Form_Place();
         $form->addElement($form->createElement('text', 'alias0', ['belongsTo' => 'alias']));
         if ($this->getRequest()->isPost()) {
-            Admin_Form_Abstract::preValidation($form, $this->getRequest()->getPost());
+            $form->preValidation($this->getRequest()->getPost());
         }
         if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
             $this->view->form = $form;
@@ -105,7 +105,7 @@ class Admin_PlaceController extends Zend_Controller_Action {
             self::prepareDefaultUpdate($form, $object, $place);
             return;
         }
-        Admin_Form_Abstract::preValidation($form, $this->getRequest()->getPost());
+        $form->preValidation($this->getRequest()->getPost());
         $formValid = $form->isValid($this->getRequest()->getPost());
         $modified = Model_EntityMapper::checkIfModified($object, $form->modified->getValue());
         if ($modified) {
@@ -196,7 +196,7 @@ class Admin_PlaceController extends Zend_Controller_Action {
             $form->populate(['easting' => $gis->easting, 'northing' => $gis->northing]);
         }
         // @codeCoverageIgnoreEnd
-        Admin_Form_Abstract::populateDates($form, $object, ['OA1' => 'begin', 'OA2' => 'end']);
+        $form->populateDates($object, ['OA1' => 'begin', 'OA2' => 'end']);
         $this->view->siteTreeData = Model_NodeMapper::getTreeData('site', $site);
         $administratives = Model_NodeMapper::getNodesByEntity('Administrative Unit', $place);
         $this->view->administratives = $administratives;

@@ -66,9 +66,9 @@ class Admin_ActorController extends Zend_Controller_Action {
             $dataVariable = $hierarchy->nameClean . 'TreeData';
             $this->view->$dataVariable = Model_NodeMapper::getTreeData($hierarchy->name);
         }
-        $form->addHierarchies($form, $hierarchies);
+        $form->addHierarchies($hierarchies);
         if ($this->getRequest()->isPost()) {
-            Admin_Form_Abstract::preValidation($form, $this->getRequest()->getPost());
+            $form->preValidation($this->getRequest()->getPost());
         }
         if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
             $this->view->className = $class->nameTranslated;
@@ -130,7 +130,7 @@ class Admin_ActorController extends Zend_Controller_Action {
             self::prepareDefaultUpdate($form, $actor);
             return;
         }
-        Admin_Form_Abstract::preValidation($form, $this->getRequest()->getPost());
+        $form->preValidation($this->getRequest()->getPost());
         $formValid = $form->isValid($this->getRequest()->getPost());
         $modified = Model_EntityMapper::checkIfModified($actor, $form->modified->getValue());
         // @codeCoverageIgnoreStart
@@ -238,7 +238,7 @@ class Admin_ActorController extends Zend_Controller_Action {
                 ]);
             }
         }
-        Admin_Form_Abstract::populateDates($form, $actor, ['OA1' => 'begin', 'OA3' => 'begin', 'OA2' => 'end', 'OA4' => 'end']);
+        $form->populateDates($actor, ['OA1' => 'begin', 'OA3' => 'begin', 'OA2' => 'end', 'OA4' => 'end']);
         if ($actor->class->code == 'E21') {
             $gender = Model_NodeMapper::getNodeByEntity('Gender', $actor);
             if ($gender) {

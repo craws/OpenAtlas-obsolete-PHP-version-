@@ -2,7 +2,7 @@
 
 /* Copyright 2016 by Alexander Watzinger and others. Please see the file README.md for licensing information */
 
-class Admin_Form_Reference extends Craws\Form\Table {
+class Admin_Form_Reference extends Admin_Form_Base {
 
     public function init() {
         $this->setName('referenceForm')->setMethod('post');
