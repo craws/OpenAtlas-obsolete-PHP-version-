@@ -35,8 +35,8 @@
             }
             $infoTable['data'][_('alias')] = implode('<br/>', $aliasArray);
         }
-        if ($this->gender) {
-            $infoTable['data']['Gender'] = $this->link($this->gender);
+        foreach ($this->nodes as $rootName => $nodes) {
+            $infoTable['data'][$rootName] = implode('<br/>', $nodes);
         }
         if ($this->residence) {
             $infoTable['data'][_('residence')] = $this->link($this->residence);

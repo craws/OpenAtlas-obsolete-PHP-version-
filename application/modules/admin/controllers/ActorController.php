@@ -86,7 +86,7 @@ class Admin_ActorController extends Zend_Controller_Action {
         if ($source) {
             Model_LinkMapper::insert('P67', $source, $actor);
         }
-        self::save($actor, $form);
+        self::save($actor, $form, $hierarchies);
         $this->_helper->message('info_insert');
         $url = '/admin/actor/view/id/' . $actor->id;
         // @codeCoverageIgnoreStart
@@ -122,10 +122,26 @@ class Admin_ActorController extends Zend_Controller_Action {
 
     public function updateAction() {
         $actor = Model_EntityMapper::getById($this->_getParam('id'));
+        switch ($actor->class->code) {
+            case 'E21':
+                $formName = 'Person';
+                break;
+            case 'E40':
+                $formName = 'Group';
+                break;
+            case 'E71':
+                $formName = 'Legal Body';
+                break;
+            default:
+                $this->getHelper('viewRenderer')->setNoRender(true);
+                $this->_helper->message('error_missing_class');
+                return;
+        }
         $this->view->actor = $actor;
         $form = new Admin_Form_Actor();
         $form->prepareUpdate($actor);
         $this->view->form = $form;
+        $form->addHierarchies($formName, $actor);
         if (!$this->getRequest()->isPost()) {
             self::prepareDefaultUpdate($form, $actor);
             return;
@@ -163,10 +179,17 @@ class Admin_ActorController extends Zend_Controller_Action {
 
     public function viewAction() {
         $actor = Model_EntityMapper::getById($this->_getParam('id'));
+        $nodes = [];
+        foreach (Model_LinkMapper::getLinkedEntities($actor, 'P2') as $node) {
+            if ($node->rootId) {
+                $nodes[Model_NodeMapper::getById($node->rootId)->name][] = $node->name;
+            }
+        }
+        ksort($nodes);
         $this->view->actor = $actor;
         $this->view->aliases = Model_LinkMapper::getLinkedEntities($actor, 'P131');
         $this->view->dates = Model_DateMapper::getDates($actor);
-        $this->view->gender = Model_NodeMapper::getNodeByEntity('Gender', $actor);
+        $this->view->nodes = $nodes;
         $this->view->relationInverseLinks = Model_LinkMapper::getLinks($actor, 'OA7', true);
         $this->view->relationLinks = Model_LinkMapper::getLinks($actor, 'OA7');
         $sourceLinks = [];
@@ -246,11 +269,11 @@ class Admin_ActorController extends Zend_Controller_Action {
             }
             $this->view->genderTreeData = Model_NodeMapper::getTreeData('gender', $gender);
         }
-
         $this->view->objects = Model_EntityMapper::getByCodes('PhysicalObject');
     }
 
-    private function save(Model_Entity $actor, Zend_Form $form) {
+    private function save(Model_Entity $actor, Zend_Form $form, array $hierarchies) {
+        $forms = Zend_Registry::get('forms');
         Model_DateMapper::saveDates($actor, $form);
         foreach (['residenceId' => 'P74', 'appearsFirstId' => 'OA8', 'appearsLastId' => 'OA9'] as $formField => $propertyCode) {
             if ($form->getValue($formField)) {
@@ -259,13 +282,21 @@ class Admin_ActorController extends Zend_Controller_Action {
             }
         }
         if ($form->getValue('genderId')) {
-            Model_LinkMapper::insert('P2', $actor, Model_EntityMapper::getById($form->getValue('genderId')));
+            Model_LinkMapper::insert('P2', $actor, Model_NodeMapper::getById($form->getValue('genderId')));
         }
         $data = $form->getValues();
         foreach (array_unique($data['alias']) as $name) {
             if (trim($name)) {
                 $alias = Model_EntityMapper::insert('E82', trim($name));
                 Model_LinkMapper::insert('P131', $actor, $alias);
+            }
+        }
+        foreach ($hierarchies as $hierarchy) {
+            $idFormField = $hierarchy->nameClean . 'Id';
+            if ($form->getValue($idFormField)) {
+                foreach (explode(",", $form->getValue($idFormField)) as $id) {
+                    Model_LinkMapper::insert('P2', $actor, Model_NodeMapper::getById($id));
+                }
             }
         }
     }
