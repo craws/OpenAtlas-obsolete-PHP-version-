@@ -111,6 +111,10 @@ UPDATE model.link SET property_id = (SELECT id FROM model.property WHERE code = 
 WHERE range_id = (SELECT id FROM model.entity WHERE name = 'Date value type') AND
 property_id = (SELECT id FROM model.property WHERE code = 'P86');
 
+INSERT INTO web.hierarchy_form (hierarchy_id, form_id) VALUES
+((SELECT id FROM web.hierarchy WHERE name LIKE 'Gender'),(SELECT id FROM web.form WHERE name LIKE 'Person'))
+;
+
 COMMIT;
 
 1.4.0 to 1.5.0 Upgrade

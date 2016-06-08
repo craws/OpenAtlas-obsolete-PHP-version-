@@ -25,21 +25,6 @@ class Admin_ActorController extends Zend_Controller_Action {
     }
 
     public function insertAction() {
-        switch ($this->_getParam('code')) {
-            case 'E21':
-                $formName = 'Person';
-                break;
-            case 'E40':
-                $formName = 'Group';
-                break;
-            case 'E71':
-                $formName = 'Legal Body';
-                break;
-            default:
-                $this->getHelper('viewRenderer')->setNoRender(true);
-                $this->_helper->message('error_missing_class');
-                return;
-        }
         $class = Model_ClassMapper::getByCode($this->_getParam('code'));
         $source = null;
         $event = null;
@@ -54,13 +39,11 @@ class Admin_ActorController extends Zend_Controller_Action {
         if ($class->code != 'E21') {
             $form->removeElement('birth');
             $form->removeElement('death');
-            $form->removeElement('genderId');
-            $form->removeElement('genderButton');
         }
         $form->addElement($form->createElement('text', 'alias0', ['belongsTo' => 'alias']));
         $hierarchies = [];
         $forms = Zend_Registry::get('forms');
-        foreach ($forms[$formName]['hierarchyIds'] as $hierarchyId) {
+        foreach ($forms[$this->getFormName($this->_getParam('code'))]['hierarchyIds'] as $hierarchyId) {
             $hierarchy = Model_NodeMapper::getById($hierarchyId);
             $hierarchies[] = $hierarchy;
             $dataVariable = $hierarchy->nameClean . 'TreeData';
@@ -77,9 +60,6 @@ class Admin_ActorController extends Zend_Controller_Action {
             $this->view->hierarchies = $hierarchies;
             $this->view->objects = Model_EntityMapper::getByCodes('PhysicalObject');
             $this->view->source = $source;
-            if ($class->code == 'E21') {
-                $this->view->genderTreeData = Model_NodeMapper::getTreeData('gender');
-            }
             return;
         }
         $actor = Model_EntityMapper::insert($class->id, $form->getValue('name'), $form->getValue('description'));
@@ -122,26 +102,17 @@ class Admin_ActorController extends Zend_Controller_Action {
 
     public function updateAction() {
         $actor = Model_EntityMapper::getById($this->_getParam('id'));
-        switch ($actor->class->code) {
-            case 'E21':
-                $formName = 'Person';
-                break;
-            case 'E40':
-                $formName = 'Group';
-                break;
-            case 'E71':
-                $formName = 'Legal Body';
-                break;
-            default:
-                $this->getHelper('viewRenderer')->setNoRender(true);
-                $this->_helper->message('error_missing_class');
-                return;
-        }
         $this->view->actor = $actor;
         $form = new Admin_Form_Actor();
         $form->prepareUpdate($actor);
         $this->view->form = $form;
-        $form->addHierarchies($formName, $actor);
+        $forms = Zend_Registry::get('forms');
+        $hierarchies = [];
+        foreach ($forms[$this->getFormName($actor->class->code)]['hierarchyIds'] as $hierarchyId) {
+            $hierarchy = Model_NodeMapper::getById($hierarchyId);
+            $hierarchies[] = $hierarchy;
+        }
+        $form->addHierarchies($hierarchies, $actor);
         if (!$this->getRequest()->isPost()) {
             self::prepareDefaultUpdate($form, $actor);
             return;
@@ -156,9 +127,6 @@ class Admin_ActorController extends Zend_Controller_Action {
         }
         // @codeCoverageIgnoreEnd
         if (!$formValid || $modified) {
-            if ($actor->class->code == 'E21') {
-                $this->view->genderTreeData = Model_NodeMapper::getTreeData('gender');
-            }
             $this->view->objects = Model_EntityMapper::getByCodes('PhysicalObject');
             $this->_helper->message('error_modified');
             return;
@@ -172,7 +140,7 @@ class Admin_ActorController extends Zend_Controller_Action {
         foreach (Model_LinkMapper::getLinks($actor, ['P2', 'P74', 'OA8', 'OA9']) as $link) {
             $link->delete();
         }
-        self::save($actor, $form);
+        self::save($actor, $form, $hierarchies);
         $this->_helper->message('info_update');
         return $this->_helper->redirector->gotoUrl('/admin/actor/view/id/' . $actor->id);
     }
@@ -245,6 +213,24 @@ class Admin_ActorController extends Zend_Controller_Action {
         $this->view->objects = $objects;
     }
 
+    private function getFormName($code) {
+        switch ($code) {
+            case 'E21':
+                $formName = 'Person';
+                break;
+            case 'E40':
+                $formName = 'Group';
+                break;
+            case 'E71':
+                $formName = 'Legal Body';
+                break;
+            default:
+                echo $this->view->ucstring('error_missing_class');
+                exit;
+        }
+        return $formName;
+    }
+
     private function prepareDefaultUpdate(Zend_Form $form, Model_Entity $actor) {
         $form->populate([
             'name' => $actor->name,
@@ -262,17 +248,20 @@ class Admin_ActorController extends Zend_Controller_Action {
             }
         }
         $form->populateDates($actor, ['OA1' => 'begin', 'OA3' => 'begin', 'OA2' => 'end', 'OA4' => 'end']);
-        if ($actor->class->code == 'E21') {
-            $gender = Model_NodeMapper::getNodeByEntity('Gender', $actor);
-            if ($gender) {
-                $form->populate(['genderId' => $gender->id, 'genderButton' => $gender->name]);
-            }
-            $this->view->genderTreeData = Model_NodeMapper::getTreeData('gender', $gender);
-        }
         $this->view->objects = Model_EntityMapper::getByCodes('PhysicalObject');
     }
 
     private function save(Model_Entity $actor, Zend_Form $form, array $hierarchies) {
+        foreach ($hierarchies as $hierarchy) {
+            $idField = $hierarchy->nameClean . 'Id';
+            if ($form->getValue($idField)) {
+                foreach (explode(",", $form->getValue($idField)) as $id) {
+                    Model_LinkMapper::insert('P2', $actor, Model_NodeMapper::getById($id));
+                }
+            } else if ($hierarchy->system) {
+                Model_LinkMapper::insert('P2', $actor, $hierarchy);
+            }
+        }
         $forms = Zend_Registry::get('forms');
         Model_DateMapper::saveDates($actor, $form);
         foreach (['residenceId' => 'P74', 'appearsFirstId' => 'OA8', 'appearsLastId' => 'OA9'] as $formField => $propertyCode) {
@@ -281,22 +270,11 @@ class Admin_ActorController extends Zend_Controller_Action {
                 Model_LinkMapper::insert($propertyCode, $actor, $place);
             }
         }
-        if ($form->getValue('genderId')) {
-            Model_LinkMapper::insert('P2', $actor, Model_NodeMapper::getById($form->getValue('genderId')));
-        }
         $data = $form->getValues();
         foreach (array_unique($data['alias']) as $name) {
             if (trim($name)) {
                 $alias = Model_EntityMapper::insert('E82', trim($name));
                 Model_LinkMapper::insert('P131', $actor, $alias);
-            }
-        }
-        foreach ($hierarchies as $hierarchy) {
-            $idFormField = $hierarchy->nameClean . 'Id';
-            if ($form->getValue($idFormField)) {
-                foreach (explode(",", $form->getValue($idFormField)) as $id) {
-                    Model_LinkMapper::insert('P2', $actor, Model_NodeMapper::getById($id));
-                }
             }
         }
     }

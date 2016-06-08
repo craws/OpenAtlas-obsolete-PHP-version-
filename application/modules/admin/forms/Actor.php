@@ -24,15 +24,6 @@ class Admin_Form_Actor extends Admin_Form_Base {
             'label' => $this->getView()->ucstring('name'),
         ]);
         $this->addElement('textarea', 'description', ['label' => $this->getView()->ucstring('description')]);
-        $this->addElement('hidden', 'genderId', ['decorators' => ['ViewHelper']]);
-        $this->addElement('text', 'genderButton', [
-            'label' => 'Gender',
-            'class' => 'tableSelect',
-            'readonly' => true,
-            'onfocus' => 'this.blur()',
-            'placeholder' => $this->getView()->ucstring('select'),
-            'attribs' => ['readonly' => 'true'],
-        ]);
         $this->addElement('hidden', 'residenceId', ['decorators' => ['ViewHelper']]);
         $this->addElement('text', 'residenceButton', [
             'label' => $this->getView()->ucstring('residence'),
@@ -96,8 +87,6 @@ class Admin_Form_Actor extends Admin_Form_Base {
         if ($actor->class->code != 'E21') {
             $this->removeElement('birth');
             $this->removeElement('death');
-            $this->removeElement('genderId');
-            $this->removeElement('genderButton');
         }
     }
 

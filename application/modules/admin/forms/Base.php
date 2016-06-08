@@ -84,12 +84,8 @@ class Admin_Form_Base extends Craws\Form\Table {
         }
     }
 
-    public function addHierarchies($formName, $entity = null) {
-        $forms = Zend_Registry::get('forms');
-        $hierarchies = [];
-        foreach ($forms[$formName]['hierarchyIds'] as $hierarchyId) {
-            $hierarchy = Model_NodeMapper::getById($hierarchyId);
-            $hierarchies[] = $hierarchy;
+    public function addHierarchies(array $hierarchies, $entity = null) {
+        foreach ($hierarchies as $hierarchy) {
             $this->addElement('hidden', $hierarchy->nameClean . 'Id', ['decorators' => ['ViewHelper']]);
             $this->addElement('text', $hierarchy->nameClean . 'Button', [
                 'label' => $hierarchy->name,
@@ -105,14 +101,17 @@ class Admin_Form_Base extends Craws\Form\Table {
             $nodeNames = [];
             foreach ($nodes as $node) {
                 $nodeIds[] = $node->id;
-                $nodeNames[] = $node->name;
+                if ($node->rootId) {
+                    $nodeNames[] = $node->name;
+                }
             }
             $this->populate([$hierarchy->nameClean . 'Id' => implode(',', $nodeIds)]);
-            if ($node->multiple) {
-                /* To do */
-                //$this->getView()->nameClean . $selectionElement, implode('</br>', $nodeNames);
+            if ($hierarchy->multiple) {
+                $selection = new Admin_Form_Element_Note($hierarchy->nameClean . 'Selection', ['value' => implode('<br/>', $nodeNames)]);
+                $this->addElement($selection);
             } else {
-                $this->populate([$hierarchy->nameClean . 'Button' => implode('</br>', $nodeNames)]);
+                $selection = ($nodeNames) ? $nodeNames[0] : '';
+                $this->populate([$hierarchy->nameClean . 'Button' => $selection]);
             }
             $this->getView()->$treeVariable = Model_NodeMapper::getTreeData($hierarchy->name, $nodes);
         }

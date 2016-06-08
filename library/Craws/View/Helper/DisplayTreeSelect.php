@@ -4,46 +4,40 @@
 
 class Craws_View_Helper_DisplayTreeSelect extends Zend_View_Helper_Abstract {
 
-    public function displayTreeSelect($hierarchy, Zend_Form $form, $selection = null) {
-        if (!is_a($hierarchy, 'Model_Node')) {
-            $hierarchy = Model_NodeMapper::getRootType($hierarchy);
-        }
-        $elementName = $hierarchy->nameClean . 'Button';
-        $elementId = $hierarchy->nameClean . 'Id';
-        $displayName = ucfirst($hierarchy->name);
-        $class = (in_array($hierarchy->name, ['administrative', 'historical'])) ? ' placeSwitch display-none' : '';
-        $html = '<div class="tableRow' . $class . '">
-            <div id="' . $elementName . '-label">
-                <label class="optional" for="' . $elementName . '">' . $displayName . '</label>
-                <span class="tooltip" title="' . $this->view->ucstring('tip_hierarchy') . '">i</span>
-            </div>';
-        $html .= '<div class="tableCell">';
-        if ($hierarchy->multiple) {
-            $ids = [];
-            $htmlIds = '';
-            $htmlNames = '';
-            if ($selection) {
-                foreach ($selection as $item) {
-                    $ids[] = $item->id;
-                    $htmlNames .= $item->name . '<br/>';
-                }
-                $htmlIds = implode(',', $ids);
+    public function displayTreeSelect(array $hierarchies, Zend_Form $form) {
+        usort($hierarchies, function($a, $b) {
+            return strcmp($a->name, $b->name);
+        });
+        $html = '';
+        foreach ($hierarchies as $hierarchy) {
+            if (!is_a($hierarchy, 'Model_Node')) {
+                $hierarchy = Model_NodeMapper::getRootType($hierarchy);
             }
-            $html .= '<span id="' . $hierarchy->nameClean . 'Button" class="button">' . $this->view->ucstring('change') . '</span><br/>';
-            $form->$elementId->setValue($htmlIds);
+            $elementName = $hierarchy->nameClean . 'Button';
+            $elementId = $hierarchy->nameClean . 'Id';
+            $displayName = ucfirst($hierarchy->name);
+            $class = (in_array($hierarchy->name, ['administrative', 'historical'])) ? ' placeSwitch display-none' : '';
+            $html .= '<div class="tableRow' . $class . '">
+                <div id="' . $elementName . '-label">
+                    <label class="optional" for="' . $elementName . '">' . $displayName . '</label>
+                    <span class="tooltip" title="' . $this->view->ucstring('tip_hierarchy') . '">i</span>
+                </div>';
+            $html .= '<div class="tableCell">';
             $html .= $form->$elementId->renderViewHelper();
-            $html .= '<div id="' . $hierarchy->nameClean . 'Selection" style="text-align:left;">' . $htmlNames . '</div>';
-        } else {
-            $html .= $form->$elementName->renderViewHelper();
-            $html .= $form->$elementId->renderViewHelper();
-            if ($hierarchy->directional) {
-                $html .= $form->inverse->renderViewHelper() . ' ' . $this->view->ucstring('inverse') . ' ';
+            if ($hierarchy->multiple) {
+                $html .= '<span id="' . $hierarchy->nameClean . 'Button" class="button">' . $this->view->ucstring('change') . '</span><br/>';
+                $selectionElement = $hierarchy->nameClean . 'Selection';
+                $html .= '<div style="text-align:left;" id="' . $hierarchy->nameClean . 'Selection">' . $form->$selectionElement->renderViewHelper() . '</div>';
+            } else {
+                $html .= $form->$elementName->renderViewHelper();
+                $html .= ($hierarchy->directional) ? $form->inverse->renderViewHelper() . ' ' . $this->view->ucstring('inverse') . ' ' : '';
+                $display = (!$form->$elementName->getValue()) ? 'style="display: none;"' : '';
+                $html .= '<a id="' . $hierarchy->nameClean . 'Clear" class="button" ' . $display . ' onclick="clearSelect(\'' . $hierarchy->nameClean .
+                    '\');">' . $this->view->ucstring('clear') . '</a>';
             }
-            $display = (!$form->$elementName->getValue()) ? 'style="display: none;"' : '';
-            $html .= '<a id="' . $hierarchy->nameClean . 'Clear" class="button" ' . $display . ' onclick="clearSelect(\'' . $hierarchy->nameClean .
-                '\');">' . $this->view->ucstring('clear') . '</a>';
+            $html .= '</div></div>';
         }
-        return $html . '</div></div>';
+        return $html;
     }
 
 }
