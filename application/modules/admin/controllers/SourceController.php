@@ -52,6 +52,7 @@ class Admin_SourceController extends Zend_Controller_Action {
             $this->view->menuHighlight = 'place';
         }
         $form = new Admin_Form_Source();
+        $hierarchies = $form->addHierarchies('Source');
         if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
             $this->view->form = $form;
             $this->view->event = $event;
@@ -63,7 +64,7 @@ class Admin_SourceController extends Zend_Controller_Action {
         $source = Model_EntityMapper::insert('E33', $form->getValue('name'), $form->getValue('description'));
         $type = Model_NodeMapper::getByNodeCategoryName('Linguistic object classification', 'Source Content');
         Model_LinkMapper::insert('P2', $source, $type);
-        self::save($form, $source);
+        self::save($form, $source, $hierarchies);
         if ($event) {
             Model_LinkMapper::insert('P67', $source, $event);
         }
@@ -151,6 +152,7 @@ class Admin_SourceController extends Zend_Controller_Action {
     public function updateAction() {
         $source = Model_EntityMapper::getById($this->_getParam('id'));
         $form = new Admin_Form_Source();
+        $hierarchies = $form->addHierarchies('Source', $source);
         $this->view->form = $form;
         $this->view->source = $source;
         if (!$this->getRequest()->isPost()) {
@@ -160,12 +162,6 @@ class Admin_SourceController extends Zend_Controller_Action {
                 'description' => $source->description,
                 'modified' => ($source->modified) ? $source->modified->getTimestamp() : 0
             ]);
-            $type = Model_NodeMapper::getNodeByEntity('Source', $source);
-            if ($type && $type->rootId) {
-                $form->populate(['typeId' => $type->id, 'typeButton' => $type->name]);
-                $this->view->type = $type;
-            }
-            $this->view->typeTreeData = Model_NodeMapper::getTreeData('source', [$type]);
             return;
         }
         $formValid = $form->isValid($this->getRequest()->getPost());
@@ -189,17 +185,22 @@ class Admin_SourceController extends Zend_Controller_Action {
                 $link->delete();
             }
         }
-        self::save($form, $source);
+        self::save($form, $source, $hierarchies);
         $this->_helper->message('info_update');
         return $this->_helper->redirector->gotoUrl('/admin/source/view/id/' . $source->id);
     }
 
-    private function save(Zend_Form $form, Model_Entity $source) {
-        $sourceType = Model_NodeMapper::getRootType('source');
-        if ($this->_getParam('typeId')) {
-            $sourceType = Model_NodeMapper::getById($this->_getParam('typeId'));
-        };
-        Model_LinkMapper::insert('P2', $source, $sourceType);
+    private function save(Zend_Form $form, Model_Entity $entity, array $hierarchies) {
+        foreach ($hierarchies as $hierarchy) {
+            $idField = $hierarchy->nameClean . 'Id';
+            if ($form->getValue($idField)) {
+                foreach (explode(",", $form->getValue($idField)) as $id) {
+                    Model_LinkMapper::insert('P2', $entity, Model_NodeMapper::getById($id));
+                }
+            } else if ($hierarchy->system) {
+                Model_LinkMapper::insert('P2', $entity, $hierarchy);
+            }
+        }
     }
 
     public function viewAction() {
@@ -231,7 +232,6 @@ class Admin_SourceController extends Zend_Controller_Action {
         $this->view->referenceLinks = $referenceLinks;
         $this->view->source = $source;
         $this->view->textLinks = Model_LinkMapper::getLinks($source, 'P73');
-        $this->view->sourceType = Model_NodeMapper::getNodeByEntity('Source', $source);
     }
 
 }

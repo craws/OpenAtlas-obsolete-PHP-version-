@@ -84,7 +84,14 @@ class Admin_Form_Base extends Craws\Form\Table {
         }
     }
 
-    public function addHierarchies(array $hierarchies, $entity = null) {
+    /* add hierarchies form elements and return used hierarchies */
+    public function addHierarchies($formName, $entity = null) {
+        $forms = Zend_Registry::get('forms');
+        $hierarchies = [];
+        foreach ($forms[$formName]['hierarchyIds'] as $hierarchyId) {
+            $hierarchy = Model_NodeMapper::getById($hierarchyId);
+            $hierarchies[] = $hierarchy;
+        }
         foreach ($hierarchies as $hierarchy) {
             $this->addElement('hidden', $hierarchy->nameClean . 'Id', ['decorators' => ['ViewHelper']]);
             $this->addElement('text', $hierarchy->nameClean . 'Button', [
@@ -116,7 +123,7 @@ class Admin_Form_Base extends Craws\Form\Table {
             $this->getView()->$treeVariable = Model_NodeMapper::getTreeData($hierarchy->name, $nodes);
         }
         $this->getView()->hierarchies = $hierarchies;
-
+        return $hierarchies;
     }
 
 }

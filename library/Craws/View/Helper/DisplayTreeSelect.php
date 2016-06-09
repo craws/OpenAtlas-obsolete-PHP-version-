@@ -32,7 +32,7 @@ class Craws_View_Helper_DisplayTreeSelect extends Zend_View_Helper_Abstract {
                 $html .= $form->$elementName->renderViewHelper();
                 $html .= ($hierarchy->directional) ? $form->inverse->renderViewHelper() . ' ' . $this->view->ucstring('inverse') . ' ' : '';
                 $display = (!$form->$elementName->getValue()) ? 'style="display: none;"' : '';
-                $html .= '<a id="' . $hierarchy->nameClean . 'Clear" class="button" ' . $display . ' onclick="clearSelect(\'' . $hierarchy->nameClean .
+                $html .= ' <a id="' . $hierarchy->nameClean . 'Clear" class="button" ' . $display . ' onclick="clearSelect(\'' . $hierarchy->nameClean .
                     '\');">' . $this->view->ucstring('clear') . '</a>';
             }
             $html .= '</div></div>';

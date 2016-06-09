@@ -19,9 +19,14 @@
             <?= $this->bookmarkToggle($source->id) ?>
         </div>
         <h1><?= $source->name ?></h1>
-        <? $table['data'][_('type')] = $this->link($this->sourceType); ?>
-        <? $this->table = $this->tableLog($table, 'entity', $source->id); ?>
-        <?= $this->render('tableDataItem.phtml') ?>
+        <?
+            $table['data'] = [];
+            foreach ($this->getNodesForView($source) as $rootName => $nodes) {
+                $table['data'][$rootName] = implode('<br/>', $nodes);
+            }
+            $this->table = $this->tableLog($table, 'entity', $source->id);
+        ?>
+        <?= $this->render('tableDataItem.phtml'); ?>
         <? if ($source->description): ?>
             <p class="descriptionTitle"><?= $this->ucstring('content') ?><p>
             <p><?= $source->description ?></p>

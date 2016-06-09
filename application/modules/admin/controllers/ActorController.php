@@ -41,15 +41,7 @@ class Admin_ActorController extends Zend_Controller_Action {
             $form->removeElement('death');
         }
         $form->addElement($form->createElement('text', 'alias0', ['belongsTo' => 'alias']));
-        $hierarchies = [];
-        $forms = Zend_Registry::get('forms');
-        foreach ($forms[$this->getFormName($this->_getParam('code'))]['hierarchyIds'] as $hierarchyId) {
-            $hierarchy = Model_NodeMapper::getById($hierarchyId);
-            $hierarchies[] = $hierarchy;
-            $dataVariable = $hierarchy->nameClean . 'TreeData';
-            $this->view->$dataVariable = Model_NodeMapper::getTreeData($hierarchy->name);
-        }
-        $form->addHierarchies($hierarchies);
+        $hierarchies = $form->addHierarchies($this->getFormName($this->_getParam('code')));
         if ($this->getRequest()->isPost()) {
             $form->preValidation($this->getRequest()->getPost());
         }
@@ -106,13 +98,7 @@ class Admin_ActorController extends Zend_Controller_Action {
         $form = new Admin_Form_Actor();
         $form->prepareUpdate($actor);
         $this->view->form = $form;
-        $forms = Zend_Registry::get('forms');
-        $hierarchies = [];
-        foreach ($forms[$this->getFormName($actor->class->code)]['hierarchyIds'] as $hierarchyId) {
-            $hierarchy = Model_NodeMapper::getById($hierarchyId);
-            $hierarchies[] = $hierarchy;
-        }
-        $form->addHierarchies($hierarchies, $actor);
+        $hierarchies = $form->addHierarchies($this->getFormName($actor->class->code), $actor);
         if (!$this->getRequest()->isPost()) {
             self::prepareDefaultUpdate($form, $actor);
             return;
@@ -147,17 +133,9 @@ class Admin_ActorController extends Zend_Controller_Action {
 
     public function viewAction() {
         $actor = Model_EntityMapper::getById($this->_getParam('id'));
-        $nodes = [];
-        foreach (Model_LinkMapper::getLinkedEntities($actor, 'P2') as $node) {
-            if ($node->rootId) {
-                $nodes[Model_NodeMapper::getById($node->rootId)->name][] = $node->name;
-            }
-        }
-        ksort($nodes);
         $this->view->actor = $actor;
         $this->view->aliases = Model_LinkMapper::getLinkedEntities($actor, 'P131');
         $this->view->dates = Model_DateMapper::getDates($actor);
-        $this->view->nodes = $nodes;
         $this->view->relationInverseLinks = Model_LinkMapper::getLinks($actor, 'OA7', true);
         $this->view->relationLinks = Model_LinkMapper::getLinks($actor, 'OA7');
         $sourceLinks = [];
@@ -262,7 +240,6 @@ class Admin_ActorController extends Zend_Controller_Action {
                 Model_LinkMapper::insert('P2', $actor, $hierarchy);
             }
         }
-        $forms = Zend_Registry::get('forms');
         Model_DateMapper::saveDates($actor, $form);
         foreach (['residenceId' => 'P74', 'appearsFirstId' => 'OA8', 'appearsLastId' => 'OA9'] as $formField => $propertyCode) {
             if ($form->getValue($formField)) {

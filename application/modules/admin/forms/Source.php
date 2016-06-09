@@ -7,15 +7,6 @@ class Admin_Form_Source extends Admin_Form_Base {
     public function init() {
         $this->setName('sourceForm')->setMethod('post');
         $this->setAction($this->getView()->url());
-        $this->addElement('hidden', 'typeId', ['decorators' => ['ViewHelper']]);
-        $this->addElement('text', 'typeButton', [
-            'label' => $this->getView()->ucstring('type'),
-            'class' => 'tableSelect',
-            'readonly' => true,
-            'onfocus' => 'this.blur()',
-            'placeholder' => $this->getView()->ucstring('select'),
-            'attribs' => ['readonly' => 'true'],
-        ]);
         $this->addElement('text', 'name', [
             'label' => $this->getView()->ucstring('name'),
             'class' => 'required',
