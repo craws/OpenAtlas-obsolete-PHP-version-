@@ -6,7 +6,7 @@
         <?= $form->name->renderLabel() ?>
         <div class="tableCell"><?= $form->name->renderViewHelper() ?></div>
     </div>
-    <?= $this->displayTreeSelect('event', $form, $this->types) ?>
+    <?= $this->displayTreeSelect($this->hierarchies, $form) ?>
     <?= $this->displayTableSelect('super', $form); ?>
     <?= $this->displayTableSelect('place', $form); ?>
     <?= $this->render('dateForm.phtml'); ?>
@@ -126,7 +126,10 @@
         </div>
     </div>
 <? endif ?>
-<?= $this->displayTreeOverlay('type', $this->typeTreeData, true) ?>
+<? foreach ($this->hierarchies as $hierarchy) : ?>
+    <? $dataVariable = $hierarchy->nameClean . 'TreeData'; ?>
+    <?= $this->displayTreeOverlay($hierarchy->nameClean, $this->$dataVariable); ?>
+<? endforeach ?>
 <script type="text/javascript">
     $(document).ready(function () {
         createOverlay("super", "<?= $this->ucstring('event') ?>");

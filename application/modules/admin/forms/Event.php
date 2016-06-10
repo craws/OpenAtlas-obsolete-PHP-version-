@@ -32,7 +32,6 @@ class Admin_Form_Event extends Admin_Form_Base {
             'placeholder' => $this->getView()->ucstring('select'),
             'attribs' => ['readonly' => 'true'],
         ]);
-        $this->addElement('hidden', 'typeId', ['decorators' => ['ViewHelper']]);
         $submitLabel = 'save';
         if (Zend_Controller_Front::getInstance()->getRequest()->getActionName() == 'insert') {
             $submitLabel = 'insert';

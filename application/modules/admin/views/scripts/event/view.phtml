@@ -27,12 +27,8 @@
         if ($this->place) {
             $table['data'][_('place')] = $this->link($this->place);
         }
-        if ($this->eventTypes) {
-            $types = [];
-            foreach ($this->eventTypes as $type) {
-                $types[] = $this->link($type);
-            }
-            $table['data'][_('type')] = implode('<br/>', $types);
+        foreach ($this->getNodesForView($event) as $rootName => $nodes) {
+            $table['data'][$rootName] = implode('<br/>', $nodes);
         }
         foreach (['OA5' => _('begin'), 'OA6' => _('end')] as $key => $label) {
             if (isset($this->dates[$key])) {

@@ -51,6 +51,7 @@ class Admin_EventController extends Zend_Controller_Action {
         }
         $form = new Admin_Form_Event();
         $form->addFields($class);
+        $hierarchies = $form->addHierarchies('Event');
         if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
             $this->view->form = $form;
             $this->view->source = $source;
@@ -59,11 +60,10 @@ class Admin_EventController extends Zend_Controller_Action {
             $this->view->actors = Model_EntityMapper::getByCodes('Actor');
             $this->view->objects = Model_EntityMapper::getByCodes('PhysicalObject');
             $this->view->events = Model_EntityMapper::getByCodes('Event');
-            $this->view->typeTreeData = Model_NodeMapper::getTreeData('event');
             return;
         }
         $event = Model_EntityMapper::insert($class->id, $form->getValue('name'), $form->getValue('description'));
-        self::save($event, $form);
+        self::save($event, $form, $hierarchies);
         if ($source) {
             Model_LinkMapper::insert('P67', $source, $event);
         }
@@ -110,6 +110,7 @@ class Admin_EventController extends Zend_Controller_Action {
         // @codeCoverageIgnoreEnd
         $form = new Admin_Form_Event();
         $form->addFields($event->class);
+        $hierarchies = $form->addHierarchies('Event', $event);
         $this->view->form = $form;
         if (!$this->getRequest()->isPost()) {
             self::prepareDefaultUpdate($event, $form);
@@ -126,7 +127,6 @@ class Admin_EventController extends Zend_Controller_Action {
             $this->view->actors = Model_EntityMapper::getByCodes('Actor');
             $this->view->objects = Model_EntityMapper::getByCodes('PhysicalObject');
             $this->view->events = Model_EntityMapper::getByCodes('Event');
-            $this->view->typeTreeData = Model_NodeMapper::getTreeData('event');
             $this->_helper->message('error_modified');
             return;
         }
@@ -136,7 +136,7 @@ class Admin_EventController extends Zend_Controller_Action {
         foreach (Model_LinkMapper::getLinks($event, ['P2', 'P7', 'P117', 'P22', 'P23', 'P24']) as $link) {
             $link->delete();
         }
-        self::save($event, $form);
+        self::save($event, $form, $hierarchies);
         $this->_helper->message('info_update');
         return $this->_helper->redirector->gotoUrl('/admin/event/view/id/' . $event->id);
     }
@@ -145,7 +145,6 @@ class Admin_EventController extends Zend_Controller_Action {
         $event = Model_EntityMapper::getById($this->_getParam('id'));
         $this->view->actorLinks = Model_LinkMapper::getLinks($event, ['P11', 'P14', 'P22', 'P23']);
         $this->view->event = $event;
-        $this->view->eventTypes = Model_NodeMapper::getNodesByEntity('Event', $event);
         $this->view->dates = Model_DateMapper::getDates($event);
         $this->view->subs = Model_LinkMapper::getLinkedEntities($event, 'P117', true);
         $this->view->super = Model_LinkMapper::getLinkedEntity($event, 'P117');
@@ -221,18 +220,20 @@ class Admin_EventController extends Zend_Controller_Action {
         $this->view->actors = Model_EntityMapper::getByCodes('Actor');
         $this->view->objects = Model_EntityMapper::getByCodes('PhysicalObject');
         $this->view->events = Model_EntityMapper::getByCodes('Event');
-        $types = Model_NodeMapper::getNodesByEntity('Event', $event);
-        $this->view->types = $types;
-        $this->view->typeTreeData = Model_NodeMapper::getTreeData('event', $types);
     }
 
-    private function save(Model_Entity $event, Zend_Form $form) {
-        Model_DateMapper::saveDates($event, $form);
-        if ($form->getValue('typeId')) {
-            foreach (explode(",", $form->getValue('typeId')) as $id) {
-                Model_LinkMapper::insert('P2', $event, Model_EntityMapper::getById($id));
+    private function save(Model_Entity $event, Zend_Form $form, $hierarchies) {
+        foreach ($hierarchies as $hierarchy) {
+            $idField = $hierarchy->nameClean . 'Id';
+            if ($form->getValue($idField)) {
+                foreach (explode(",", $form->getValue($idField)) as $id) {
+                    Model_LinkMapper::insert('P2', $event, Model_NodeMapper::getById($id));
+                }
+            } else if ($hierarchy->system) {
+                Model_LinkMapper::insert('P2', $event, $hierarchy);
             }
         }
+        Model_DateMapper::saveDates($event, $form);
         if ($form->getValue('placeId')) {
             $place = Model_LinkMapper::getLinkedEntity($form->getValue('placeId'), 'P53');
             Model_LinkMapper::insert('P7', $event, $place);
