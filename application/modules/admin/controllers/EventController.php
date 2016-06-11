@@ -222,7 +222,7 @@ class Admin_EventController extends Zend_Controller_Action {
         $this->view->events = Model_EntityMapper::getByCodes('Event');
     }
 
-    private function save(Model_Entity $event, Zend_Form $form, $hierarchies) {
+    private function save(Model_Entity $event, Zend_Form $form, array $hierarchies) {
         foreach ($hierarchies as $hierarchy) {
             $idField = $hierarchy->nameClean . 'Id';
             if ($form->getValue($idField)) {

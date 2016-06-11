@@ -254,8 +254,11 @@ INSERT INTO web.form (name) VALUES
 ('Edition'),
 ('Information Carrier');
 
-INSERT INTO web.hierarchy_form (hierarchy_id, form_id) VALUES (
-(SELECT id FROM web.hierarchy WHERE name LIKE 'Gender'),(SELECT id FROM web.form WHERE name LIKE 'Person'),
-(SELECT id FROM web.hierarchy WHERE name LIKE 'Source'),(SELECT id FROM web.form WHERE name LIKE 'Source'),
-(SELECT id FROM web.hierarchy WHERE name LIKE 'Event'),(SELECT id FROM web.form WHERE name LIKE 'Event')
-);
+INSERT INTO web.hierarchy_form (hierarchy_id, form_id) VALUES
+((SELECT id FROM web.hierarchy WHERE name LIKE 'Gender'),(SELECT id FROM web.form WHERE name LIKE 'Person')),
+((SELECT id FROM web.hierarchy WHERE name LIKE 'Source'),(SELECT id FROM web.form WHERE name LIKE 'Source')),
+((SELECT id FROM web.hierarchy WHERE name LIKE 'Event'),(SELECT id FROM web.form WHERE name LIKE 'Event')),
+((SELECT id FROM web.hierarchy WHERE name LIKE 'Site'),(SELECT id FROM web.form WHERE name LIKE 'Place')),
+((SELECT id FROM web.hierarchy WHERE name LIKE 'Administrative Unit'),(SELECT id FROM web.form WHERE name LIKE 'Place')),
+((SELECT id FROM web.hierarchy WHERE name LIKE 'Historical Place'),(SELECT id FROM web.form WHERE name LIKE 'Place'))
+;

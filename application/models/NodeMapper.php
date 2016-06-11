@@ -112,11 +112,17 @@ class Model_NodeMapper extends Model_EntityMapper {
         $nodes = [];
         foreach (Zend_Registry::get('nodes') as $node) {
             if (\Craws\FilterInput::filter($node->name, 'node') == \Craws\FilterInput::filter($rootName, 'node')) {
-                foreach (Model_LinkMapper::getLinkedEntities($entity, $node->propertyToEntity) as $linkedNode) {
+                $realEntity = $entity;
+                /* if its a place we need the object for locations */
+                if (in_array($node->name, ['Administrative Unit', 'Historical Place'])) {
+                    $realEntity = Model_LinkMapper::getLinkedEntity($entity, 'P53');
+                }
+                foreach (Model_LinkMapper::getLinkedEntities($realEntity, $node->propertyToEntity) as $linkedNode) {
                     if ($linkedNode->rootId == $node->id || $linkedNode->id == $node->id) {
                         $nodes[] = $linkedNode;
                     }
                 }
+
             }
         }
         return $nodes;
