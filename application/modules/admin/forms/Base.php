@@ -85,6 +85,7 @@ class Admin_Form_Base extends Craws\Form\Table {
     }
 
     /* add hierarchies form elements and return used hierarchies */
+
     public function addHierarchies($formName, $entity = null) {
         $forms = Zend_Registry::get('forms');
         $hierarchies = [];
@@ -102,6 +103,14 @@ class Admin_Form_Base extends Craws\Form\Table {
                 'placeholder' => $this->getView()->ucstring('select'),
                 'attribs' => ['readonly' => 'true'],
             ]);
+            if ($hierarchy->directional) {
+                $this->addElement('checkbox', 'inverse', [
+                    'label' => $this->getView()->ucstring('inverse'),
+                    'checkedValue' => 1,
+                    'uncheckedValue' => 0,
+                    'value' => 0,
+                ]);
+            }
             $treeVariable = $hierarchy->nameClean . 'TreeData';
             $nodes = ($entity) ? Model_NodeMapper::getNodesByEntity($hierarchy->name, $entity) : [];
             $nodeIds = [];

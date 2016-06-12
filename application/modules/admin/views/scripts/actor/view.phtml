@@ -111,14 +111,15 @@
             $relationTable['header'] = ['Actor Actor Relation', _('actor'), _('first'), _('last'), '', ''];
             foreach ($this->relationLinks as $link) {
                 $type = Model_LinkPropertyMapper::getLinkedEntity($link, 'P2');
+                $typeName = ($type && $type->rootId) ? $type->getNameDirected() : '';
                 $dates = Model_DateMapper::getLinkDateRange($link);
-                $text = $this->translate('relation') . ': ' . $type->getNameDirected() . ' ' . $link->range->name;
+                $text = $this->translate('relation') . ': ' . $typeName . ' ' . $link->range->name;
                 $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_remove', $text)) .
                     "')\" ";
                 $deleteLink = '<div><a href="/admin/function/unlink/id/' . $link->id . '/entityId/' . $actor->id .
                     '/#tabRelation' . '" class="button"' . $confirm . '>' . $this->ucstring('remove') . '</a></div>';
                 $relationTable['data'][] = [
-                    $type->getNameDirected(),
+                    $typeName,
                     $this->link($link->range),
                     $dates['first'],
                     $dates['last'],
@@ -129,15 +130,15 @@
             }
             foreach ($this->relationInverseLinks as $link) {
                 $type = Model_LinkPropertyMapper::getLinkedEntity($link, 'P2');
+                $typeName = ($type && $type->rootId) ? $type->getNameDirected(true) : '';
                 $dates = Model_DateMapper::getLinkDateRange($link);
-                $text = $this->translate('relation') . ': ' . $type->getNameDirected(true) . ' ' .
-                    $link->domain->name;
+                $text = $this->translate('relation') . ': ' . $typeName . ' ' . $link->domain->name;
                 $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_remove', $text)) .
                     "')\" ";
                 $deleteLink = '<div><a href="/admin/function/unlink/id/' . $link->id . '/entityId/' . $actor->id .
                     '/#tabRelation' . '" class="button"' . $confirm . '>' . $this->ucstring('remove') . '</a></div>';
                 $relationTable['data'][] = [
-                    $type->getNameDirected(true),
+                    $typeName,
                     $this->link($link->domain),
                     $dates['first'],
                     $dates['last'],

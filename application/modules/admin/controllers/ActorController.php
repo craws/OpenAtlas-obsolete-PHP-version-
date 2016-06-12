@@ -229,29 +229,29 @@ class Admin_ActorController extends Zend_Controller_Action {
         $this->view->objects = Model_EntityMapper::getByCodes('PhysicalObject');
     }
 
-    private function save(Model_Entity $actor, Zend_Form $form, array $hierarchies) {
+    private function save(Model_Entity $entity, Zend_Form $form, array $hierarchies) {
         foreach ($hierarchies as $hierarchy) {
             $idField = $hierarchy->nameClean . 'Id';
             if ($form->getValue($idField)) {
                 foreach (explode(",", $form->getValue($idField)) as $id) {
-                    Model_LinkMapper::insert('P2', $actor, Model_NodeMapper::getById($id));
+                    Model_LinkMapper::insert('P2', $entity, Model_NodeMapper::getById($id));
                 }
             } else if ($hierarchy->system) {
-                Model_LinkMapper::insert('P2', $actor, $hierarchy);
+                Model_LinkMapper::insert('P2', $entity, $hierarchy);
             }
         }
-        Model_DateMapper::saveDates($actor, $form);
+        Model_DateMapper::saveDates($entity, $form);
         foreach (['residenceId' => 'P74', 'appearsFirstId' => 'OA8', 'appearsLastId' => 'OA9'] as $formField => $propertyCode) {
             if ($form->getValue($formField)) {
                 $place = Model_LinkMapper::getLinkedEntity($form->getValue($formField), 'P53');
-                Model_LinkMapper::insert($propertyCode, $actor, $place);
+                Model_LinkMapper::insert($propertyCode, $entity, $place);
             }
         }
         $data = $form->getValues();
         foreach (array_unique($data['alias']) as $name) {
             if (trim($name)) {
                 $alias = Model_EntityMapper::insert('E82', trim($name));
-                Model_LinkMapper::insert('P131', $actor, $alias);
+                Model_LinkMapper::insert('P131', $entity, $alias);
             }
         }
     }

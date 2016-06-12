@@ -5,7 +5,7 @@
 class Model_NodeMapper extends Model_EntityMapper {
 
     public static function registerHierarchies() {
-        $sqlForms = "SELECT f.id, f.name,
+        $sqlForms = "SELECT f.id, f.name, f.extendable,
             (SELECT ARRAY(SELECT h.id FROM web.hierarchy h JOIN web.hierarchy_form hf ON h.id = hf.hierarchy_id
             WHERE hf.form_id = f.id )) AS hierarchy_ids
             FROM web.form f ORDER BY name ASC;";
@@ -16,9 +16,10 @@ class Model_NodeMapper extends Model_EntityMapper {
             $forms[$row['name']]['id'] = $row['id'];
             $forms[$row['name']]['name'] = $row['name'];
             $forms[$row['name']]['hierarchyIds'] = str_getcsv(trim($row['hierarchy_ids'], '{}'));
+            $forms[$row['name']]['extendable'] = $row['extendable'];
         }
         Zend_Registry::set('forms', $forms);
-        $sql = "SELECT h.id, h.multiple, h.system, h.is_extendable, h.is_directional,
+        $sql = "SELECT h.id, h.multiple, h.system, h.extendable, h.directional,
             e.name, e.description, e.class_id, e.created, e.modified
             FROM web.hierarchy h JOIN model.entity e ON h.id = e.id;";
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
@@ -29,8 +30,8 @@ class Model_NodeMapper extends Model_EntityMapper {
             $node = Model_EntityMapper::populate(new Model_Node(), $row);
             $node->multiple = $row['multiple'];
             $node->system = $row['system'];
-            $node->extendable = $row['is_extendable'];
-            $node->directional = $row['is_directional'];
+            $node->extendable = $row['extendable'];
+            $node->directional = $row['directional'];
             $node->nameClean = \Craws\FilterInput::filter($row['name'], 'node');
             foreach ($forms as $form) {
                 if (in_array($node->id, $form['hierarchyIds'])) {
@@ -108,7 +109,7 @@ class Model_NodeMapper extends Model_EntityMapper {
     }
     // @codeCoverageIgnoreEnd
 
-    public static function getNodesByEntity($rootName, Model_Entity $entity) {
+    public static function getNodesByEntity($rootName, $entity) {
         $nodes = [];
         foreach (Zend_Registry::get('nodes') as $node) {
             if (\Craws\FilterInput::filter($node->name, 'node') == \Craws\FilterInput::filter($rootName, 'node')) {
@@ -117,9 +118,17 @@ class Model_NodeMapper extends Model_EntityMapper {
                 if (in_array($node->name, ['Administrative Unit', 'Historical Place'])) {
                     $realEntity = Model_LinkMapper::getLinkedEntity($entity, 'P53');
                 }
-                foreach (Model_LinkMapper::getLinkedEntities($realEntity, $node->propertyToEntity) as $linkedNode) {
-                    if ($linkedNode->rootId == $node->id || $linkedNode->id == $node->id) {
-                        $nodes[] = $linkedNode;
+                if (is_a($entity, 'Model_Entity')) {
+                    foreach (Model_LinkMapper::getLinkedEntities($realEntity, $node->propertyToEntity) as $linkedNode) {
+                        if ($linkedNode->rootId == $node->id || $linkedNode->id == $node->id) {
+                            $nodes[] = $linkedNode;
+                        }
+                    }
+                } else if (is_a($entity, 'Model_Link')) {
+                    foreach (Model_LinkPropertyMapper::getLinkedEntities($realEntity, $node->propertyToEntity) as $linkedNode) {
+                        if ($linkedNode->rootId == $node->id || $linkedNode->id == $node->id) {
+                            $nodes[] = $linkedNode;
+                        }
                     }
                 }
 
@@ -248,7 +257,7 @@ class Model_NodeMapper extends Model_EntityMapper {
     }
 
     public static function insertHierarchy($form, $hierarchy) {
-        $sql = "INSERT INTO web.hierarchy (id, name, multiple, is_extendable) VALUES (:id, :name, :multiple, 1)";
+        $sql = "INSERT INTO web.hierarchy (id, name, multiple, extendable) VALUES (:id, :name, :multiple, 1)";
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->bindValue(':id', $hierarchy->id);
         $statement->bindValue(':name', $hierarchy->name);

@@ -21,7 +21,9 @@ class Admin_Form_Hierarchy extends Admin_Form_Base {
         $this->addElement('textarea', 'description', ['label' => $this->getView()->ucstring('description')]);
         $formsElement = new Zend_Form_Element_MultiCheckbox('forms');
         foreach (Zend_Registry::get('forms') as $formName => $form) {
-            $formsElement->addMultiOption($form['id'], $formName);
+            if ($form['extendable']) {
+                $formsElement->addMultiOption($form['id'], $formName);
+            }
         }
         $this->addElement($formsElement);
         $this->addElement('textarea', 'description', ['label' => $this->getView()->ucstring('description')]);

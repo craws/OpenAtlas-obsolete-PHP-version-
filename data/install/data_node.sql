@@ -227,7 +227,7 @@ INSERT INTO link (property_id, range_id, domain_id) VALUES
 ((SELECT id FROM property WHERE code='P89'), (SELECT id FROM entity WHERE name='Historical Place'), (SELECT id FROM entity WHERE name='Comitatus Iauntal')),
 ((SELECT id FROM property WHERE code='P89'), (SELECT id FROM entity WHERE name='Historical Place'), (SELECT id FROM entity WHERE name='Kingdom of Serbia'));
 
-INSERT INTO web.node (id, name, multiple, system, is_extendable, is_directional) VALUES
+INSERT INTO web.hierarchy (id, name, multiple, system, extendable, directional) VALUES
 ((SELECT id FROM entity WHERE name='Source'), 'Source', 0, 1, 1, 0),
 ((SELECT id FROM entity WHERE name='Event'), 'Event', 0, 1, 1, 0),
 ((SELECT id FROM entity WHERE name='Actor Actor Relation'), 'Actor Actor Relation', 0, 1, 1, 1),
@@ -243,16 +243,18 @@ INSERT INTO web.node (id, name, multiple, system, is_extendable, is_directional)
 ((SELECT id FROM entity WHERE name='Administrative Unit'), 'Administrative Unit', 1, 1, 1, 0),
 ((SELECT id FROM entity WHERE name='Historical Place'), 'Historical Place', 1, 1, 1, 0);
 
-INSERT INTO web.form (name) VALUES
-('Source'),
-('Event'),
-('Person'),
-('Group'),
-('Legal Body'),
-('Place'),
-('Bibliography'),
-('Edition'),
-('Information Carrier');
+INSERT INTO web.form (name, extendable) VALUES
+('Source', 1),
+('Event', 1),
+('Person', 1),
+('Group', 1),
+('Legal Body', 1),
+('Place', 1),
+('Bibliography', 1),
+('Edition', 1),
+('Information Carrier', 1),
+('Actor Actor Relation', 0)
+;
 
 INSERT INTO web.hierarchy_form (hierarchy_id, form_id) VALUES
 ((SELECT id FROM web.hierarchy WHERE name LIKE 'Gender'),(SELECT id FROM web.form WHERE name LIKE 'Person')),
@@ -263,5 +265,6 @@ INSERT INTO web.hierarchy_form (hierarchy_id, form_id) VALUES
 ((SELECT id FROM web.hierarchy WHERE name LIKE 'Historical Place'),(SELECT id FROM web.form WHERE name LIKE 'Place')),
 ((SELECT id FROM web.hierarchy WHERE name LIKE 'Bibliography'),(SELECT id FROM web.form WHERE name LIKE 'Bibliography')),
 ((SELECT id FROM web.hierarchy WHERE name LIKE 'Edition'),(SELECT id FROM web.form WHERE name LIKE 'Edition')),
-((SELECT id FROM web.hierarchy WHERE name LIKE 'Information Carrier'),(SELECT id FROM web.form WHERE name LIKE 'Information Carrier'))
+((SELECT id FROM web.hierarchy WHERE name LIKE 'Information Carrier'),(SELECT id FROM web.form WHERE name LIKE 'Information Carrier')),
+((SELECT id FROM web.hierarchy WHERE name LIKE 'Actor Actor Relation'),(SELECT id FROM web.form WHERE name LIKE 'Actor Actor Relation'))
 ;
