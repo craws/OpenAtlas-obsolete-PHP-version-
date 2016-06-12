@@ -13,15 +13,6 @@ class Admin_Form_Reference extends Admin_Form_Base {
             'label' => $this->getView()->ucstring('name'),
             'placeholder' => 'Doe 2015'
         ]);
-        $this->addElement('hidden', 'typeId', ['decorators' => ['ViewHelper']]);
-        $this->addElement('text', 'typeButton', [
-            'label' => $this->getView()->ucstring('type'),
-            'class' => 'tableSelect',
-            'readonly' => true,
-            'onfocus' => 'this.blur()',
-            'placeholder' => $this->getView()->ucstring('select'),
-            'attribs' => ['readonly' => 'true'],
-        ]);
         $this->addElement('textarea', 'description', [
             'label' => $this->getView()->ucstring('description'),
             'placeholder' => 'Jane Doe, my first book about dinosaurs, Cambridge 2015',

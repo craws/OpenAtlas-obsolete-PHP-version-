@@ -13,16 +13,16 @@ class Admin_CarrierController extends Zend_Controller_Action {
 
     public function insertAction() {
         $form = new Admin_Form_Carrier();
+        $hierarchies = $form->addHierarchies('Information Carrier');
         if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
             $this->view->form = $form;
             $this->view->label = Model_ClassMapper::getByCode('E84')->nameTranslated;
             $this->view->menuHighlight = 'reference';
             $this->view->objects = Model_EntityMapper::getByCodes('PhysicalObject');
-            $this->view->typeTreeData = Model_NodeMapper::getTreeData('information carrier');
             return;
         }
         $carrier = Model_EntityMapper::insert('E84', $form->getValue('name'), $form->getValue('description'));
-        self::save($form, $carrier);
+        self::save($form, $carrier, $hierarchies);
         $this->_helper->message('info_insert');
         // @codeCoverageIgnoreStart
         if ($form->getElement('continue')->getValue()) {
@@ -35,6 +35,7 @@ class Admin_CarrierController extends Zend_Controller_Action {
     public function updateAction() {
         $carrier = Model_EntityMapper::getById($this->_getParam('id'));
         $form = new Admin_Form_Carrier();
+        $hierarchies = $form->addHierarchies('Information Carrier', $carrier);
         $this->view->form = $form;
         $this->view->carrier = $carrier;
         $this->view->menuHighlight = 'reference';
@@ -43,7 +44,6 @@ class Admin_CarrierController extends Zend_Controller_Action {
             $form->populate([
                 'name' => $carrier->name,
                 'description' => $carrier->description,
-                'typeId' => $type->id,
                 'modified' => ($carrier->modified) ? $carrier->modified->getTimestamp() : 0
             ]);
             if ($type->rootId) {
@@ -82,7 +82,7 @@ class Admin_CarrierController extends Zend_Controller_Action {
         foreach (Model_LinkMapper::getLinks($carrier, ['P2', 'OA8']) as $link) {
             $link->delete();
         }
-        self::save($form, $carrier);
+        self::save($form, $carrier, $hierarchies);
         $this->_helper->message('info_update');
         return $this->_helper->redirector->gotoUrl('/admin/carrier/view/id/' . $carrier->id);
     }
@@ -91,7 +91,6 @@ class Admin_CarrierController extends Zend_Controller_Action {
         $carrier = Model_EntityMapper::getById($this->_getParam('id'));
         $sourceLinks = Model_LinkMapper::getLinks($carrier, 'P128');
         $this->view->carrier = $carrier;
-        $this->view->carrierType = Model_NodeMapper::getNodeByEntity('Information Carrier', $carrier);
         $this->view->dates = Model_DateMapper::getDates($carrier);
         $this->view->menuHighlight = 'reference';
         $this->view->sourceLinks = $sourceLinks;
@@ -101,17 +100,21 @@ class Admin_CarrierController extends Zend_Controller_Action {
         }
     }
 
-    private function save(Zend_Form $form, Model_Entity $carrier) {
-        $type = Model_NodeMapper::getRootType('information carrier');
-        if ($this->_getParam('typeId')) {
-            $type = Model_EntityMapper::getById($this->_getParam('typeId'));
+    private function save(Zend_Form $form, Model_Entity $entity, array $hierarchies) {
+        foreach ($hierarchies as $hierarchy) {
+            $idField = $hierarchy->nameClean . 'Id';
+            if ($form->getValue($idField)) {
+                foreach (explode(",", $form->getValue($idField)) as $id) {
+                    Model_LinkMapper::insert('P2', $entity, Model_NodeMapper::getById($id));
+                }
+            } else if ($hierarchy->system) {
+                Model_LinkMapper::insert('P2', $entity, $hierarchy);
+            }
         }
-        Model_LinkMapper::insert('P2', $carrier, $type);
         if ($form->getValue('objectId')) {
             $place = Model_LinkMapper::getLinkedEntity($form->getValue('objectId'), 'P53');
-            Model_LinkMapper::insert('OA8', $carrier, $place);
+            Model_LinkMapper::insert('OA8', $entity, $place);
         }
-        Model_DateMapper::saveDates($carrier, $form);
+        Model_DateMapper::saveDates($entity, $form);
     }
-
 }

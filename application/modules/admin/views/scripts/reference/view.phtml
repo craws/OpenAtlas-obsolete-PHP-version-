@@ -15,7 +15,13 @@
             <?= $this->bookmarkToggle($reference->id) ?>
         </div>
         <h1><?= $reference->name ?></h1>
-        <? $table['data'][_('type')] = $this->link($this->referenceType); ?>
+        <?
+            $table['data'] = [];
+            foreach ($this->getNodesForView($reference) as $rootName => $nodes) {
+                $table['data'][$rootName] = implode('<br/>', $nodes);
+            }
+            $this->table = $this->tableLog($table, 'entity', $reference->id);
+        ?>
         <? $this->table = $this->tableLog($table, 'entity', $reference->id); ?>
         <?= $this->render('tableDataItem.phtml'); ?>
         <?= $this->description($reference) ?>

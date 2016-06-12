@@ -13,15 +13,6 @@ class Admin_Form_Carrier extends Admin_Form_Base {
             'required' => true,
             'label' => $this->getView()->ucstring('name')
         ]);
-        $this->addElement('hidden', 'typeId', ['decorators' => ['ViewHelper']]);
-        $this->addElement('text', 'typeButton', [
-            'label' => $this->getView()->ucstring('type'),
-            'class' => 'tableSelect',
-            'readonly' => true,
-            'onfocus' => 'this.blur()',
-            'placeholder' => $this->getView()->ucstring('select'),
-            'attribs' => ['readonly' => 'true'],
-        ]);
         $this->addElement('hidden', 'objectId', ['decorators' => ['ViewHelper']]);
         $this->addElement('text', 'objectButton', [
             'label' => $this->getView()->ucstring('place_of_issue'),

@@ -17,15 +17,13 @@ class Admin_ReferenceController extends Zend_Controller_Action {
     public function insertAction() {
         $form = new Admin_Form_Reference();
         $rootType = Model_NodeMapper::getRootType($this->_getParam('type'));
+        $hierarchies = $form->addHierarchies($rootType->name);
         if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
             $this->view->form = $form;
-            $this->view->rootType = $rootType->name;
-            $this->view->typeTreeData = Model_NodeMapper::getTreeData($rootType->name);
             return;
         }
         $reference = Model_EntityMapper::insert('E31', $form->getValue('name'), $form->getValue('description'));
-        $typeId = ($this->_getParam('typeId')) ? $this->_getParam('typeId') : $rootType->id;
-        Model_LinkMapper::insert('P2', $reference, Model_NodeMapper::getById($typeId));
+        self::save($form, $reference, $hierarchies);
         $this->_helper->message('info_insert');
         // @codeCoverageIgnoreStart
         if ($form->getElement('continue')->getValue()) {
@@ -39,11 +37,10 @@ class Admin_ReferenceController extends Zend_Controller_Action {
         $reference = Model_EntityMapper::getById($this->_getParam('id'));
         $this->view->reference = $reference;
         $form = new Admin_Form_Reference();
-        $this->view->form = $form;
-        $types = Model_LinkMapper::getLinkedEntities($reference, 'P2');
         // find out if has a bibliography or edition type
         $referenceRootType = null;
         $referenceType = null;
+        $types = Model_LinkMapper::getLinkedEntities($reference, 'P2');
         foreach ($types as $type) {
             if (!$type->system) {
                 continue;
@@ -58,6 +55,8 @@ class Admin_ReferenceController extends Zend_Controller_Action {
                     break 2;
             }
         }
+        $hierarchies = $form->addHierarchies($rootType->name, $reference);
+        $this->view->form = $form;
         if (!$this->getRequest()->isPost()) {
             $form->populate([
                 'name' => $reference->name,
@@ -87,9 +86,10 @@ class Admin_ReferenceController extends Zend_Controller_Action {
         $reference->name = $form->getValue('name');
         $reference->description = $form->getValue('description');
         $reference->update();
-        Model_LinkMapper::getLink($reference, 'P2')->delete();
-        $type = ($this->_getParam('typeId')) ? Model_NodeMapper::getById($this->_getParam('typeId')) : $referenceRootType;
-        Model_LinkMapper::insert('P2', $reference, $type);
+        foreach (Model_LinkMapper::getLinks($reference, ['P2']) as $link) {
+            $link->delete();
+        }
+        self::save($form, $reference, $hierarchies);
         $this->_helper->message('info_update');
         return $this->_helper->redirector->gotoUrl('/admin/reference/view/id/' . $reference->id);
     }
@@ -120,4 +120,16 @@ class Admin_ReferenceController extends Zend_Controller_Action {
         $this->view->placeLinks = $placeLinks;
     }
 
+    private function save(Zend_Form $form, Model_Entity $entity, array $hierarchies) {
+        foreach ($hierarchies as $hierarchy) {
+            $idField = $hierarchy->nameClean . 'Id';
+            if ($form->getValue($idField)) {
+                foreach (explode(",", $form->getValue($idField)) as $id) {
+                    Model_LinkMapper::insert('P2', $entity, Model_NodeMapper::getById($id));
+                }
+            } else if ($hierarchy->system) {
+                Model_LinkMapper::insert('P2', $entity, $hierarchy);
+            }
+        }
+    }
 }

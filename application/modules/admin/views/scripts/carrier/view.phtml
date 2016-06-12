@@ -13,8 +13,8 @@
         <h1><?= $carrier->name ?></h1>
         <?
         $table = [];
-        if ($this->carrierType && $this->carrierType->rootId) {
-            $table['data'][_('type')] = $this->link($this->carrierType);
+        foreach ($this->getNodesForView($carrier) as $rootName => $nodes) {
+            $table['data'][$rootName] = implode('<br/>', $nodes);
         }
         if ($this->object) {
             $table['data'][_('place')] = $this->link($this->object);
