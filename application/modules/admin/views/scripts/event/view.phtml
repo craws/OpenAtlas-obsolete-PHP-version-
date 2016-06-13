@@ -80,7 +80,7 @@
                     $this->link($link->range),
                     $link->range->class->nameTranslated,
                     $link->property->nameInverseTranslated,
-                    ($involvementType->rootId) ? $involvementType->name : '',
+                    ($involvementType && $involvementType->rootId) ? $involvementType->name : '',
                     $dates['first'],
                     $dates['last'],
                     '<a class="button" href="/admin/involvement/update/origin/event/id/' . $link->id . '">' .
@@ -101,11 +101,7 @@
             $sourceTable = ['id' => 'source', 'pager' => true, 'filter' => true];
             $sourceTable['header'] = [_('source'), _('type'), ''];
             foreach ($this->sourceLinks as $link) {
-                $type = '';
                 $sourceType = Model_NodeMapper::getNodeByEntity('Source', $link->domain);
-                if ($sourceType) {
-                    $type = $sourceType->name;
-                }
                 $text = $link->property->nameInverseTranslated . ': ' . $link->domain->name;
                 $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_remove', $text)) .
                     "')\" ";
@@ -113,7 +109,7 @@
                     '/#tabSource' . '" class="button"' . $confirm . '>' . $this->ucstring('remove') . '</a>';
                 $sourceTable['data'][] = [
                     $this->link($link->domain),
-                    $type,
+                    ($sourceType) ? $sourceType->name : '',
                     $deleteButton
                 ];
             }

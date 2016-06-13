@@ -10,9 +10,6 @@ class Craws_View_Helper_DisplayTreeSelect extends Zend_View_Helper_Abstract {
         });
         $html = '';
         foreach ($hierarchies as $hierarchy) {
-            if (!is_a($hierarchy, 'Model_Node')) {
-                $hierarchy = Model_NodeMapper::getRootType($hierarchy);
-            }
             $elementName = $hierarchy->nameClean . 'Button';
             $elementId = $hierarchy->nameClean . 'Id';
             $displayName = ucfirst($hierarchy->name);

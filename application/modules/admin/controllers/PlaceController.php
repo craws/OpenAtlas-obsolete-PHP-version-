@@ -145,7 +145,6 @@ class Admin_PlaceController extends Zend_Controller_Action {
         }
         // @codeCoverageIgnoreEnd
         $this->view->object = $object;
-        $this->view->events = Model_LinkMapper::getLinkedEntities($place, 'P7', true);
         $this->view->aliases = Model_LinkMapper::getLinkedEntities($object, 'P1');
         $this->view->dates = Model_DateMapper::getDates($object);
         $this->view->administrative = Model_NodeMapper::getNodesByEntity('Administrative Unit', $object);
