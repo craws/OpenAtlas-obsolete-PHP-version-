@@ -18,7 +18,7 @@ class Admin_EventControllerTest extends ControllerTestCase {
         $this->login();
         $actor = Model_EntityMapper::getById($this->actorId);
         $this->formValues['superId'] = $this->eventId;
-        $this->formValues['typeId'] = Model_NodeMapper::getByNodeCategoryName('Event', 'Conflict')->id;
+        $this->formValues['eventId'] = Model_NodeMapper::getByNodeCategoryName('Event', 'Conflict')->id;
         $this->formValues['placeId'] = $this->objectId;
         $this->formValues['recipientId'] = $actor->id;
         $this->formValues['recipientButton'] = $actor->name;

@@ -36,12 +36,12 @@ class Admin_ActorController extends Zend_Controller_Action {
             $this->view->menuHighlight = 'event';
         }
         $form = new Admin_Form_Actor();
+        $hierarchies = $form->addHierarchies($this->getFormName($this->_getParam('code')));
         if ($class->code != 'E21') {
             $form->removeElement('birth');
             $form->removeElement('death');
         }
         $form->addElement($form->createElement('text', 'alias0', ['belongsTo' => 'alias']));
-        $hierarchies = $form->addHierarchies($this->getFormName($this->_getParam('code')));
         if ($this->getRequest()->isPost()) {
             $form->preValidation($this->getRequest()->getPost());
         }
@@ -196,10 +196,10 @@ class Admin_ActorController extends Zend_Controller_Action {
             case 'E21':
                 $formName = 'Person';
                 break;
-            case 'E40':
+            case 'E74':
                 $formName = 'Group';
                 break;
-            case 'E71':
+            case 'E40':
                 $formName = 'Legal Body';
                 break;
             default:

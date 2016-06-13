@@ -21,9 +21,8 @@ class Admin_ReferenceControllerTest extends ControllerTestCase {
         $this->dispatch('admin/reference/insert/type/edition');
         $this->formValues = [
             'name' => 'Cryptonomicum',
-            'typeId' => Model_NodeMapper::getByNodeCategoryName('Bibliography', 'Book')->id,
-            'desc' => 'desc',
-            'typeButton' => 'Placeholder',
+            'editionId' => Model_NodeMapper::getByNodeCategoryName('Bibliography', 'Book')->id,
+            'desc' => 'desc'
         ];
         $this->request->setMethod('POST')->setPost($this->formValues);
         $this->dispatch('admin/reference/insert/type/edition');
@@ -39,8 +38,7 @@ class Admin_ReferenceControllerTest extends ControllerTestCase {
         $this->dispatch('admin/reference/insert/type/edition');
         $this->formValues = [
             'name' => 'Cryptonomicum Edition',
-            'typeId' => Model_NodeMapper::getByNodeCategoryName('Edition', 'Charter Edition')->id,
-            'typeButton' => 'Placeholder',
+            'editionId' => Model_NodeMapper::getByNodeCategoryName('Edition', 'Charter Edition')->id,
             'desc' => 'desc'
         ];
         $this->request->setMethod('POST')->setPost($this->formValues);

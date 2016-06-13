@@ -13,6 +13,8 @@ SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET row_security = off;
 
+-- CREATE EXTENSION postgis;
+
 SET search_path = web, pg_catalog;
 
 ALTER TABLE IF EXISTS ONLY web.user_settings DROP CONSTRAINT IF EXISTS user_settings_user_id_fkey;

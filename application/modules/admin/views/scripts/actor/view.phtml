@@ -85,7 +85,7 @@
             $eventTable['data'][] = [
                 $link->property->nameInverseTranslated,
                 $this->link($link->domain),
-                ($involvementType->rootId) ? $involvementType->name : '',
+                ($involvementType && $involvementType->rootId) ? $involvementType->name : '',
                 $dates['first'],
                 $dates['last'],
                 '<a class="button" href="/admin/involvement/update/origin/actor/id/' . $link->id . '">' .

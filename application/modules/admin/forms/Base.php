@@ -91,7 +91,9 @@ class Admin_Form_Base extends Craws\Form\Table {
         $hierarchies = [];
         foreach ($forms[$formName]['hierarchyIds'] as $hierarchyId) {
             $hierarchy = Model_NodeMapper::getById($hierarchyId);
-            $hierarchies[] = $hierarchy;
+            if ($hierarchy) {
+                $hierarchies[] = $hierarchy;
+            }
         }
         foreach ($hierarchies as $hierarchy) {
             $this->addElement('hidden', $hierarchy->nameClean . 'Id', ['decorators' => ['ViewHelper']]);

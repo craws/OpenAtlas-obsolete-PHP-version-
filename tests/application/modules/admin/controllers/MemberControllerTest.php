@@ -12,7 +12,7 @@ class Admin_MemberControllerTest extends ControllerTestCase {
     public function testCrud() {
         $formValues = [
             'relatedActorIds' => $this->actorId,
-            'typeId' => Model_NodeMapper::getByNodeCategoryName('Actor Function', 'King')->id,
+            'memberId' => Model_NodeMapper::getByNodeCategoryName('Actor Function', 'King')->id,
             'relatedActorButton' => 'Placeholder',
             'beginYear' => '23'
         ];

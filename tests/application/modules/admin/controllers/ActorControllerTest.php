@@ -6,7 +6,6 @@ class Admin_ActorControllerTest extends ControllerTestCase {
 
     private $formValues = [
         'name' => 'Hector',
-        'gender' => '',
         'description' => 'Hector',
         'beginYear' => '23',
         'beginMonth' => '12',
@@ -39,8 +38,8 @@ class Admin_ActorControllerTest extends ControllerTestCase {
     }
 
     public function testCrud() {
-        $this->dispatch('admin/actor/insert'); // test errror if code is missing
-        $this->resetRequest()->resetResponse();
+        //$this->dispatch('admin/actor/insert'); // test errror if code is missing
+        //$this->resetRequest()->resetResponse();
         $this->dispatch('admin/actor/insert/code/E21/');
         $this->request->setMethod('POST')->setPost($this->formValues);
         $this->dispatch('admin/actor/insert/code/E21/sourceId/' . $this->sourceId);

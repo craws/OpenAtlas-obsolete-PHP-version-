@@ -13,8 +13,7 @@ class Admin_SourceControllerTest extends ControllerTestCase {
         parent::setUp();
         $this->login();
         $type = Model_NodeMapper::getByNodeCategoryName('source', 'letter');
-        $this->formValues['typeId'] = $type->id;
-        $this->formValues['typeButton'] = $type->name;
+        $this->formValues['sourceId'] = $type->id;
     }
 
     public function testAdd() {
