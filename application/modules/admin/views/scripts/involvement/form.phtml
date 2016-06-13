@@ -13,7 +13,7 @@
             <div class="tableCell"><?= $form->activity->renderViewHelper() ?></div>
         </div>
     <? endif ?>
-    <?= $this->displayTreeSelect('involvement', $form) ?>
+    <?= $this->displayTreeSelect($this->hierarchies, $form) ?>
     <?= $this->render('dateForm.phtml'); ?>
     <div style="margin-top:1em;">
         <?= $form->description->renderLabel() ?>
@@ -24,7 +24,6 @@
     </div>
 </div>
 <?= '</form>' ?>
-<?= $this->displayTreeOverlay('involvement', $this->involvementTreeData) ?>
 <? if ($form->actorIds): ?>
     <div id="actorOverlay" class="overlay">
         <div id="actorDialog" class="overlayContainer">
@@ -69,6 +68,10 @@
         </div>
     </div>
 <? endif ?>
+<? foreach ($this->hierarchies as $hierarchy) : ?>
+    <? $dataVariable = $hierarchy->nameClean . 'TreeData'; ?>
+    <?= $this->displayTreeOverlay($hierarchy->nameClean, $this->$dataVariable); ?>
+<? endforeach ?>
 <script type="text/javascript">
     $.validator.setDefaults({ignore: []});
     $(document).ready(function () {

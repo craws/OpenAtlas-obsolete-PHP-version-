@@ -69,11 +69,7 @@
             $actorTable = ['id' => 'actor', 'pager' => true, 'filter' => true];
             $actorTable['header'] = [_('actor'), _('class'), _('activity'), 'Involvement', _('first'), _('last'), '', ''];
             foreach ($this->actorLinks as $link) {
-                $involvement = "";
                 $involvementType = Model_LinkPropertyMapper::getLinkedEntity($link, 'P2');
-                if ($involvementType) {
-                    $involvement = $involvementType->name;
-                }
                 $text = 'Involvement: ' . $link->range->name . ' ' . $link->property->nameInverseTranslated;
                 $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_remove', $text)) .
                     "')\" ";
@@ -84,7 +80,7 @@
                     $this->link($link->range),
                     $link->range->class->nameTranslated,
                     $link->property->nameInverseTranslated,
-                    $involvement,
+                    ($involvementType->rootId) ? $involvementType->name : '',
                     $dates['first'],
                     $dates['last'],
                     '<a class="button" href="/admin/involvement/update/origin/event/id/' . $link->id . '">' .

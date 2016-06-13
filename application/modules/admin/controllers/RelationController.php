@@ -21,8 +21,8 @@ class Admin_RelationController extends Zend_Controller_Action {
             } else {
                 $link = Model_LinkMapper::insert('OA7', $actor, $relatedActor, $this->_getParam('description'));
             }
+            self::save($link, $form, $hierarchies);
         }
-        self::save($link, $form, $hierarchies);
         $this->_helper->message('info_insert');
         // @codeCoverageIgnoreStart
         if ($form->getElement('continue')->getValue()) {

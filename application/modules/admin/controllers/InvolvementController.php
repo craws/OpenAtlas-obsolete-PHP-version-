@@ -12,6 +12,7 @@ class Admin_InvolvementController extends Zend_Controller_Action {
     public function insertAction() {
         /* Only multiple actors. Multiple events not viable because of different activity possiblities */
         $form = new Admin_Form_Involvement();
+        $hierarchies = $form->addHierarchies('Involvement');
         $event = null;
         $actor = null;
         if ($this->_getParam('actorId')) {
@@ -36,7 +37,6 @@ class Admin_InvolvementController extends Zend_Controller_Action {
                 $this->view->events = Model_EntityMapper::getByCodes('Event');
             }
             $this->view->form = $form;
-            $this->view->involvementTreeData = Model_NodeMapper::getTreeData('involvement');
             $this->view->origin = $this->_getParam('origin');
             return;
         }
@@ -47,18 +47,12 @@ class Admin_InvolvementController extends Zend_Controller_Action {
         }
         if ($actor) {
             $link = Model_LinkMapper::insert($activity->code, $event, $actor, $form->getValue('description'));
-            Model_DateMapper::saveLinkDates($link, $form);
-            if ($this->_getParam('involvementId')) {
-                Model_LinkPropertyMapper::insert('P2', $link, Model_EntityMapper::getById($this->_getParam('involvementId')));
-            }
+            self::save($link, $form, $hierarchies);
         } else {
             foreach (explode(",", $form->getValue('actorIds')) as $id) {
                 $actor = Model_EntityMapper::getById($id);
                 $link = Model_LinkMapper::insert($activity->code, $event, $actor, $form->getValue('description'));
-                Model_DateMapper::saveLinkDates($link, $form);
-                if ($this->_getParam('involvementId')) {
-                    Model_LinkPropertyMapper::insert('P2', $link, Model_EntityMapper::getById($this->_getParam('involvementId')));
-                }
+                self::save($link, $form, $hierarchies);
             }
         }
         $this->_helper->message('info_insert');
@@ -73,6 +67,7 @@ class Admin_InvolvementController extends Zend_Controller_Action {
         $actor = $link->range;
         $event = $link->domain;
         $form = new Admin_Form_Involvement();
+        $hierarchies = $form->addHierarchies('Involvement', $link);
         $form->removeElement('actorIds');
         $form->removeElement('eventId');
         $form->removeElement('eventButton');
@@ -81,14 +76,9 @@ class Admin_InvolvementController extends Zend_Controller_Action {
             $form->populateDates($link, ['OA5' => 'begin', 'OA6' => 'end']);
             $form->populate(['activity' => $link->property->id]);
             $form->populate(['description' => $link->description]);
-            $involvement = Model_LinkPropertyMapper::getLinkedEntity($link, 'P2');
-            if ($involvement) {
-                $form->populate(['involvementId' => $involvement->id, 'involvementButton' => $involvement->name]);
-            }
             $this->view->actor = $actor;
             $this->view->event = $event;
             $this->view->form = $form;
-            $this->view->involvementTreeData = Model_NodeMapper::getTreeData('involvement', $involvement);
             $this->view->origin = 'event';
             return;
         }
@@ -99,10 +89,7 @@ class Admin_InvolvementController extends Zend_Controller_Action {
             $activity = Model_PropertyMapper::getById($this->_getParam('activity'));
         }
         $newLink = Model_LinkMapper::insert($activity->code, $event, $actor, $form->getValue('description'));
-        if ($this->_getParam('involvementId')) {
-            Model_LinkPropertyMapper::insert('P2', $newLink, Model_EntityMapper::getById($this->_getParam('involvementId')));
-        }
-        Model_DateMapper::saveLinkDates($newLink, $form);
+        self::save($newLink, $form, $hierarchies);
         $this->_helper->message('info_update');
         // @codeCoverageIgnoreStart
         if ($this->_getParam('origin') == 'event') {
@@ -110,6 +97,21 @@ class Admin_InvolvementController extends Zend_Controller_Action {
         }
         return $this->_helper->redirector->gotoUrl('/admin/actor/view/id/' . $actor->id . '/#tabEvent');
         // @codeCoverageIgnoreEnd
+    }
+
+    private function save(Model_Link $link, Zend_Form $form, array $hierarchies) {
+        var_dump($link->domain->name);
+        foreach ($hierarchies as $hierarchy) {
+            $idField = $hierarchy->nameClean . 'Id';
+            if ($form->getValue($idField)) {
+                foreach (explode(",", $form->getValue($idField)) as $id) {
+                    Model_LinkPropertyMapper::insert('P2', $link, Model_NodeMapper::getById($id));
+                }
+            } else if ($hierarchy->system) {
+                Model_LinkPropertyMapper::insert('P2', $link, $hierarchy);
+            }
+        }
+        Model_DateMapper::saveLinkDates($link, $form);
     }
 
 }

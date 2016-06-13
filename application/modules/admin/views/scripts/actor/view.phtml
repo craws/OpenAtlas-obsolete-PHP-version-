@@ -77,11 +77,7 @@
         $eventTable['header'] = [_('activity'), _('event'), 'Involvement', _('first'), _('last'), '', ''];
         foreach ($this->eventLinks as $link) {
             $dates = Model_DateMapper::getLinkDateRange($link);
-            $involvement = "";
             $involvementType = Model_LinkPropertyMapper::getLinkedEntity($link, 'P2');
-            if ($involvementType) {
-                $involvement = $involvementType->name;
-            }
             $text = $this->translate('activity') . ': ' . $link->property->nameInverseTranslated . ' ' . $link->domain->name;
             $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_remove', $text)) . "')\" ";
             $deleteLink = '<div><a href="/admin/function/unlink/id/' . $link->id . '/entityId/' . $actor->id . '/#tabEvent' .
@@ -89,7 +85,7 @@
             $eventTable['data'][] = [
                 $link->property->nameInverseTranslated,
                 $this->link($link->domain),
-                $involvement,
+                ($involvementType->rootId) ? $involvementType->name : '',
                 $dates['first'],
                 $dates['last'],
                 '<a class="button" href="/admin/involvement/update/origin/actor/id/' . $link->id . '">' .
