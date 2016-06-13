@@ -12,8 +12,10 @@ ALTER SCHEMA crm RENAME TO model;
 CREATE TABLE web.form (
     id integer NOT NULL,
     name text NOT NULL,
+    extendable integer DEFAULT 0 NOT NULL,
     created timestamp without time zone DEFAULT now() NOT NULL,
     modified timestamp without time zone
+
 );
 ALTER TABLE web.form OWNER TO openatlas_master;
 CREATE SEQUENCE web.form_id_seq
@@ -27,19 +29,18 @@ ALTER SEQUENCE web.form_id_seq OWNED BY web.form.id;
 
 CREATE TABLE web.hierarchy (
     id integer NOT NULL,
-    entity_id integer NOT NULL,
     name text NOT NULL,
     multiple integer DEFAULT 0 NOT NULL,
-    is_extendable integer DEFAULT 0 NOT NULL,
-    is_directional integer DEFAULT 0 NOT NULL,
+    system integer DEFAULT 0 NOT NULL,
+    extendable integer DEFAULT 0 NOT NULL,
+    directional integer DEFAULT 0 NOT NULL,
     created timestamp without time zone DEFAULT now() NOT NULL,
-    modified timestamp without time zone,
-    system integer DEFAULT 0 NOT NULL
+    modified timestamp without time zone
 );
 ALTER TABLE web.hierarchy OWNER TO openatlas_master;
-COMMENT ON COLUMN web.hierarchy.name IS 'same as model.entity.name, to ensure unique root hierarchy names';
-COMMENT ON COLUMN web.hierarchy.multiple IS 'if 1 multiple selection is possible';
-COMMENT ON COLUMN web.hierarchy.system IS 'if 1 it is a non deleteable predefined hierarchy';
+COMMENT ON COLUMN web.hierarchy.id IS 'same as model.entity.id';
+COMMENT ON COLUMN web.hierarchy.name IS 'same as model.entity.name, to ensure unique root type names';
+
 CREATE SEQUENCE web.hierarchy_id_seq
     START WITH 1
     INCREMENT BY 1
@@ -57,6 +58,7 @@ CREATE TABLE web.hierarchy_form (
     modified timestamp without time zone
 );
 ALTER TABLE web.hierarchy_form OWNER TO openatlas_master;
+
 CREATE SEQUENCE web.hierarchy_form_id_seq
     START WITH 1
     INCREMENT BY 1
