@@ -78,7 +78,7 @@ ALTER TABLE ONLY web.hierarchy_form ADD CONSTRAINT hierarchy_form_pkey PRIMARY K
 CREATE TRIGGER update_modified BEFORE UPDATE ON web.hierarchy FOR EACH ROW EXECUTE PROCEDURE model.update_modified();
 CREATE TRIGGER update_modified BEFORE UPDATE ON web.form FOR EACH ROW EXECUTE PROCEDURE model.update_modified();
 CREATE TRIGGER update_modified BEFORE UPDATE ON web.hierarchy_form FOR EACH ROW EXECUTE PROCEDURE model.update_modified();
-ALTER TABLE ONLY web.hierarchy ADD CONSTRAINT hierarchy_entity_id_fkey FOREIGN KEY (entity_id) REFERENCES model.entity(id) ON UPDATE CASCADE ON DELETE CASCADE;
+ALTER TABLE ONLY web.hierarchy ADD CONSTRAINT hierarchy_id_fkey FOREIGN KEY (id) REFERENCES model.entity(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY web.hierarchy_form ADD CONSTRAINT hierarchy_form_form_id_fkey FOREIGN KEY (form_id) REFERENCES web.form(id) ON UPDATE CASCADE ON DELETE CASCADE;
 ALTER TABLE ONLY web.hierarchy_form ADD CONSTRAINT hierarchy_form_hierarchy_id_fkey FOREIGN KEY (hierarchy_id) REFERENCES web.hierarchy(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
@@ -87,20 +87,20 @@ WHERE range_id = (SELECT id FROM model.entity WHERE name = 'Date value type') AN
 property_id = (SELECT id FROM model.property WHERE code = 'P86');
 
 INSERT INTO web.hierarchy (id, name, multiple, system, extendable, directional) VALUES
-((SELECT id FROM entity WHERE name='Source'), 'Source', 0, 1, 1, 0),
-((SELECT id FROM entity WHERE name='Event'), 'Event', 0, 1, 1, 0),
-((SELECT id FROM entity WHERE name='Actor Actor Relation'), 'Actor Actor Relation', 0, 1, 1, 1),
-((SELECT id FROM entity WHERE name='Actor Function'), 'Actor Function', 0, 1, 1, 0),
-((SELECT id FROM entity WHERE name='Involvement'), 'Involvement', 0, 1, 1, 0),
-((SELECT id FROM entity WHERE name='Gender'), 'Gender', 0, 1, 1, 0),
-((SELECT id FROM entity WHERE name='Site'), 'Site', 0, 1, 1, 0),
-((SELECT id FROM entity WHERE name='Information Carrier'), 'Information Carrier', 0, 1, 1, 0),
-((SELECT id FROM entity WHERE name='Bibliography'), 'Bibliography', 0, 1, 1, 0),
-((SELECT id FROM entity WHERE name='Edition'), 'Edition', 0, 1, 1, 0),
-((SELECT id FROM entity WHERE name='Date value type'), 'Date value type', 0, 1, 0, 0),
-((SELECT id FROM entity WHERE name='Linguistic object classification'), 'Linguistic object classification', 0, 1, 0, 0),
-((SELECT id FROM entity WHERE name='Administrative Unit'), 'Administrative Unit', 1, 1, 1, 0),
-((SELECT id FROM entity WHERE name='Historical Place'), 'Historical Place', 1, 1, 1, 0);
+((SELECT id FROM model.entity WHERE name='Source'), 'Source', 0, 1, 1, 0),
+((SELECT id FROM model.entity WHERE name='Event'), 'Event', 0, 1, 1, 0),
+((SELECT id FROM model.entity WHERE name='Actor Actor Relation'), 'Actor Actor Relation', 0, 1, 1, 1),
+((SELECT id FROM model.entity WHERE name='Actor Function'), 'Actor Function', 0, 1, 1, 0),
+((SELECT id FROM model.entity WHERE name='Involvement'), 'Involvement', 0, 1, 1, 0),
+((SELECT id FROM model.entity WHERE name='Gender'), 'Gender', 0, 1, 1, 0),
+((SELECT id FROM model.entity WHERE name='Site'), 'Site', 0, 1, 1, 0),
+((SELECT id FROM model.entity WHERE name='Information Carrier'), 'Information Carrier', 0, 1, 1, 0),
+((SELECT id FROM model.entity WHERE name='Bibliography'), 'Bibliography', 0, 1, 1, 0),
+((SELECT id FROM model.entity WHERE name='Edition'), 'Edition', 0, 1, 1, 0),
+((SELECT id FROM model.entity WHERE name='Date value type'), 'Date value type', 0, 1, 0, 0),
+((SELECT id FROM model.entity WHERE name='Linguistic object classification'), 'Linguistic object classification', 0, 1, 0, 0),
+((SELECT id FROM model.entity WHERE name='Administrative Unit'), 'Administrative Unit', 1, 1, 1, 0),
+((SELECT id FROM model.entity WHERE name='Historical Place'), 'Historical Place', 1, 1, 1, 0);
 
 INSERT INTO web.form (name, extendable) VALUES
 ('Source', 1),
