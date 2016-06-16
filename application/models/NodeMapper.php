@@ -256,7 +256,7 @@ class Model_NodeMapper extends Model_EntityMapper {
         }
     }
 
-    public static function insertHierarchy(Zend_Form $form, Model_Node $hierarchy) {
+    public static function insertHierarchy(Zend_Form $form, Model_Entity $hierarchy) {
         $sql = "INSERT INTO web.hierarchy (id, name, multiple, extendable) VALUES (:id, :name, :multiple, 1)";
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->bindValue(':id', $hierarchy->id);

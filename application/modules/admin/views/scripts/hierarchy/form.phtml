@@ -7,8 +7,10 @@
         <div class="tableCell"><?= $form->name->renderViewHelper() ?></div>
     </div>
     <div class="tableRow">
-        <label><?= $this->ucstring('multiple') ?></label>
-        <span class="tooltip" title="<?= $this->ucstring('tip_hierarchy_multiple') ?>">i</span>
+        <? if (!$this->hierarchy || !$this->hierarchy->multiple): ?>
+            <label><?= $this->ucstring('multiple') ?></label>
+            <span class="tooltip" title="<?= $this->ucstring('tip_hierarchy_multiple') ?>">i</span>
+        <? endif ?>
         <div class="tableCell"><?= $form->multiple->renderViewHelper() ?></div>
     </div>
     <div class="tableRow">

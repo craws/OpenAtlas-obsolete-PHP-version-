@@ -21,7 +21,7 @@ foreach ($this->nodes as $id => $node) {
     if ($node->forms) {
         $tabDiv[$menu] .= '<p><strong>' . $this->ucstring('forms') . '</strong></br>';
         foreach ($node->forms as $form) {
-            $tabDiv[$menu] .=  $form['name'] . '</br>';
+            $tabDiv[$menu] .= $form['name'] . '</br>';
         }
         $tabDiv[$menu] .= '</p>';
     }
@@ -42,13 +42,13 @@ if (in_array(Zend_Registry::get('user')->group, ['admin', 'manager'])) {
         <li><a href="#menuTabSystem"><?= $this->ucstring('system') ?></a></li>
         <li><a href="#menuTabCustom"><?= $this->ucstring('custom') ?></a></li>
     </ul>
-    <div id="menuTabSystem" style="padding: 0;">
+    <div id="menuTabSystem" style="padding: 0;" class="tabContent">
         <div id="tabsSystem" class="tabsContainer">
             <ul><?= $tabUl['system'] ?></ul>
             <?= $tabDiv['system'] ?>
         </div>
     </div>
-    <div id="menuTabCustom" style="padding: 0;" >
+    <div id="menuTabCustom" style="padding: 0;" class="tabContent">
         <div id="tabsCustom" class="tabsContainer">
             <ul><?= $tabUl['custom'] ?></ul>
             <?= $tabDiv['custom'] ?>
@@ -56,10 +56,14 @@ if (in_array(Zend_Registry::get('user')->group, ['admin', 'manager'])) {
     </div>
 </div>
 <script type="text/javascript">
-    $(document).ready(function() {
+    $(document).ready(function () {
         $("#tabsMenu").tabs();
         $("#tabsSystem").tabs().addClass("ui-tabs-vertical");
         $("#tabsCustom").tabs().addClass("ui-tabs-vertical");
+        //var curTab = $('.ui-tabs-panel:not(.ui-tabs-hide)');
+        //alert(curTab);
+        //$("#tabsMenu").tabs({ active: 1 });
+        //openParentTab();
     });
     function validateName() {
         if ($.trim($("#name").val()).length > 0) {
@@ -77,6 +81,36 @@ if (in_array(Zend_Registry::get('user')->group, ['admin', 'manager'])) {
         }
         form += '<input type="submit" class="submit" value="<?= $this->ucstring('add') ?>"></form>';
         $('#form' + superId).append(form);
+    }
+    function openParentTab() {
+        locationHash = location.hash.substring(1);
+        console.log(locationHash);
+        // Check if we have an location Hash
+        if (locationHash) {
+            // Check if the location hash exsist.
+            var hash = $('#' + locationHash);
+            if (hash.length) {
+                // Check of the location Hash is inside a tab.
+                if (hash.closest(".tabContent").length) {
+                    // Grab the index number of the parent tab so we can activate it
+                    var tabNumber = hash.closest(".tabContent").index() - 1;
+                    //alert(tabNumber);
+                    $("#tabsMenu").tabs({active: tabNumber - 1});
+                    /*if (tabNumber) {
+                        $("#tabsSystem").tabs().addClass("ui-tabs-vertical");
+                    } else {
+                        $("#tabsCustom").tabs().addClass("ui-tabs-vertical");
+                    }*/
+
+
+                    // Not need but this puts the focus on the selected hash
+                    hash.get(0).scrollIntoView();
+                    setTimeout(function () {
+                        hash.get(0).scrollIntoView();
+                    }, 1000);
+                }
+            }
+        }
     }
 </script>
 <?

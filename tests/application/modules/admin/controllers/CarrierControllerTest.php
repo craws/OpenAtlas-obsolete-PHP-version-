@@ -18,7 +18,7 @@ class Admin_CarrierControllerTest extends ControllerTestCase {
         $type = Model_NodeMapper::getByNodeCategoryName('Information Carrier', 'Original Document');
         $this->formValues = [
             'name' => 'Cryptonomicum',
-            'information_carrierId' => $type,
+            'information_carrierId' => $type->id,
             'desc' => 'desc',
             'objectId' => $this->objectId
         ];

@@ -110,18 +110,24 @@ class Admin_HierarchyController extends Zend_Controller_Action {
         $node->description = $this->_getParam('description');
         $node->update();
         $superLink = Model_LinkMapper::getLink($node, $node->propertyToSuper);
-        $superLink->range = Model_EntityMapper::getById($form->getValue('super'));
+        $superLink->range = Model_NodeMapper::getById($form->getValue('super'));
         $superLink->update();
         $this->_helper->message('info_update');
+
         return $this->_helper->redirector->gotoUrl('/admin/hierarchy/#tab' . $node->rootId);
     }
 
     public function updateHierarchyAction() {
         $hierarchy = Model_NodeMapper::getById($this->_getParam('id'));
+        if ($hierarchy->system) {
+            $this->_helper->message('error_forbidden');
+            return $this->_helper->redirector->gotoUrl('/admin/hierarchy/#tab' . $hierarchy->id);
+        }
         $form = new Admin_Form_Hierarchy();
         if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
             if ($hierarchy->multiple) {
-                $form->getElement('multiple')->setAttrib('readonly', 'true');
+                $form->getElement('multiple')->setAttribs(array('style' => 'display: none'));
+                $form->getElement('multiple')->getDecorator('Label')->setOption('style', 'display: none');
             }
             $this->view->hierarchy = $hierarchy;
             $this->view->form = $form;

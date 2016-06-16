@@ -19,7 +19,7 @@ class Admin_HierarchyControllerTest extends ControllerTestCase {
         Model_NodeMapper::getByNodeCategoryName('You shall not be', 'found'); // test not found
     }
 
-    public function testCrud() {
+    public function testCrudNode() {
         $kindredship = Model_NodeMapper::getByNodeCategoryName('Actor Actor Relation', 'Parent of (Child of)');
         $this->request->setMethod('POST')->setPost([]);
         $this->dispatch('admin/hierarchy/insert/superId/' . $kindredship->superId);
@@ -51,6 +51,30 @@ class Admin_HierarchyControllerTest extends ControllerTestCase {
         $this->dispatch('admin/hierarchy/update/id/' . $relation->rootId); // test forbidden
         $this->resetRequest()->resetResponse();
         $this->dispatch('admin/hierarchy/delete/id/' . $relation->rootId); // test forbidden
+    }
+
+    public function testCrudHierarchy() {
+        $formValues = [
+            'name' => 'new name',
+            'description' => 'description',
+            'multiple' => 1
+        ];
+        $this->dispatch('admin/hierarchy/insert-hierarchy');
+        $this->request->setMethod('POST')->setPost($formValues);
+        $this->dispatch('admin/hierarchy/insert-hierarchy');
+        $this->resetRequest()->resetResponse();
+        /* To do - make a test fixture custom hierarchy */
+        $hierarchy = Model_NodeMapper::getRootType('Gender');
+        $this->request->setMethod('POST')->setPost($formValues);
+        $this->dispatch('admin/hierarchy/update-hierarchy/id/' . $hierarchy->id);
+        // test unique hierarchy names
+        $this->resetRequest()->resetResponse();
+        $formValues['name'] = 'Gender';
+        $this->request->setMethod('POST')->setPost($formValues);
+        $this->dispatch('admin/hierarchy/insert-hierarchy');
+        $this->resetRequest()->resetResponse();
+        $this->dispatch('admin/hierarchy/update-hierarchy/id/' . $hierarchy->id);
+        $this->request->setMethod('POST')->setPost($formValues);
     }
 
     public function testDeleteDenied() {
