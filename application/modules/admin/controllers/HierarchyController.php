@@ -120,6 +120,9 @@ class Admin_HierarchyController extends Zend_Controller_Action {
         $hierarchy = Model_NodeMapper::getById($this->_getParam('id'));
         $form = new Admin_Form_Hierarchy();
         if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
+            if ($hierarchy->multiple) {
+                $form->getElement('multiple')->setAttrib('readonly', 'true');
+            }
             $this->view->hierarchy = $hierarchy;
             $this->view->form = $form;
             $form->populate([
