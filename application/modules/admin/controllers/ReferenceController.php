@@ -16,7 +16,7 @@ class Admin_ReferenceController extends Zend_Controller_Action {
 
     public function insertAction() {
         $form = new Admin_Form_Reference();
-        $rootType = Model_NodeMapper::getRootType($this->_getParam('type'));
+        $rootType = Model_NodeMapper::getHierarchyByName($this->_getParam('type'));
         $hierarchies = $form->addHierarchies($rootType->name);
         if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
             $this->view->form = $form;

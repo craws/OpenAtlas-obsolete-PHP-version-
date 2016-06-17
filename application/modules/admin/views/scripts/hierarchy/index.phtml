@@ -11,8 +11,8 @@ foreach ($this->nodes as $id => $node) {
         onclick="addForm(' . $node->id . ', ' . (int) $node->directional . ');">+</a>';
     if (!$node->system && (in_array(Zend_Registry::get('user')->group, ['admin', 'manager']))) {
         $tabDiv[$menu] .= '
-            <a href="/admin/hierarchy/update-hierarchy/id/' . $node->id . '">' . $this->ucstring('edit') . '</a>
-            <a href="/admin/hierarchy/delete/id/' . $node->id . '">' . $this->ucstring('delete') . '</a>';
+            <a href="/admin/hierarchy/update-hierarchy/id/' . $node->id . '">' . $this->ucstring('edit') . '</a>' .
+            $this->link($node, 'delete');
     }
     $tabDiv[$menu] .= '</div>';
     if ($node->description) {
@@ -60,10 +60,7 @@ if (in_array(Zend_Registry::get('user')->group, ['admin', 'manager'])) {
         $("#tabsMenu").tabs();
         $("#tabsSystem").tabs().addClass("ui-tabs-vertical");
         $("#tabsCustom").tabs().addClass("ui-tabs-vertical");
-        //var curTab = $('.ui-tabs-panel:not(.ui-tabs-hide)');
-        //alert(curTab);
-        //$("#tabsMenu").tabs({ active: 1 });
-        //openParentTab();
+        openParentTab();
     });
     function validateName() {
         if ($.trim($("#name").val()).length > 0) {
@@ -82,28 +79,16 @@ if (in_array(Zend_Registry::get('user')->group, ['admin', 'manager'])) {
         form += '<input type="submit" class="submit" value="<?= $this->ucstring('add') ?>"></form>';
         $('#form' + superId).append(form);
     }
+
     function openParentTab() {
         locationHash = location.hash.substring(1);
         console.log(locationHash);
-        // Check if we have an location Hash
         if (locationHash) {
-            // Check if the location hash exsist.
             var hash = $('#' + locationHash);
             if (hash.length) {
-                // Check of the location Hash is inside a tab.
                 if (hash.closest(".tabContent").length) {
-                    // Grab the index number of the parent tab so we can activate it
-                    var tabNumber = hash.closest(".tabContent").index() - 1;
-                    //alert(tabNumber);
+                    var tabNumber = hash.closest(".tabContent").index();
                     $("#tabsMenu").tabs({active: tabNumber - 1});
-                    /*if (tabNumber) {
-                        $("#tabsSystem").tabs().addClass("ui-tabs-vertical");
-                    } else {
-                        $("#tabsCustom").tabs().addClass("ui-tabs-vertical");
-                    }*/
-
-
-                    // Not need but this puts the focus on the selected hash
                     hash.get(0).scrollIntoView();
                     setTimeout(function () {
                         hash.get(0).scrollIntoView();

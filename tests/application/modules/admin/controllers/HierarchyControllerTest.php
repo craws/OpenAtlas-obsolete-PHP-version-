@@ -64,7 +64,7 @@ class Admin_HierarchyControllerTest extends ControllerTestCase {
         $this->dispatch('admin/hierarchy/insert-hierarchy');
         $this->resetRequest()->resetResponse();
         /* To do - make a test fixture custom hierarchy */
-        $hierarchy = Model_NodeMapper::getRootType('Gender');
+        $hierarchy = Model_NodeMapper::getHierarchyByName('Gender');
         $this->request->setMethod('POST')->setPost($formValues);
         $this->dispatch('admin/hierarchy/update-hierarchy/id/' . $hierarchy->id);
         // test unique hierarchy names

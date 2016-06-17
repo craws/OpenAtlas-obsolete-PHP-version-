@@ -6,7 +6,7 @@ class Craws_View_Helper_DisplayTreeOverlay extends Zend_View_Helper_Abstract {
 
     public function displayTreeOverlay($hierarchy, $treeData) {
         if (!is_a($hierarchy, 'Model_Node')) {
-            $hierarchy = Model_NodeMapper::getRootType($hierarchy);
+            $hierarchy = Model_NodeMapper::getHierarchyByName($hierarchy);
         }
         $html = '<div id="' . $hierarchy->nameClean . 'Overlay" class="overlay">
                     <div id="' . $hierarchy->nameClean . 'Dialog" class="overlayContainer">

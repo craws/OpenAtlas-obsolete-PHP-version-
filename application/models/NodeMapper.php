@@ -204,7 +204,7 @@ class Model_NodeMapper extends Model_EntityMapper {
                 $selectedIds[] = $selected->id;
             }
         }
-        $item = self::getRootType($rootName);
+        $item = self::getHierarchyByName($rootName);
         $data = "{'data':[" . self::walkTree($item, $selectedIds) . "]}";
         return $data;
     }
@@ -248,7 +248,7 @@ class Model_NodeMapper extends Model_EntityMapper {
         return $options;
     }
 
-    public static function getRootType($rootName) {
+    public static function getHierarchyByName($rootName) {
         foreach (Zend_Registry::get('nodes') as $node) {
             if (\Craws\FilterInput::filter($node->name, 'node') == \Craws\FilterInput::filter($rootName, 'node')) {
                 return $node;
