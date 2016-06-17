@@ -37,7 +37,6 @@ class Admin_ReferenceController extends Zend_Controller_Action {
         $reference = Model_EntityMapper::getById($this->_getParam('id'));
         $this->view->reference = $reference;
         $form = new Admin_Form_Reference();
-        // find out if has a bibliography or edition type
         $referenceRootType = null;
         $referenceType = null;
         $types = Model_LinkMapper::getLinkedEntities($reference, 'P2');
@@ -51,7 +50,6 @@ class Admin_ReferenceController extends Zend_Controller_Action {
                 case 'Edition':
                     $referenceType = $type;
                     $referenceRootType = $rootType;
-
                     break 2;
             }
         }

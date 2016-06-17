@@ -131,7 +131,7 @@ class Model_EntityMapper extends \Model_AbstractMapper {
                 if (isset($caller['class'])) {
                     echo " in {$caller['class']}";
                 }
-                die;
+                exit;
                 throw new \Zend_Application_Bootstrap_Exception("Entity populate instead of using existing node");
             }
         }

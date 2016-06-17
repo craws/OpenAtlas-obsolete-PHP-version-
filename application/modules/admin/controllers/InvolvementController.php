@@ -100,7 +100,6 @@ class Admin_InvolvementController extends Zend_Controller_Action {
     }
 
     private function save(Model_Link $link, Zend_Form $form, array $hierarchies) {
-        var_dump($link->domain->name);
         foreach ($hierarchies as $hierarchy) {
             $idField = $hierarchy->nameClean . 'Id';
             if ($form->getValue($idField)) {
