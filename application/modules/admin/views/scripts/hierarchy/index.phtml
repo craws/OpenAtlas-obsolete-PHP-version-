@@ -7,25 +7,26 @@ $tabDiv['custom'] = '';
 foreach ($this->nodes as $id => $node) {
     $menu = ($node->system) ? 'system' : 'custom';
     $tabUl[$menu] .= '<li><a href="#tab' . $node->id . '">' . $node->name . '</a></li>';
-    $tabDiv[$menu] .= '<div id="tab' . $node->id . '"><div class="buttonBar"><a id="add' . $node->id . '"
-        onclick="addForm(' . $node->id . ', ' . (int) $node->directional . ');">+</a>';
+    $tabDiv[$menu] .= '<div id="tab' . $node->id . '">';
     if (!$node->system && (in_array(Zend_Registry::get('user')->group, ['admin', 'manager']))) {
-        $tabDiv[$menu] .= '
+        $tabDiv[$menu] .= '<div class="buttonBar">
             <a href="/admin/hierarchy/update-hierarchy/id/' . $node->id . '">' . $this->ucstring('edit') . '</a>' .
-            $this->link($node, 'delete');
+            $this->link($node, 'delete') . '</div>';
     }
-    $tabDiv[$menu] .= '</div>';
+    $tabDiv[$menu] .= '<p><strong>' . $node->name . '</strong></p>';
     if ($node->description) {
-        $tabDiv[$menu] .= '<p>' . $node->description . '</p>';
+        $tabDiv[$menu] .= '<p style="width:700px;">' . $node->description . '</p>';
     }
     if ($node->forms) {
-        $tabDiv[$menu] .= '<p><strong>' . $this->ucstring('forms') . '</strong></br>';
+        $tabDiv[$menu] .= '<p><strong>' . $this->ucstring('forms') . '</strong></br></br>';
         foreach ($node->forms as $form) {
             $tabDiv[$menu] .= $form['name'] . '</br>';
         }
         $tabDiv[$menu] .= '</p>';
     }
-    $tabDiv[$menu] .= '<div id="form' . $node->id . '"></div>';
+    $tabDiv[$menu] .= '<div class="buttonBar" style="margin-bottom:0.5em;"><a id="add' . $node->id . '"
+        onclick="addForm(' . $node->id . ', ' . (int) $node->directional . ');">+</a></div>';
+    $tabDiv[$menu] .= '<div style="margin-bottom:0.5em;" id="form' . $node->id . '"></div>';
     if ($node->subs) {
         global $printRecursiveTypes;
         $printRecursiveTypes = '';

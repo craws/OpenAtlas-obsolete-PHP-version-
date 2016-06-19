@@ -73,7 +73,7 @@ class Admin_HierarchyController extends Zend_Controller_Action {
         $hierarchy = Model_EntityMapper::insert('E55', $form->getValue('name'), $form->getValue('description'));
         Model_NodeMapper::insertHierarchy($form, $hierarchy);
         $this->_helper->message('info_insert');
-        return $this->_helper->redirector->gotoUrl('/admin/hierarchy/#menuTabCustom');
+        return $this->_helper->redirector->gotoUrl('/admin/hierarchy/#tab' . $hierarchy->id);
     }
 
     public function updateAction() {

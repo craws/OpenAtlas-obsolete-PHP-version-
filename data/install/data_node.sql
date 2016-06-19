@@ -272,3 +272,40 @@ INSERT INTO web.hierarchy_form (hierarchy_id, form_id) VALUES
 ((SELECT id FROM web.hierarchy WHERE name LIKE 'Involvement'),(SELECT id FROM web.form WHERE name LIKE 'Involvement')),
 ((SELECT id FROM web.hierarchy WHERE name LIKE 'Actor Function'),(SELECT id FROM web.form WHERE name LIKE 'Member'))
 ;
+
+UPDATE model.entity SET description =
+'Categories for the relationship between two actors. This may be a mutual relationship (e.g. actor A is friend of actor B and vice versa), or a directional relationship (e.g. actor A is the child of actor B, while actor B is the parent of actor A).'
+WHERE name LIKE 'Actor Actor Relation';
+UPDATE model.entity SET description =
+'Definitions of an actor''s function within a group or legal body. An actor can for example be member of a legal body and this membership is defined by a certain function during a certain period of time. E.g. actor "Charlemagne" is member of the legal body "Frankish Reign" from 768 to 814 in the function of "King" and he is member of the legal body "Roman Empire" from 800 to 814 in the function "Emperor".'
+WHERE name LIKE 'Actor Function';
+UPDATE model.entity SET description =
+'Hierarchy of administrative units like "Austria", "Germany", "Italy" and their respective subunits like "Lower Austria", "Styria" and their subunits etc.'
+WHERE name LIKE 'Administrative Unit';
+UPDATE model.entity SET description =
+'Categories for bibliographical entries as used for example in BibTeX, e.g. Book, Inbook, Article etc.'
+WHERE name LIKE 'Bibliography';
+UPDATE model.entity SET description =
+'Categories for the classification of written sources'' editions like charter editions, chronicle edition etc.'
+WHERE name LIKE 'Edition';
+UPDATE model.entity SET description =
+'Categories for the type of events like Change of property, Conflict, Movement, Attendance etc.'
+WHERE name LIKE 'Event';
+UPDATE model.entity SET description =
+'Categories for gender like male, female.'
+WHERE name LIKE 'Gender';
+UPDATE model.entity SET description =
+'Hierarchy of historical places respectively historical administrative units like: Duchy of Bavaria, Lombard Kingdom etc.'
+WHERE name LIKE 'Historical Place';
+UPDATE model.entity SET description =
+'Categories for information carriers. A medieval charter for example may be an information carrier that has a specific content. A later copy of that charter that may be stored in another place/archive will also contain the same content. Therefore we provide different types of information carriers like: Original document, Copy of document etc.'
+WHERE name LIKE 'Information Carrier';
+UPDATE model.entity SET description =
+'Categories to define the involvement of an actor within an event. E.g. "Napoleon" participated in the event "Invasion of Russia" as "Commander" or "Michelangelo" performed the event "painting of the Sistine chapel" as "Artist".'
+WHERE name LIKE 'Involvement';
+UPDATE model.entity SET description =
+'Types for non-moveable entities (i.e. places) with a certain extent and/or location like Settlement, Burial site, Ritual site, Fortification etc.'
+WHERE name LIKE 'Site';
+UPDATE model.entity SET description =
+'Types for historical sources like charter, chronicle, letter etc.'
+WHERE name LIKE 'Source';

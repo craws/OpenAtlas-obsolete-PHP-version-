@@ -14,10 +14,12 @@ class Craws_View_Helper_DisplayTreeSelect extends Zend_View_Helper_Abstract {
             $elementId = $hierarchy->nameClean . 'Id';
             $displayName = ucfirst($hierarchy->name);
             $class = (in_array($hierarchy->name, ['administrative', 'historical'])) ? ' placeSwitch display-none' : '';
+            $tip = $this->view->ucstring('tip_hierarchy');
+            $tip .= ($hierarchy->description) ? '&#013;' . str_replace('"', '', $hierarchy->description) : '';
             $html .= '<div class="tableRow' . $class . '">
                 <div id="' . $elementName . '-label">
                     <label class="optional" for="' . $elementName . '">' . $displayName . '</label>
-                    <span class="tooltip" title="' . $this->view->ucstring('tip_hierarchy') . '">i</span>
+                    <span class="tooltip" title="' . $tip . '">i</span>
                 </div>';
             $html .= '<div class="tableCell">';
             $html .= $form->$elementId->renderViewHelper();
