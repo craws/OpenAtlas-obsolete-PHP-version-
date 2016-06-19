@@ -7,16 +7,17 @@ class Admin_HierarchyController extends Zend_Controller_Action {
     public function deleteAction() {
         $type = Model_NodeMapper::getById($this->_getParam('id'));
         if (!$type->extendable ||
-            (!$type->superId && ($type->system && !in_array(Zend_Registry::get('user')->group, ['admin', 'manager'])))) {
+            (!$type->superId && $type->system) ||
+            (!$type->superId && !in_array(Zend_Registry::get('user')->group, ['admin', 'manager']))) {
             $this->_helper->message('error_forbidden');
             return $this->_helper->redirector->gotoUrl('/admin/hierarchy');
         }
-        if (Model_LinkMapper::getLinks($type, 'P2', true) || Model_LinkMapper::getLinks($type, 'P89', true)) {
-            $this->_helper->message('error_links_exists');
-            return $this->_helper->redirector->gotoUrl('/admin/hierarchy/view/id/' . $type->id);
-        }
         if (!empty($type->subs)) {
             $this->_helper->message('error_subs_exists');
+            return $this->_helper->redirector->gotoUrl('/admin/hierarchy/view/id/' . $type->id);
+        }
+        if (Model_LinkMapper::getLinks($type, 'P2', true) || Model_LinkMapper::getLinks($type, 'P89', true)) {
+            $this->_helper->message('error_links_exists');
             return $this->_helper->redirector->gotoUrl('/admin/hierarchy/view/id/' . $type->id);
         }
         $type->delete();

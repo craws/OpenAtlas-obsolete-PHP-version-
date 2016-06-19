@@ -16,6 +16,7 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase {
     protected $source2Id = '1008';
     protected $carrierId = '1009';
     protected $subEventId = '1010';
+    protected $customHierarchyId = '1011';
 
     public function setUp() {
         $this->bootstrap = new Zend_Application(APPLICATION_ENV, ['config' => [

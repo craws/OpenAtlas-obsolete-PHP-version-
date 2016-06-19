@@ -46,9 +46,6 @@ class Admin_CarrierController extends Zend_Controller_Action {
                 'description' => $carrier->description,
                 'modified' => ($carrier->modified) ? $carrier->modified->getTimestamp() : 0
             ]);
-            if ($type->rootId) {
-                $form->populate(['typeButton' => $type->name]);
-            }
             $form->populateDates($carrier, ['OA1' => 'begin', 'OA2' => 'end']);
             $place = Model_LinkMapper::getLinkedEntity($carrier, ['OA8']);
             if ($place) {

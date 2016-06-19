@@ -18,7 +18,10 @@ INSERT INTO entity (id, class_id, name) VALUES
 (1007, (SELECT id FROM class WHERE code='E31'), 'tBiblio'     ),
 (1008, (SELECT id FROM class WHERE code='E33'), 'tDocument2'  ),
 (1009, (SELECT id FROM class WHERE code='E84'), 'tCarrier'    ),
-(1010, (SELECT id FROM class WHERE code='E8' ), 'tSubEvent'   );
+(1010, (SELECT id FROM class WHERE code='E8' ), 'tSubEvent'   ),
+(1011, (SELECT id FROM class WHERE code='E55'), 'tCustomHierarchy'  );
+
+INSERT INTO hierarchy (id, name, multiple) VALUES (1011, 'tCustomHierarchy', 1);
 
 INSERT INTO user_bookmarks (user_id, entity_id) VALUES ((SELECT id FROM web."user" WHERE username = 'a'), 1001);
 

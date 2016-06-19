@@ -38,19 +38,15 @@ class Admin_HierarchyControllerTest extends ControllerTestCase {
         $this->request->setMethod('POST')->setPost($formValues);
         $this->dispatch('admin/hierarchy/update/id/' . $kindredship->superId);
         $this->resetRequest()->resetResponse();
+        $this->dispatch('admin/hierarchy/update/id/' . $kindredship->rootId); // test forbidden
+        $this->resetRequest()->resetResponse();
+        $formValues['super'] = $kindredship->superId;
+        $this->request->setMethod('POST')->setPost($formValues);
+        $this->dispatch('admin/hierarchy/update/id/' . $kindredship->id);
         $this->dispatch('admin/hierarchy/delete/id/' . $kindredship->superId);
         $this->resetRequest()->resetResponse();
         $this->dispatch('admin/hierarchy/delete/id/' . $kindredship->id);
         $this->resetRequest()->resetResponse();
-        $relation = Model_NodeMapper::getByNodeCategoryName('Actor Actor Relation', 'Parent of (Child of)');
-        $formValues['super'] = $relation->superId;
-        $this->request->setMethod('POST')->setPost($formValues);
-        // TODO this raises an: call to undefined method stdClass::update() in HierarchyController.php on line 94
-        // $this->dispatch('admin/hierarchy/update/id/' . $relation->id);
-        //$this->resetRequest()->resetResponse();
-        $this->dispatch('admin/hierarchy/update/id/' . $relation->rootId); // test forbidden
-        $this->resetRequest()->resetResponse();
-        $this->dispatch('admin/hierarchy/delete/id/' . $relation->rootId); // test forbidden
     }
 
     public function testCrudHierarchy() {
@@ -63,7 +59,6 @@ class Admin_HierarchyControllerTest extends ControllerTestCase {
         $this->request->setMethod('POST')->setPost($formValues);
         $this->dispatch('admin/hierarchy/insert-hierarchy');
         $this->resetRequest()->resetResponse();
-        /* To do - make a test fixture custom hierarchy */
         $hierarchy = Model_NodeMapper::getHierarchyByName('Gender');
         $this->request->setMethod('POST')->setPost($formValues);
         $this->dispatch('admin/hierarchy/update-hierarchy/id/' . $hierarchy->id);
@@ -73,8 +68,14 @@ class Admin_HierarchyControllerTest extends ControllerTestCase {
         $this->request->setMethod('POST')->setPost($formValues);
         $this->dispatch('admin/hierarchy/insert-hierarchy');
         $this->resetRequest()->resetResponse();
-        $this->dispatch('admin/hierarchy/update-hierarchy/id/' . $hierarchy->id);
+        $this->dispatch('admin/hierarchy/update-hierarchy/id/' . $this->customHierarchyId);
+        $this->resetRequest()->resetResponse();
         $this->request->setMethod('POST')->setPost($formValues);
+        $this->dispatch('admin/hierarchy/update-hierarchy/id/' . $this->customHierarchyId); // test existing name
+        $this->resetRequest()->resetResponse();
+        $formValues['name'] = 'a complete new name';
+        $this->request->setMethod('POST')->setPost($formValues);
+        $this->dispatch('admin/hierarchy/update-hierarchy/id/' . $this->customHierarchyId);
     }
 
     public function testDeleteDenied() {

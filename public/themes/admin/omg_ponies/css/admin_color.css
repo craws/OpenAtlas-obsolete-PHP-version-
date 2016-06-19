@@ -101,7 +101,7 @@ span.button,
 .dateSwitch,
 .placeSwitch,
 tr.tableGroup,
-div#tabs a.add,
+div.tabsContainer a.add,
 .ui-state-default,
 .ui-widget-content .ui-state-default,
 .changelogVersion

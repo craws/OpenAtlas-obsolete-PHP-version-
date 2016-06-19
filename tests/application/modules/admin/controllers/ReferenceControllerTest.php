@@ -52,7 +52,7 @@ class Admin_ReferenceControllerTest extends ControllerTestCase {
         $this->resetRequest()->resetResponse();
         $this->formValues['name'] = '';
         $this->request->setMethod('POST')->setPost($this->formValues);
-        $this->dispatch('admin/reference/delete/id/' . $reference->id); // test invalid form
+        $this->dispatch('admin/reference/update/id/' . $reference->id); // test invalid form
         $this->resetRequest()->resetResponse();
         $this->dispatch('admin/reference/delete/id/' . $reference->id);
     }
