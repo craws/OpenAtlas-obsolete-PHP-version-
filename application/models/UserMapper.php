@@ -29,7 +29,7 @@ class Model_UserMapper extends Model_AbstractMapper {
     }
 
     public static function getByUsername($username) {
-        $sql = 'SELECT id FROM web."user" WHERE LOWER(username) = :username';
+        $sql = 'SELECT id FROM web."user" WHERE LOWER(username) = :username;';
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->bindValue(':username', mb_strtolower($username));
         $statement->execute();
@@ -41,7 +41,7 @@ class Model_UserMapper extends Model_AbstractMapper {
     }
 
     public static function getBookmarks($userId) {
-        $sql = 'SELECT entity_id FROM web.user_bookmarks WHERE user_id = :user_id';
+        $sql = 'SELECT entity_id FROM web.user_bookmarks WHERE user_id = :user_id;';
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->bindValue(':user_id', mb_strtolower($userId));
         $statement->execute();
@@ -87,7 +87,8 @@ class Model_UserMapper extends Model_AbstractMapper {
     // @codeCoverageIgnoreEnd
 
     public static function getByEmail($email) {
-        $statement = Zend_Db_Table::getDefaultAdapter()->prepare('SELECT id FROM web."user" WHERE LOWER(email) = :email;');
+        $sql = 'SELECT id FROM web."user" WHERE LOWER(email) = :email;';
+        $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->bindValue(':email', $email);
         $statement->execute();
         $row = $statement->fetch();
@@ -120,7 +121,7 @@ class Model_UserMapper extends Model_AbstractMapper {
 
     public static function insert(Model_User $user) {
         $sql = 'INSERT INTO web."user" (username, password, active, real_name, info, email, group_id)
-      VALUES (:username, :password, :active, :real_name, :info, :email, :group_id) RETURNING id;';
+            VALUES (:username, :password, :active, :real_name, :info, :email, :group_id) RETURNING id;';
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->bindValue(':username', $user->username);
         $statement->bindValue(':password', $user->password);

@@ -2,12 +2,12 @@
 
 /* Copyright 2016 by Alexander Watzinger and others. Please see the file README.md for licensing information */
 
-class Admin_Form_Involvement extends Craws\Form\Table {
+class Admin_Form_Involvement extends Admin_Form_Base {
 
     public function init() {
         $this->setName('involvementForm')->setMethod('post');
         $this->setAction($this->getView()->url());
-        Admin_Form_Abstract::addDates($this, ['begin', 'begin2', 'end', 'end2']);
+        $this->addDates(['begin', 'begin2', 'end', 'end2']);
         $this->addElement('hidden', 'involvementId', ['decorators' => ['ViewHelper']]);
         $this->addElement('text', 'involvementButton', [
             'label' => 'Involvement',
@@ -45,14 +45,14 @@ class Admin_Form_Involvement extends Craws\Form\Table {
     }
 
     public function addActivity($event) {
-        if ($event && $event->getClass()->code == 'E6') {
+        if ($event && $event->class->code == 'E6') {
             return;
         }
         $activity = $this->createElement('select', 'activity', ['required' => true, 'class' => 'required']);
         $activity->setLabel($this->getView()->ucstring('activity'));
         $activity->addMultiOptions(['' => html_entity_decode('&nbsp;')]);
         $options = ['P11', 'P14'];
-        if (!$event || $event->getClass()->code == 'E8') {
+        if (!$event || $event->class->code == 'E8') {
             $options[] = 'P22';
             $options[] = 'P23';
         }

@@ -13,9 +13,7 @@
         <div class="tableCell"><?= $form->name->renderViewHelper() ?></div>
     </div>
     <?= $this->displayAliasForm($form) ?>
-    <? if ($form->genderId): ?>
-        <?= $this->displayTreeSelect('gender', $form) ?>
-    <? endif ?>
+    <?= $this->displayTreeSelect($this->hierarchies, $form) ?>
     <?= $this->displayTableSelect('residence', $form) ?>
     <?= $this->displayTableSelect('appearsFirst', $form) ?>
     <?= $this->displayTableSelect('appearsLast', $form) ?>
@@ -34,9 +32,10 @@
     </div>
 </div>
 <?= '</form>' ?>
-<? if ($form->genderId): ?>
-    <?= $this->displayTreeOverlay('gender', $this->genderTreeData) ?>
-<? endif ?>
+<? foreach ($this->hierarchies as $hierarchy) : ?>
+    <? $dataVariable = $hierarchy->nameClean . 'TreeData'; ?>
+    <?= $this->displayTreeOverlay($hierarchy->nameClean, $this->$dataVariable); ?>
+<? endforeach ?>
 <? foreach (['residence', 'appearsFirst', 'appearsLast'] as $placeTable): ?>
     <div id="<?= $placeTable ?>Overlay" class="overlay">
         <div id='<?= $placeTable ?>Dialog' class="overlayContainer">
@@ -46,7 +45,7 @@
             foreach ($this->objects as $object) {
                 $table['data'][] = [
                     '<a onclick="selectFromTable(this, \'' . $placeTable . '\', ' . $object->id . ')">' .
-                        $object->name . '</a>',
+                    $object->name . '</a>',
                     $object->first,
                     $object->last,
                 ];

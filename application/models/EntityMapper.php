@@ -9,11 +9,11 @@ class Model_EntityMapper extends \Model_AbstractMapper {
             e.value_timestamp, e.value_integer,
             min(date_part('year', d1.value_timestamp)) AS first,
             max(date_part('year', d2.value_timestamp)) AS last
-        FROM crm.entity e
-        JOIN crm.class c ON e.class_id = c.id
-        LEFT OUTER JOIN crm.link l ON e.id = l.domain_id
-        LEFT OUTER JOIN crm.entity d1 ON l.range_id = d1.id
-        LEFT OUTER JOIN crm.entity d2 ON l.range_id = d2.id
+        FROM model.entity e
+        JOIN model.class c ON e.class_id = c.id
+        LEFT OUTER JOIN model.link l ON e.id = l.domain_id
+        LEFT OUTER JOIN model.entity d1 ON l.range_id = d1.id
+        LEFT OUTER JOIN model.entity d2 ON l.range_id = d2.id
     ";
 
     public static function search($term, $codes, $description = false, $own = false) {
@@ -27,7 +27,7 @@ class Model_EntityMapper extends \Model_AbstractMapper {
         if ($own) {
             $sql .= " ul.user_id = :user_id AND ";
         }
-        $sql .= "e.class_id IN (SELECT id from crm.class WHERE code IN ('" . implode("', '", $codes) . "'))";
+        $sql .= "e.class_id IN (SELECT id from model.class WHERE code IN ('" . implode("', '", $codes) . "'))";
         $sql .= " GROUP BY e.id, c.code ORDER BY e.name";
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->bindValue(':term', '%' . mb_strtolower($term) . '%');
@@ -39,7 +39,7 @@ class Model_EntityMapper extends \Model_AbstractMapper {
         $entitites = [];
         foreach ($rows as $row) {
             $entity = self::populate(new Model_Entity(), $row);
-            switch ($entity->getClass()->code) {
+            switch ($entity->class->code) {
                 case 'E82':
                     $entityForAlias = Model_LinkMapper::getLinkedEntity($entity, 'P131', true);
                     if (!isset($entitites[$entityForAlias->id])) { // otherwise the one with dates would be overwriten
@@ -103,14 +103,13 @@ class Model_EntityMapper extends \Model_AbstractMapper {
                 continue;
             }
             $entitites[] = $entity;
-
         }
         return $entitites;
     }
 
     public static function countByCodes($code) {
         $codes = Zend_Registry::get('config')->get('code' . $code)->toArray();
-        $sql = "SELECT COUNT(*) AS count FROM crm.entity e JOIN crm.class c ON e.class_id = c.id
+        $sql = "SELECT COUNT(*) AS count FROM model.entity e JOIN model.class c ON e.class_id = c.id
             WHERE c.code IN ('" . implode("', '", $codes) . "');";
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->execute();
@@ -119,12 +118,31 @@ class Model_EntityMapper extends \Model_AbstractMapper {
     }
 
     protected static function populate(Model_Entity $entity, array $row) {
+        if (
+            APPLICATION_ENV == 'development' &&
+            Zend_Registry::isRegistered('nodesIds') &&
+            is_a($entity, 'Model_entity') &&
+            in_array($row['id'], Zend_Registry::get('nodesIds'))) {
+
+            $trace = debug_backtrace();
+            $caller = $trace[2];
+            if (!in_array($caller['function'], ['tablelog'])) {
+                echo "Entity populate called by {$caller['function']}";
+                if (isset($caller['class'])) {
+                    echo " in {$caller['class']}";
+                }
+                exit;
+                throw new \Zend_Application_Bootstrap_Exception("Entity populate instead of using existing node");
+            }
+        }
         $classes = Zend_Registry::get('classes');
         $entity->id = $row['id'];
-        $entity->setClass($classes[$row['class_id']]);
+        $entity->class = $classes[$row['class_id']];
         $entity->name = $row['name'];
         $entity->description = $row['description'];
-        $entity->date = parent::toZendDate($row['value_timestamp']);
+        if (isset($row['value_timestamp'])) {
+            $entity->date = parent::toZendDate($row['value_timestamp']);
+        }
         $entity->created = parent::toZendDate($row['created']);
         $entity->modified = parent::toZendDate($row['modified']);
         if (isset($row['first'])) {
@@ -140,7 +158,7 @@ class Model_EntityMapper extends \Model_AbstractMapper {
         if (!is_numeric($class)) { // if $class was a string (code) get the id
             $class = Model_ClassMapper::getByCode($class)->id;
         }
-        $sql = 'INSERT INTO crm.entity (class_id, name, description, value_timestamp)
+        $sql = 'INSERT INTO model.entity (class_id, name, description, value_timestamp)
             VALUES (:class_id, :name, :description, :value_timestamp) RETURNING id;';
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->bindValue(':class_id', (int) $class);
@@ -167,7 +185,7 @@ class Model_EntityMapper extends \Model_AbstractMapper {
     }
 
     public static function update(Model_Entity $entity) {
-        $sql = 'UPDATE crm.entity SET (name, description) = (:name, :description) WHERE id = :id;';
+        $sql = 'UPDATE model.entity SET (name, description) = (:name, :description) WHERE id = :id;';
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->bindValue(':id', $entity->id);
         $statement->bindValue(':name', \Craws\FilterInput::filter($entity->name, 'crm'));
@@ -183,14 +201,14 @@ class Model_EntityMapper extends \Model_AbstractMapper {
     public static function delete(Model_Entity $entity) {
         self::deleteDates($entity);
         foreach (Model_LinkMapper::getLinks($entity, ['P1', 'P53', 'P73', 'P131']) as $link) {
-            parent::deleteAbstract('crm.entity', $link->getRange()->id);
+            parent::deleteAbstract('model.entity', $link->range->id);
         }
-        parent::deleteAbstract('crm.entity', $entity->id);
+        parent::deleteAbstract('model.entity', $entity->id);
     }
 
     public static function deleteDates(Model_Entity $entity) {
         foreach (Model_LinkMapper::getLinks($entity, ['OA1', 'OA2', 'OA3', 'OA4', 'OA5', 'OA6']) as $link) {
-            parent::deleteAbstract('crm.entity', $link->getRange()->id);
+            parent::deleteAbstract('model.entity', $link->range->id);
         }
     }
 
@@ -199,6 +217,17 @@ class Model_EntityMapper extends \Model_AbstractMapper {
         if ($entity->modified && $entity->modified->getTimestamp() > $modified) {
             return true;
         }
+    }
+
+    public static function getRootEvent() {
+        $sql = "
+            SELECT e.id, e.class_id, e.name, e.description, e.created, e.modified, c.code
+            FROM model.entity e JOIN model.class c ON e.class_id = c.id
+            WHERE e.name LIKE :name ORDER BY id ASC LIMIT 1;";
+        $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
+        $statement->bindValue(':name', Zend_Registry::get('config')->get('eventRootName'));
+        $statement->execute();
+        return self::populate(new Model_Entity(), $statement->fetch());
     }
 
 }

@@ -10,7 +10,8 @@ class Model_GroupMapper extends Model_AbstractMapper {
     }
 
     public static function getByName($name) {
-        $statement = Zend_Db_Table::getDefaultAdapter()->prepare('SELECT id, name FROM web.group WHERE name = :name;');
+        $sql = 'SELECT id, name FROM web.group WHERE name = :name;';
+        $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->bindValue(':name', $name);
         $statement->execute();
         $row = $statement->fetch();

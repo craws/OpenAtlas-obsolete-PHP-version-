@@ -4,19 +4,20 @@
 
 class Admin_HierarchyController extends Zend_Controller_Action {
 
-
     public function deleteAction() {
         $type = Model_NodeMapper::getById($this->_getParam('id'));
-        if (!$type->superId || !$type->expandable) {
+        if (!$type->extendable ||
+            (!$type->superId && $type->system) ||
+            (!$type->superId && !in_array(Zend_Registry::get('user')->group, ['admin', 'manager']))) {
             $this->_helper->message('error_forbidden');
             return $this->_helper->redirector->gotoUrl('/admin/hierarchy');
         }
-        if (Model_LinkMapper::getLinks($type, 'P2', true) || Model_LinkMapper::getLinks($type, 'P89', true)) {
-            $this->_helper->message('error_links_exists');
-            return $this->_helper->redirector->gotoUrl('/admin/hierarchy/view/id/' . $type->id);
-        }
         if (!empty($type->subs)) {
             $this->_helper->message('error_subs_exists');
+            return $this->_helper->redirector->gotoUrl('/admin/hierarchy/view/id/' . $type->id);
+        }
+        if (Model_LinkMapper::getLinks($type, 'P2', true) || Model_LinkMapper::getLinks($type, 'P89', true)) {
+            $this->_helper->message('error_links_exists');
             return $this->_helper->redirector->gotoUrl('/admin/hierarchy/view/id/' . $type->id);
         }
         $type->delete();
@@ -25,18 +26,16 @@ class Admin_HierarchyController extends Zend_Controller_Action {
     }
 
     public function indexAction() {
-        $types = [];
-        foreach (['place', 'type'] as $hierarchy) {
-            foreach (Zend_Registry::get($hierarchy) as $type) {
-                if ($type->expandable) {
-                    $types[] = $type;
-                }
+        $nodes = [];
+        foreach (Zend_Registry::get('nodes') as $node) {
+            if ($node->extendable) {
+                $nodes[] = $node;
             }
         }
-        usort($types, function($a, $b) {
+        usort($nodes, function($a, $b) {
             return strcmp($a->name, $b->name);
         });
-        $this->view->types = $types;
+        $this->view->nodes = $nodes;
     }
 
     public function insertAction() {
@@ -51,7 +50,7 @@ class Admin_HierarchyController extends Zend_Controller_Action {
             if ($inverse) {
                 $name .= ' (' . $inverse . ')';
             }
-            $type = Model_EntityMapper::insert($super->getClass()->code, $name);
+            $type = Model_EntityMapper::insert($super->class->code, $name);
             Model_LinkMapper::insert($super->propertyToSuper, $type, $super);
             $this->_helper->message('info_insert');
         }
@@ -59,61 +58,122 @@ class Admin_HierarchyController extends Zend_Controller_Action {
         return $this->_helper->redirector->gotoUrl('/admin/hierarchy/#tab' . $tabId);
     }
 
+    public function insertHierarchyAction() {
+        $form = new Admin_Form_Hierarchy();
+        if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
+            $this->view->form = $form;
+            return;
+        }
+        foreach (Zend_Registry::get('nodes') as $node) {
+            if ($node->nameClean == \Craws\FilterInput::filter($form->getValue('name'), 'node')) {
+                $this->view->form = $form;
+                $this->_helper->message('error_name_exists');
+                return;
+            }
+        }
+        $hierarchy = Model_EntityMapper::insert('E55', $form->getValue('name'), $form->getValue('description'));
+        Model_NodeMapper::insertHierarchy($form, $hierarchy);
+        $this->_helper->message('info_insert');
+        return $this->_helper->redirector->gotoUrl('/admin/hierarchy/#tab' . $hierarchy->id);
+    }
+
     public function updateAction() {
-        $type = Model_NodeMapper::getById($this->_getParam('id'));
-        if (!$type->superId || !$type->expandable) {
+        $node = Model_NodeMapper::getById($this->_getParam('id'));
+        if (!$node->superId || !$node->extendable) {
             $this->_helper->message('error_forbidden');
             return $this->_helper->redirector->gotoUrl('/admin/hierarchy');
         }
-        $form = new Admin_Form_Type();
-        if (!$type->directed) {
+        $form = new Admin_Form_Node();
+        if (!$node->directional) {
             $form->removeElement('inverse');
         }
         $superElement = $form->getElement('super');
-        $options = Model_NodeMapper::getSuperCandidates(Model_NodeMapper::getById($type->rootId), $type->id);
+        $options = Model_NodeMapper::getSuperCandidates(Model_NodeMapper::getById($node->rootId), $node->id);
         $superElement->addMultiOptions($options);
         if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
-            $array = explode('(', $type->name);
+            $array = explode('(', $node->name);
             $inverse = (isset($array[1])) ? trim(str_replace(['(', ')'], '', $array[1])) : '';
             $form->populate([
-                'description' => $type->description,
+                'description' => $node->description,
                 'inverse' => $inverse,
                 'name' => trim($array[0]),
-                'super' => $type->superId,
-             ]);
+                'super' => $node->superId,
+            ]);
             $this->view->form = $form;
-            $this->view->type = $type;
+            $this->view->type = $node;
             return;
         }
-        $type->name = str_replace(['(', ')'], '', $form->getValue('name'));
+        $node->name = str_replace(['(', ')'], '', $form->getValue('name'));
         $inverse = trim(str_replace(['(', ')'], '', $form->getValue('inverse')));
         if ($inverse) {
-            $type->name .= ' (' . $inverse . ')';
+            $node->name .= ' (' . $inverse . ')';
         }
-        $type->description = $this->_getParam('description');
-        $type->update();
-        $superLink = Model_LinkMapper::getLink($type, $type->propertyToSuper);
-        $superLink->setRange(Model_EntityMapper::getById($form->getValue('super')));
+        $node->description = $this->_getParam('description');
+        $node->update();
+        $superLink = Model_LinkMapper::getLink($node, $node->propertyToSuper);
+        $superLink->range = Model_NodeMapper::getById($form->getValue('super'));
         $superLink->update();
         $this->_helper->message('info_update');
-        return $this->_helper->redirector->gotoUrl('/admin/hierarchy/#tab' . $type->rootId);
+
+        return $this->_helper->redirector->gotoUrl('/admin/hierarchy/#tab' . $node->rootId);
+    }
+
+    public function updateHierarchyAction() {
+        $hierarchy = Model_NodeMapper::getById($this->_getParam('id'));
+        if ($hierarchy->system) {
+            $this->_helper->message('error_forbidden');
+            return $this->_helper->redirector->gotoUrl('/admin/hierarchy/#tab' . $hierarchy->id);
+        }
+        $form = new Admin_Form_Hierarchy();
+        if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
+            if ($hierarchy->multiple) {
+                $form->getElement('multiple')->setAttribs(array('style' => 'display: none'));
+                $form->getElement('multiple')->getDecorator('Label')->setOption('style', 'display: none');
+            }
+            $this->view->hierarchy = $hierarchy;
+            $this->view->form = $form;
+            $form->populate([
+                'description' => $hierarchy->description,
+                'name' => $hierarchy->name,
+                'multiple' => $hierarchy->multiple
+            ]);
+            foreach ($hierarchy->forms as $hierarchyForm) {
+                $form->forms->removeMultiOption($hierarchyForm['id']);
+            }
+            return;
+        }
+        if ($hierarchy->name != $form->getValue('name')) {
+            foreach (Zend_Registry::get('nodes') as $node) {
+                if ($node->nameClean == \Craws\FilterInput::filter($form->getValue('name'), 'node')) {
+                    $this->view->form = $form;
+                    $this->_helper->message('error_name_exists');
+                    return;
+                }
+            }
+        }
+        $hierarchy->name = $form->getValue('name');
+        $hierarchy->description = $form->getValue('description');
+        $hierarchy->update();
+        Model_NodeMapper::updateHierarchy($form, $hierarchy);
+        $this->_helper->message('info_update');
+        return $this->_helper->redirector->gotoUrl('/admin/hierarchy/#tab' . $hierarchy->id);
     }
 
     public function viewAction() {
-        $type = Model_NodeMapper::getById($this->_getParam('id'));
-        $linksEntitites = Model_LinkMapper::getLinkedEntities($type, $type->propertyToEntity, true);
-        if ($type->getClass()->code == 'E53') {
+        $node = Model_NodeMapper::getById($this->_getParam('id'));
+        $linksEntitites = Model_LinkMapper::getLinkedEntities($node, $node->propertyToEntity, true);
+        if ($node->class->code == 'E53') {
             $linksEntitites = [];
-            foreach (Model_LinkMapper::getLinkedEntities($type, $type->propertyToEntity, true) as $object) {
+            foreach (Model_LinkMapper::getLinkedEntities($node, $node->propertyToEntity, true) as $object) {
                 $linkedEntity = Model_LinkMapper::getLinkedEntity($object, 'P53', true);
                 if ($linkedEntity) { // needed to remove node subs
                     $linksEntitites[] = $linkedEntity;
                 }
             }
         }
-        $this->view->type = $type;
+        $this->view->node = $node;
         $this->view->linksEntities = $linksEntitites;
-        $this->view->linksProperties = Model_LinkPropertyMapper::getByEntity($type);
+        $this->view->linksProperties = Model_LinkPropertyMapper::getByEntity($node);
     }
 
 }

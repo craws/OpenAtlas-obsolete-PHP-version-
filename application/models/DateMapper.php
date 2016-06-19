@@ -27,19 +27,19 @@ class Model_DateMapper {
     }
 
     private static function getTypeByName($name) {
-        return Model_NodeMapper::getByNodeCategoryName('type', 'Date value type', $name);
+        return Model_NodeMapper::getByNodeCategoryName('Date value type', $name);
     }
 
     public static function getLinkDateRange(Model_Link $link) {
         $sql = "
             SELECT
-            (SELECT min(date_part('year', e.value_timestamp)) FROM crm.entity e
-            JOIN crm.link_property lp ON e.id = lp.range_id
-            JOIN crm.link l ON lp.domain_id = l.id
+            (SELECT min(date_part('year', e.value_timestamp)) FROM model.entity e
+            JOIN model.link_property lp ON e.id = lp.range_id
+            JOIN model.link l ON lp.domain_id = l.id
             WHERE l.id = :link_id) AS first,
-            max(date_part('year', e.value_timestamp)) AS last FROM crm.entity e
-            JOIN crm.link_property lp ON e.id = lp.range_id
-            JOIN crm.link l ON lp.domain_id = l.id
+            max(date_part('year', e.value_timestamp)) AS last FROM model.entity e
+            JOIN model.link_property lp ON e.id = lp.range_id
+            JOIN model.link l ON lp.domain_id = l.id
             WHERE l.id = :link_id;";
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->bindValue(':link_id', $link->id);
@@ -50,7 +50,7 @@ class Model_DateMapper {
 
     public static function saveDates(Model_Entity $entity, Zend_Form $form) {
         Model_EntityMapper::deleteDates($entity);
-        switch ($entity->getClass()->name) {
+        switch ($entity->class->name) {
             case 'Person':
                 if ($form->getValue('birth')) {
                     self::insert($entity, $form, 'begin', 'OA3', 'Model_LinkMapper');

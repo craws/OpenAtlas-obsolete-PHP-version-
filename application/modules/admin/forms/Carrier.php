@@ -2,25 +2,16 @@
 
 /* Copyright 2016 by Alexander Watzinger and others. Please see the file README.md for licensing information */
 
-class Admin_Form_Carrier extends Craws\Form\Table {
+class Admin_Form_Carrier extends Admin_Form_Base {
 
     public function init() {
         $this->setName('carrierForm')->setMethod('post');
         $this->setAction($this->getView()->url());
-        Admin_Form_Abstract::addDates($this, ['begin', 'begin2', 'end', 'end2']);
+        $this->addDates(['begin', 'begin2', 'end', 'end2']);
         $this->addElement('text', 'name', [
             'class' => 'required',
             'required' => true,
             'label' => $this->getView()->ucstring('name')
-        ]);
-        $this->addElement('hidden', 'typeId', ['decorators' => ['ViewHelper']]);
-        $this->addElement('text', 'typeButton', [
-            'label' => $this->getView()->ucstring('type'),
-            'class' => 'tableSelect',
-            'readonly' => true,
-            'onfocus' => 'this.blur()',
-            'placeholder' => $this->getView()->ucstring('select'),
-            'attribs' => ['readonly' => 'true'],
         ]);
         $this->addElement('hidden', 'objectId', ['decorators' => ['ViewHelper']]);
         $this->addElement('text', 'objectButton', [

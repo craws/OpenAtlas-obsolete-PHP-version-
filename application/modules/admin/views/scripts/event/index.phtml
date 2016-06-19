@@ -9,7 +9,7 @@ $table['header'] = [_('name'), _('class'), _('first'), _('last')];
 foreach ($this->events as $event) {
     $table['data'][] = [
         $this->link($event),
-        $event->getClass()->nameTranslated,
+        $event->class->nameTranslated,
         $event->first,
         $event->last
     ];

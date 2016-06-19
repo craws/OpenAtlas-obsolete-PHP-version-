@@ -10,7 +10,7 @@ $table['header'] = [_('actor'), _('class'), _('first'), _('last'), ''];
 foreach ($this->actors as $actor) {
     $table['data'][] = [
         $this->link($actor),
-        $actor->getClass()->nameTranslated,
+        $actor->class->nameTranslated,
         $actor->first,
         $actor->last,
         '<a class="button" href="/admin/actor/link/actorId/' . $actor->id . '/rangeId/' . $this->origin->id . '">' .

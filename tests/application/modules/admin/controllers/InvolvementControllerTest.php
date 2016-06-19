@@ -12,7 +12,7 @@ class Admin_InvolvementControllerTest extends ControllerTestCase {
     public function testInsert() {
         $formValues = [
             'activity' => Model_PropertyMapper::getByCode('P11')->id,
-            'involvementId' => Model_NodeMapper::getByNodeCategoryName('type', 'Involvement', 'Creator')->id,
+            'involvementId' => Model_NodeMapper::getByNodeCategoryName('Involvement', 'Creator')->id,
         ];
         $this->dispatch('admin/involvement/insert/origin/actor/actorId/' . $this->actorId);
         $this->resetRequest()->resetResponse();
