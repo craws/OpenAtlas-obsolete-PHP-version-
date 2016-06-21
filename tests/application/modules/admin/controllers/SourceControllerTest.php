@@ -12,14 +12,13 @@ class Admin_SourceControllerTest extends ControllerTestCase {
     public function setUp() {
         parent::setUp();
         $this->login();
-        $type = Model_NodeMapper::getByNodeCategoryName('type', 'source', 'letter');
-        $this->formValues['typeId'] = $type->id;
-        $this->formValues['typeButton'] = $type->name;
+        $type = Model_NodeMapper::getByNodeCategoryName('source', 'letter');
+        $this->formValues['sourceId'] = $type->id;
     }
 
     public function testAdd() {
         $this->dispatch('admin/source/add/id/' . $this->actorId);
-        $this->request->setMethod('POST')->setPost([$this->sourceId => '']);
+        $this->request->setMethod('POST')->setPost(['' => $this->sourceId ]);
         $this->dispatch('admin/source/add/id/' . $this->actorId);
         $this->resetRequest()->resetResponse();
         $this->dispatch('admin/source/view/id/' . $this->sourceId);
@@ -42,15 +41,15 @@ class Admin_SourceControllerTest extends ControllerTestCase {
         $this->request->setMethod('POST')->setPost($this->formValues);
         $this->dispatch('admin/source/update/id/' . $this->sourceId);
         $this->resetRequest()->resetResponse();
+        $this->formValues['name'] = '';
+        $this->request->setMethod('POST')->setPost($this->formValues);
+        $this->dispatch('admin/source/update/id/' . $this->sourceId); // test invalid form
+        $this->resetRequest()->resetResponse();
         $this->dispatch('admin/source/delete/id/' . $this->sourceId);
     }
 
     public function testText() {
-        $original = Model_NodeMapper::getByNodeCategoryName(
-            'type',
-            'Linguistic object classification',
-            'Source Original Text'
-        );
+        $original = Model_NodeMapper::getByNodeCategoryName('Linguistic object classification', 'Source Original Text');
         $this->dispatch('admin/source/text-add/id/' . $this->sourceId);
         $this->resetRequest()->resetResponse();
         $formValues = ['type' => $original->id, 'name' => 'original', 'description' => 'description'];

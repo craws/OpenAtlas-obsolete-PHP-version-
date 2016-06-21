@@ -22,7 +22,8 @@ class Model_AbstractMapper {
     }
 
     public static function deleteAbstract($table, $id) {
-        $statement = Zend_Db_Table::getDefaultAdapter()->prepare('DELETE FROM ' . $table . ' WHERE id = :id;');
+        $sql = 'DELETE FROM ' . $table . ' WHERE id = :id;';
+        $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->bindValue('id', (int) $id);
         $statement->execute();
     }

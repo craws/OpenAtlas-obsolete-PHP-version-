@@ -4,24 +4,19 @@
 
 class Model_Node extends Model_Entity {
 
-    public $directed = false;
-    public $expandable = false;
-    public $rootId = null;
-    public $superId = null;
-    public $subs = [];
+    public $directional = false;
+    public $extendable = false;
+    public $forms = [];
+    public $multiple = 0;
     public $propertyToEntity;
     public $propertyToSuper;
+    public $rootId = null;
+    public $superId = null;
+    public $system = null;
+    public $subs = [];
 
     public function addSub(Model_Node $sub) {
         $this->subs[] = $sub;
-    }
-
-    public function getNameDirected($inverse = false) {
-        $array = explode('(', $this->name);
-        if ($inverse && isset($array[1])) {
-            return trim(str_replace(['(', ')'], '', $array[1]));
-        }
-        return trim($array[0]);
     }
 
 }

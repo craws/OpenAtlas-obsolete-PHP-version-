@@ -21,9 +21,8 @@ class Admin_ReferenceControllerTest extends ControllerTestCase {
         $this->dispatch('admin/reference/insert/type/edition');
         $this->formValues = [
             'name' => 'Cryptonomicum',
-            'typeId' => Model_NodeMapper::getByNodeCategoryName('type', 'Bibliography', 'Book')->id,
-            'desc' => 'desc',
-            'typeButton' => 'Placeholder',
+            'editionId' => Model_NodeMapper::getByNodeCategoryName('Bibliography', 'Book')->id,
+            'desc' => 'desc'
         ];
         $this->request->setMethod('POST')->setPost($this->formValues);
         $this->dispatch('admin/reference/insert/type/edition');
@@ -39,27 +38,23 @@ class Admin_ReferenceControllerTest extends ControllerTestCase {
         $this->dispatch('admin/reference/insert/type/edition');
         $this->formValues = [
             'name' => 'Cryptonomicum Edition',
-            'typeId' => Model_NodeMapper::getByNodeCategoryName('type', 'Edition', 'Charter Edition')->id,
-            'typeButton' => 'Placeholder',
+            'editionId' => Model_NodeMapper::getByNodeCategoryName('Edition', 'Charter Edition')->id,
             'desc' => 'desc'
         ];
         $this->request->setMethod('POST')->setPost($this->formValues);
         $this->dispatch('admin/reference/insert/type/edition');
         $references = Model_EntityMapper::getByCodes('Bibliography');
-        foreach ($references as $reference) {
-            $type = Model_LinkMapper::getLinkedEntity($reference, 'P2');
-            $typeRoot = Model_NodeMapper::getById($type->rootId);
-            if ($typeRoot->name == 'Edition') {
-                $referenceId = $reference->id;
-                break;
-            }
-        }
+        $reference = $references[0];
         $this->resetRequest()->resetResponse();
-        $this->dispatch('admin/reference/update/id/' . $referenceId);
+        $this->dispatch('admin/reference/update/id/' . $reference->id);
         $this->request->setMethod('POST')->setPost($this->formValues);
-        $this->dispatch('admin/reference/update/id/' . $referenceId);
+        $this->dispatch('admin/reference/update/id/' . $reference->id);
         $this->resetRequest()->resetResponse();
-        $this->dispatch('admin/reference/delete/id/' . $referenceId);
+        $this->formValues['name'] = '';
+        $this->request->setMethod('POST')->setPost($this->formValues);
+        $this->dispatch('admin/reference/update/id/' . $reference->id); // test invalid form
+        $this->resetRequest()->resetResponse();
+        $this->dispatch('admin/reference/delete/id/' . $reference->id);
     }
 
 }

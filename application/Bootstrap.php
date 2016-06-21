@@ -100,9 +100,10 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
     protected function _initModel() {
         Zend_Registry::set('classes', Model_ClassMapper::getAll());
         Zend_Registry::set('properties', Model_PropertyMapper::getAll());
-        Model_NodeMapper::setAll();
+        Zend_Registry::set('rootEvent', Model_EntityMapper::getRootEvent());
+        Model_NodeMapper::registerHierarchies();
         // @codeCoverageIgnoreStart
-        if (count(Zend_Registry::get('type')) < 1) {
+        if (count(Zend_Registry::get('nodes')) < 1) {
             echo ('<p class="error">Warning: nodes are missing (import data_node.sql)</p>');
         }
         // @codeCoverageIgnoreEnd

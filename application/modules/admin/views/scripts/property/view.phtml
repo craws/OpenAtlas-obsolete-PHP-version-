@@ -3,6 +3,7 @@
     $this->breadcrumb = [
         $this->link('overview'),
         '<a href="/admin/overview/model">' . $this->ucstring('model') . '</a>',
+        '<a href="/admin/property">' . $this->ucstring('property') . '</a>',
         $property->getCodeName()
     ]
 ?>
@@ -13,8 +14,8 @@
         _('code') => $property->code,
         _('name') => $property->nameTranslated,
         _('inverse') => $property->nameInverseTranslated,
-        _('domain') => $this->link($property->getDomain(), 'view', $property->getDomain()->getCodeName()),
-        _('range') => $this->link($property->getRange(), 'view', $property->getRange()->getCodeName()),
+        _('domain') => $this->link($property->domain, 'view', $property->domain->getCodeName()),
+        _('range') => $this->link($property->range, 'view', $property->range->getCodeName()),
     ];
     $this->table = $table;
     ?>

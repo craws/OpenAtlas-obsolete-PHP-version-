@@ -14,7 +14,7 @@ foreach ($this->sources as $source) {
     if (!Model_LinkMapper::linkExists('P67', $source, $this->origin)) {
         $table['data'][] = [
             $source->name,
-            Model_NodeMapper::getNodeByEntity('type', 'Source', $source)->name,
+            Model_NodeMapper::getNodeByEntity('Source', $source)->name,
             '<input id="' . $source->id . '" name="' . $source->id . '" type="checkbox" value="' . $source->id . '">'
         ];
     }

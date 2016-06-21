@@ -5,7 +5,7 @@
     <? if ($form->relatedActorIds): ?>
         <?= $this->displayTableSelectMulti('relatedActor', $form, 'actor', true) ?>
     <? endif ?>
-    <?= $this->displayTreeSelect('type', $form) ?>
+    <?= $this->displayTreeSelect($this->hierarchies, $form) ?>
     <?= $this->render('dateForm.phtml'); ?>
     <div style="margin-top:1em;">
         <?= $form->description->renderLabel() ?>
@@ -20,7 +20,6 @@
     </div>
 </div>
 <?= '</form>' ?>
-<?= $this->displayTreeOverlay('type', $this->typeTreeData) ?>
 <? if ($form->relatedActorIds): ?>
     <div id="relatedActorOverlay" class="overlay">
         <div id="relatedActorDialog" class="overlayContainer">
@@ -33,7 +32,7 @@
                 }
                 $actorTable['data'][] = [
                     $actor->name,
-                    $actor->getClass()->nameTranslated,
+                    $actor->class->nameTranslated,
                     $actor->first,
                     $actor->last,
                     '<input class="multiTableSelect" type="checkbox" id="' . $actor->id . '" value="' .
@@ -52,4 +51,7 @@
         });
     </script>
 <? endif ?>
-
+<? foreach ($this->hierarchies as $hierarchy) : ?>
+    <? $dataVariable = $hierarchy->nameClean . 'TreeData'; ?>
+    <?= $this->displayTreeOverlay($hierarchy->nameClean, $this->$dataVariable); ?>
+<? endforeach ?>

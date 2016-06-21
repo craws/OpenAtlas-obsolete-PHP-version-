@@ -4,79 +4,99 @@
 
 class Model_NodeMapper extends Model_EntityMapper {
 
-    public static function setAll() {
-        foreach (['type', 'place', 'event'] as $hierarchy) {
-            Zend_Registry::set($hierarchy, self::getAll($hierarchy));
+    public static function registerHierarchies() {
+        $sqlForms = "SELECT f.id, f.name, f.extendable,
+            (SELECT ARRAY(SELECT h.id FROM web.hierarchy h JOIN web.hierarchy_form hf ON h.id = hf.hierarchy_id
+            WHERE hf.form_id = f.id )) AS hierarchy_ids
+            FROM web.form f ORDER BY name ASC;";
+        $statementForms = Zend_Db_Table::getDefaultAdapter()->prepare($sqlForms);
+        $statementForms->execute();
+        $forms = [];
+        foreach ($statementForms->fetchAll() as $row) {
+            $forms[$row['name']]['id'] = $row['id'];
+            $forms[$row['name']]['name'] = $row['name'];
+            $forms[$row['name']]['hierarchyIds'] = str_getcsv(trim($row['hierarchy_ids'], '{}'));
+            $forms[$row['name']]['extendable'] = $row['extendable'];
         }
-    }
-
-    private static function getAll($hierarchy) {
-        switch ($hierarchy) {
-            case 'place':
-                $propertyToEntity = 'P89';
-                $propertyToSuper = 'P89';
-                $sql = "
-                    SELECT e.id, e.class_id, e.name, e.description, e.created, e.modified, c.code,
-                      e.value_timestamp, e.value_integer, l.range_id, l2.property_id
-                    FROM crm.entity e
-                    LEFT OUTER JOIN crm.link l ON e.id = l.domain_id
-                    LEFT OUTER JOIN crm.link l2 ON e.id = l2.domain_id
-                    JOIN crm.class c ON e.class_id = c.id
-                    WHERE c.code = 'E53' AND e.name NOT LIKE 'Location of%'
-                    ORDER BY e.name;";
-                break;
-            case 'event':
-                $propertyToEntity = 'P117';
-                $propertyToSuper = 'P117';
-                $sql = "
-                    SELECT e.id, e.class_id, e.name, e.description, e.created, e.modified, c.code,
-                      e.value_timestamp, e.value_integer, l.range_id
-                    FROM crm.entity e
-                    LEFT JOIN crm.link l ON e.id = l.domain_id AND l.property_id = :property_id
-                    JOIN crm.class c ON e.class_id = c.id
-                    WHERE c.code IN ('" . implode("', '", Zend_Registry::get('config')->get('codeEvent')->toArray()) . "')
-                    ORDER BY e.name;";
-                break;
-            case 'type':
-                $propertyToEntity = 'P2';
-                $propertyToSuper = 'P127';
-                $sql = "
-                    SELECT e.id, e.class_id, e.name, e.description, e.created, e.modified, c.code,
-                      e.value_timestamp, e.value_integer, l.range_id
-                    FROM crm.entity e
-                    LEFT JOIN crm.link l ON e.id = l.domain_id
-                    JOIN crm.class c ON e.class_id = c.id
-                    WHERE c.code = 'E55'
-                    ORDER BY e.name;";
-                break;
-        }
+        Zend_Registry::set('forms', $forms);
+        $sql = "SELECT h.id, h.multiple, h.system, h.extendable, h.directional,
+            e.name, e.description, e.class_id, e.created, e.modified
+            FROM web.hierarchy h JOIN model.entity e ON h.id = e.id;";
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
-        if ($hierarchy == 'event') {
-            $statement->bindValue(':property_id', Model_PropertyMapper::getByCode($propertyToSuper)->id);
-        }
         $statement->execute();
         $nodes = [];
+        $nodeIds = [];
         foreach ($statement->fetchAll() as $row) {
-            $node = parent::populate(new Model_Node(), $row);
-            $node->superId = $row['range_id'];
-            $node->propertyToEntity = $propertyToEntity;
-            $node->propertyToSuper = $propertyToSuper;
-            $nodes[$row['id']] = $node;
+            $node = Model_EntityMapper::populate(new Model_Node(), $row);
+            $node->multiple = $row['multiple'];
+            $node->system = $row['system'];
+            $node->extendable = $row['extendable'];
+            $node->directional = $row['directional'];
+            $node->nameClean = \Craws\FilterInput::filter($row['name'], 'node');
+            foreach ($forms as $form) {
+                if (in_array($node->id, $form['hierarchyIds'])) {
+                    $node->forms[] = $form;
+                }
+            }
+            switch ($node->class->code) {
+                case 'E55':
+                    $node->propertyToEntity = 'P2';
+                    $node->propertyToSuper = 'P127';
+                    break;
+                case 'E53':
+                    $node->propertyToEntity = 'P89';
+                    $node->propertyToSuper = 'P89';
+                    break;
+            }
+            $nodes[$row['name']] = $node;
+            $nodeIds[] = $node->id;
         }
-        return self::buildTree($nodes);
+        foreach ($nodes as $node) {
+            self::addSubs($node, $nodeIds);
+        }
+        Zend_Registry::set('nodes', $nodes);
+        Zend_Registry::set('nodesIds', $nodeIds); // nodeIds array to identify nodes in LinkMapper
     }
 
-    public static function getByNodeCategoryName($hierarchy, $rootName, $name) {
-        foreach (Zend_Registry::get($hierarchy) as $node) {
+    private static function addSubs(Model_Node $node, &$nodeIds) {
+        $sql = "SELECT e.id, e.name, e.description, e.class_id, e.created, e.modified
+            FROM model.entity e JOIN model.link l ON e.id = l.domain_id
+            WHERE
+                l.range_id = :range_id AND
+                l.property_id = :property_id AND
+                e.name NOT LIKE 'Location of%';";
+        $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
+        $statement->bindValue(':range_id', $node->id);
+        $statement->bindValue(':property_id', Model_PropertyMapper::getByCode($node->propertyToSuper)->id);
+        $statement->execute();
+        foreach ($statement->fetchAll() as $row) {
+            $sub = Model_EntityMapper::populate(new Model_Node(), $row);
+            $sub->superId = $node->id;
+            $sub->rootId = $node->rootId ? $node->rootId : $node->id;
+            $sub->multiple = $node->multiple;
+            $sub->system = $node->system;
+            $sub->extendable = $node->extendable;
+            $sub->directional = $node->directional;
+            $sub->propertyToEntity = $node->propertyToEntity;
+            $sub->propertyToSuper = $node->propertyToSuper;
+            $node->subs[] = $sub;
+            $nodeIds[] = $sub->id;
+            self::addSubs($sub, $nodeIds);
+        }
+    }
+
+    /* This method is not reliable for types which are editable, use only for system types and tests! */
+    public static function getByNodeCategoryName($rootName, $name) {
+        foreach (Zend_Registry::get('nodes') as $node) {
             if (mb_strtolower($node->name) == mb_strtolower($rootName)) {
                 return self::getByNameRecursive($node, $name);
             }
         }
-        Model_LogMapper::log('error', 'found no node for: ' . $hierarchy . ', ' . $rootName . ', ' . $name);
+        Model_LogMapper::log('error', 'found no node for: ' . $rootName . ', ' . $name);
     }
 
-    public static function getNodeByEntity($hierarchy, $rootName, Model_Entity $entity) {
-        $nodes = self::getNodesByEntity($hierarchy, $rootName, $entity);
+    public static function getNodeByEntity($rootName, Model_Entity $entity) {
+        $nodes = self::getNodesByEntity($rootName, $entity);
         switch (count($nodes)) {
             case 0:
                 return false;
@@ -85,20 +105,33 @@ class Model_NodeMapper extends Model_EntityMapper {
             // @codeCoverageIgnoreStart
         }
         $error = 'Found ' . count($nodes) . ' ' . $rootName . ' nodes for Entity (' . $entity->id . ') instead of one.';
-        Model_LogMapper::log('error', 'crm', $error);
+        Model_LogMapper::log('error', 'model', $error);
     }
-
     // @codeCoverageIgnoreEnd
 
-    public static function getNodesByEntity($hierarchy, $rootName, Model_Entity $entity) {
+    public static function getNodesByEntity($rootName, $entity) {
         $nodes = [];
-        foreach (Zend_Registry::get($hierarchy) as $node) {
-            if (mb_strtolower($node->name) == mb_strtolower($rootName)) {
-                foreach (Model_LinkMapper::getLinkedEntities($entity, $node->propertyToEntity) as $linkedNode) {
-                    if ($linkedNode->rootId == $node->id || $linkedNode->id == $node->id) {
-                        $nodes[] = $linkedNode;
+        foreach (Zend_Registry::get('nodes') as $node) {
+            if (\Craws\FilterInput::filter($node->name, 'node') == \Craws\FilterInput::filter($rootName, 'node')) {
+                $realEntity = $entity;
+                /* if its a place we need the object for locations */
+                if (in_array($node->name, ['Administrative Unit', 'Historical Place'])) {
+                    $realEntity = Model_LinkMapper::getLinkedEntity($entity, 'P53');
+                }
+                if (is_a($entity, 'Model_Entity')) {
+                    foreach (Model_LinkMapper::getLinkedEntities($realEntity, $node->propertyToEntity) as $linkedNode) {
+                        if ($linkedNode->rootId == $node->id || $linkedNode->id == $node->id) {
+                            $nodes[] = $linkedNode;
+                        }
+                    }
+                } else if (is_a($entity, 'Model_Link')) {
+                    foreach (Model_LinkPropertyMapper::getLinkedEntities($realEntity, $node->propertyToEntity) as $linkedNode) {
+                        if ($linkedNode->rootId == $node->id || $linkedNode->id == $node->id) {
+                            $nodes[] = $linkedNode;
+                        }
                     }
                 }
+
             }
         }
         return $nodes;
@@ -123,21 +156,7 @@ class Model_NodeMapper extends Model_EntityMapper {
     }
 
     public static function getById($id) {
-        switch (Model_EntityMapper::getById($id)->getClass()->code) {
-            case 'E6':
-            case 'E7':
-            case 'E8':
-            case 'E12':
-                $category = 'event';
-                break;
-            case 'E53':
-                $category = 'place';
-                break;
-            case 'E55':
-                $category = 'type';
-                break;
-        }
-        foreach (Zend_Registry::get($category) as $root) {
+        foreach (Zend_Registry::get('nodes') as $root) {
             $node = self::recursiveSearchId($root, $id);
             if ($node) {
                 return $node;
@@ -175,43 +194,7 @@ class Model_NodeMapper extends Model_EntityMapper {
         return $returnCandidates;
     }
 
-    private static function buildTree(array $nodeArray) {
-        $expandableArray = Zend_Registry::get('config')->get('nodeExpandable')->toArray();
-        $rootNodes = [];
-        foreach ($nodeArray as $node) {
-            if (!$node->superId) {
-                if (array_key_exists($node->name, $expandableArray)) {
-                    $node->expandable = true;
-                    if ($expandableArray[$node->name]) {
-                        $node->directed = true;
-                    }
-                }
-                $rootNodes[] = $node;
-            }
-        }
-        foreach ($rootNodes as $rootNode) {
-            self::addSubs($rootNode, $nodeArray);
-        }
-        return $rootNodes;
-    }
-
-    private static function addSubs(Model_Node $super, array $nodeArray) {
-        foreach ($nodeArray as $node) {
-            if ($node->superId == $super->id) {
-                $node->expandable = $super->expandable;
-                $node->directed = $super->directed;
-                $node->superId = $super->id;
-                $node->rootId = $super->id;
-                if ($super->rootId) {
-                    $node->rootId = $super->rootId;
-                }
-                self::addSubs($node, $nodeArray);
-                $super->addSub($node);
-            }
-        }
-    }
-
-    public static function getTreeData($hierarchy, $rootName, $selection = false) {
+    public static function getTreeData($rootName, $selection = false) {
         if ($selection && !is_array($selection)) {
             $selection = [$selection];
         }
@@ -220,14 +203,13 @@ class Model_NodeMapper extends Model_EntityMapper {
             foreach($selection as $selected) {
                 $selectedIds[] = $selected->id;
             }
-
         }
-        $item = self::getRootType($hierarchy, $rootName);
+        $item = self::getHierarchyByName($rootName);
         $data = "{'data':[" . self::walkTree($item, $selectedIds) . "]}";
         return $data;
     }
 
-    private static function walkTree($item, $selectedIds) {
+    private static function walkTree(Model_Node $item, $selectedIds) {
         $text = '';
         if ($item->rootId) { // only if not root item
             $text = "{'text':'" . str_replace("'", "\'", $item->name) . "', 'id':'" . $item->id . "',";
@@ -252,12 +234,11 @@ class Model_NodeMapper extends Model_EntityMapper {
         return $text;
     }
 
-    public static function getOptionsForSelect($hierarchy, $rootName) {
+    public static function getOptionsForSelect($rootName) {
         global $returnCandidates;
         $returnCandidates = [];
-        foreach (Zend_Registry::get($hierarchy) as $node) {
-            if (mb_strtolower($node->name) == mb_strtolower($rootName) ||
-                mb_strtolower($node->name) == mb_strtolower(Zend_Registry::get('event')[0]->name)) {
+        foreach (Zend_Registry::get('nodes') as $node) {
+            if (\Craws\FilterInput::filter($node->name, 'node') == \Craws\FilterInput::filter($rootName, 'node')) {
                 $rootNode = $node;
                 break;
             }
@@ -267,12 +248,45 @@ class Model_NodeMapper extends Model_EntityMapper {
         return $options;
     }
 
-    public static function getRootType($hierarchy, $rootName) {
-        foreach (Zend_Registry::get($hierarchy) as $node) {
-            if (mb_strtolower($node->name) == mb_strtolower($rootName) ||
-                mb_strtolower($node->name) == mb_strtolower(Zend_Registry::get('event')[0]->name)) {
+    public static function getHierarchyByName($rootName) {
+        foreach (Zend_Registry::get('nodes') as $node) {
+            if (\Craws\FilterInput::filter($node->name, 'node') == \Craws\FilterInput::filter($rootName, 'node')) {
                 return $node;
             }
+        }
+    }
+
+    public static function insertHierarchy(Zend_Form $form, Model_Entity $hierarchy) {
+        $sql = "INSERT INTO web.hierarchy (id, name, multiple, extendable) VALUES (:id, :name, :multiple, 1)";
+        $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
+        $statement->bindValue(':id', $hierarchy->id);
+        $statement->bindValue(':name', $hierarchy->name);
+        $statement->bindValue(':multiple', $form->getValue('multiple'));
+        $statement->execute();
+        if ($form->getValue('forms')) {
+            foreach ($form->getValue('forms') as $formId) {
+                $values[] = '(' . $hierarchy->id . ',' . (int) $formId . ')';
+            }
+            $sqlForms = "INSERT INTO web.hierarchy_form (hierarchy_id, form_id) VALUES " . implode(',', $values) ;
+            $statementForms = Zend_Db_Table::getDefaultAdapter()->prepare($sqlForms . ';');
+            $statementForms->execute();
+        }
+    }
+
+    public static function updateHierarchy(Zend_Form $form, Model_Node $hierarchy) {
+        $sql = "UPDATE web.hierarchy SET (name, multiple) = (:name, :multiple) WHERE id = :id";
+        $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
+        $statement->bindValue(':id', $hierarchy->id);
+        $statement->bindValue(':name', $hierarchy->name);
+        $statement->bindValue(':multiple', $form->getValue('multiple'));
+        $statement->execute();
+        if ($form->getValue('forms')) {
+            foreach ($form->getValue('forms') as $formId) {
+                $values[] = '(' . $hierarchy->id . ',' . (int) $formId . ')';
+            }
+            $sqlForms = "INSERT INTO web.hierarchy_form (hierarchy_id, form_id) VALUES " . implode(',', $values) ;
+            $statementForms = Zend_Db_Table::getDefaultAdapter()->prepare($sqlForms . ';');
+            $statementForms->execute();
         }
     }
 

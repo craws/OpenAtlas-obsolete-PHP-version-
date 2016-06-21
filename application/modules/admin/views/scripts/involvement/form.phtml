@@ -13,7 +13,7 @@
             <div class="tableCell"><?= $form->activity->renderViewHelper() ?></div>
         </div>
     <? endif ?>
-    <?= $this->displayTreeSelect('involvement', $form) ?>
+    <?= $this->displayTreeSelect($this->hierarchies, $form) ?>
     <?= $this->render('dateForm.phtml'); ?>
     <div style="margin-top:1em;">
         <?= $form->description->renderLabel() ?>
@@ -24,7 +24,6 @@
     </div>
 </div>
 <?= '</form>' ?>
-<?= $this->displayTreeOverlay('involvement', $this->involvementTreeData) ?>
 <? if ($form->actorIds): ?>
     <div id="actorOverlay" class="overlay">
         <div id="actorDialog" class="overlayContainer">
@@ -34,7 +33,7 @@
             foreach ($this->actors as $actor) {
                 $actorTable['data'][] = [
                     $actor->name,
-                    $actor->getClass()->nameTranslated,
+                    $actor->class->nameTranslated,
                     $actor->first,
                     $actor->last,
                     '<input class="multiTableSelect" type="checkbox" id="' . $actor->id . '" value="' .
@@ -53,12 +52,12 @@
             $eventTable = ['id' => 'event', 'pager' => true, 'filter' => true];
             $eventTable['header'] = [_('name'), _('class'), _('first'), _('last')];
             foreach ($this->events as $event) {
-                if ($event->name == Zend_Registry::get('config')->get('eventRootName')) {
+                if ($event->id == $this->rootEvent->id) {
                     continue; // dont show root event
                 }
                 $eventTable['data'][] = [
                     '<a onclick="selectFromTable(this, \'event\', ' . $event->id . ')">' . $event->name . '</a>',
-                    $event->getClass()->nameTranslated,
+                    $event->class->nameTranslated,
                     $event->first,
                     $event->last
                 ];
@@ -69,6 +68,10 @@
         </div>
     </div>
 <? endif ?>
+<? foreach ($this->hierarchies as $hierarchy) : ?>
+    <? $dataVariable = $hierarchy->nameClean . 'TreeData'; ?>
+    <?= $this->displayTreeOverlay($hierarchy->nameClean, $this->$dataVariable); ?>
+<? endforeach ?>
 <script type="text/javascript">
     $.validator.setDefaults({ignore: []});
     $(document).ready(function () {

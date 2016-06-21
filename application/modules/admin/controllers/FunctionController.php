@@ -26,7 +26,7 @@ class Admin_FunctionController extends Zend_Controller_Action {
         $this->_helper->message('info_delete');
         $array = Zend_Registry::get('config')->get('codeView')->toArray();
         $entity = Model_EntityMapper::getById($this->_getParam('entityId'));
-        $url = '/admin/' . $array[$entity->getClass()->code] . '/view/id/' . $entity->id . '/';
+        $url = '/admin/' . $array[$entity->class->code] . '/view/id/' . $entity->id . '/';
         return $this->_helper->redirector->gotoUrl($url);
     }
 

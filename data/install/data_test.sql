@@ -1,4 +1,4 @@
-SET search_path = crm, web;
+SET search_path = model, web;
 
 INSERT INTO "user" (username, password, active, email, group_id) VALUES
 ('testUser', '$2a$08$cVEBAnh6MIp/KEcEoMcYAOOK9B70eeq9FVQ6pNxKJK8UBfsKQeW5ycVEBAnh6MIp/KEcEoMcYAQ', 1, 'nobody@craws.net', 2);
@@ -18,7 +18,10 @@ INSERT INTO entity (id, class_id, name) VALUES
 (1007, (SELECT id FROM class WHERE code='E31'), 'tBiblio'     ),
 (1008, (SELECT id FROM class WHERE code='E33'), 'tDocument2'  ),
 (1009, (SELECT id FROM class WHERE code='E84'), 'tCarrier'    ),
-(1010, (SELECT id FROM class WHERE code='E8' ), 'tSubEvent'   );
+(1010, (SELECT id FROM class WHERE code='E8' ), 'tSubEvent'   ),
+(1011, (SELECT id FROM class WHERE code='E55'), 'tCustomHierarchy'  );
+
+INSERT INTO hierarchy (id, name, multiple) VALUES (1011, 'tCustomHierarchy', 1);
 
 INSERT INTO user_bookmarks (user_id, entity_id) VALUES ((SELECT id FROM web."user" WHERE username = 'a'), 1001);
 

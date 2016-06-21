@@ -9,7 +9,7 @@ class Admin_Form_Text extends Craws\Form\Table {
         $this->setAction($this->getView()->url());
         $typeElement = $this->createElement('select', 'type', ['required' => true, 'class' => 'required']);
         $typeElement->setLabel($this->getView()->ucstring('type'));
-        $types = Model_NodeMapper::getOptionsForSelect('type', 'linguistic object classification');
+        $types = Model_NodeMapper::getOptionsForSelect('linguistic object classification');
         if (($key = array_search('Source Content', $types)) !== false) {
             unset($types[$key]);
         }

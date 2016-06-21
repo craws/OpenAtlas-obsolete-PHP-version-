@@ -7,22 +7,24 @@
             <?= $form->name->renderLabel() ?>
             <div class="tableCell"><?= $form->name->renderViewHelper() ?></div>
         </div>
-        <?= $this->displayTreeSelect('site', $form) ?>
         <?= $this->displayAliasForm($form) ?>
+        <?= $this->displayTreeSelect($this->hierarchies, $form) ?>
         <?= $this->render('dateForm.phtml'); ?>
         <div class="tableRow">
+            <div><label><?= $this->ucstring('label_location_switch') ?></label></div>
+            <div class="tableCell"><span id="placeSwitcher" class="button"><?= $this->ucstring('show') ?></span></div>
+        </div>
+        <div class="tableRow placeSwitch display-none">
             <?= $form->easting->renderLabel() ?>
             <div class="tableCell"><?= $form->easting->renderViewHelper() ?></div>
         </div>
-        <div class="tableRow">
+        <div class="tableRow placeSwitch display-none">
             <?= $form->northing->renderLabel() ?>
             <div class="tableCell"><?= $form->northing->renderViewHelper() ?></div>
         </div>
-        <div class="tableRow">
+        <div class="tableRow placeSwitch display-none">
             &nbsp;<div class="tableCell subformTitle"><?= $this->ucstring('situated_within') ?></div>
         </div>
-        <?= $this->displayTreeSelectMulti('administrative', $form, $this->administratives) ?>
-        <?= $this->displayTreeSelectMulti('historical', $form, $this->historicals) ?>
         <div style="margin-top:1em;">
             <?= $form->description->renderLabel() ?>
             <div><?= $form->description->renderViewHelper() ?></div>
@@ -37,9 +39,10 @@
     </div>
     <?= '</form>' ?>
 </div>
-<?= $this->displayTreeOverlay('site', $this->siteTreeData) ?>
-<?= $this->displayTreeOverlay('administrative', $this->administrativeTreeData, true) ?>
-<?= $this->displayTreeOverlay('historical', $this->historicalTreeData, true) ?>
+<? foreach ($this->hierarchies as $hierarchy) : ?>
+    <? $dataVariable = $hierarchy->nameClean . 'TreeData'; ?>
+    <?= $this->displayTreeOverlay($hierarchy->nameClean, $this->$dataVariable); ?>
+<? endforeach ?>
 <div id="map" class="map"></div>
 <? $this->jsonData = Model_GisMapper::getJsonData(); ?>
 <? if (!$this->jsonData): ?>

@@ -9,10 +9,10 @@ SET standard_conforming_strings = on;
 SET check_function_bodies = false;
 SET client_min_messages = warning;
 
-SET search_path = crm, pg_catalog;
+SET search_path = model, pg_catalog;
 
 --
--- Data for Name: class; Type: TABLE DATA; Schema: crm; Owner: openatlas_master
+-- Data for Name: class; Type: TABLE DATA; Schema: model; Owner: openatlas_master
 --
 
 INSERT INTO class VALUES (1, 'E1', 'CRM Entity', '2015-06-11 19:26:28.25822', NULL);
@@ -104,14 +104,14 @@ INSERT INTO class VALUES (86, 'E62', 'String', '2015-06-11 19:26:28.25822', NULL
 
 
 --
--- Name: class_id_seq; Type: SEQUENCE SET; Schema: crm; Owner: openatlas_master
+-- Name: class_id_seq; Type: SEQUENCE SET; Schema: model; Owner: openatlas_master
 --
 
 SELECT pg_catalog.setval('class_id_seq', 86, true);
 
 
 --
--- Data for Name: class_inheritance; Type: TABLE DATA; Schema: crm; Owner: openatlas_master
+-- Data for Name: class_inheritance; Type: TABLE DATA; Schema: model; Owner: openatlas_master
 --
 
 INSERT INTO class_inheritance VALUES (1, 1, 2, '2015-06-11 19:26:28.25822', NULL);
@@ -214,27 +214,27 @@ INSERT INTO class_inheritance VALUES (97, 83, 86, '2015-06-11 19:26:28.25822', N
 
 
 --
--- Name: class_inheritance_id_seq; Type: SEQUENCE SET; Schema: crm; Owner: openatlas_master
+-- Name: class_inheritance_id_seq; Type: SEQUENCE SET; Schema: model; Owner: openatlas_master
 --
 
 SELECT pg_catalog.setval('class_inheritance_id_seq', 97, true);
 
 
 --
--- Data for Name: entity; Type: TABLE DATA; Schema: crm; Owner: openatlas_master
+-- Data for Name: entity; Type: TABLE DATA; Schema: model; Owner: openatlas_master
 --
 
 
 
 --
--- Name: entity_id_seq; Type: SEQUENCE SET; Schema: crm; Owner: openatlas_master
+-- Name: entity_id_seq; Type: SEQUENCE SET; Schema: model; Owner: openatlas_master
 --
 
 SELECT pg_catalog.setval('entity_id_seq', 1, false);
 
 
 --
--- Data for Name: i18n; Type: TABLE DATA; Schema: crm; Owner: openatlas_master
+-- Data for Name: i18n; Type: TABLE DATA; Schema: model; Owner: openatlas_master
 --
 
 INSERT INTO i18n VALUES (1, 'class', 'name', 1, 'el', 'Οντότητα CIDOC CRM', '2015-06-11 19:26:28.25822', NULL);
@@ -244,12 +244,12 @@ INSERT INTO i18n VALUES (4, 'class', 'name', 1, 'ru', 'CRM Сущность', '2
 INSERT INTO i18n VALUES (5, 'class', 'name', 1, 'fr', 'Entité CRM', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (6, 'class', 'name', 1, 'pt', 'Entidade CRM', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (7, 'class', 'name', 1, 'cn', 'CRM实体', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (8, 'class', 'comment', 1, 'en', 'This class comprises all things in the universe of discourse of the CIDOC Conceptual Reference Model. 
+INSERT INTO i18n VALUES (8, 'class', 'comment', 1, 'en', 'This class comprises all things in the universe of discourse of the CIDOC Conceptual Reference Model.
 It is an abstract concept providing for three general properties:
 1.	Identification by name or appellation, and in particular by a preferred identifier
-2.	Classification by type, allowing further refinement of the specific subclass an instance belongs to 
+2.	Classification by type, allowing further refinement of the specific subclass an instance belongs to
 3.	Attachment of free text for the expression of anything not captured by formal properties
-With the exception of E59 Primitive Value, all other classes within the CRM are directly or indirectly specialisations of E1 CRM Entity. 
+With the exception of E59 Primitive Value, all other classes within the CRM are directly or indirectly specialisations of E1 CRM Entity.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (9, 'class', 'name', 2, 'fr', 'Entité temporelle', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (10, 'class', 'name', 2, 'en', 'Temporal Entity', '2015-06-11 19:26:28.25822', NULL);
@@ -258,7 +258,7 @@ INSERT INTO i18n VALUES (12, 'class', 'name', 2, 'el', 'Έγχρονη  Οντό
 INSERT INTO i18n VALUES (13, 'class', 'name', 2, 'de', 'Geschehendes', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (14, 'class', 'name', 2, 'pt', 'Entidade Temporal', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (15, 'class', 'name', 2, 'cn', '时间实体', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (16, 'class', 'comment', 2, 'en', 'This class comprises all phenomena, such as the instances of E4 Periods, E5 Events and states, which happen over a limited extent in time. 
+INSERT INTO i18n VALUES (16, 'class', 'comment', 2, 'en', 'This class comprises all phenomena, such as the instances of E4 Periods, E5 Events and states, which happen over a limited extent in time.
 	In some contexts, these are also called perdurants. This class is disjoint from E77 Persistent Item. This is an abstract class and has no direct instances. E2 Temporal Entity is specialized into E4 Period, which applies to a particular geographic area (defined with a greater or lesser degree of precision), and E3 Condition State, which applies to instances of E18 Physical Thing.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (17, 'class', 'name', 3, 'ru', 'Состояние', '2015-06-11 19:26:28.25822', NULL);
@@ -268,9 +268,9 @@ INSERT INTO i18n VALUES (20, 'class', 'name', 3, 'fr', 'État matériel', '2015-
 INSERT INTO i18n VALUES (21, 'class', 'name', 3, 'el', 'Κατάσταση', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (22, 'class', 'name', 3, 'pt', 'Estado Material', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (23, 'class', 'name', 3, 'cn', '状态', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (24, 'class', 'comment', 3, 'en', 'This class comprises the states of objects characterised by a certain condition over a time-span. 
+INSERT INTO i18n VALUES (24, 'class', 'comment', 3, 'en', 'This class comprises the states of objects characterised by a certain condition over a time-span.
 An instance of this class describes the prevailing physical condition of any material object or feature during a specific E52 Time Span. In general, the time-span for which a certain condition can be asserted may be shorter than the real time-span, for which this condition held.
- The nature of that condition can be described using P2 has type. For example, the E3 Condition State “condition of the SS Great Britain between 22 September 1846 and 27 August 1847” can be characterized as E55 Type “wrecked”. 
+ The nature of that condition can be described using P2 has type. For example, the E3 Condition State “condition of the SS Great Britain between 22 September 1846 and 27 August 1847” can be characterized as E55 Type “wrecked”.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (25, 'class', 'name', 4, 'de', 'Phase', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (26, 'class', 'name', 4, 'en', 'Period', '2015-06-11 19:26:28.25822', NULL);
@@ -279,9 +279,9 @@ INSERT INTO i18n VALUES (28, 'class', 'name', 4, 'ru', 'Период', '2015-06-
 INSERT INTO i18n VALUES (29, 'class', 'name', 4, 'el', 'Περίοδος', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (30, 'class', 'name', 4, 'pt', 'Período', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (31, 'class', 'name', 4, 'cn', '期间', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (32, 'class', 'comment', 4, 'en', '	This class comprises sets of coherent phenomena or cultural manifestations bounded in time and space. 
-It is the social or physical coherence of these phenomena that identify an E4 Period and not the associated spatio-temporal bounds. These bounds are a mere approximation of the actual process of growth, spread and retreat. Consequently, different periods can overlap and coexist in time and space, such as when a nomadic culture exists in the same area as a sedentary culture. 
-Typically this class is used to describe prehistoric or historic periods such as the “Neolithic Period”, the “Ming Dynasty” or the “McCarthy Era”. There are however no assumptions about the scale of the associated phenomena. In particular all events are seen as synthetic processes consisting of coherent phenomena. Therefore E4 Period is a superclass of E5 Event. For example, a modern clinical E67 Birth can be seen as both an atomic E5 Event and as an E4 Period that consists of multiple activities performed by multiple instances of E39 Actor. 
+INSERT INTO i18n VALUES (32, 'class', 'comment', 4, 'en', '	This class comprises sets of coherent phenomena or cultural manifestations bounded in time and space.
+It is the social or physical coherence of these phenomena that identify an E4 Period and not the associated spatio-temporal bounds. These bounds are a mere approximation of the actual process of growth, spread and retreat. Consequently, different periods can overlap and coexist in time and space, such as when a nomadic culture exists in the same area as a sedentary culture.
+Typically this class is used to describe prehistoric or historic periods such as the “Neolithic Period”, the “Ming Dynasty” or the “McCarthy Era”. There are however no assumptions about the scale of the associated phenomena. In particular all events are seen as synthetic processes consisting of coherent phenomena. Therefore E4 Period is a superclass of E5 Event. For example, a modern clinical E67 Birth can be seen as both an atomic E5 Event and as an E4 Period that consists of multiple activities performed by multiple instances of E39 Actor.
 There are two different conceptualisations of ‘artistic style’, defined either by physical features or by historical context. For example, “Impressionism” can be viewed as a period lasting from approximately 1870 to 1905 during which paintings with particular characteristics were produced by a group of artists that included (among others) Monet, Renoir, Pissarro, Sisley and Degas. Alternatively, it can be regarded as a style applicable to all paintings sharing the characteristics of the works produced by the Impressionist painters, regardless of historical context. The first interpretation is an E4 Period, and the second defines morphological object types that fall under E55 Type.
 Another specific case of an E4 Period is the set of activities and phenomena associated with a settlement, such as the populated period of Nineveh.
 ', '2015-06-11 19:26:28.25822', NULL);
@@ -305,12 +305,12 @@ INSERT INTO i18n VALUES (47, 'class', 'name', 6, 'cn', '摧毁', '2015-06-11 19:
 INSERT INTO i18n VALUES (123, 'class', 'name', 16, 'de', 'Messung', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (124, 'class', 'name', 16, 'fr', 'Mesurage', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (125, 'class', 'name', 16, 'en', 'Measurement', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (48, 'class', 'comment', 6, 'en', 'This class comprises events that destroy one or more instances of E18 Physical Thing such that they lose their identity as the subjects of documentation.  
-Some destruction events are intentional, while others are independent of human activity. Intentional destruction may be documented by classifying the event as both an E6 Destruction and E7 Activity. 
-The decision to document an object as destroyed, transformed or modified is context sensitive: 
-1.  If the matter remaining from the destruction is not documented, the event is modelled solely as E6 Destruction. 
+INSERT INTO i18n VALUES (48, 'class', 'comment', 6, 'en', 'This class comprises events that destroy one or more instances of E18 Physical Thing such that they lose their identity as the subjects of documentation.
+Some destruction events are intentional, while others are independent of human activity. Intentional destruction may be documented by classifying the event as both an E6 Destruction and E7 Activity.
+The decision to document an object as destroyed, transformed or modified is context sensitive:
+1.  If the matter remaining from the destruction is not documented, the event is modelled solely as E6 Destruction.
 2. An event should also be documented using E81 Transformation if it results in the destruction of one or more objects and the simultaneous production of others using parts or material from the original. In this case, the new items have separate identities. Matter is preserved, but identity is not.
-3. When the initial identity of the changed instance of E18 Physical Thing is preserved, the event should be documented as E11 Modification. 
+3. When the initial identity of the changed instance of E18 Physical Thing is preserved, the event should be documented as E11 Modification.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (49, 'class', 'name', 7, 'en', 'Activity', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (50, 'class', 'name', 7, 'fr', 'Activité', '2015-06-11 19:26:28.25822', NULL);
@@ -319,7 +319,7 @@ INSERT INTO i18n VALUES (52, 'class', 'name', 7, 'ru', 'Деятельность
 INSERT INTO i18n VALUES (53, 'class', 'name', 7, 'el', 'Δράση', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (54, 'class', 'name', 7, 'pt', 'Atividade', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (55, 'class', 'name', 7, 'cn', '活动', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (56, 'class', 'comment', 7, 'en', 'This class comprises actions intentionally carried out by instances of E39 Actor that result in changes of state in the cultural, social, or physical systems documented. 
+INSERT INTO i18n VALUES (56, 'class', 'comment', 7, 'en', 'This class comprises actions intentionally carried out by instances of E39 Actor that result in changes of state in the cultural, social, or physical systems documented.
 This notion includes complex, composite and long-lasting actions such as the building of a settlement or a war, as well as simple, short-lived actions such as the opening of a door.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (57, 'class', 'name', 8, 'fr', 'Acquisition', '2015-06-11 19:26:28.25822', NULL);
@@ -329,12 +329,12 @@ INSERT INTO i18n VALUES (60, 'class', 'name', 8, 'en', 'Acquisition', '2015-06-1
 INSERT INTO i18n VALUES (61, 'class', 'name', 8, 'de', 'Erwerb', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (62, 'class', 'name', 8, 'pt', 'Aquisição', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (63, 'class', 'name', 8, 'cn', '征集取得', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (64, 'class', 'comment', 8, 'en', 'This class comprises transfers of legal ownership from one or more instances of E39 Actor to one or more other instances of E39 Actor. 
+INSERT INTO i18n VALUES (64, 'class', 'comment', 8, 'en', 'This class comprises transfers of legal ownership from one or more instances of E39 Actor to one or more other instances of E39 Actor.
 The class also applies to the establishment or loss of ownership of instances of E18 Physical Thing. It does not, however, imply changes of any other kinds of right. The recording of the donor and/or recipient is optional. It is possible that in an instance of E8 Acquisition there is either no donor or no recipient. Depending on the circumstances, it may describe:
 1.	the beginning of ownership
 2.	the end of ownership
 3.	the transfer of ownership
-4.	the acquisition from an unknown source 
+4.	the acquisition from an unknown source
 5.	the loss of title due to destruction of the item
 It may also describe events where a collector appropriates legal title, for example by annexation or field collection. The interpretation of the museum notion of "accession" differs between institutions. The CRM therefore models legal ownership (E8 Acquisition) and physical custody (E10 Transfer of Custody) separately. Institutions will then model their specific notions of accession and deaccession as combinations of these.
 ', '2015-06-11 19:26:28.25822', NULL);
@@ -345,7 +345,7 @@ INSERT INTO i18n VALUES (68, 'class', 'name', 9, 'ru', 'Перемещение',
 INSERT INTO i18n VALUES (69, 'class', 'name', 9, 'fr', 'Déplacement', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (70, 'class', 'name', 9, 'pt', 'Locomoção', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (71, 'class', 'name', 9, 'cn', '移动', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (72, 'class', 'comment', 9, 'en', 'This class comprises changes of the physical location of the instances of E19 Physical Object. 
+INSERT INTO i18n VALUES (72, 'class', 'comment', 9, 'en', 'This class comprises changes of the physical location of the instances of E19 Physical Object.
 Note, that the class E9 Move inherits the property P7 took place at (witnessed): E53 Place. This property should be used to describe the trajectory or a larger area within which a move takes place, whereas the properties P26 moved to (was destination of), P27 moved from (was origin of) describe the start and end points only. Moves may also be documented to consist of other moves (via P9 consists of (forms part of)), in order to describe intermediate stages on a trajectory. In that case, start and end points of the partial moves should match appropriately between each other and with the overall event.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (73, 'class', 'name', 10, 'fr', 'Changement de détenteur', '2015-06-11 19:26:28.25822', NULL);
@@ -355,11 +355,11 @@ INSERT INTO i18n VALUES (76, 'class', 'name', 10, 'el', 'Μεταβίβαση  �
 INSERT INTO i18n VALUES (77, 'class', 'name', 10, 'ru', 'Передача Опеки', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (78, 'class', 'name', 10, 'pt', 'Transferência de Custódia', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (79, 'class', 'name', 10, 'cn', '保管作业转移', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (80, 'class', 'comment', 10, 'en', 'This class comprises transfers of physical custody of objects between instances of E39 Actor. 
+INSERT INTO i18n VALUES (80, 'class', 'comment', 10, 'en', 'This class comprises transfers of physical custody of objects between instances of E39 Actor.
 The recording of the donor and/or recipient is optional. It is possible that in an instance of E10 Transfer of Custody there is either no donor or no recipient. Depending on the circumstances it may describe:
-1.	the beginning of custody 
-2.	the end of custody 
-3.	the transfer of custody 
+1.	the beginning of custody
+2.	the end of custody
+3.	the transfer of custody
 4.	the receipt of custody from an unknown source
 5.	the declared loss of an object
 The distinction between the legal responsibility for custody and the actual physical possession of the object should be expressed using the property P2 has type (is type of). A specific case of transfer of custody is theft.
@@ -377,12 +377,12 @@ INSERT INTO i18n VALUES (127, 'class', 'name', 16, 'cn', '测量', '2015-06-11 1
 INSERT INTO i18n VALUES (182, 'class', 'name', 23, 'pt', 'Coisa Material Fabricada', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (183, 'class', 'name', 23, 'cn', '人造实体物', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (184, 'class', 'comment', 23, 'en', 'This class comprises all persistent physical items that are purposely created by human activity.
-This class comprises man-made objects, such as a swords, and man-made features, such as rock art. No assumptions are made as to the extent of modification required to justify regarding an object as man-made. For example, a “cup and ring” carving on bedrock is regarded as instance of E24 Physical Man-Made Thing. 
+This class comprises man-made objects, such as a swords, and man-made features, such as rock art. No assumptions are made as to the extent of modification required to justify regarding an object as man-made. For example, a “cup and ring” carving on bedrock is regarded as instance of E24 Physical Man-Made Thing.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (185, 'class', 'name', 24, 'fr', 'Caractéristique fabriquée', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (88, 'class', 'comment', 11, 'en', 'This class comprises all instances of E7 Activity that create, alter or change E24 Physical Man-Made Thing. 
-This class includes the production of an item from raw materials, and other so far undocumented objects, and the preventive treatment or restoration of an object for conservation. 
-Since the distinction between modification and production is not always clear, modification is regarded as the more generally applicable concept. This implies that some items may be consumed or destroyed in a Modification, and that others may be produced as a result of it. An event should also be documented using E81 Transformation if it results in the destruction of one or more objects and the simultaneous production of others using parts or material from the originals. In this case, the new items have separate identities. 
+INSERT INTO i18n VALUES (88, 'class', 'comment', 11, 'en', 'This class comprises all instances of E7 Activity that create, alter or change E24 Physical Man-Made Thing.
+This class includes the production of an item from raw materials, and other so far undocumented objects, and the preventive treatment or restoration of an object for conservation.
+Since the distinction between modification and production is not always clear, modification is regarded as the more generally applicable concept. This implies that some items may be consumed or destroyed in a Modification, and that others may be produced as a result of it. An event should also be documented using E81 Transformation if it results in the destruction of one or more objects and the simultaneous production of others using parts or material from the originals. In this case, the new items have separate identities.
 If the instance of the E29 Design or Procedure utilized for the modification prescribes the use of specific materials, they should be documented using property P68 foresees use of (use foreseen by): E57 Material of E29 Design or Procedure, rather than via P126 employed (was employed in): E57 Material.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (89, 'class', 'name', 12, 'fr', 'Production', '2015-06-11 19:26:28.25822', NULL);
@@ -392,9 +392,9 @@ INSERT INTO i18n VALUES (92, 'class', 'name', 12, 'ru', 'Событие Прои
 INSERT INTO i18n VALUES (93, 'class', 'name', 12, 'en', 'Production', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (94, 'class', 'name', 12, 'pt', 'Produção', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (95, 'class', 'name', 12, 'cn', '生产', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (96, 'class', 'comment', 12, 'en', 'This class comprises activities that are designed to, and succeed in, creating one or more new items. 
-It specializes the notion of modification into production. The decision as to whether or not an object is regarded as new is context sensitive. Normally, items are considered “new” if there is no obvious overall similarity between them and the consumed items and material used in their production. In other cases, an item is considered “new” because it becomes relevant to documentation by a modification. For example, the scribbling of a name on a potsherd may make it a voting token. The original potsherd may not be worth documenting, in contrast to the inscribed one. 
-This entity can be collective: the printing of a thousand books, for example, would normally be considered a single event. 
+INSERT INTO i18n VALUES (96, 'class', 'comment', 12, 'en', 'This class comprises activities that are designed to, and succeed in, creating one or more new items.
+It specializes the notion of modification into production. The decision as to whether or not an object is regarded as new is context sensitive. Normally, items are considered “new” if there is no obvious overall similarity between them and the consumed items and material used in their production. In other cases, an item is considered “new” because it becomes relevant to documentation by a modification. For example, the scribbling of a name on a potsherd may make it a voting token. The original potsherd may not be worth documenting, in contrast to the inscribed one.
+This entity can be collective: the printing of a thousand books, for example, would normally be considered a single event.
 An event should also be documented using E81 Transformation if it results in the destruction of one or more objects and the simultaneous production of others using parts or material from the originals. In this case, the new items have separate identities and matter is preserved, but identity is not.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (97, 'class', 'name', 13, 'ru', 'Присвоение Атрибута', '2015-06-11 19:26:28.25822', NULL);
@@ -404,9 +404,9 @@ INSERT INTO i18n VALUES (100, 'class', 'name', 13, 'en', 'Attribute Assignment',
 INSERT INTO i18n VALUES (101, 'class', 'name', 13, 'el', 'Απόδοση Ιδιοτήτων', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (102, 'class', 'name', 13, 'pt', 'Atribuição de Característica', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (103, 'class', 'name', 13, 'cn', '屬性指定', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (104, 'class', 'comment', 13, 'en', 'This class comprises the actions of making assertions about properties of an object or any relation between two items or concepts. 
-This class allows the documentation of how the respective assignment came about, and whose opinion it was. All the attributes or properties assigned in such an action can also be seen as directly attached to the respective item or concept, possibly as a collection of contradictory values. All cases of properties in this model that are also described indirectly through an action are characterised as "short cuts" of this action. This redundant modelling of two alternative views is preferred because many implementations may have good reasons to model either the action or the short cut, and the relation between both alternatives can be captured by simple rules. 
-In particular, the class describes the actions of people making propositions and statements during certain museum procedures, e.g. the person and date when a condition statement was made, an identifier was assigned, the museum object was measured, etc. Which kinds of such assignments and statements need to be documented explicitly in structures of a schema rather than free text, depends on if this information should be accessible by structured queries. 
+INSERT INTO i18n VALUES (104, 'class', 'comment', 13, 'en', 'This class comprises the actions of making assertions about properties of an object or any relation between two items or concepts.
+This class allows the documentation of how the respective assignment came about, and whose opinion it was. All the attributes or properties assigned in such an action can also be seen as directly attached to the respective item or concept, possibly as a collection of contradictory values. All cases of properties in this model that are also described indirectly through an action are characterised as "short cuts" of this action. This redundant modelling of two alternative views is preferred because many implementations may have good reasons to model either the action or the short cut, and the relation between both alternatives can be captured by simple rules.
+In particular, the class describes the actions of people making propositions and statements during certain museum procedures, e.g. the person and date when a condition statement was made, an identifier was assigned, the museum object was measured, etc. Which kinds of such assignments and statements need to be documented explicitly in structures of a schema rather than free text, depends on if this information should be accessible by structured queries.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (105, 'class', 'name', 14, 'el', 'Εκτίμηση Κατάστασης', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (106, 'class', 'name', 14, 'ru', 'Оценка Состояния', '2015-06-11 19:26:28.25822', NULL);
@@ -415,8 +415,8 @@ INSERT INTO i18n VALUES (108, 'class', 'name', 14, 'de', 'Zustandsfeststellung',
 INSERT INTO i18n VALUES (109, 'class', 'name', 14, 'en', 'Condition Assessment', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (110, 'class', 'name', 14, 'pt', 'Avaliação do Estado Material', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (111, 'class', 'name', 14, 'cn', '状态评估', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (112, 'class', 'comment', 14, 'en', 'This class describes the act of assessing the state of preservation of an object during a particular period. 
-The condition assessment may be carried out by inspection, measurement or through historical research. This class is used to document circumstances of the respective assessment that may be relevant to interpret its quality at a later stage, or to continue research on related documents. 
+INSERT INTO i18n VALUES (112, 'class', 'comment', 14, 'en', 'This class describes the act of assessing the state of preservation of an object during a particular period.
+The condition assessment may be carried out by inspection, measurement or through historical research. This class is used to document circumstances of the respective assessment that may be relevant to interpret its quality at a later stage, or to continue research on related documents.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (113, 'class', 'name', 15, 'el', 'Απόδοση Αναγνωριστικού', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (114, 'class', 'name', 15, 'ru', 'Назначение Идентификатора', '2015-06-11 19:26:28.25822', NULL);
@@ -431,8 +431,8 @@ The fact that an identifier is a preferred one for an organisation can be expres
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (121, 'class', 'name', 16, 'ru', 'Событие Измерения', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (122, 'class', 'name', 16, 'el', 'Μέτρηση', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (128, 'class', 'comment', 16, 'en', 'This class comprises actions measuring physical properties and other values that can be determined by a systematic procedure. 
-Examples include measuring the monetary value of a collection of coins or the running time of a specific video cassette. 
+INSERT INTO i18n VALUES (128, 'class', 'comment', 16, 'en', 'This class comprises actions measuring physical properties and other values that can be determined by a systematic procedure.
+Examples include measuring the monetary value of a collection of coins or the running time of a specific video cassette.
 The E16 Measurement may use simple counting or tools, such as yardsticks or radiation detection devices. The interest is in the method and care applied, so that the reliability of the result may be judged at a later stage, or research continued on the associated documents. The date of the event is important for dimensions, which may change value over time, such as the length of an object subject to shrinkage. Details of methods and devices are best handled as free text, whereas basic techniques such as "carbon 14 dating" should be encoded using P2 has type (is type of:) E55 Type.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (129, 'class', 'name', 17, 'de', 'Typuszuweisung', '2015-06-11 19:26:28.25822', NULL);
@@ -442,8 +442,8 @@ INSERT INTO i18n VALUES (132, 'class', 'name', 17, 'en', 'Type Assignment', '201
 INSERT INTO i18n VALUES (133, 'class', 'name', 17, 'el', 'Απόδοση Τύπου', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (134, 'class', 'name', 17, 'pt', 'Atribuição de Tipo', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (135, 'class', 'name', 17, 'cn', '类型指定', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (136, 'class', 'comment', 17, 'en', 'This class comprises the actions of classifying items of whatever kind. Such items include objects, specimens, people, actions and concepts. 
-This class allows for the documentation of the context of classification acts in cases where the value of the classification depends on the personal opinion of the classifier, and the date that the classification was made. This class also encompasses the notion of "determination," i.e. the systematic and molecular identification of a specimen in biology. 
+INSERT INTO i18n VALUES (136, 'class', 'comment', 17, 'en', 'This class comprises the actions of classifying items of whatever kind. Such items include objects, specimens, people, actions and concepts.
+This class allows for the documentation of the context of classification acts in cases where the value of the classification depends on the personal opinion of the classifier, and the date that the classification was made. This class also encompasses the notion of "determination," i.e. the systematic and molecular identification of a specimen in biology.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (137, 'class', 'name', 18, 'de', 'Materielles', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (138, 'class', 'name', 18, 'el', 'Υλικό Πράγμα', '2015-06-11 19:26:28.25822', NULL);
@@ -452,9 +452,9 @@ INSERT INTO i18n VALUES (140, 'class', 'name', 18, 'fr', 'Chose matérielle', '2
 INSERT INTO i18n VALUES (141, 'class', 'name', 18, 'ru', 'Физическая Вещь', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (142, 'class', 'name', 18, 'pt', 'Coisa Material', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (143, 'class', 'name', 18, 'cn', '实体物', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (144, 'class', 'comment', 18, 'en', 'This class comprises all persistent physical items with a relatively stable form, man-made or natural. 
-Depending on the existence of natural boundaries of such things, the CRM distinguishes the instances of E19 Physical Object from instances of E26 Physical Feature, such as holes, rivers, pieces of land etc. Most instances of E19 Physical Object can be moved (if not too heavy), whereas features are integral to the surrounding matter. 
-The CRM is generally not concerned with amounts of matter in fluid or gaseous states. 
+INSERT INTO i18n VALUES (144, 'class', 'comment', 18, 'en', 'This class comprises all persistent physical items with a relatively stable form, man-made or natural.
+Depending on the existence of natural boundaries of such things, the CRM distinguishes the instances of E19 Physical Object from instances of E26 Physical Feature, such as holes, rivers, pieces of land etc. Most instances of E19 Physical Object can be moved (if not too heavy), whereas features are integral to the surrounding matter.
+The CRM is generally not concerned with amounts of matter in fluid or gaseous states.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (145, 'class', 'name', 19, 'ru', 'Физический Объект', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (146, 'class', 'name', 19, 'fr', 'Objet matériel', '2015-06-11 19:26:28.25822', NULL);
@@ -463,9 +463,9 @@ INSERT INTO i18n VALUES (148, 'class', 'name', 19, 'el', 'Υλικό Αντικ�
 INSERT INTO i18n VALUES (149, 'class', 'name', 19, 'de', 'Materieller Gegenstand', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (150, 'class', 'name', 19, 'pt', 'Objeto Material', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (151, 'class', 'name', 19, 'cn', '实体物件', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (152, 'class', 'comment', 19, 'en', 'This class comprises items of a material nature that are units for documentation and have physical boundaries that separate them completely in an objective way from other objects. 
+INSERT INTO i18n VALUES (152, 'class', 'comment', 19, 'en', 'This class comprises items of a material nature that are units for documentation and have physical boundaries that separate them completely in an objective way from other objects.
 The class also includes all aggregates of objects made for functional purposes of whatever kind, independent of physical coherence, such as a set of chessmen. Typically, instances of E19 Physical Object can be moved (if not too heavy).
-In some contexts, such objects, except for aggregates, are also called “bona fide objects” (Smith & Varzi, 2000, pp.401-420), i.e. naturally defined objects. 
+In some contexts, such objects, except for aggregates, are also called “bona fide objects” (Smith & Varzi, 2000, pp.401-420), i.e. naturally defined objects.
 The decision as to what is documented as a complete item, rather than by its parts or components, may be a purely administrative decision or may be a result of the order in which the item was acquired.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (153, 'class', 'name', 20, 'ru', 'Биологический Объект', '2015-06-11 19:26:28.25822', NULL);
@@ -475,8 +475,8 @@ INSERT INTO i18n VALUES (156, 'class', 'name', 20, 'fr', 'Objet biologique', '20
 INSERT INTO i18n VALUES (157, 'class', 'name', 20, 'de', 'Biologischer Gegenstand', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (158, 'class', 'name', 20, 'pt', 'Objeto Biológico', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (159, 'class', 'name', 20, 'cn', '生物体', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (160, 'class', 'comment', 20, 'en', 'This class comprises individual items of a material nature, which live, have lived or are natural products of or from living organisms. 
-Artificial objects that incorporate biological elements, such as Victorian butterfly frames, can be documented as both instances of E20 Biological Object and E22 Man-Made Object. 
+INSERT INTO i18n VALUES (160, 'class', 'comment', 20, 'en', 'This class comprises individual items of a material nature, which live, have lived or are natural products of or from living organisms.
+Artificial objects that incorporate biological elements, such as Victorian butterfly frames, can be documented as both instances of E20 Biological Object and E22 Man-Made Object.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (161, 'class', 'name', 21, 'de', 'Person', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (162, 'class', 'name', 21, 'fr', 'Personne', '2015-06-11 19:26:28.25822', NULL);
@@ -485,7 +485,7 @@ INSERT INTO i18n VALUES (164, 'class', 'name', 21, 'ru', 'Личность', '20
 INSERT INTO i18n VALUES (165, 'class', 'name', 21, 'el', 'Πρόσωπο', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (166, 'class', 'name', 21, 'pt', 'Pessoa', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (167, 'class', 'name', 21, 'cn', '人物', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (168, 'class', 'comment', 21, 'en', 'This class comprises real persons who live or are assumed to have lived. 
+INSERT INTO i18n VALUES (168, 'class', 'comment', 21, 'en', 'This class comprises real persons who live or are assumed to have lived.
 Legendary figures that may have existed, such as Ulysses and King Arthur, fall into this class if the documentation refers to them as historical figures. In cases where doubt exists as to whether several persons are in fact identical, multiple instances can be created and linked to indicate their relationship. The CRM does not propose a specific form to support reasoning about possible identity.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (169, 'class', 'name', 22, 'fr', 'Objet fabriqué', '2015-06-11 19:26:28.25822', NULL);
@@ -509,7 +509,7 @@ INSERT INTO i18n VALUES (188, 'class', 'name', 24, 'el', 'Ανθρωπογενέ
 INSERT INTO i18n VALUES (189, 'class', 'name', 24, 'de', 'Hergestelltes Merkmal', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (190, 'class', 'name', 24, 'pt', 'Característica Fabricada', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (191, 'class', 'name', 24, 'cn', '人造外貌表征', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (192, 'class', 'comment', 24, 'en', 'This class comprises physical features that are purposely created by human activity, such as scratches, artificial caves, artificial water channels, etc. 
+INSERT INTO i18n VALUES (192, 'class', 'comment', 24, 'en', 'This class comprises physical features that are purposely created by human activity, such as scratches, artificial caves, artificial water channels, etc.
 No assumptions are made as to the extent of modification required to justify regarding a feature as man-made. For example, rock art or even “cup and ring” carvings on bedrock a regarded as types of E25 Man-Made Feature.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (193, 'class', 'name', 25, 'el', 'Υλικό Μόρφωμα', '2015-06-11 19:26:28.25822', NULL);
@@ -519,10 +519,10 @@ INSERT INTO i18n VALUES (196, 'class', 'name', 25, 'de', 'Materielles Merkmal', 
 INSERT INTO i18n VALUES (197, 'class', 'name', 25, 'fr', 'Caractéristique matérielle', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (198, 'class', 'name', 25, 'pt', 'Característica Material', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (199, 'class', 'name', 25, 'cn', '实体外貌表征', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (200, 'class', 'comment', 25, 'en', 'This class comprises identifiable features that are physically attached in an integral way to particular physical objects. 
-Instances of E26 Physical Feature share many of the attributes of instances of E19 Physical Object. They may have a one-, two- or three-dimensional geometric extent, but there are no natural borders that separate them completely in an objective way from the carrier objects. For example, a doorway is a feature but the door itself, being attached by hinges, is not. 
-Instances of E26 Physical Feature can be features in a narrower sense, such as scratches, holes, reliefs, surface colours, reflection zones in an opal crystal or a density change in a piece of wood. In the wider sense, they are portions of particular objects with partially imaginary borders, such as the core of the Earth, an area of property on the surface of the Earth, a landscape or the head of a contiguous marble statue. They can be measured and dated, and it is sometimes possible to state who or what is or was responsible for them. They cannot be separated from the carrier object, but a segment of the carrier object may be identified (or sometimes removed) carrying the complete feature. 
-This definition coincides with the definition of "fiat objects" (Smith & Varzi, 2000, pp.401-420), with the exception of aggregates of “bona fide objects”. 
+INSERT INTO i18n VALUES (200, 'class', 'comment', 25, 'en', 'This class comprises identifiable features that are physically attached in an integral way to particular physical objects.
+Instances of E26 Physical Feature share many of the attributes of instances of E19 Physical Object. They may have a one-, two- or three-dimensional geometric extent, but there are no natural borders that separate them completely in an objective way from the carrier objects. For example, a doorway is a feature but the door itself, being attached by hinges, is not.
+Instances of E26 Physical Feature can be features in a narrower sense, such as scratches, holes, reliefs, surface colours, reflection zones in an opal crystal or a density change in a piece of wood. In the wider sense, they are portions of particular objects with partially imaginary borders, such as the core of the Earth, an area of property on the surface of the Earth, a landscape or the head of a contiguous marble statue. They can be measured and dated, and it is sometimes possible to state who or what is or was responsible for them. They cannot be separated from the carrier object, but a segment of the carrier object may be identified (or sometimes removed) carrying the complete feature.
+This definition coincides with the definition of "fiat objects" (Smith & Varzi, 2000, pp.401-420), with the exception of aggregates of “bona fide objects”.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (201, 'class', 'name', 26, 'el', 'Φυσικός Χώρος', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (202, 'class', 'name', 26, 'en', 'Site', '2015-06-11 19:26:28.25822', NULL);
@@ -531,7 +531,7 @@ INSERT INTO i18n VALUES (204, 'class', 'name', 26, 'ru', 'Участок', '2015
 INSERT INTO i18n VALUES (205, 'class', 'name', 26, 'de', 'Gelände', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (206, 'class', 'name', 26, 'pt', 'Lugar', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (207, 'class', 'name', 26, 'cn', '场地', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (208, 'class', 'comment', 26, 'en', 'This class comprises pieces of land or sea floor. 
+INSERT INTO i18n VALUES (208, 'class', 'comment', 26, 'en', 'This class comprises pieces of land or sea floor.
 In contrast to the purely geometric notion of E53 Place, this class describes constellations of matter on the surface of the Earth or other celestial body, which can be represented by photographs, paintings and maps.
  Instances of E27 Site are composed of relatively immobile material items and features in a particular configuration at a particular location', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (209, 'class', 'name', 27, 'fr', 'Objet conceptuel', '2015-06-11 19:26:28.25822', NULL);
@@ -543,7 +543,7 @@ INSERT INTO i18n VALUES (214, 'class', 'name', 27, 'pt', 'Objeto Conceitual', '2
 INSERT INTO i18n VALUES (215, 'class', 'name', 27, 'cn', '概念物件', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (216, 'class', 'comment', 27, 'en', 'This class comprises non-material products of our minds and other human produced data that 		have become objects of a discourse about their identity, circumstances of creation or historical 		implication. The production of such information may have been supported by the use of    		technical devices such as cameras or computers.
 Characteristically, instances of this class are created, invented or thought by someone, and then may be documented or communicated between persons. Instances of E28 Conceptual Object have the ability to exist on more than one particular carrier at the same time, such as paper, electronic signals, marks, audio media, paintings, photos, human memories, etc.
-They cannot be destroyed. They exist as long as they can be found on at least one carrier or in at least one human memory. Their existence ends when the last carrier and the last memory are lost. 
+They cannot be destroyed. They exist as long as they can be found on at least one carrier or in at least one human memory. Their existence ends when the last carrier and the last memory are lost.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (217, 'class', 'name', 28, 'el', 'Σχέδιο', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (218, 'class', 'name', 28, 'de', 'Entwurf oder Verfahren', '2015-06-11 19:26:28.25822', NULL);
@@ -552,11 +552,11 @@ INSERT INTO i18n VALUES (220, 'class', 'name', 28, 'ru', 'Проект или П
 INSERT INTO i18n VALUES (221, 'class', 'name', 28, 'en', 'Design or Procedure', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (222, 'class', 'name', 28, 'pt', 'Projeto ou Procedimento', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (223, 'class', 'name', 28, 'cn', '设计或程序', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (224, 'class', 'comment', 28, 'en', 'This class comprises documented plans for the execution of actions in order to achieve a result of a specific quality, form or contents. In particular it comprises plans for deliberate human activities that may result in the modification or production of instances of E24 Physical Thing. 
-Instances of E29 Design or Procedure can be structured in parts and sequences or depend on others. This is modelled using P69 has association with (is associated with). 
+INSERT INTO i18n VALUES (224, 'class', 'comment', 28, 'en', 'This class comprises documented plans for the execution of actions in order to achieve a result of a specific quality, form or contents. In particular it comprises plans for deliberate human activities that may result in the modification or production of instances of E24 Physical Thing.
+Instances of E29 Design or Procedure can be structured in parts and sequences or depend on others. This is modelled using P69 has association with (is associated with).
 Designs or procedures can be seen as one of the following:
 1.	A schema for the activities it describes
-2.	A schema of the products that result from their application. 
+2.	A schema of the products that result from their application.
 3.	An independent intellectual product that may have never been applied, such as Leonardo da Vinci’s famous plans for flying machines.
 Because designs or procedures may never be applied or only partially executed, the CRM models a loose relationship between the plan and the respective product.
 ', '2015-06-11 19:26:28.25822', NULL);
@@ -567,7 +567,7 @@ INSERT INTO i18n VALUES (228, 'class', 'name', 29, 'en', 'Right', '2015-06-11 19
 INSERT INTO i18n VALUES (229, 'class', 'name', 29, 'de', 'Recht', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (230, 'class', 'name', 29, 'pt', 'Direitos', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (231, 'class', 'name', 29, 'cn', '权限', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (232, 'class', 'comment', 29, 'en', 'This class comprises legal privileges concerning material and immaterial things or their derivatives. 
+INSERT INTO i18n VALUES (232, 'class', 'comment', 29, 'en', 'This class comprises legal privileges concerning material and immaterial things or their derivatives.
 These include reproduction and property rights', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (233, 'class', 'name', 30, 'fr', 'Document', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (234, 'class', 'name', 30, 'en', 'Document', '2015-06-11 19:26:28.25822', NULL);
@@ -595,7 +595,7 @@ INSERT INTO i18n VALUES (252, 'class', 'name', 32, 'fr', 'Objet linguistique', '
 INSERT INTO i18n VALUES (253, 'class', 'name', 32, 'de', 'Sprachlicher Gegenstand', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (254, 'class', 'name', 32, 'pt', 'Objeto Lingüístico', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (255, 'class', 'name', 32, 'cn', '语言物件', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (256, 'class', 'comment', 32, 'en', 'This class comprises identifiable expressions in natural language or languages. 
+INSERT INTO i18n VALUES (256, 'class', 'comment', 32, 'en', 'This class comprises identifiable expressions in natural language or languages.
 Instances of E33 Linguistic Object can be expressed in many ways: e.g. as written texts, recorded speech or sign language. However, the CRM treats instances of E33 Linguistic Object independently from the medium or method by which they are expressed. Expressions in formal languages, such as computer code or mathematical formulae, are not treated as instances of E33 Linguistic Object by the CRM. These should be modelled as instances of E73 Information Object.
 The text of an instance of E33 Linguistic Object can be documented in a note by P3 has note: E62 String
 ', '2015-06-11 19:26:28.25822', NULL);
@@ -606,9 +606,9 @@ INSERT INTO i18n VALUES (260, 'class', 'name', 33, 'ru', 'Надпись', '2015
 INSERT INTO i18n VALUES (261, 'class', 'name', 33, 'de', 'Inschrift', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (262, 'class', 'name', 33, 'pt', 'Inscrição', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (263, 'class', 'name', 33, 'cn', '题字', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (264, 'class', 'comment', 33, 'en', 'This class comprises recognisable, short texts attached to instances of E24 Physical Man-Made Thing. 
+INSERT INTO i18n VALUES (264, 'class', 'comment', 33, 'en', 'This class comprises recognisable, short texts attached to instances of E24 Physical Man-Made Thing.
 The transcription of the text can be documented in a note by P3 has note: E62 String. The alphabet used can be documented by P2 has type: E55 Type. This class does not intend to describe the idiosyncratic characteristics of an individual physical embodiment of an inscription, but the underlying prototype. The physical embodiment is modelled in the CRM as E24 Physical Man-Made Thing.
-The relationship of a physical copy of a book to the text it contains is modelled using E84 Information Carrier. P128 carries (is carried by): E33 Linguistic Object. 
+The relationship of a physical copy of a book to the text it contains is modelled using E84 Information Carrier. P128 carries (is carried by): E33 Linguistic Object.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (265, 'class', 'name', 34, 'ru', 'Заголовок', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (266, 'class', 'name', 34, 'fr', 'Titre', '2015-06-11 19:26:28.25822', NULL);
@@ -617,8 +617,8 @@ INSERT INTO i18n VALUES (268, 'class', 'name', 34, 'en', 'Title', '2015-06-11 19
 INSERT INTO i18n VALUES (269, 'class', 'name', 34, 'el', ' Τίτλος', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (270, 'class', 'name', 34, 'pt', 'Título', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (271, 'class', 'name', 34, 'cn', '题目', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (272, 'class', 'comment', 34, 'en', 'This class comprises the names assigned to works, such as texts, artworks or pieces of music. 
-Titles are proper noun phrases or verbal phrases, and should not be confused with generic object names such as “chair”, “painting” or “book” (the latter are common nouns that stand for instances of E55 Type). Titles may be assigned by the creator of the work itself, or by a social group. 
+INSERT INTO i18n VALUES (272, 'class', 'comment', 34, 'en', 'This class comprises the names assigned to works, such as texts, artworks or pieces of music.
+Titles are proper noun phrases or verbal phrases, and should not be confused with generic object names such as “chair”, “painting” or “book” (the latter are common nouns that stand for instances of E55 Type). Titles may be assigned by the creator of the work itself, or by a social group.
 This class also comprises the translations of titles that are used as surrogates for the original titles in different social contexts.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (273, 'class', 'name', 35, 'ru', 'Визуальный Предмет', '2015-06-11 19:26:28.25822', NULL);
@@ -629,8 +629,8 @@ INSERT INTO i18n VALUES (277, 'class', 'name', 35, 'de', 'Bildliches', '2015-06-
 INSERT INTO i18n VALUES (278, 'class', 'name', 35, 'pt', 'Item Visual', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (279, 'class', 'name', 35, 'cn', '视觉项目', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (280, 'class', 'comment', 35, 'en', 'This class comprises the intellectual or conceptual aspects of recognisable marks and images.
-This class does not intend to describe the idiosyncratic characteristics of an individual physical embodiment of a visual item, but the underlying prototype. For example, a mark such as the ICOM logo is generally considered to be the same logo when used on any number of publications. The size, orientation and colour may change, but the logo remains uniquely identifiable. The same is true of images that are reproduced many times. This means that visual items are independent of their physical support. 
-The class E36 Visual Item provides a means of identifying and linking together instances of E24 Physical Man-Made Thing that carry the same visual symbols, marks or images etc. The property P62 depicts (is depicted by) between E24 Physical Man-Made Thing and depicted subjects (E1 CRM Entity) can be regarded as a short-cut of the more fully developed path from E24 Physical Man-Made Thing through P65 shows visual item (is shown by), E36 Visual Item, P138 represents (has representation) to E1CRM Entity, which in addition captures the optical features of the depiction.  
+This class does not intend to describe the idiosyncratic characteristics of an individual physical embodiment of a visual item, but the underlying prototype. For example, a mark such as the ICOM logo is generally considered to be the same logo when used on any number of publications. The size, orientation and colour may change, but the logo remains uniquely identifiable. The same is true of images that are reproduced many times. This means that visual items are independent of their physical support.
+The class E36 Visual Item provides a means of identifying and linking together instances of E24 Physical Man-Made Thing that carry the same visual symbols, marks or images etc. The property P62 depicts (is depicted by) between E24 Physical Man-Made Thing and depicted subjects (E1 CRM Entity) can be regarded as a short-cut of the more fully developed path from E24 Physical Man-Made Thing through P65 shows visual item (is shown by), E36 Visual Item, P138 represents (has representation) to E1CRM Entity, which in addition captures the optical features of the depiction.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (281, 'class', 'name', 36, 'ru', 'Пометка', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (282, 'class', 'name', 36, 'fr', 'Marque', '2015-06-11 19:26:28.25822', NULL);
@@ -639,8 +639,8 @@ INSERT INTO i18n VALUES (284, 'class', 'name', 36, 'en', 'Mark', '2015-06-11 19:
 INSERT INTO i18n VALUES (285, 'class', 'name', 36, 'de', 'Marke', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (286, 'class', 'name', 36, 'pt', 'Marca', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (287, 'class', 'name', 36, 'cn', '标志', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (288, 'class', 'comment', 36, 'en', 'This class comprises symbols, signs, signatures or short texts applied to instances of E24 Physical Man-Made Thing by arbitrary techniques in order to indicate the creator, owner, dedications, purpose, etc. 
-This class specifically excludes features that have no semantic significance, such as scratches or tool marks. These should be documented as instances of E25 Man-Made Feature. 
+INSERT INTO i18n VALUES (288, 'class', 'comment', 36, 'en', 'This class comprises symbols, signs, signatures or short texts applied to instances of E24 Physical Man-Made Thing by arbitrary techniques in order to indicate the creator, owner, dedications, purpose, etc.
+This class specifically excludes features that have no semantic significance, such as scratches or tool marks. These should be documented as instances of E25 Man-Made Feature.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (289, 'class', 'name', 37, 'ru', 'Изображение', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (290, 'class', 'name', 37, 'el', 'Εικόνα', '2015-06-11 19:26:28.25822', NULL);
@@ -649,7 +649,7 @@ INSERT INTO i18n VALUES (292, 'class', 'name', 37, 'fr', 'Image', '2015-06-11 19
 INSERT INTO i18n VALUES (293, 'class', 'name', 37, 'en', 'Image', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (294, 'class', 'name', 37, 'pt', 'Imagem', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (295, 'class', 'name', 37, 'cn', '图像', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (296, 'class', 'comment', 37, 'en', 'This class comprises distributions of form, tone and colour that may be found on surfaces such as photos, paintings, prints and sculptures or directly on electronic media. 
+INSERT INTO i18n VALUES (296, 'class', 'comment', 37, 'en', 'This class comprises distributions of form, tone and colour that may be found on surfaces such as photos, paintings, prints and sculptures or directly on electronic media.
 The degree to which variations in the distribution of form and colour affect the identity of an instance of E38 Image depends on a given purpose. The original painting of the Mona Lisa in the Louvre may be said to bear the same instance of E38 Image as reproductions in the form of transparencies, postcards, posters or T-shirts, even though they may differ in size and carrier and may vary in tone and colour. The images in a “spot the difference” competition are not the same with respect to their context, however similar they may at first appear.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (297, 'class', 'name', 38, 'de', 'Akteur', '2015-06-11 19:26:28.25822', NULL);
@@ -659,7 +659,7 @@ INSERT INTO i18n VALUES (300, 'class', 'name', 38, 'el', 'Δράστης', '2015
 INSERT INTO i18n VALUES (301, 'class', 'name', 38, 'en', 'Actor', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (302, 'class', 'name', 38, 'pt', 'Agente', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (303, 'class', 'name', 38, 'cn', '角色', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (304, 'class', 'comment', 38, 'en', 'This class comprises people, either individually or in groups, who have the potential to perform intentional actions for which they can be held responsible. 
+INSERT INTO i18n VALUES (304, 'class', 'comment', 38, 'en', 'This class comprises people, either individually or in groups, who have the potential to perform intentional actions for which they can be held responsible.
 The CRM does not attempt to model the inadvertent actions of such actors. Individual people should be documented as instances of E21 Person, whereas groups should be documented as instances of either E74 Group or its subclass E40 Legal Body.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (305, 'class', 'name', 39, 'fr', 'Collectivité', '2015-06-11 19:26:28.25822', NULL);
@@ -669,8 +669,8 @@ INSERT INTO i18n VALUES (308, 'class', 'name', 39, 'ru', 'Юридическое
 INSERT INTO i18n VALUES (309, 'class', 'name', 39, 'en', 'Legal Body', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (310, 'class', 'name', 39, 'pt', 'Pessoa Jurídica', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (311, 'class', 'name', 39, 'cn', '法律组织', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (312, 'class', 'comment', 39, 'en', 'This class comprises institutions or groups of people that have obtained a legal recognition as a group and can act collectively as agents.  
-This means that they can perform actions, own property, create or destroy things and can be held collectively responsible for their actions like individual people. The term ''personne morale'' is often used for this in French. 
+INSERT INTO i18n VALUES (312, 'class', 'comment', 39, 'en', 'This class comprises institutions or groups of people that have obtained a legal recognition as a group and can act collectively as agents.
+This means that they can perform actions, own property, create or destroy things and can be held collectively responsible for their actions like individual people. The term ''personne morale'' is often used for this in French.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (313, 'class', 'name', 40, 'de', 'Benennung', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (314, 'class', 'name', 40, 'ru', 'Обозначение', '2015-06-11 19:26:28.25822', NULL);
@@ -680,7 +680,7 @@ INSERT INTO i18n VALUES (317, 'class', 'name', 40, 'el', 'Ονομασία', '20
 INSERT INTO i18n VALUES (318, 'class', 'name', 40, 'pt', 'Designação', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (319, 'class', 'name', 40, 'cn', '称号', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (320, 'class', 'comment', 40, 'en', 'This class comprises signs, either meaningful or not, or arrangements of signs following a specific syntax, that are used or can be used to refer to and identify a specific instance of some class or category within a certain context.
-Instances of E41 Appellation do not identify things by their meaning, even if they happen to have one, but instead by convention, tradition, or agreement. Instances of E41 Appellation are cultural constructs; as such, they have a context, a history, and a use in time and space by some group of users. A given instance of E41 Appellation can have alternative forms, i.e., other instances of E41 Appellation that are always regarded as equivalent independent from the thing it denotes. 
+Instances of E41 Appellation do not identify things by their meaning, even if they happen to have one, but instead by convention, tradition, or agreement. Instances of E41 Appellation are cultural constructs; as such, they have a context, a history, and a use in time and space by some group of users. A given instance of E41 Appellation can have alternative forms, i.e., other instances of E41 Appellation that are always regarded as equivalent independent from the thing it denotes.
 Specific subclasses of E41 Appellation should be used when instances of E41 Appellation of a characteristic form are used for particular objects. Instances of E49 Time Appellation, for example, which take the form of instances of E50 Date, can be easily recognised.
 E41 Appellation should not be confused with the act of naming something. Cf. E15 Identifier Assignment
 ', '2015-06-11 19:26:28.25822', NULL);
@@ -699,7 +699,7 @@ INSERT INTO i18n VALUES (332, 'class', 'name', 42, 'de', 'Ortsbenennung', '2015-
 INSERT INTO i18n VALUES (333, 'class', 'name', 42, 'el', 'Ονομασία Τόπου', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (334, 'class', 'name', 42, 'pt', 'Designação de Local', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (335, 'class', 'name', 42, 'cn', '地点称号', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (336, 'class', 'comment', 42, 'en', 'This class comprises any sort of identifier characteristically used to refer to an E53 Place. 
+INSERT INTO i18n VALUES (336, 'class', 'comment', 42, 'en', 'This class comprises any sort of identifier characteristically used to refer to an E53 Place.
 Instances of E44 Place Appellation may vary in their degree of precision and their meaning may vary over time - the same instance of E44 Place Appellation may be used to refer to several places, either because of cultural shifts, or because objects used as reference points have moved around. Instances of E44 Place Appellation can be extremely varied in form: postal addresses, instances of E47 Spatial Coordinate, and parts of buildings can all be considered as instances of E44 Place Appellation.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (337, 'class', 'name', 43, 'fr', 'Adresse', '2015-06-11 19:26:28.25822', NULL);
@@ -709,7 +709,7 @@ INSERT INTO i18n VALUES (340, 'class', 'name', 43, 'ru', 'Адрес', '2015-06-
 INSERT INTO i18n VALUES (341, 'class', 'name', 43, 'en', 'Address', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (342, 'class', 'name', 43, 'pt', 'Endereço', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (343, 'class', 'name', 43, 'cn', '地址', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (496, 'class', 'comment', 62, 'en', 'This class comprises the events that result in the formal or informal termination of an E74 Group of people. 
+INSERT INTO i18n VALUES (496, 'class', 'comment', 62, 'en', 'This class comprises the events that result in the formal or informal termination of an E74 Group of people.
 If the dissolution was deliberate, the Dissolution event should also be instantiated as an E7 Activity.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (497, 'class', 'name', 63, 'ru', 'Смерть', '2015-06-11 19:26:28.25822', NULL);
@@ -723,7 +723,7 @@ INSERT INTO i18n VALUES (348, 'class', 'name', 44, 'de', 'Abschnittsdefinition',
 INSERT INTO i18n VALUES (349, 'class', 'name', 44, 'el', 'Ονομασία Τμήματος', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (350, 'class', 'name', 44, 'pt', 'Designação de Seção', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (351, 'class', 'name', 44, 'cn', '区域定义', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (352, 'class', 'comment', 44, 'en', 'This class comprises areas of objects referred to in terms specific to the general geometry or structure of its kind. 
+INSERT INTO i18n VALUES (352, 'class', 'comment', 44, 'en', 'This class comprises areas of objects referred to in terms specific to the general geometry or structure of its kind.
 The ''prow'' of the boat, the ''frame'' of the picture, the ''front'' of the building are all instances of E46 Section Definition. The class highlights the fact that parts of objects can be treated as locations. This holds in particular for features without natural boundaries, such as the “head” of a marble statue made out of one block (cf. E53 Place). In answer to the question ''where is the signature?'' one might reply ''on the lower left corner''. (Section Definition is closely related to the term “segment” in Gerstl, P.& Pribbenow, S, 1996 “ A conceptual theory of part – whole relations and its applications”, Data & Knowledge 	Engineering 20 305-322, North Holland- Elsevier ).
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (353, 'class', 'name', 45, 'fr', 'Coordonnées spatiales', '2015-06-11 19:26:28.25822', NULL);
@@ -733,7 +733,7 @@ INSERT INTO i18n VALUES (356, 'class', 'name', 45, 'de', 'Raumkoordinaten', '201
 INSERT INTO i18n VALUES (357, 'class', 'name', 45, 'en', 'Spatial Coordinates', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (358, 'class', 'name', 45, 'pt', 'Coordenadas Espaciais', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (359, 'class', 'name', 45, 'cn', '空间坐标', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (360, 'class', 'comment', 45, 'en', 'This class comprises the textual or numeric information required to locate specific instances of E53 Place within schemes of spatial identification. 
+INSERT INTO i18n VALUES (360, 'class', 'comment', 45, 'en', 'This class comprises the textual or numeric information required to locate specific instances of E53 Place within schemes of spatial identification.
 
 Coordinates are a specific form of E44 Place Appellation, that is, a means of referring to a particular E53 Place. Coordinates are not restricted to longitude, latitude and altitude. Any regular system of reference that maps onto an E19 Physical Object can be used to generate coordinates.
 ', '2015-06-11 19:26:28.25822', NULL);
@@ -744,7 +744,7 @@ INSERT INTO i18n VALUES (364, 'class', 'name', 46, 'en', 'Place Name', '2015-06-
 INSERT INTO i18n VALUES (365, 'class', 'name', 46, 'de', 'Orts- oder Flurname', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (366, 'class', 'name', 46, 'pt', 'Nome de Local', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (367, 'class', 'name', 46, 'cn', '地名', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (368, 'class', 'comment', 46, 'en', 'This class comprises particular and common forms of E44 Place Appellation. 
+INSERT INTO i18n VALUES (368, 'class', 'comment', 46, 'en', 'This class comprises particular and common forms of E44 Place Appellation.
 Place Names may change their application over time: the name of an E53 Place may change, and a name may be reused for a different E53 Place. Instances of E48 Place Name are typically subject to place name gazetteers.', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (369, 'class', 'name', 47, 'ru', 'Обозначение Времени', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (370, 'class', 'name', 47, 'el', 'Ονομασία Χρόνου', '2015-06-11 19:26:28.25822', NULL);
@@ -753,7 +753,7 @@ INSERT INTO i18n VALUES (372, 'class', 'name', 47, 'en', 'Time Appellation', '20
 INSERT INTO i18n VALUES (373, 'class', 'name', 47, 'fr', 'Appellation temporelle', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (374, 'class', 'name', 47, 'pt', 'Designação de Tempo', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (375, 'class', 'name', 47, 'cn', '时间称号', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (376, 'class', 'comment', 47, 'en', 'This class comprises all forms of names or codes, such as historical periods, and dates, which are characteristically used to refer to a specific E52 Time-Span. 
+INSERT INTO i18n VALUES (376, 'class', 'comment', 47, 'en', 'This class comprises all forms of names or codes, such as historical periods, and dates, which are characteristically used to refer to a specific E52 Time-Span.
 The instances of E49 Time Appellation may vary in their degree of precision, and they may be relative to other time frames, “Before Christ” for example. Instances of E52 Time-Span are often defined by reference to a cultural period or an event e.g. ‘the duration of the Ming Dynasty’.', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (377, 'class', 'name', 48, 'de', 'Datum', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (378, 'class', 'name', 48, 'el', 'Ημερομηνία', '2015-06-11 19:26:28.25822', NULL);
@@ -770,7 +770,7 @@ INSERT INTO i18n VALUES (388, 'class', 'name', 49, 'en', 'Contact Point', '2015-
 INSERT INTO i18n VALUES (389, 'class', 'name', 49, 'ru', 'Контакт', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (390, 'class', 'name', 49, 'pt', 'Ponto de Contato', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (391, 'class', 'name', 49, 'cn', '联系方式', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (392, 'class', 'comment', 49, 'en', 'This class comprises identifiers employed, or understood, by communication services to direct communications to an instance of E39 Actor. These include E-mail addresses, telephone numbers, post office boxes, Fax numbers, URLs etc. Most postal addresses can be considered both as instances of E44 Place Appellation and E51 Contact Point. In such cases the subclass E45 Address should be used. 
+INSERT INTO i18n VALUES (392, 'class', 'comment', 49, 'en', 'This class comprises identifiers employed, or understood, by communication services to direct communications to an instance of E39 Actor. These include E-mail addresses, telephone numbers, post office boxes, Fax numbers, URLs etc. Most postal addresses can be considered both as instances of E44 Place Appellation and E51 Contact Point. In such cases the subclass E45 Address should be used.
 URLs are addresses used by machines to access another machine through an http request. Since the accessed machine acts on behalf of the E39 Actor providing the machine, URLs are considered as instances of E51 Contact Point to that E39 Actor.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (393, 'class', 'name', 50, 'fr', 'Durée', '2015-06-11 19:26:28.25822', NULL);
@@ -786,9 +786,9 @@ INSERT INTO i18n VALUES (500, 'class', 'name', 63, 'fr', 'Mort', '2015-06-11 19:
 INSERT INTO i18n VALUES (501, 'class', 'name', 63, 'el', 'Θάνατος', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (502, 'class', 'name', 63, 'pt', 'Morte', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (503, 'class', 'name', 63, 'cn', '死亡', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (400, 'class', 'comment', 50, 'en', 'This class comprises abstract temporal extents, in the sense of Galilean physics, having a beginning, an end and a duration. 
-Time Span has no other semantic connotations. Time-Spans are used to define the temporal extent of instances of E4 Period, E5 Event and any other phenomena valid for a certain time. An E52 Time-Span may be identified by one or more instances of E49 Time Appellation. 
-Since our knowledge of history is imperfect, instances of E52 Time-Span can best be considered as approximations of the actual Time-Spans of temporal entities. The properties of E52 Time-Span are intended to allow these approximations to be expressed precisely.  An extreme case of approximation, might, for example, define an E52 Time-Span having unknown beginning, end and duration. Used as a common E52 Time-Span for two events, it would nevertheless define them as being simultaneous, even if nothing else was known. 
+INSERT INTO i18n VALUES (400, 'class', 'comment', 50, 'en', 'This class comprises abstract temporal extents, in the sense of Galilean physics, having a beginning, an end and a duration.
+Time Span has no other semantic connotations. Time-Spans are used to define the temporal extent of instances of E4 Period, E5 Event and any other phenomena valid for a certain time. An E52 Time-Span may be identified by one or more instances of E49 Time Appellation.
+Since our knowledge of history is imperfect, instances of E52 Time-Span can best be considered as approximations of the actual Time-Spans of temporal entities. The properties of E52 Time-Span are intended to allow these approximations to be expressed precisely.  An extreme case of approximation, might, for example, define an E52 Time-Span having unknown beginning, end and duration. Used as a common E52 Time-Span for two events, it would nevertheless define them as being simultaneous, even if nothing else was known.
 	Automatic processing and querying of instances of E52 Time-Span is facilitated if data can be parsed into an E61 Time Primitive.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (401, 'class', 'name', 51, 'fr', 'Lieu', '2015-06-11 19:26:28.25822', NULL);
@@ -798,7 +798,7 @@ INSERT INTO i18n VALUES (404, 'class', 'name', 51, 'ru', 'Место', '2015-06-
 INSERT INTO i18n VALUES (405, 'class', 'name', 51, 'de', 'Ort', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (406, 'class', 'name', 51, 'pt', 'Local', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (407, 'class', 'name', 51, 'cn', '地点', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (408, 'class', 'comment', 51, 'en', 'This class comprises extents in space, in particular on the surface of the earth, in the pure sense of physics: independent from temporal phenomena and matter. 
+INSERT INTO i18n VALUES (408, 'class', 'comment', 51, 'en', 'This class comprises extents in space, in particular on the surface of the earth, in the pure sense of physics: independent from temporal phenomena and matter.
 The instances of E53 Place are usually determined by reference to the position of “immobile” objects such as buildings, cities, mountains, rivers, or dedicated geodetic marks. A Place can be determined by combining a frame of reference and a location with respect to this frame. It may be identified by one or more instances of E44 Place Appellation.
  It is sometimes argued that instances of E53 Place are best identified by global coordinates or absolute reference systems. However, relative references are often more relevant in the context of cultural documentation and tend to be more precise. In particular, we are often interested in position in relation to large, mobile objects, such as ships. For example, the Place at which Nelson died is known with reference to a large mobile object – H.M.S Victory. A resolution of this Place in terms of absolute coordinates would require knowledge of the movements of the vessel and the precise time of death, either of which may be revised, and the result would lack historical and cultural relevance.
 Any object can serve as a frame of reference for E53 Place determination. The model foresees the notion of a "section" of an E19 Physical Object as a valid E53 Place determination.', '2015-06-11 19:26:28.25822', NULL);
@@ -820,8 +820,8 @@ INSERT INTO i18n VALUES (420, 'class', 'name', 53, 'ru', 'Тип', '2015-06-11 1
 INSERT INTO i18n VALUES (421, 'class', 'name', 53, 'de', 'Typus', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (422, 'class', 'name', 53, 'pt', 'Tipo', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (423, 'class', 'name', 53, 'cn', '类型', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (424, 'class', 'comment', 53, 'en', 'This class comprises concepts denoted by terms from thesauri and controlled vocabularies used to characterize and classify instances of CRM classes. Instances of E55 Type represent concepts  in contrast to instances of E41 Appellation which are used to name instances of CRM classes. 
-E55 Type is the CRM’s interface to domain specific ontologies and thesauri. These can be represented in the CRM as subclasses of E55 Type, forming hierarchies of terms, i.e. instances of E55 Type linked via P127 has broader  term (has narrower term). Such hierarchies may be extended with additional properties. 
+INSERT INTO i18n VALUES (424, 'class', 'comment', 53, 'en', 'This class comprises concepts denoted by terms from thesauri and controlled vocabularies used to characterize and classify instances of CRM classes. Instances of E55 Type represent concepts  in contrast to instances of E41 Appellation which are used to name instances of CRM classes.
+E55 Type is the CRM’s interface to domain specific ontologies and thesauri. These can be represented in the CRM as subclasses of E55 Type, forming hierarchies of terms, i.e. instances of E55 Type linked via P127 has broader  term (has narrower term). Such hierarchies may be extended with additional properties.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (425, 'class', 'name', 54, 'fr', 'Langue', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (426, 'class', 'name', 54, 'ru', 'Язык', '2015-06-11 19:26:28.25822', NULL);
@@ -830,9 +830,9 @@ INSERT INTO i18n VALUES (428, 'class', 'name', 54, 'el', 'Γλώσσα', '2015-0
 INSERT INTO i18n VALUES (429, 'class', 'name', 54, 'de', 'Sprache', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (430, 'class', 'name', 54, 'pt', 'Língua', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (431, 'class', 'name', 54, 'cn', '语言', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (432, 'class', 'comment', 54, 'en', 'This class is a specialization of E55 Type and comprises the natural languages in the sense of concepts. 
+INSERT INTO i18n VALUES (432, 'class', 'comment', 54, 'en', 'This class is a specialization of E55 Type and comprises the natural languages in the sense of concepts.
 This type is used categorically in the model without reference to instances of it, i.e. the Model does not foresee the description of instances of instances of E56 Language, e.g.: “instances of  Mandarin Chinese”.
-It is recommended that internationally or nationally agreed codes and terminology are used to denote instances of E56 Language, such as those defined in ISO 639:1988. 
+It is recommended that internationally or nationally agreed codes and terminology are used to denote instances of E56 Language, such as those defined in ISO 639:1988.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (433, 'class', 'name', 55, 'fr', 'Matériau', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (434, 'class', 'name', 55, 'el', 'Υλικό', '2015-06-11 19:26:28.25822', NULL);
@@ -841,14 +841,14 @@ INSERT INTO i18n VALUES (436, 'class', 'name', 55, 'en', 'Material', '2015-06-11
 INSERT INTO i18n VALUES (437, 'class', 'name', 55, 'de', 'Material', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (438, 'class', 'name', 55, 'pt', 'Material', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (439, 'class', 'name', 55, 'cn', '材料', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (504, 'class', 'comment', 63, 'en', 'This class comprises the deaths of human beings. 
+INSERT INTO i18n VALUES (504, 'class', 'comment', 63, 'en', 'This class comprises the deaths of human beings.
 If a person is killed, their death should be instantiated as E69 Death and as E7 Activity. The death or perishing of other living beings should be documented using E64 End of Existence.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (505, 'class', 'name', 64, 'ru', '', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (506, 'class', 'name', 64, 'fr', 'Chose', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (507, 'class', 'name', 64, 'en', 'Thing', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (508, 'class', 'name', 64, 'el', 'Πράγμα', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (440, 'class', 'comment', 55, 'en', 'This class is a specialization of E55 Type and comprises the concepts of materials. 
+INSERT INTO i18n VALUES (440, 'class', 'comment', 55, 'en', 'This class is a specialization of E55 Type and comprises the concepts of materials.
 Instances of E57 Material may denote properties of matter before its use, during its use, and as incorporated in an object, such as ultramarine powder, tempera paste, reinforced concrete. Discrete pieces of raw-materials kept in museums, such as bricks, sheets of fabric, pieces of metal, should be modelled individually in the same way as other objects. Discrete used or processed pieces, such as the stones from Nefer Titi''s temple, should be modelled as parts (cf. P46 is composed of).
 This type is used categorically in the model without reference to instances of it, i.e. the Model does not foresee the description of instances of instances of E57 Material, e.g.: “instances of  gold”.
 It is recommended that internationally or nationally agreed codes and terminology are used.', '2015-06-11 19:26:28.25822', NULL);
@@ -859,7 +859,7 @@ INSERT INTO i18n VALUES (444, 'class', 'name', 56, 'de', 'Maßeinheit', '2015-06
 INSERT INTO i18n VALUES (445, 'class', 'name', 56, 'ru', 'Единица Измерения', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (446, 'class', 'name', 56, 'pt', 'Unidade de Medida', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (447, 'class', 'name', 56, 'cn', '测量单位', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (448, 'class', 'comment', 56, 'en', 'This class is a specialization of E55 Type and comprises the types of measurement units: feet, inches, centimetres, litres, lumens, etc. 
+INSERT INTO i18n VALUES (448, 'class', 'comment', 56, 'en', 'This class is a specialization of E55 Type and comprises the types of measurement units: feet, inches, centimetres, litres, lumens, etc.
 This type is used categorically in the model without reference to instances of it, i.e. the Model does not foresee the description of instances of instances of E58 Measurement Unit, e.g.: “instances of cm”.
 Syst?me International (SI) units or internationally recognized non-SI terms should be used whenever possible. (ISO 1000:1992). Archaic Measurement Units used in historical records should be preserved.
 ', '2015-06-11 19:26:28.25822', NULL);
@@ -870,7 +870,7 @@ INSERT INTO i18n VALUES (452, 'class', 'name', 57, 'el', 'Αρχή Ύπαρξη�
 INSERT INTO i18n VALUES (453, 'class', 'name', 57, 'ru', 'Начало Существования', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (454, 'class', 'name', 57, 'pt', 'Início da Existência', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (455, 'class', 'name', 57, 'cn', '存在开始', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (456, 'class', 'comment', 57, 'en', 'This class comprises events that bring into existence any E77 Persistent Item. 
+INSERT INTO i18n VALUES (456, 'class', 'comment', 57, 'en', 'This class comprises events that bring into existence any E77 Persistent Item.
 It may be used for temporal reasoning about things (intellectual products, physical items, groups of people, living beings) beginning to exist; it serves as a hook for determination of a terminus post quem and ante quem. ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (457, 'class', 'name', 58, 'de', 'Daseinsende', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (458, 'class', 'name', 58, 'ru', 'Конец Существования', '2015-06-11 19:26:28.25822', NULL);
@@ -879,7 +879,7 @@ INSERT INTO i18n VALUES (460, 'class', 'name', 58, 'fr', 'Fin d''existence', '20
 INSERT INTO i18n VALUES (461, 'class', 'name', 58, 'en', 'End of Existence', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (462, 'class', 'name', 58, 'pt', 'Fim da Existência', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (463, 'class', 'name', 58, 'cn', '存在结束', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (464, 'class', 'comment', 58, 'en', 'This class comprises events that end the existence of any E77 Persistent Item. 
+INSERT INTO i18n VALUES (464, 'class', 'comment', 58, 'en', 'This class comprises events that end the existence of any E77 Persistent Item.
 It may be used for temporal reasoning about things (physical items, groups of people, living beings) ceasing to exist; it serves as a hook for determination of a terminus postquem and antequem. In cases where substance from a Persistent Item continues to exist in a new form, the process would be documented by E81 Transformation.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (465, 'class', 'name', 59, 'el', 'Δημιουργία', '2015-06-11 19:26:28.25822', NULL);
@@ -898,9 +898,9 @@ INSERT INTO i18n VALUES (476, 'class', 'name', 60, 'de', 'Gruppenbildung', '2015
 INSERT INTO i18n VALUES (477, 'class', 'name', 60, 'el', 'Συγκρότηση Ομάδας', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (478, 'class', 'name', 60, 'pt', 'Formação', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (479, 'class', 'name', 60, 'cn', '组成', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (480, 'class', 'comment', 60, 'en', 'This class comprises events that result in the formation of a formal or informal E74 Group of people, such as a club, society, association, corporation or nation. 
+INSERT INTO i18n VALUES (480, 'class', 'comment', 60, 'en', 'This class comprises events that result in the formation of a formal or informal E74 Group of people, such as a club, society, association, corporation or nation.
 E66 Formation does not include the arbitrary aggregation of people who do not act as a collective.
-The formation of an instance of E74 Group does not mean that the group is populated with members at the time of formation. In order to express the joining of members at the time of formation, the respective activity should be simultaneously an instance of both E66 Formation and E85 Joining. 
+The formation of an instance of E74 Group does not mean that the group is populated with members at the time of formation. In order to express the joining of members at the time of formation, the respective activity should be simultaneously an instance of both E66 Formation and E85 Joining.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (481, 'class', 'name', 61, 'en', 'Birth', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (482, 'class', 'name', 61, 'ru', 'Рождение', '2015-06-11 19:26:28.25822', NULL);
@@ -909,7 +909,7 @@ INSERT INTO i18n VALUES (484, 'class', 'name', 61, 'de', 'Geburt', '2015-06-11 1
 INSERT INTO i18n VALUES (485, 'class', 'name', 61, 'el', 'Γέννηση', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (486, 'class', 'name', 61, 'pt', 'Nascimento', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (487, 'class', 'name', 61, 'cn', '诞生', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (488, 'class', 'comment', 61, 'en', 'This class comprises the births of human beings. E67 Birth is a biological event focussing on the context of people coming into life. (E63 Beginning of Existence comprises the coming into life of any living beings). 
+INSERT INTO i18n VALUES (488, 'class', 'comment', 61, 'en', 'This class comprises the births of human beings. E67 Birth is a biological event focussing on the context of people coming into life. (E63 Beginning of Existence comprises the coming into life of any living beings).
 Twins, triplets etc. are brought into life by the same E67 Birth event. The introduction of the E67 Birth event as a documentation element allows the description of a range of family relationships in a simple model. Suitable extensions may describe more details and the complexity of motherhood with the intervention of modern medicine. In this model, the biological father is not seen as a necessary participant in the E67 Birth event.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (489, 'class', 'name', 62, 'ru', 'Роспуск', '2015-06-11 19:26:28.25822', NULL);
@@ -922,9 +922,9 @@ INSERT INTO i18n VALUES (495, 'class', 'name', 62, 'cn', '解散', '2015-06-11 1
 INSERT INTO i18n VALUES (509, 'class', 'name', 64, 'de', 'Sache', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (510, 'class', 'name', 64, 'pt', 'Coisa', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (511, 'class', 'name', 64, 'cn', '万物', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (512, 'class', 'comment', 64, 'en', 'This general class comprises usable discrete, identifiable, instances of E77 Persistent Item that are documented as single units. 
+INSERT INTO i18n VALUES (512, 'class', 'comment', 64, 'en', 'This general class comprises usable discrete, identifiable, instances of E77 Persistent Item that are documented as single units.
 
-They can be either intellectual products or physical things, and are characterized by relative stability. They may for instance either have a solid physical form, an electronic encoding, or they may be logical concept or structure. 
+They can be either intellectual products or physical things, and are characterized by relative stability. They may for instance either have a solid physical form, an electronic encoding, or they may be logical concept or structure.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (513, 'class', 'name', 65, 'de', 'Künstliches', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (514, 'class', 'name', 65, 'fr', 'Chose fabriquée', '2015-06-11 19:26:28.25822', NULL);
@@ -933,7 +933,7 @@ INSERT INTO i18n VALUES (516, 'class', 'name', 65, 'en', 'Man-Made Thing', '2015
 INSERT INTO i18n VALUES (517, 'class', 'name', 65, 'el', 'Ανθρώπινο Δημιούργημα', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (518, 'class', 'name', 65, 'pt', 'Coisa Fabricada', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (519, 'class', 'name', 65, 'cn', '人造物', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (520, 'class', 'comment', 65, 'en', 'This class comprises discrete, identifiable man-made items that are documented as single units. 
+INSERT INTO i18n VALUES (520, 'class', 'comment', 65, 'en', 'This class comprises discrete, identifiable man-made items that are documented as single units.
 These items are either intellectual products or man-made physical things, and are characterized by relative stability. They may for instance have a solid physical form, an electronic encoding, or they may be logical concepts or structures.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (521, 'class', 'name', 66, 'fr', 'Objet juridique', '2015-06-11 19:26:28.25822', NULL);
@@ -943,8 +943,8 @@ INSERT INTO i18n VALUES (524, 'class', 'name', 66, 'en', 'Legal Object', '2015-0
 INSERT INTO i18n VALUES (525, 'class', 'name', 66, 'de', 'Rechtsobjekt', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (526, 'class', 'name', 66, 'pt', 'Objeto Jurídico', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (527, 'class', 'name', 66, 'cn', '法律物件', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (528, 'class', 'comment', 66, 'en', 'This class comprises those material or immaterial items to which instances of E30 Right, such as the right of ownership or use, can be applied. 
-This is true for all E18 Physical Thing. In the case of instances of E28 Conceptual Object, however, the identity of the E28 Conceptual Object or the method of its use may be too ambiguous to reliably establish instances of E30 Right, as in the case of taxa and inspirations. Ownership of corporations is currently regarded as out of scope of the CRM. 
+INSERT INTO i18n VALUES (528, 'class', 'comment', 66, 'en', 'This class comprises those material or immaterial items to which instances of E30 Right, such as the right of ownership or use, can be applied.
+This is true for all E18 Physical Thing. In the case of instances of E28 Conceptual Object, however, the identity of the E28 Conceptual Object or the method of its use may be too ambiguous to reliably establish instances of E30 Right, as in the case of taxa and inspirations. Ownership of corporations is currently regarded as out of scope of the CRM.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (529, 'class', 'name', 67, 'de', 'Informationsgegenstand', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (530, 'class', 'name', 67, 'en', 'Information Object', '2015-06-11 19:26:28.25822', NULL);
@@ -953,9 +953,9 @@ INSERT INTO i18n VALUES (532, 'class', 'name', 67, 'fr', 'Objet d''information',
 INSERT INTO i18n VALUES (533, 'class', 'name', 67, 'ru', 'Информационный Объект', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (534, 'class', 'name', 67, 'pt', 'Objeto de Informação', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (535, 'class', 'name', 67, 'cn', '信息物件', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (536, 'class', 'comment', 67, 'en', 'This class comprises identifiable immaterial items, such as a poems, jokes, data sets, images, texts, multimedia objects, procedural prescriptions, computer program code, algorithm or mathematical formulae, that have an objectively recognizable structure and are documented as single units. 
+INSERT INTO i18n VALUES (536, 'class', 'comment', 67, 'en', 'This class comprises identifiable immaterial items, such as a poems, jokes, data sets, images, texts, multimedia objects, procedural prescriptions, computer program code, algorithm or mathematical formulae, that have an objectively recognizable structure and are documented as single units.
 An E73 Information Object does not depend on a specific physical carrier, which can include human memory, and it can exist on one or more carriers simultaneously.
-Instances of E73 Information Object of a linguistic nature should be declared as instances of the E33 Linguistic Object subclass. Instances of E73 Information Object of a documentary nature should be declared as instances of the E31 Document subclass. Conceptual items such as types and classes are not instances of E73 Information Object, nor are ideas without a reproducible expression. 
+Instances of E73 Information Object of a linguistic nature should be declared as instances of the E33 Linguistic Object subclass. Instances of E73 Information Object of a documentary nature should be declared as instances of the E31 Document subclass. Conceptual items such as types and classes are not instances of E73 Information Object, nor are ideas without a reproducible expression.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (537, 'class', 'name', 68, 'ru', 'Группа', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (538, 'class', 'name', 68, 'en', 'Group', '2015-06-11 19:26:28.25822', NULL);
@@ -964,7 +964,7 @@ INSERT INTO i18n VALUES (540, 'class', 'name', 68, 'de', 'Menschliche Gruppe', '
 INSERT INTO i18n VALUES (541, 'class', 'name', 68, 'fr', 'Groupe', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (542, 'class', 'name', 68, 'pt', 'Grupo', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (543, 'class', 'name', 68, 'cn', '群组', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (544, 'class', 'comment', 68, 'en', 'This class comprises any gatherings or organizations of two or more people that act collectively or in a similar way due to any form of unifying relationship. In the wider sense this class also comprises official positions which used to be regarded in certain contexts as one actor, independent of the current holder of the office, such as the president of a country. 
+INSERT INTO i18n VALUES (544, 'class', 'comment', 68, 'en', 'This class comprises any gatherings or organizations of two or more people that act collectively or in a similar way due to any form of unifying relationship. In the wider sense this class also comprises official positions which used to be regarded in certain contexts as one actor, independent of the current holder of the office, such as the president of a country.
 A gathering of people becomes an E74 Group when it exhibits organizational characteristics usually typified by a set of ideas or beliefs held in common, or actions performed together. These might be communication, creating some common artifact, a common purpose such as study, worship, business, sports, etc. Nationality can be modeled as membership in an E74 Group (cf. HumanML markup). Married couples and other concepts of family are regarded as particular examples of E74 Group.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (545, 'class', 'name', 69, 'fr', 'Appellation d''objet conceptuel', '2015-06-11 19:26:28.25822', NULL);
@@ -982,10 +982,10 @@ INSERT INTO i18n VALUES (556, 'class', 'name', 70, 'el', 'Ον', '2015-06-11 19:
 INSERT INTO i18n VALUES (557, 'class', 'name', 70, 'fr', 'Entité persistante', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (558, 'class', 'name', 70, 'pt', 'Entidade Persistente', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (559, 'class', 'name', 70, 'cn', '持续性项目', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (592, 'class', 'comment', 74, 'en', 'This class comprises the events that result in the simultaneous destruction of one or more than one E77 Persistent Item and the creation of one or more than one E77 Persistent Item that preserves recognizable substance from the first one(s) but has fundamentally different nature and identity. 
+INSERT INTO i18n VALUES (592, 'class', 'comment', 74, 'en', 'This class comprises the events that result in the simultaneous destruction of one or more than one E77 Persistent Item and the creation of one or more than one E77 Persistent Item that preserves recognizable substance from the first one(s) but has fundamentally different nature and identity.
 Although the old and the new instances of E77 Persistent Item are treated as discrete entities having separate, unique identities, they are causally connected through the E81 Transformation; the destruction of the old E77 Persistent Item(s) directly causes the creation of the new one(s) using or preserving some relevant substance. Instances of E81 Transformation are therefore distinct from re-classifications (documented using E17 Type Assignment) or modifications (documented using E11 Modification) of objects that do not fundamentally change their nature or identity. Characteristic cases are reconstructions and repurposing of historical buildings or ruins, fires leaving buildings in ruins, taxidermy of specimen in natural history and the reorganization of a corporate body into a new one.
 ', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (560, 'class', 'comment', 70, 'en', 'This class comprises items that have a persistent identity, sometimes known as “endurants” in philosophy. 
+INSERT INTO i18n VALUES (560, 'class', 'comment', 70, 'en', 'This class comprises items that have a persistent identity, sometimes known as “endurants” in philosophy.
 They can be repeatedly recognized within the duration of their existence by identity criteria rather than by continuity or observation. Persistent Items can be either physical entities, such as people, animals or things, or conceptual entities such as ideas, concepts, products of the imagination or common names.
 The criteria that determine the identity of an item are often difficult to establish -; the decision depends largely on the judgement of the observer. For example, a building is regarded as no longer existing if it is dismantled and the materials reused in a different configuration. On the other hand, human beings go through radical and profound changes during their life-span, affecting both material composition and form, yet preserve their identity by other criteria. Similarly, inanimate objects may be subject to exchange of parts and matter. The class E77 Persistent Item does not take any position about the nature of the applicable identity criteria and if actual knowledge about identity of an instance of this class exists. There may be cases, where the identity of an E77 Persistent Item is not decidable by a certain state of knowledge.
 The main classes of objects that fall outside the scope the E77 Persistent Item class are temporal objects such as periods, events and acts, and descriptive properties. ', '2015-06-11 19:26:28.25822', NULL);
@@ -996,7 +996,7 @@ INSERT INTO i18n VALUES (564, 'class', 'name', 71, 'en', 'Collection', '2015-06-
 INSERT INTO i18n VALUES (565, 'class', 'name', 71, 'de', 'Sammlung', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (566, 'class', 'name', 71, 'pt', 'Coleção', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (567, 'class', 'name', 71, 'cn', '收藏', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (568, 'class', 'comment', 71, 'en', 'This class comprises aggregations of instances of E18 Physical Thing that are assembled and maintained (“curated” and “preserved,” in museological terminology) by one or more instances of E39 Actor over time for a specific purpose and audience, and according to a particular collection development plan.  
+INSERT INTO i18n VALUES (568, 'class', 'comment', 71, 'en', 'This class comprises aggregations of instances of E18 Physical Thing that are assembled and maintained (“curated” and “preserved,” in museological terminology) by one or more instances of E39 Actor over time for a specific purpose and audience, and according to a particular collection development plan.
 Items may be added or removed from an E78 Collection in pursuit of this plan. This class should not be confused with the E39 Actor maintaining the E78 Collection often referred to with the name of the E78 Collection (e.g. “The Wallace Collection decided…”).
 Collective objects in the general sense, like a tomb full of gifts, a folder with stamps or a set of chessmen, should be documented as instances of E19 Physical Object, and not as instances of E78 Collection. This is because they form wholes either because they are physically bound together or because they are kept together for their functionality.
 ', '2015-06-11 19:26:28.25822', NULL);
@@ -1007,7 +1007,7 @@ INSERT INTO i18n VALUES (572, 'class', 'name', 72, 'ru', 'Добавление �
 INSERT INTO i18n VALUES (573, 'class', 'name', 72, 'el', 'Προσθήκη Μερών', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (574, 'class', 'name', 72, 'pt', 'Adição de Parte', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (575, 'class', 'name', 72, 'cn', '部件增加', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (576, 'class', 'comment', 72, 'en', 'This class comprises activities that result in an instance of E24 Physical Man-Made Thing being increased, enlarged or augmented by the addition of a part. 
+INSERT INTO i18n VALUES (576, 'class', 'comment', 72, 'en', 'This class comprises activities that result in an instance of E24 Physical Man-Made Thing being increased, enlarged or augmented by the addition of a part.
 Typical scenarios include the attachment of an accessory, the integration of a component, the addition of an element to an aggregate object, or the accessioning of an object into a curated E78 Collection. Objects to which parts are added are, by definition, man-made, since the addition of a part implies a human activity. Following the addition of parts, the resulting man-made assemblages are treated objectively as single identifiable wholes, made up of constituent or component parts bound together either physically (for example the engine becoming a part of the car), or by sharing a common purpose (such as the 32 chess pieces that make up a chess set). This class of activities forms a basis for reasoning about the history and continuity of identity of objects that are integrated into other objects over time, such as precious gemstones being repeatedly incorporated into different items of jewellery, or cultural artifacts being added to different museum instances of E78 Collection over their lifespan.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (577, 'class', 'name', 73, 'de', 'Teilentfernung', '2015-06-11 19:26:28.25822', NULL);
@@ -1038,8 +1038,8 @@ INSERT INTO i18n VALUES (638, 'class', 'name', 83, 'de', 'Primitiver Wert', '201
 INSERT INTO i18n VALUES (688, 'property', 'name', 4, 'en', 'has time-span', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (689, 'property', 'name', 4, 'de', 'hat Zeitspanne', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (690, 'property', 'name', 4, 'el', 'βρισκόταν σε εξέλιξη', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (600, 'class', 'comment', 75, 'en', 'This class comprises any sort of name, number, code or symbol characteristically used to identify an E39 Actor. 
-An E39 Actor will typically have more than one E82 Actor Appellation, and instances of E82 Actor Appellation in turn may have alternative representations. The distinction between corporate and personal names, which is particularly important in library applications, should be made by explicitly linking the E82 Actor Appellation to an instance of either E21 Person or E74 Group/E40 Legal Body. If this is not possible, the distinction can be made through the use of the P2 has type mechanism. 
+INSERT INTO i18n VALUES (600, 'class', 'comment', 75, 'en', 'This class comprises any sort of name, number, code or symbol characteristically used to identify an E39 Actor.
+An E39 Actor will typically have more than one E82 Actor Appellation, and instances of E82 Actor Appellation in turn may have alternative representations. The distinction between corporate and personal names, which is particularly important in library applications, should be made by explicitly linking the E82 Actor Appellation to an instance of either E21 Person or E74 Group/E40 Legal Body. If this is not possible, the distinction can be made through the use of the P2 has type mechanism.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (601, 'class', 'name', 76, 'de', 'Typuserfindung', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (602, 'class', 'name', 76, 'ru', 'Создание Типа', '2015-06-11 19:26:28.25822', NULL);
@@ -1048,7 +1048,7 @@ INSERT INTO i18n VALUES (604, 'class', 'name', 76, 'fr', 'Création de type', '2
 INSERT INTO i18n VALUES (605, 'class', 'name', 76, 'el', 'Δημιουργία Τύπου', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (606, 'class', 'name', 76, 'pt', 'Criação de Tipo', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (607, 'class', 'name', 76, 'cn', '类型创造', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (608, 'class', 'comment', 76, 'en', 'This class comprises activities formally defining new types of items. 
+INSERT INTO i18n VALUES (608, 'class', 'comment', 76, 'en', 'This class comprises activities formally defining new types of items.
 It is typically a rigorous scholarly or scientific process that ensures a type is exhaustively described and appropriately named. In some cases, particularly in archaeology and the life sciences, E83 Type Creation requires the identification of an exemplary specimen and the publication of the type definition in an appropriate scholarly forum. The activity of E83 Type Creation is central to research in the life sciences, where a type would be referred to as a “taxon,” the type description as a “protologue,” and the exemplary specimens as “orgininal element” or “holotype”.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (609, 'class', 'name', 77, 'el', 'Φορέας Πληροφορίας', '2015-06-11 19:26:28.25822', NULL);
@@ -1058,31 +1058,31 @@ INSERT INTO i18n VALUES (612, 'class', 'name', 77, 'fr', 'Support d''information
 INSERT INTO i18n VALUES (613, 'class', 'name', 77, 'de', 'Informationsträger', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (614, 'class', 'name', 77, 'pt', 'Suporte de Informação', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (615, 'class', 'name', 77, 'cn', '信息载体', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (616, 'class', 'comment', 77, 'en', 'This class comprises all instances of E22 Man-Made Object that are explicitly designed to act as persistent physical carriers for instances of E73 Information Object. 
+INSERT INTO i18n VALUES (616, 'class', 'comment', 77, 'en', 'This class comprises all instances of E22 Man-Made Object that are explicitly designed to act as persistent physical carriers for instances of E73 Information Object.
 This allows a relationship to be asserted between an E19 Physical Object and its immaterial information contents. An E84 Information Carrier may or may not contain information, e.g., a diskette. Note that any E18 Physical Thing may carry information, such as an E34 Inscription. However, unless it was specifically designed for this purpose, it is not an Information Carrier. Therefore the property P128 carries (is carried by) applies to E18 Physical Thing in general.', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (617, 'class', 'name', 78, 'de', 'Beitritt', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (618, 'class', 'name', 78, 'en', 'Joining', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (619, 'class', 'name', 78, 'cn', '加入', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (620, 'class', 'comment', 78, 'en', 'This class comprises the activities that result in an instance of E39 Actor becoming a member of an instance of E74 Group. This class does not imply initiative by either party.
-Typical scenarios include becoming a member of a social organisation, becoming employee of a company, marriage, the adoption of a child by a family and the inauguration of somebody into an official position. 
+Typical scenarios include becoming a member of a social organisation, becoming employee of a company, marriage, the adoption of a child by a family and the inauguration of somebody into an official position.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (621, 'class', 'name', 79, 'de', 'Austritt', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (622, 'class', 'name', 79, 'en', 'Leaving', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (623, 'class', 'name', 79, 'cn', '脱离', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (624, 'class', 'comment', 79, 'en', 'This class comprises the activities that result in an instance of E39 Actor to be disassociated from an instance of E74 Group. This class does not imply initiative by either party. 
+INSERT INTO i18n VALUES (624, 'class', 'comment', 79, 'en', 'This class comprises the activities that result in an instance of E39 Actor to be disassociated from an instance of E74 Group. This class does not imply initiative by either party.
 Typical scenarios include the termination of membership in a social organisation, ending the employment at a company, divorce, and the end of tenure of somebody in an official position.', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (625, 'class', 'name', 80, 'de', 'Kuratorische Tätigkeit', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (626, 'class', 'name', 80, 'en', 'Curation Activity', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (627, 'class', 'name', 80, 'cn', '典藏管理', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (628, 'class', 'comment', 80, 'en', 'This class comprises the activities that result in the continuity of management and the preservation and evolution of instances of E78 Collection, following an implicit or explicit curation plan. 
+INSERT INTO i18n VALUES (628, 'class', 'comment', 80, 'en', 'This class comprises the activities that result in the continuity of management and the preservation and evolution of instances of E78 Collection, following an implicit or explicit curation plan.
 It specializes the notion of activity into the curation of a collection and allows the history of curation to be recorded.
 Items are accumulated and organized following criteria like subject, chronological period, material type, style of art etc. and can be added or removed from an E78 Collection for a specific purpose and/or audience. The initial aggregation of items of a collection is regarded as an instance of E12 Production Event while the activity of evolving, preserving and promoting a collection is regarded as an instance of E87 Curation Activity.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (629, 'class', 'name', 81, 'de', 'Aussagenobjekt', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (630, 'class', 'name', 81, 'en', 'Propositional Object', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (631, 'class', 'name', 81, 'cn', '陈述性物件', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (632, 'class', 'comment', 81, 'en', 'This class comprises immaterial items, including but not limited to stories, plots, procedural prescriptions, algorithms, laws of physics or images that are, or represent in some sense, sets of propositions about real or imaginary things and that are documented as single units or serve as topics of discourse. 
-	
+INSERT INTO i18n VALUES (632, 'class', 'comment', 81, 'en', 'This class comprises immaterial items, including but not limited to stories, plots, procedural prescriptions, algorithms, laws of physics or images that are, or represent in some sense, sets of propositions about real or imaginary things and that are documented as single units or serve as topics of discourse.
+
 This class also comprises items that are “about” something in the sense of a subject. In the wider sense, this class includes expressions of psychological value such as non-figural art and musical themes. However, conceptual items such as types and classes are not instances of E89 Propositional Object. This should not be confused with the definition of a type, which is indeed an instance of E89 Propositional Object.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (633, 'class', 'name', 82, 'de', 'Symbolisches Objekt', '2015-06-11 19:26:28.25822', NULL);
@@ -1118,7 +1118,7 @@ INSERT INTO i18n VALUES (659, 'property', 'name_inverse', 1, 'el', 'είναι �
 INSERT INTO i18n VALUES (660, 'property', 'name_inverse', 1, 'en', 'identifies', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (661, 'property', 'name_inverse', 1, 'pt', 'identifica', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (662, 'property', 'name_inverse', 1, 'cn', '被用来识别', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (663, 'property', 'comment', 1, 'en', 'This property describes the naming or identification of any real world item by a name or any other identifier. 
+INSERT INTO i18n VALUES (663, 'property', 'comment', 1, 'en', 'This property describes the naming or identification of any real world item by a name or any other identifier.
 This property is intended for identifiers in general use, which form part of the world the model intends to describe, and not merely for internal database identifiers which are specific to a technical system, unless these latter also have a more general use outside the technical context. This property includes in particular identification by mathematical expressions such as coordinate systems used for the identification of instances of E53 Place. The property does not reveal anything about when, where and by whom this identifier was used. A more detailed representation can be made using the fully developed (i.e. indirect) path through E15 Identifier Assignment.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (664, 'property', 'name', 2, 'de', 'hat den Typus', '2015-06-11 19:26:28.25822', NULL);
@@ -1135,7 +1135,7 @@ INSERT INTO i18n VALUES (674, 'property', 'name_inverse', 2, 'de', 'ist Typus vo
 INSERT INTO i18n VALUES (675, 'property', 'name_inverse', 2, 'en', 'is type of', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (676, 'property', 'name_inverse', 2, 'pt', 'é o tipo de', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (677, 'property', 'name_inverse', 2, 'cn', '被用来分类', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (678, 'property', 'comment', 2, 'en', 'This property allows sub typing of CRM entities - a form of specialisation – through the use of a terminological hierarchy, or thesaurus. 
+INSERT INTO i18n VALUES (678, 'property', 'comment', 2, 'en', 'This property allows sub typing of CRM entities - a form of specialisation – through the use of a terminological hierarchy, or thesaurus.
 The CRM is intended to focus on the high-level entities and relationships needed to describe data structures. Consequently, it does not specialise entities any further than is required for this immediate purpose. However, entities in the isA hierarchy of the CRM may by specialised into any number of sub entities, which can be defined in the E55 Type hierarchy. E51 Contact Point, for example, may be specialised into “e-mail address”, “telephone number”, “post office box”, “URL” etc. none of which figures explicitly in the CRM hierarchy. Sub typing obviously requires consistency between the meaning of the terms assigned and the more general intent of the CRM entity in question.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (679, 'property', 'name', 3, 'de', 'hat Anmerkung', '2015-06-11 19:26:28.25822', NULL);
@@ -1145,9 +1145,9 @@ INSERT INTO i18n VALUES (682, 'property', 'name', 3, 'fr', 'a pour note', '2015-
 INSERT INTO i18n VALUES (683, 'property', 'name', 3, 'el', 'έχει επεξήγηση', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (684, 'property', 'name', 3, 'pt', 'tem nota', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (685, 'property', 'name', 3, 'cn', '有说明', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (686, 'property', 'comment', 3, 'en', 'This property is a container for all informal descriptions about an object that have not been expressed in terms of CRM constructs. 
+INSERT INTO i18n VALUES (686, 'property', 'comment', 3, 'en', 'This property is a container for all informal descriptions about an object that have not been expressed in terms of CRM constructs.
 In particular it captures the characterisation of the item itself, its internal structures, appearance etc.
-Like property P2 has type (is type of), this property is a consequence of the restricted focus of the CRM. The aim is not to capture, in a structured form, everything that can be said about an item; indeed, the CRM formalism is not regarded as sufficient to express everything that can be said. Good practice requires use of distinct note fields for different aspects of a characterisation. The P3.1 has type property of P3 has note allows differentiation of specific notes, e.g. “construction”, “decoration” etc. 
+Like property P2 has type (is type of), this property is a consequence of the restricted focus of the CRM. The aim is not to capture, in a structured form, everything that can be said about an item; indeed, the CRM formalism is not regarded as sufficient to express everything that can be said. Good practice requires use of distinct note fields for different aspects of a characterisation. The P3.1 has type property of P3 has note allows differentiation of specific notes, e.g. “construction”, “decoration” etc.
 An item may have many notes, but a note is attached to a specific item.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (687, 'property', 'name', 4, 'fr', 'a pour durée', '2015-06-11 19:26:28.25822', NULL);
@@ -1178,7 +1178,7 @@ INSERT INTO i18n VALUES (712, 'property', 'name_inverse', 5, 'en', 'forms part o
 INSERT INTO i18n VALUES (713, 'property', 'name_inverse', 5, 'el', 'αποτελεί μέρος του/της', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (714, 'property', 'name_inverse', 5, 'pt', 'faz parte de', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (715, 'property', 'name_inverse', 5, 'cn', '组成了', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (716, 'property', 'comment', 5, 'en', 'This property describes the decomposition of an E3 Condition State into discrete, subsidiary states. 
+INSERT INTO i18n VALUES (716, 'property', 'comment', 5, 'en', 'This property describes the decomposition of an E3 Condition State into discrete, subsidiary states.
 It is assumed that the sub-states into which the condition state is analysed form a logical whole - although the entire story may not be completely known – and that the sub-states are in fact constitutive of the general condition state. For example, a general condition state of “in ruins” may be decomposed into the individual stages of decay', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (717, 'property', 'name', 6, 'fr', 'a eu lieu dans', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (718, 'property', 'name', 6, 'ru', 'совершался на', '2015-06-11 19:26:28.25822', NULL);
@@ -1194,7 +1194,7 @@ INSERT INTO i18n VALUES (727, 'property', 'name_inverse', 6, 'ru', 'был ме�
 INSERT INTO i18n VALUES (728, 'property', 'name_inverse', 6, 'el', 'υπήρξε τόπος του', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (729, 'property', 'name_inverse', 6, 'pt', 'testemunhou', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (730, 'property', 'name_inverse', 6, 'cn', '发生过', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (731, 'property', 'comment', 6, 'en', 'This property describes the spatial location of an instance of E4 Period. 
+INSERT INTO i18n VALUES (731, 'property', 'comment', 6, 'en', 'This property describes the spatial location of an instance of E4 Period.
 The related E53 Place should be seen as an approximation of the geographical area within which the phenomena that characterise the period in question occurred. P7took place at (witnessed) does not convey any meaning other than spatial positioning (generally on the surface of the earth).  For example, the period “R?volution fran?aise” can be said to have taken place in “France”, the “Victorian” period, may be said to have taken place in “Britain” and its colonies, as well as other parts of Europe and north America.
 A period can take place at multiple locations.
 ', '2015-06-11 19:26:28.25822', NULL);
@@ -1214,7 +1214,7 @@ INSERT INTO i18n VALUES (744, 'property', 'name_inverse', 7, 'pt', 'testemunhou'
 INSERT INTO i18n VALUES (745, 'property', 'name_inverse', 7, 'cn', '发生过', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (746, 'property', 'comment', 7, 'en', 'This property describes the location of an instance of E4 Period with respect to an E18 Physical Thing.
 P8 took place on or within (witnessed) is a short-cut of a path defining a E53 Place with respect to the geometry of an object. cf. E46 Section Definition.
-This property is in effect a special case of P7 took place at. It describes a period that can be located with respect to the space defined by an E18 Physical Thing such as a ship or a building. The precise geographical location of the object during the period in question may be unknown or unimportant. 
+This property is in effect a special case of P7 took place at. It describes a period that can be located with respect to the space defined by an E18 Physical Thing such as a ship or a building. The precise geographical location of the object during the period in question may be unknown or unimportant.
 For example, the French and German armistice of 22 June 1940 was signed in the same railway carriage as the armistice of 11 November 1918.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (747, 'property', 'name', 8, 'el', 'αποτελείται από', '2015-06-11 19:26:28.25822', NULL);
@@ -1248,7 +1248,7 @@ INSERT INTO i18n VALUES (772, 'property', 'name_inverse', 9, 'fr', 'contient', '
 INSERT INTO i18n VALUES (773, 'property', 'name_inverse', 9, 'de', 'enthält', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (774, 'property', 'name_inverse', 9, 'pt', 'contém', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (775, 'property', 'name_inverse', 9, 'cn', '时间上涵盖', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (776, 'property', 'comment', 9, 'en', 'This property describes an instance of E4 Period, which falls within the E53 Place and E52 Time-Span of another. 
+INSERT INTO i18n VALUES (776, 'property', 'comment', 9, 'en', 'This property describes an instance of E4 Period, which falls within the E53 Place and E52 Time-Span of another.
 The difference with P9 consists of (forms part of) is subtle. Unlike P9 consists of (forms part of), P10 falls within (contains) does not imply any logical connection between the two periods and it may refer to a period of a completely different type.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (777, 'property', 'name', 10, 'fr', 'a eu pour participant', '2015-06-11 19:26:28.25822', NULL);
@@ -1265,7 +1265,7 @@ INSERT INTO i18n VALUES (787, 'property', 'name_inverse', 10, 'en', 'participate
 INSERT INTO i18n VALUES (788, 'property', 'name_inverse', 10, 'fr', 'a participé à', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (789, 'property', 'name_inverse', 10, 'pt', 'participa em', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (790, 'property', 'name_inverse', 10, 'cn', '参与了', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (791, 'property', 'comment', 10, 'en', 'This property describes the active or passive participation of instances of E39 Actors in an E5 Event. 
+INSERT INTO i18n VALUES (791, 'property', 'comment', 10, 'en', 'This property describes the active or passive participation of instances of E39 Actors in an E5 Event.
 It connects the life-line of the related E39 Actor with the E53 Place and E50 Date of the event. The property implies that the Actor was involved in the event but does not imply any causal relationship. The subject of a portrait can be said to have participated in the creation of the portrait.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (792, 'property', 'name', 11, 'en', 'occurred in the presence of', '2015-06-11 19:26:28.25822', NULL);
@@ -1282,7 +1282,7 @@ INSERT INTO i18n VALUES (802, 'property', 'name_inverse', 11, 'fr', 'était pré
 INSERT INTO i18n VALUES (803, 'property', 'name_inverse', 11, 'ru', 'присутствовал при', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (804, 'property', 'name_inverse', 11, 'pt', 'estava presente no', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (805, 'property', 'name_inverse', 11, 'cn', '当时在场於', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (806, 'property', 'comment', 11, 'en', 'This property describes the active or passive presence of an E77 Persistent Item in an E5 Event without implying any specific role. 
+INSERT INTO i18n VALUES (806, 'property', 'comment', 11, 'en', 'This property describes the active or passive presence of an E77 Persistent Item in an E5 Event without implying any specific role.
 It connects the history of a thing with the E53 Place and E50 Date of an event. For example, an object may be the desk, now in a museum on which a treaty was signed. The presence of an immaterial thing implies the presence of at least one of its carriers.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (807, 'property', 'name', 12, 'de', 'zerstörte', '2015-06-11 19:26:28.25822', NULL);
@@ -1299,7 +1299,7 @@ INSERT INTO i18n VALUES (817, 'property', 'name_inverse', 12, 'fr', 'a été dé
 INSERT INTO i18n VALUES (818, 'property', 'name_inverse', 12, 'ru', 'был уничтожен посредством', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (819, 'property', 'name_inverse', 12, 'pt', 'foi destruído por', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (820, 'property', 'name_inverse', 12, 'cn', '被毁灭於', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (821, 'property', 'comment', 12, 'en', 'This property allows specific instances of E18 Physical Thing that have been destroyed to be related to a destruction event. 
+INSERT INTO i18n VALUES (821, 'property', 'comment', 12, 'en', 'This property allows specific instances of E18 Physical Thing that have been destroyed to be related to a destruction event.
 Destruction implies the end of an item’s life as a subject of cultural documentation – the physical matter of which the item was composed may in fact continue to exist. A destruction event may be contiguous with a Production that brings into existence a derived object composed partly of matter from the destroyed object.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (822, 'property', 'name', 13, 'de', 'wurde ausgeführt von', '2015-06-11 19:26:28.25822', NULL);
@@ -1316,7 +1316,7 @@ INSERT INTO i18n VALUES (832, 'property', 'name_inverse', 13, 'en', 'performed',
 INSERT INTO i18n VALUES (833, 'property', 'name_inverse', 13, 'fr', 'a exécuté', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (834, 'property', 'name_inverse', 13, 'pt', 'executou', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (835, 'property', 'name_inverse', 13, 'cn', '执行了', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (836, 'property', 'comment', 13, 'en', 'This property describes the active participation of an E39 Actor in an E7 Activity. 
+INSERT INTO i18n VALUES (836, 'property', 'comment', 13, 'en', 'This property describes the active participation of an E39 Actor in an E7 Activity.
 It implies causal or legal responsibility. The P14.1 in the role of property of the property allows the nature of an Actor’s participation to be specified.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (837, 'property', 'name', 14, 'de', 'wurde beeinflußt durch', '2015-06-11 19:26:28.25822', NULL);
@@ -1350,7 +1350,7 @@ INSERT INTO i18n VALUES (862, 'property', 'name_inverse', 15, 'en', 'was used fo
 INSERT INTO i18n VALUES (863, 'property', 'name_inverse', 15, 'el', 'χρησιμοποιήθηκε για', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (864, 'property', 'name_inverse', 15, 'pt', 'foi usado por', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (865, 'property', 'name_inverse', 15, 'cn', '被用於', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (866, 'property', 'comment', 15, 'en', 'This property describes the use of material or immaterial things in a way essential to the performance or the outcome of an E7 Activity. 
+INSERT INTO i18n VALUES (866, 'property', 'comment', 15, 'en', 'This property describes the use of material or immaterial things in a way essential to the performance or the outcome of an E7 Activity.
 This property typically applies to tools, instruments, moulds, raw materials and items embedded in a product. It implies that the presence of the object in question was a necessary condition for the action. For example, the activity of writing this text required the use of a computer. An immaterial thing can be used if at least one of its carriers is present. For example, the software tools on a computer.
 Another example is the use of a particular name by a particular group of people over some span to identify a thing, such as a settlement. In this case, the physical carriers of this name are at least the people understanding its use.
 ', '2015-06-11 19:26:28.25822', NULL);
@@ -1368,8 +1368,8 @@ INSERT INTO i18n VALUES (877, 'property', 'name_inverse', 16, 'ru', 'обусл�
 INSERT INTO i18n VALUES (878, 'property', 'name_inverse', 16, 'fr', 'a motivé', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (879, 'property', 'name_inverse', 16, 'pt', 'motivou', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (880, 'property', 'name_inverse', 16, 'cn', '促动了', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (881, 'property', 'comment', 16, 'en', 'This property describes an item or items that are regarded as a reason for carrying out the E7 Activity. 
-For example, the discovery of a large hoard of treasure may call for a celebration, an order from head quarters can start a military manoeuvre. 
+INSERT INTO i18n VALUES (881, 'property', 'comment', 16, 'en', 'This property describes an item or items that are regarded as a reason for carrying out the E7 Activity.
+For example, the discovery of a large hoard of treasure may call for a celebration, an order from head quarters can start a military manoeuvre.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (882, 'property', 'name', 17, 'ru', 'был предполагаемым использованием для', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (883, 'property', 'name', 17, 'fr', 'était l''utilisation prévue de', '2015-06-11 19:26:28.25822', NULL);
@@ -1385,7 +1385,7 @@ INSERT INTO i18n VALUES (892, 'property', 'name_inverse', 17, 'de', 'wurde herge
 INSERT INTO i18n VALUES (893, 'property', 'name_inverse', 17, 'en', 'was made for', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (894, 'property', 'name_inverse', 17, 'pt', 'foi feito para', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (895, 'property', 'name_inverse', 17, 'cn', '被制造来用於', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (896, 'property', 'comment', 17, 'en', 'This property relates an E7 Activity with objects created specifically for use in the activity. 
+INSERT INTO i18n VALUES (896, 'property', 'comment', 17, 'en', 'This property relates an E7 Activity with objects created specifically for use in the activity.
 This is distinct from the intended use of an item in some general type of activity such as the book of common prayer which was intended for use in Church of England services (see P101 had as general use (was use of)).', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (897, 'property', 'name', 18, 'de', 'hatte den bestimmten Zweck', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (898, 'property', 'name', 18, 'fr', 'avait pour but spécifique', '2015-06-11 19:26:28.25822', NULL);
@@ -1402,7 +1402,7 @@ INSERT INTO i18n VALUES (908, 'property', 'name_inverse', 18, 'en', 'was purpose
 INSERT INTO i18n VALUES (909, 'property', 'name_inverse', 18, 'pt', 'era o propósito de', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (910, 'property', 'name_inverse', 18, 'cn', '之準備活動是', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (911, 'property', 'comment', 18, 'en', 'This property identifies the relationship between a preparatory activity and the event it is intended to be preparation for.
-This includes activities, orders and other organisational actions, taken in preparation for other activities or events. 
+This includes activities, orders and other organisational actions, taken in preparation for other activities or events.
 P20 had specific purpose (was purpose of) implies that an activity succeeded in achieving its aim. If it does not succeed, such as the setting of a trap that did not catch anything, one may document the unrealized intention using P21 had general purpose (was purpose of):E55 Type and/or  P33 used specific technique (was used by): E29 Design or Procedure.', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (912, 'property', 'name', 19, 'el', 'είχε γενικό σκοπό', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (913, 'property', 'name', 19, 'de', 'hatte den allgemeinen Zweck', '2015-06-11 19:26:28.25822', NULL);
@@ -1418,8 +1418,8 @@ INSERT INTO i18n VALUES (922, 'property', 'name_inverse', 19, 'de', 'war Zweck v
 INSERT INTO i18n VALUES (923, 'property', 'name_inverse', 19, 'en', 'was purpose of', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (924, 'property', 'name_inverse', 19, 'pt', 'era o propósito de', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (925, 'property', 'name_inverse', 19, 'cn', '可利用', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (926, 'property', 'comment', 19, 'en', 'This property describes an intentional relationship between an E7 Activity and some general goal or purpose. 
-This may involve activities intended as preparation for some type of activity or event. P21had general purpose (was purpose of) differs from P20 had specific purpose (was purpose of) in that no occurrence of an event is implied as the purpose. 
+INSERT INTO i18n VALUES (926, 'property', 'comment', 19, 'en', 'This property describes an intentional relationship between an E7 Activity and some general goal or purpose.
+This may involve activities intended as preparation for some type of activity or event. P21had general purpose (was purpose of) differs from P20 had specific purpose (was purpose of) in that no occurrence of an event is implied as the purpose.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (927, 'property', 'name', 20, 'el', 'μετεβίβασε τον τίτλο σε', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (928, 'property', 'name', 20, 'fr', 'a fait passer le droit de propriété à', '2015-06-11 19:26:28.25822', NULL);
@@ -1435,7 +1435,7 @@ INSERT INTO i18n VALUES (937, 'property', 'name_inverse', 20, 'fr', 'a acquis le
 INSERT INTO i18n VALUES (938, 'property', 'name_inverse', 20, 'ru', 'получил право собственности через', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (939, 'property', 'name_inverse', 20, 'pt', 'adquiriu os direitos de propriedade por meio da', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (940, 'property', 'name_inverse', 20, 'cn', '获取所有权於', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (941, 'property', 'comment', 20, 'en', 'This property identifies the E39 Actor that acquires the legal ownership of an object as a result of an E8 Acquisition. 
+INSERT INTO i18n VALUES (941, 'property', 'comment', 20, 'en', 'This property identifies the E39 Actor that acquires the legal ownership of an object as a result of an E8 Acquisition.
 The property will typically describe an Actor purchasing or otherwise acquiring an object from another Actor. However, title may also be acquired, without any corresponding loss of title by another Actor, through legal fieldwork such as hunting, shooting or fishing.
 In reality the title is either transferred to or from someone, or both.
 ', '2015-06-11 19:26:28.25822', NULL);
@@ -1470,7 +1470,7 @@ INSERT INTO i18n VALUES (967, 'property', 'name_inverse', 22, 'el', 'άλλαξ�
 INSERT INTO i18n VALUES (968, 'property', 'name_inverse', 22, 'fr', 'a changé de mains du fait de', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (969, 'property', 'name_inverse', 22, 'pt', 'mudou de proprietário por meio de', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (970, 'property', 'name_inverse', 22, 'cn', '转移了所有权於', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (971, 'property', 'comment', 22, 'en', 'This property identifies the E18 Physical Thing or things involved in an E8 Acquisition. 
+INSERT INTO i18n VALUES (971, 'property', 'comment', 22, 'en', 'This property identifies the E18 Physical Thing or things involved in an E8 Acquisition.
 In reality, an acquisition must refer to at least one transferred item.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (972, 'property', 'name', 23, 'en', 'moved', '2015-06-11 19:26:28.25822', NULL);
@@ -1487,8 +1487,8 @@ INSERT INTO i18n VALUES (982, 'property', 'name_inverse', 23, 'fr', 'a été dé
 INSERT INTO i18n VALUES (983, 'property', 'name_inverse', 23, 'de', 'wurde bewegt durch', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (984, 'property', 'name_inverse', 23, 'pt', 'foi locomovido por', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (985, 'property', 'name_inverse', 23, 'cn', '被移动於', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (986, 'property', 'comment', 23, 'en', 'This property identifies the E19 Physical Object that is moved during a move event. 
-The property implies the object’s passive participation. For example, Monet’s painting “Impression sunrise” was moved for the first Impressionist exhibition in 1874. 
+INSERT INTO i18n VALUES (986, 'property', 'comment', 23, 'en', 'This property identifies the E19 Physical Object that is moved during a move event.
+The property implies the object’s passive participation. For example, Monet’s painting “Impression sunrise” was moved for the first Impressionist exhibition in 1874.
 In reality, a move must concern at least one object.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (987, 'property', 'name', 24, 'el', 'μετακινήθηκε προς', '2015-06-11 19:26:28.25822', NULL);
@@ -1505,7 +1505,7 @@ INSERT INTO i18n VALUES (997, 'property', 'name_inverse', 24, 'ru', 'был пу
 INSERT INTO i18n VALUES (998, 'property', 'name_inverse', 24, 'fr', 'a été la destination de', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (999, 'property', 'name_inverse', 24, 'pt', 'era destinação de', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1000, 'property', 'name_inverse', 24, 'cn', '被作为移入地於', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (1001, 'property', 'comment', 24, 'en', 'This property identifies the destination of a E9 Move. 
+INSERT INTO i18n VALUES (1001, 'property', 'comment', 24, 'en', 'This property identifies the destination of a E9 Move.
 A move will be linked to a destination, such as the move of an artefact from storage to display. A move may be linked to many terminal instances of E53 Places. In this case the move describes a distribution of a set of objects. The area of the move includes the origin, route and destination.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1002, 'property', 'name', 25, 'el', 'μετακινήθηκε από', '2015-06-11 19:26:28.25822', NULL);
@@ -1539,7 +1539,7 @@ INSERT INTO i18n VALUES (1027, 'property', 'name_inverse', 26, 'el', 'παρέδ
 INSERT INTO i18n VALUES (1028, 'property', 'name_inverse', 26, 'de', 'wurde Gewahrsam übergeben durch', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1029, 'property', 'name_inverse', 26, 'pt', 'final da custódia por meio de', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1030, 'property', 'name_inverse', 26, 'cn', '交出保管作业於', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (1031, 'property', 'comment', 26, 'en', 'This property identifies the E39 Actor or Actors who surrender custody of an instance of E18 Physical Thing in an E10 Transfer of Custody activity. 
+INSERT INTO i18n VALUES (1031, 'property', 'comment', 26, 'en', 'This property identifies the E39 Actor or Actors who surrender custody of an instance of E18 Physical Thing in an E10 Transfer of Custody activity.
 The property will typically describe an Actor surrendering custody of an object when it is handed over to someone else’s care. On occasion, physical custody may be surrendered involuntarily – through accident, loss or theft.
 In reality, custody is either transferred to someone or from someone, or both.
 ', '2015-06-11 19:26:28.25822', NULL);
@@ -1557,7 +1557,7 @@ INSERT INTO i18n VALUES (1042, 'property', 'name_inverse', 27, 'fr', 'est devenu
 INSERT INTO i18n VALUES (1043, 'property', 'name_inverse', 27, 'de', 'erhielt Gewahrsam durch', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1044, 'property', 'name_inverse', 27, 'pt', 'início da custódia por meio de', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1045, 'property', 'name_inverse', 27, 'cn', '取得保管作业於', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (1046, 'property', 'comment', 27, 'en', 'This property identifies the E39 Actor or Actors who receive custody of an instance of E18 Physical Thing in an E10 Transfer of Custody activity. 
+INSERT INTO i18n VALUES (1046, 'property', 'comment', 27, 'en', 'This property identifies the E39 Actor or Actors who receive custody of an instance of E18 Physical Thing in an E10 Transfer of Custody activity.
 The property will typically describe Actors receiving custody of an object when it is handed over from another Actor’s care. On occasion, physical custody may be received involuntarily or illegally – through accident, unsolicited donation, or theft.
 In reality, custody is either transferred to someone or from someone, or both.
 ', '2015-06-11 19:26:28.25822', NULL);
@@ -1575,7 +1575,7 @@ INSERT INTO i18n VALUES (1057, 'property', 'name_inverse', 28, 'de', 'wechselte 
 INSERT INTO i18n VALUES (1058, 'property', 'name_inverse', 28, 'ru', 'опека передана через', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1059, 'property', 'name_inverse', 28, 'pt', 'custódia transferida por meio de', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1060, 'property', 'name_inverse', 28, 'cn', '被移转了保管作业於', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (1061, 'property', 'comment', 28, 'en', 'This property identifies an item or items of E18 Physical Thing concerned in an E10 Transfer of Custody activity. 
+INSERT INTO i18n VALUES (1061, 'property', 'comment', 28, 'en', 'This property identifies an item or items of E18 Physical Thing concerned in an E10 Transfer of Custody activity.
 The property will typically describe the object that is handed over by an E39 Actor to another Actor’s custody. On occasion, physical custody may be transferred involuntarily or illegally – through accident, unsolicited donation, or theft.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1062, 'property', 'name', 29, 'de', 'veränderte', '2015-06-11 19:26:28.25822', NULL);
@@ -1593,7 +1593,7 @@ INSERT INTO i18n VALUES (1073, 'property', 'name_inverse', 29, 'en', 'was modifi
 INSERT INTO i18n VALUES (1074, 'property', 'name_inverse', 29, 'pt', 'foi modificada por', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1075, 'property', 'name_inverse', 29, 'cn', '被修改於', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1076, 'property', 'comment', 29, 'en', 'This property identifies the E24 Physical Man-Made Thing modified in an E11 Modification.
-If a modification is applied to a non-man-made object, it is regarded as an E22 Man-Made Object from that time onwards. 
+If a modification is applied to a non-man-made object, it is regarded as an E22 Man-Made Object from that time onwards.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1077, 'property', 'name', 30, 'el', 'χρησιμοποίησε γενική τεχνική', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1078, 'property', 'name', 30, 'de', 'benutzte das allgemeine Verfahren', '2015-06-11 19:26:28.25822', NULL);
@@ -1609,7 +1609,7 @@ INSERT INTO i18n VALUES (1087, 'property', 'name_inverse', 30, 'en', 'was techni
 INSERT INTO i18n VALUES (1088, 'property', 'name_inverse', 30, 'fr', 'a été la technique mise en œuvre dans', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1089, 'property', 'name_inverse', 30, 'pt', 'foi técnica da', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1090, 'property', 'name_inverse', 30, 'cn', '被使用於', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (1091, 'property', 'comment', 30, 'en', 'This property identifies the technique that was employed in an act of modification. 
+INSERT INTO i18n VALUES (1091, 'property', 'comment', 30, 'en', 'This property identifies the technique that was employed in an act of modification.
 These techniques should be drawn from an external E55 Type hierarchy of consistent terminology of general techniques such as embroidery, oil-painting, etc. Specific techniques may be further described as instances of E29 Design or Procedure.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1092, 'property', 'name', 31, 'el', 'χρησιμοποίησε συγκεκριμένη τεχνική', '2015-06-11 19:26:28.25822', NULL);
@@ -1626,8 +1626,8 @@ INSERT INTO i18n VALUES (1102, 'property', 'name_inverse', 31, 'de', 'wurde benu
 INSERT INTO i18n VALUES (1103, 'property', 'name_inverse', 31, 'el', 'χρησιμοποιήθηκε για', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1104, 'property', 'name_inverse', 31, 'pt', 'foi usada por', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1105, 'property', 'name_inverse', 31, 'cn', '被特别使用於', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (1106, 'property', 'comment', 31, 'en', 'This property identifies a specific instance of E29 Design or Procedure in order to carry out an instance of E7 Activity or parts of it. 
-The property differs from P32 used general technique (was technique of) in that P33 refers to an instance of E29 Design or Procedure, which is a concrete information object in its own right rather than simply being a term or a method known by tradition. 
+INSERT INTO i18n VALUES (1106, 'property', 'comment', 31, 'en', 'This property identifies a specific instance of E29 Design or Procedure in order to carry out an instance of E7 Activity or parts of it.
+The property differs from P32 used general technique (was technique of) in that P33 refers to an instance of E29 Design or Procedure, which is a concrete information object in its own right rather than simply being a term or a method known by tradition.
 Typical examples would include intervention plans for conservation or the construction plans of a building.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1107, 'property', 'name', 32, 'el', 'αφορούσε σε', '2015-06-11 19:26:28.25822', NULL);
@@ -1644,7 +1644,7 @@ INSERT INTO i18n VALUES (1117, 'property', 'name_inverse', 32, 'en', 'was assess
 INSERT INTO i18n VALUES (1118, 'property', 'name_inverse', 32, 'ru', 'был оценен посредством', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1119, 'property', 'name_inverse', 32, 'pt', 'foi avaliada por', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1120, 'property', 'name_inverse', 32, 'cn', '被评估於', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (1121, 'property', 'comment', 32, 'en', 'This property identifies the E18 Physical Thing that was assessed during an E14 Condition Assessment activity. 
+INSERT INTO i18n VALUES (1121, 'property', 'comment', 32, 'en', 'This property identifies the E18 Physical Thing that was assessed during an E14 Condition Assessment activity.
 Conditions may be assessed either by direct observation or using recorded evidence. In the latter case the E18 Physical Thing does not need to be present or extant.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1122, 'property', 'name', 33, 'ru', 'идентифицировал', '2015-06-11 19:26:28.25822', NULL);
@@ -1695,7 +1695,7 @@ INSERT INTO i18n VALUES (1163, 'property', 'name_inverse', 35, 'en', 'was deassi
 INSERT INTO i18n VALUES (1164, 'property', 'name_inverse', 35, 'pt', 'foi retirada a atribuição por', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1165, 'property', 'name_inverse', 35, 'cn', '被取消标识符於', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1166, 'property', 'comment', 35, 'en', 'This property records the identifier that was deassigned from an instance of E1 CRM Entity.
-Deassignment of an identifier may be necessary when an item is taken out of an inventory, a new numbering system is introduced or items are merged or split up. 
+Deassignment of an identifier may be necessary when an item is taken out of an inventory, a new numbering system is introduced or items are merged or split up.
 The same identifier may be deassigned on more than one occasion.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1167, 'property', 'name', 36, 'fr', 'a mesuré', '2015-06-11 19:26:28.25822', NULL);
@@ -1764,7 +1764,7 @@ INSERT INTO i18n VALUES (1222, 'property', 'name_inverse', 39, 'de', 'wurde zuge
 INSERT INTO i18n VALUES (1223, 'property', 'name_inverse', 39, 'fr', 'a été attribué par', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1224, 'property', 'name_inverse', 39, 'pt', 'foi atribuído por', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1225, 'property', 'name_inverse', 39, 'cn', '被指定类型於', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (1226, 'property', 'comment', 39, 'en', 'This property records the type that was assigned to an entity by an E17 Type Assignment activity. 
+INSERT INTO i18n VALUES (1226, 'property', 'comment', 39, 'en', 'This property records the type that was assigned to an entity by an E17 Type Assignment activity.
 Type assignment events allow a more detailed path from E1 CRM Entity through P41 classified (was classified by), E17 Type Assignment, P42 assigned (was assigned by) to E55 Type for assigning types to objects compared to the shortcut offered by P2 has type (is type of).
 For example, a fragment of an antique vessel could be assigned the type “attic red figured belly handled amphora” by expert A. The same fragment could be assigned the type “shoulder handled amphora” by expert B.
 A Type may be intellectually constructed independent from assigning an instance of it.
@@ -1802,7 +1802,7 @@ INSERT INTO i18n VALUES (1253, 'property', 'name_inverse', 41, 'en', 'is conditi
 INSERT INTO i18n VALUES (1254, 'property', 'name_inverse', 41, 'pt', 'estado material de', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1255, 'property', 'name_inverse', 41, 'cn', '描述的标的物是', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1256, 'property', 'comment', 41, 'en', 'This property records an E3 Condition State for some E18 Physical Thing.
-It is a shortcut of the more fully developed path from E18 Physical Thing through P34 concerned (was assessed by), E14 Condition Assessment P35 has identified (was identified by) to E3 Condition State. It offers no information about how and when the E3 Condition State was established, nor by whom. 
+It is a shortcut of the more fully developed path from E18 Physical Thing through P34 concerned (was assessed by), E14 Condition Assessment P35 has identified (was identified by) to E3 Condition State. It offers no information about how and when the E3 Condition State was established, nor by whom.
 An instance of Condition State is specific to an instance of Physical Thing.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1257, 'property', 'name', 42, 'fr', 'consiste en', '2015-06-11 19:26:28.25822', NULL);
@@ -1874,8 +1874,8 @@ INSERT INTO i18n VALUES (1312, 'property', 'name_inverse', 45, 'de', 'ist frühe
 INSERT INTO i18n VALUES (1313, 'property', 'name_inverse', 45, 'ru', 'является бывшим или текущим смотрителем для', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1314, 'property', 'name_inverse', 45, 'pt', 'é ou foi guardador de', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1315, 'property', 'name_inverse', 45, 'cn', '目前或曾经保管', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (1316, 'property', 'comment', 45, 'en', 'This property identifies the E39 Actor or Actors who have or have had custody of an instance of E18 Physical Thing at some time. 
-The distinction with P50 has current keeper (is current keeper of) is that P49 has former or current keeper (is former or current keeper of) leaves open the question as to whether the specified keepers are current. 
+INSERT INTO i18n VALUES (1316, 'property', 'comment', 45, 'en', 'This property identifies the E39 Actor or Actors who have or have had custody of an instance of E18 Physical Thing at some time.
+The distinction with P50 has current keeper (is current keeper of) is that P49 has former or current keeper (is former or current keeper of) leaves open the question as to whether the specified keepers are current.
 P49 has former or current keeper (is former or current keeper of) is a shortcut for the more detailed path from E18 Physical Thing through P30 transferred custody of (custody transferred through), E10 Transfer of Custody, P28 custody surrendered by (surrendered custody through) or P29 custody received by (received custody through) to E39 Actor.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1317, 'property', 'name', 46, 'de', 'hat derzeitigen Betreuer', '2015-06-11 19:26:28.25822', NULL);
@@ -1981,11 +1981,11 @@ INSERT INTO i18n VALUES (1404, 'property', 'name_inverse', 51, 'pt', 'é localiz
 INSERT INTO i18n VALUES (1405, 'property', 'name_inverse', 51, 'cn', '目前置放了', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1459, 'property', 'comment', 55, 'en', 'This property links an area to the instance of E18 Physical Thing upon which it is found.
 It is typically used when a named E46 Section Definition is not appropriate.
-E18 Physical Thing may be subdivided into arbitrary regions. 
+E18 Physical Thing may be subdivided into arbitrary regions.
 P59 has section (is located on or within) is a shortcut. If the E53 Place is identified by a Section Definition, a more detailed representation can make use of the fully developed (i.e. indirect) path from E18 Physical Thing through P58 has section definition (defines section), E46 Section Definition, P87 is identified by (identifies) to E53 Place. A Place can only be located on or within one Physical Object.
 ', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (1406, 'property', 'comment', 51, 'en', 'This property records the location of an E19 Physical Object at the time of validity of the record or database containing the statement that uses this property. 
-	This property is a specialisation of P53 has former or current location (is former or current location of). It indicates that the E53 Place associated with the E19 Physical Object is the current location of the object. The property does not allow any indication of how long the Object has been at the current location. 
+INSERT INTO i18n VALUES (1406, 'property', 'comment', 51, 'en', 'This property records the location of an E19 Physical Object at the time of validity of the record or database containing the statement that uses this property.
+	This property is a specialisation of P53 has former or current location (is former or current location of). It indicates that the E53 Place associated with the E19 Physical Object is the current location of the object. The property does not allow any indication of how long the Object has been at the current location.
 P55 has current location (currently holds) is a shortcut. A more detailed representation can make use of the fully developed (i.e. indirect) path from E19 Physical Object through P25 moved (moved by), E9 Move P26 moved to (was destination of) to E53 Place if and only if this Move is the most recent.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1407, 'property', 'name', 52, 'ru', 'несет признак', '2015-06-11 19:26:28.25822', NULL);
@@ -2083,7 +2083,7 @@ INSERT INTO i18n VALUES (1488, 'property', 'name_inverse', 57, 'cn', '被显示�
 INSERT INTO i18n VALUES (1489, 'property', 'comment', 57, 'en', 'This property documents an E36 Visual Item shown by an instance of E24 Physical Man-Made Thing.
 This property is similar to P62 depicts (is depicted by) in that it associates an item of E24 Physical Man-Made Thing with a visual representation. However, P65 shows visual item (is shown by) differs from the P62 depicts (is depicted by) property in that it makes no claims about what the E36 Visual Item is deemed to represent. E36 Visual Item identifies a recognisable image or visual symbol, regardless of what this image may or may not represent.
 For example, all recent British coins bear a portrait of Queen Elizabeth II, a fact that is correctly documented using P62 depicts (is depicted by). Different portraits have been used at different periods, however. P65 shows visual item (is shown by) can be used to refer to a particular portrait.
-P65 shows visual item (is shown by) may also be used for Visual Items such as signs, marks and symbols, for example the ''Maltese Cross'' or the ''copyright symbol’ that have no particular representational content. 
+P65 shows visual item (is shown by) may also be used for Visual Items such as signs, marks and symbols, for example the ''Maltese Cross'' or the ''copyright symbol’ that have no particular representational content.
 This property is part of the fully developed path from E24 Physical Man-Made Thing through P65 shows visual item (is shown by), E36 Visual Item, P138 represents (has representation) to E1 CRM Entity which is shortcut by, P62 depicts (is depicted by).
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1490, 'property', 'name', 58, 'el', 'αναφέρεται σε', '2015-06-11 19:26:28.25822', NULL);
@@ -2116,7 +2116,7 @@ INSERT INTO i18n VALUES (1515, 'property', 'name_inverse', 59, 'ru', 'обычн
 INSERT INTO i18n VALUES (1516, 'property', 'name_inverse', 59, 'en', 'use foreseen by', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1517, 'property', 'name_inverse', 59, 'pt', 'é empregado por', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1518, 'property', 'name_inverse', 59, 'cn', '被指定使用於', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (1519, 'property', 'comment', 59, 'en', 'This property identifies an E57 Material foreseeen to be used by an E29 Design or Procedure. 
+INSERT INTO i18n VALUES (1519, 'property', 'comment', 59, 'en', 'This property identifies an E57 Material foreseeen to be used by an E29 Design or Procedure.
 E29 Designs and procedures commonly foresee the use of particular E57 Materials. The fabrication of adobe bricks, for example, requires straw, clay and water. This property enables this to be documented.
 This property is not intended for the documentation of E57 Materials that were used on a particular occasion when an instance of E29 Design or Procedure was executed.
 ', '2015-06-11 19:26:28.25822', NULL);
@@ -2177,7 +2177,7 @@ INSERT INTO i18n VALUES (1568, 'property', 'name_inverse', 63, 'ru', 'являе
 INSERT INTO i18n VALUES (1569, 'property', 'name_inverse', 63, 'en', 'is language of', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1570, 'property', 'name_inverse', 63, 'pt', 'é a língua de', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1571, 'property', 'name_inverse', 63, 'cn', '被用来撰写', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (1572, 'property', 'comment', 63, 'en', 'This property describes the E56 Language of an E33 Linguistic Object. 
+INSERT INTO i18n VALUES (1572, 'property', 'comment', 63, 'en', 'This property describes the E56 Language of an E33 Linguistic Object.
 Linguistic Objects are composed in one or more human Languages. This property allows these languages to be documented.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1573, 'property', 'name', 64, 'el', 'έχει μετάφραση', '2015-06-11 19:26:28.25822', NULL);
@@ -2211,7 +2211,7 @@ INSERT INTO i18n VALUES (1598, 'property', 'name_inverse', 65, 'ru', 'являе
 INSERT INTO i18n VALUES (1599, 'property', 'name_inverse', 65, 'en', 'is current or former residence of', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1600, 'property', 'name_inverse', 65, 'pt', 'é ou foi residência de', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1601, 'property', 'name_inverse', 65, 'cn', '历年来的居住者包括', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (1602, 'property', 'comment', 65, 'en', 'This property describes the current or former E53 Place of residence of an E39 Actor. 
+INSERT INTO i18n VALUES (1602, 'property', 'comment', 65, 'en', 'This property describes the current or former E53 Place of residence of an E39 Actor.
 The residence may be either the Place where the Actor resides, or a legally registered address of any kind.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1603, 'property', 'name', 66, 'ru', 'владеет', '2015-06-11 19:26:28.25822', NULL);
@@ -2267,7 +2267,7 @@ INSERT INTO i18n VALUES (1651, 'property', 'name', 69, 'en', 'beginning is quali
 INSERT INTO i18n VALUES (1652, 'property', 'name', 69, 'fr', 'début est qualifié par', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1653, 'property', 'name', 69, 'pt', 'início é qualificado por', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1654, 'property', 'name', 69, 'cn', '起点认定的性质是', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (1655, 'property', 'comment', 69, 'en', 'This property qualifies the beginning of an E52 Time-Span in some way. 
+INSERT INTO i18n VALUES (1655, 'property', 'comment', 69, 'en', 'This property qualifies the beginning of an E52 Time-Span in some way.
 The nature of the qualification may be certainty, precision, source etc.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1656, 'property', 'name', 70, 'el', 'τέλος προσδιορίζεται από', '2015-06-11 19:26:28.25822', NULL);
@@ -2277,7 +2277,7 @@ INSERT INTO i18n VALUES (1659, 'property', 'name', 70, 'ru', 'конец огр�
 INSERT INTO i18n VALUES (1660, 'property', 'name', 70, 'en', 'end is qualified by', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1661, 'property', 'name', 70, 'pt', 'final é qualificado por', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1662, 'property', 'name', 70, 'cn', '终点认定的性质是', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (1663, 'property', 'comment', 70, 'en', 'This property qualifies the end of an E52 Time-Span in some way. 
+INSERT INTO i18n VALUES (1663, 'property', 'comment', 70, 'en', 'This property qualifies the end of an E52 Time-Span in some way.
 The nature of the qualification may be certainty, precision, source etc.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1664, 'property', 'name', 71, 'en', 'ongoing throughout', '2015-06-11 19:26:28.25822', NULL);
@@ -2313,7 +2313,7 @@ INSERT INTO i18n VALUES (1689, 'property', 'name_inverse', 73, 'ru', 'был м�
 INSERT INTO i18n VALUES (1690, 'property', 'name_inverse', 73, 'en', 'was minimum duration of', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1691, 'property', 'name_inverse', 73, 'de', 'war Mindestdauer von', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1692, 'property', 'name_inverse', 73, 'pt', 'foi a duração mínima de', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (1693, 'property', 'comment', 73, 'en', 'This property describes the minimum length of time covered by an E52 Time-Span. 
+INSERT INTO i18n VALUES (1693, 'property', 'comment', 73, 'en', 'This property describes the minimum length of time covered by an E52 Time-Span.
 It allows an E52 Time-Span to be associated with an E54 Dimension representing it’s minimum duration (i.e. it’s inner boundary) independent from the actual beginning and end.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1694, 'property', 'name', 74, 'el', 'είχε μέγιστη διάρκεια', '2015-06-11 19:26:28.25822', NULL);
@@ -2330,7 +2330,7 @@ INSERT INTO i18n VALUES (1704, 'property', 'name_inverse', 74, 'el', 'είναι
 INSERT INTO i18n VALUES (1705, 'property', 'name_inverse', 74, 'fr', 'a été la durée maximum de', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1706, 'property', 'name_inverse', 74, 'pt', 'foi a duração máxima de', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1707, 'property', 'name_inverse', 74, 'cn', '', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (1708, 'property', 'comment', 74, 'en', 'This property describes the maximum length of time covered by an E52 Time-Span. 
+INSERT INTO i18n VALUES (1708, 'property', 'comment', 74, 'en', 'This property describes the maximum length of time covered by an E52 Time-Span.
 It allows an E52 Time-Span to be associated with an E54 Dimension representing it’s maximum duration (i.e. it’s outer boundary) independent from the actual beginning and end.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1709, 'property', 'name', 75, 'en', 'falls within', '2015-06-11 19:26:28.25822', NULL);
@@ -2364,7 +2364,7 @@ INSERT INTO i18n VALUES (1734, 'property', 'name_inverse', 76, 'fr', 'identifie'
 INSERT INTO i18n VALUES (1735, 'property', 'name_inverse', 76, 'en', 'identifies', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1736, 'property', 'name_inverse', 76, 'pt', 'identifica', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1737, 'property', 'name_inverse', 76, 'cn', '被用来辨认', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (1738, 'property', 'comment', 76, 'en', 'This property identifies an E53 Place using an E44 Place Appellation. 
+INSERT INTO i18n VALUES (1738, 'property', 'comment', 76, 'en', 'This property identifies an E53 Place using an E44 Place Appellation.
 Examples of Place Appellations used to identify Places include instances of E48 Place Name, addresses, E47 Spatial Coordinates etc.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1739, 'property', 'name', 77, 'fr', 's’insère dans', '2015-06-11 19:26:28.25822', NULL);
@@ -2455,7 +2455,7 @@ INSERT INTO i18n VALUES (1817, 'property', 'name_inverse', 82, 'en', 'was create
 INSERT INTO i18n VALUES (1818, 'property', 'name_inverse', 82, 'de', 'wurde erschaffen durch', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1819, 'property', 'name_inverse', 82, 'pt', 'foi criado por', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1820, 'property', 'name_inverse', 82, 'cn', '被创造於', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (1821, 'property', 'comment', 82, 'en', 'This property allows a conceptual E65 Creation to be linked to the E28 Conceptual Object created by it. 
+INSERT INTO i18n VALUES (1821, 'property', 'comment', 82, 'en', 'This property allows a conceptual E65 Creation to be linked to the E28 Conceptual Object created by it.
 It represents the act of conceiving the intellectual content of the E28 Conceptual Object. It does not represent the act of creating the first physical carrier of the E28 Conceptual Object. As an example, this is the composition of a poem, not its commitment to paper.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1822, 'property', 'name', 83, 'fr', 'a fondé', '2015-06-11 19:26:28.25822', NULL);
@@ -2507,7 +2507,7 @@ INSERT INTO i18n VALUES (1864, 'property', 'name_inverse', 85, 'pt', 'foi pai pa
 INSERT INTO i18n VALUES (1865, 'property', 'name_inverse', 85, 'cn', '成为生父於', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1866, 'property', 'comment', 85, 'en', 'This property links an E67 Birth event to an E21 Person in the role of biological father.
 Note that biological fathers are not seen as necessary participants in the Birth, whereas birth-giving mothers are (see P96 by mother (gave birth)). The Person being born is linked to the Birth with the property P98 brought into life (was born).
-This is not intended for use with general natural history material, only people. There is no explicit method for modelling conception and gestation except by using extensions. 
+This is not intended for use with general natural history material, only people. There is no explicit method for modelling conception and gestation except by using extensions.
 A Birth event is normally (but not always) associated with one biological father.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1867, 'property', 'name', 86, 'fr', 'a donné vie à', '2015-06-11 19:26:28.25822', NULL);
@@ -2605,7 +2605,7 @@ INSERT INTO i18n VALUES (1951, 'property', 'name_inverse', 91, 'ru', 'был и�
 INSERT INTO i18n VALUES (1952, 'property', 'name_inverse', 91, 'el', 'ήταν προορισμός του', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1953, 'property', 'name_inverse', 91, 'fr', 'était la raison d''être de', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1954, 'property', 'name_inverse', 91, 'pt', 'era a destinação de', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (1955, 'property', 'comment', 91, 'en', 'This property links an instance of E71 Man-Made Thing to an E55 Type of usage. 
+INSERT INTO i18n VALUES (1955, 'property', 'comment', 91, 'en', 'This property links an instance of E71 Man-Made Thing to an E55 Type of usage.
 It creates a property between specific man-made things, both physical and immaterial, to Types of intended methods and techniques of use. Note: A link between specific man-made things and a specific use activity should be expressed using P19 was intended use of (was made for).', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1956, 'property', 'name', 92, 'fr', 'est sujet à', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (1957, 'property', 'name', 92, 'en', 'is subject to', '2015-06-11 19:26:28.25822', NULL);
@@ -2675,7 +2675,7 @@ INSERT INTO i18n VALUES (2014, 'property', 'name_inverse', 95, 'cn', '目前或�
 INSERT INTO i18n VALUES (2015, 'property', 'comment', 95, 'en', 'This property relates an E39 Actor to the E74 Group of which that E39 Actor is a member.
 Groups, Legal Bodies and Persons, may all be members of Groups. A Group necessarily consists of more than one member.
 This property is a shortcut of the more fully developed path from E74 Group through P144 joined with (gained member by), E85 Joining, P143 joined (was joined by) to E39 Actor
-The property P107.1 kind of member can be used to specify the type of membership or the role the member has in the group. 
+The property P107.1 kind of member can be used to specify the type of membership or the role the member has in the group.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (2016, 'property', 'name', 96, 'el', 'παρήγαγε', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (2017, 'property', 'name', 96, 'fr', 'a produit', '2015-06-11 19:26:28.25822', NULL);
@@ -2760,7 +2760,7 @@ INSERT INTO i18n VALUES (2087, 'property', 'name_inverse', 100, 'de', 'wurde ver
 INSERT INTO i18n VALUES (2088, 'property', 'name_inverse', 100, 'pt', 'foi diminuído por', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (2089, 'property', 'name_inverse', 100, 'cn', '被缩减於', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (2090, 'property', 'comment', 100, 'en', 'This property identifies the E24 Physical Man-Made Thing that was diminished by E80 Part Removal.
-Although a Part removal activity normally concerns only one item of Physical Man-Made Thing, it is possible to imagine circumstances under which more than one item might be diminished by a single Part Removal activity. 
+Although a Part removal activity normally concerns only one item of Physical Man-Made Thing, it is possible to imagine circumstances under which more than one item might be diminished by a single Part Removal activity.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (2091, 'property', 'name', 101, 'ru', 'удален', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (2092, 'property', 'name', 101, 'de', 'entfernte', '2015-06-11 19:26:28.25822', NULL);
@@ -2783,7 +2783,7 @@ INSERT INTO i18n VALUES (2108, 'property', 'name', 102, 'el', 'συμπίπτε�
 INSERT INTO i18n VALUES (2109, 'property', 'name', 102, 'ru', 'равен по времени', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (2110, 'property', 'name', 102, 'en', 'is equal in time to', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (2112, 'property', 'name', 102, 'cn', '时段相同於', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (2113, 'property', 'comment', 102, 'en', 'This symmetric property allows the instances of E2 Temporal Entity with the same E52 Time-Span to be equated. 
+INSERT INTO i18n VALUES (2113, 'property', 'comment', 102, 'en', 'This symmetric property allows the instances of E2 Temporal Entity with the same E52 Time-Span to be equated.
 This property is only necessary if the time span is unknown (otherwise the equivalence can be calculated).
 This property is the same as the "equal" relationship of Allen’s temporal logic (Allen, 1983, pp. 832-843).
 ', '2015-06-11 19:26:28.25822', NULL);
@@ -2801,7 +2801,7 @@ INSERT INTO i18n VALUES (2124, 'property', 'name_inverse', 103, 'de', 'wurde bee
 INSERT INTO i18n VALUES (2125, 'property', 'name_inverse', 103, 'en', 'is finished by', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (2126, 'property', 'name_inverse', 103, 'pt', 'é finalizada por', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (2127, 'property', 'name_inverse', 103, 'cn', '被结束于', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (2128, 'property', 'comment', 103, 'en', 'This property allows the ending point for a E2 Temporal Entity to be situated by reference to the ending point of another temporal entity of longer duration.  
+INSERT INTO i18n VALUES (2128, 'property', 'comment', 103, 'en', 'This property allows the ending point for a E2 Temporal Entity to be situated by reference to the ending point of another temporal entity of longer duration.
 This property is only necessary if the time span is unknown (otherwise the relationship can be calculated). This property is the same as the "finishes / finished-by" relationships of Allen’s temporal logic (Allen, 1983, pp. 832-843).
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (2129, 'property', 'name', 104, 'fr', 'commence', '2015-06-11 19:26:28.25822', NULL);
@@ -2818,7 +2818,7 @@ INSERT INTO i18n VALUES (2139, 'property', 'name_inverse', 104, 'ru', 'начи�
 INSERT INTO i18n VALUES (2140, 'property', 'name_inverse', 104, 'en', 'is started by', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (2141, 'property', 'name_inverse', 104, 'pt', 'é iniciada por', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (2142, 'property', 'name_inverse', 104, 'cn', '被开始于', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (2143, 'property', 'comment', 104, 'en', 'This property allows the starting point for a E2 Temporal Entity to be situated by reference to the starting point of another temporal entity of longer duration.  
+INSERT INTO i18n VALUES (2143, 'property', 'comment', 104, 'en', 'This property allows the starting point for a E2 Temporal Entity to be situated by reference to the starting point of another temporal entity of longer duration.
 This property is only necessary if the time span is unknown (otherwise the relationship can be calculated). This property is the same as the "starts / started-by" relationships of Allen’s temporal logic (Allen, 1983, pp. 832-843).
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (2144, 'property', 'name', 105, 'de', 'fällt in', '2015-06-11 19:26:28.25822', NULL);
@@ -2835,7 +2835,7 @@ INSERT INTO i18n VALUES (2154, 'property', 'name_inverse', 105, 'en', 'includes'
 INSERT INTO i18n VALUES (2155, 'property', 'name_inverse', 105, 'de', 'beinhaltet', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (2156, 'property', 'name_inverse', 105, 'pt', 'inclui', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (2157, 'property', 'name_inverse', 105, 'cn', '时段涵盖了', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (2158, 'property', 'comment', 105, 'en', 'This property allows the entire E52 Time-Span of an E2 Temporal Entity to be situated within the Time-Span of another temporal entity that starts before and ends after the included temporal entity.   
+INSERT INTO i18n VALUES (2158, 'property', 'comment', 105, 'en', 'This property allows the entire E52 Time-Span of an E2 Temporal Entity to be situated within the Time-Span of another temporal entity that starts before and ends after the included temporal entity.
 This property is only necessary if the time span is unknown (otherwise the relationship can be calculated). This property is the same as the "during / includes" relationships of Allen’s temporal logic (Allen, 1983, pp. 832-843).
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (2159, 'property', 'name', 106, 'en', 'overlaps in time with', '2015-06-11 19:26:28.25822', NULL);
@@ -2852,7 +2852,7 @@ INSERT INTO i18n VALUES (2169, 'property', 'name_inverse', 106, 'en', 'is overla
 INSERT INTO i18n VALUES (2170, 'property', 'name_inverse', 106, 'el', 'έπεται μερικώς επικαλυπτόμενο', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (2171, 'property', 'name_inverse', 106, 'pt', 'é sobreposto temporalmente por', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (2172, 'property', 'name_inverse', 106, 'cn', '时段被重叠于', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (2173, 'property', 'comment', 106, 'en', 'This property identifies an overlap between the instances of E52 Time-Span of two instances of E2 Temporal Entity. 
+INSERT INTO i18n VALUES (2173, 'property', 'comment', 106, 'en', 'This property identifies an overlap between the instances of E52 Time-Span of two instances of E2 Temporal Entity.
 It implies a temporal order between the two entities: if A overlaps in time B, then A must start before B, and B must end after A. This property is only necessary if the relevant time spans are unknown (otherwise the relationship can be calculated).
 This property is the same as the "overlaps / overlapped-by" relationships of Allen’s temporal logic (Allen, 1983, pp. 832-843).
 ', '2015-06-11 19:26:28.25822', NULL);
@@ -2870,8 +2870,8 @@ INSERT INTO i18n VALUES (2184, 'property', 'name_inverse', 107, 'de', 'wird zeit
 INSERT INTO i18n VALUES (2185, 'property', 'name_inverse', 107, 'ru', 'предшествует во времени', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (2186, 'property', 'name_inverse', 107, 'pt', 'é imediatamente precedido por', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (2187, 'property', 'name_inverse', 107, 'cn', '紧接续於', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (2188, 'property', 'comment', 107, 'en', 'This property indicates that one E2 Temporal Entity immediately follows another. 
-It implies a particular order between the two entities: if A meets in time with B, then A must precede B. This property is only necessary if the relevant time spans are unknown (otherwise the relationship can be calculated). 
+INSERT INTO i18n VALUES (2188, 'property', 'comment', 107, 'en', 'This property indicates that one E2 Temporal Entity immediately follows another.
+It implies a particular order between the two entities: if A meets in time with B, then A must precede B. This property is only necessary if the relevant time spans are unknown (otherwise the relationship can be calculated).
 This property is the same as the "meets / met-by" relationships of Allen’s temporal logic (Allen, 1983, pp. 832-843).
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (2189, 'property', 'name', 108, 'ru', 'появляется до', '2015-06-11 19:26:28.25822', NULL);
@@ -2888,7 +2888,7 @@ INSERT INTO i18n VALUES (2199, 'property', 'name_inverse', 108, 'de', 'kommt nac
 INSERT INTO i18n VALUES (2200, 'property', 'name_inverse', 108, 'en', 'occurs after', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (2201, 'property', 'name_inverse', 108, 'pt', 'ocorre depois', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (2202, 'property', 'name_inverse', 108, 'cn', '发生时段后於', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (2203, 'property', 'comment', 108, 'en', 'This property identifies the relative chronological sequence of two temporal entities. 
+INSERT INTO i18n VALUES (2203, 'property', 'comment', 108, 'en', 'This property identifies the relative chronological sequence of two temporal entities.
 It implies that a temporal gap exists between the end of A and the start of B. This property is only necessary if the relevant time spans are unknown (otherwise the relationship can be calculated).
 This property is the same as the "before / after" relationships of Allen’s temporal logic (Allen, 1983, pp. 832-843).
 ', '2015-06-11 19:26:28.25822', NULL);
@@ -2899,7 +2899,7 @@ INSERT INTO i18n VALUES (2207, 'property', 'name', 109, 'ru', 'пересека�
 INSERT INTO i18n VALUES (2208, 'property', 'name', 109, 'en', 'overlaps with', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (2209, 'property', 'name', 109, 'pt', 'sobrepõe com', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (2210, 'property', 'name', 109, 'cn', '空间重叠于', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (2211, 'property', 'comment', 109, 'en', 'This symmetric property allows the instances of E53 Place with overlapping geometric extents to be associated with each other. 
+INSERT INTO i18n VALUES (2211, 'property', 'comment', 109, 'en', 'This symmetric property allows the instances of E53 Place with overlapping geometric extents to be associated with each other.
 It does not specify anything about the shared area. This property is purely spatial, in contrast to Allen operators, which are purely temporal.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (2212, 'property', 'name', 110, 'ru', 'граничит с', '2015-06-11 19:26:28.25822', NULL);
@@ -2909,7 +2909,7 @@ INSERT INTO i18n VALUES (2215, 'property', 'name', 110, 'de', 'grenzt an', '2015
 INSERT INTO i18n VALUES (2216, 'property', 'name', 110, 'el', 'συνορεύει με', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (2217, 'property', 'name', 110, 'pt', 'fronteira com', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (2218, 'property', 'name', 110, 'cn', '接壤于', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (2219, 'property', 'comment', 110, 'en', 'This symmetric property allows the instances of E53 Place which share common borders to be related as such. 
+INSERT INTO i18n VALUES (2219, 'property', 'comment', 110, 'en', 'This symmetric property allows the instances of E53 Place which share common borders to be related as such.
 This property is purely spatial, in contrast to Allen operators, which are purely temporal.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (2220, 'property', 'name', 111, 'fr', 'a eu pour résultat', '2015-06-11 19:26:28.25822', NULL);
@@ -2926,7 +2926,7 @@ INSERT INTO i18n VALUES (2230, 'property', 'name_inverse', 111, 'de', 'ergab sic
 INSERT INTO i18n VALUES (2231, 'property', 'name_inverse', 111, 'en', 'resulted from', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (2232, 'property', 'name_inverse', 111, 'pt', 'resultado de', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (2233, 'property', 'name_inverse', 111, 'cn', '肇因於', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (2234, 'property', 'comment', 111, 'en', 'This property identifies the E77 Persistent Item or items that are the result of an E81 Transformation. 
+INSERT INTO i18n VALUES (2234, 'property', 'comment', 111, 'en', 'This property identifies the E77 Persistent Item or items that are the result of an E81 Transformation.
 New items replace the transformed item or items, which cease to exist as units of documentation. The physical continuity between the old and the new is expressed by the link to the common Transformation.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (2235, 'property', 'name', 112, 'en', 'transformed', '2015-06-11 19:26:28.25822', NULL);
@@ -2943,10 +2943,10 @@ INSERT INTO i18n VALUES (2245, 'property', 'name_inverse', 112, 'en', 'was trans
 INSERT INTO i18n VALUES (2246, 'property', 'name_inverse', 112, 'de', 'wurde umgewandelt durch', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (2247, 'property', 'name_inverse', 112, 'pt', 'foi transformado por', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (2248, 'property', 'name_inverse', 112, 'cn', '被转变於', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (2323, 'property', 'comment', 117, 'en', 'This property documents that an E89 Propositional Object has as subject an instance of E1 CRM Entity. 
+INSERT INTO i18n VALUES (2323, 'property', 'comment', 117, 'en', 'This property documents that an E89 Propositional Object has as subject an instance of E1 CRM Entity.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (2324, 'property', 'name', 118, 'el', 'παρουσιάζει χαρακτηριστικά του/της', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (2249, 'property', 'comment', 112, 'en', 'This property identifies the E77 Persistent Item or items that cease to exist due to a E81 Transformation. 
+INSERT INTO i18n VALUES (2249, 'property', 'comment', 112, 'en', 'This property identifies the E77 Persistent Item or items that cease to exist due to a E81 Transformation.
 It is replaced by the result of the Transformation, which becomes a new unit of documentation. The continuity between both items, the new and the old, is expressed by the link to the common Transformation.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (2250, 'property', 'name', 113, 'en', 'used object of type', '2015-06-11 19:26:28.25822', NULL);
@@ -2995,7 +2995,7 @@ INSERT INTO i18n VALUES (2289, 'property', 'name_inverse', 115, 'en', 'has narro
 INSERT INTO i18n VALUES (2290, 'property', 'name_inverse', 115, 'el', 'έχει στενότερο όρο', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (2291, 'property', 'name_inverse', 115, 'pt', 'tem termo específico', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (2292, 'property', 'name_inverse', 115, 'cn', '有狭义术语', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (2293, 'property', 'comment', 115, 'en', 'This property identifies a super-Type to which an E55 Type is related. 
+INSERT INTO i18n VALUES (2293, 'property', 'comment', 115, 'en', 'This property identifies a super-Type to which an E55 Type is related.
 		It allows Types to be organised into hierarchies. This is the sense of "broader term generic  		(BTG)" as defined in ISO 2788
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (2294, 'property', 'name', 116, 'en', 'carries', '2015-06-11 19:26:28.25822', NULL);
@@ -3059,7 +3059,7 @@ INSERT INTO i18n VALUES (2349, 'property', 'name_inverse', 119, 'ru', 'иден�
 INSERT INTO i18n VALUES (2350, 'property', 'name_inverse', 119, 'de', 'identifiziert', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (2351, 'property', 'name_inverse', 119, 'pt', 'identifica', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (2352, 'property', 'name_inverse', 119, 'cn', '被用来识别', '2015-06-11 19:26:28.25822', NULL);
-INSERT INTO i18n VALUES (2353, 'property', 'comment', 119, 'en', 'This property identifies a name used specifically to identify an E39 Actor. 
+INSERT INTO i18n VALUES (2353, 'property', 'comment', 119, 'en', 'This property identifies a name used specifically to identify an E39 Actor.
 This property is a specialisation of P1 is identified by (identifies) is identified by.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (2354, 'property', 'name', 120, 'el', 'επικαλύπτεται με', '2015-06-11 19:26:28.25822', NULL);
@@ -3173,7 +3173,7 @@ INSERT INTO i18n VALUES (2449, 'property', 'name', 127, 'el', 'έχει εναλ
 INSERT INTO i18n VALUES (2450, 'property', 'name', 127, 'pt', 'tem forma alternativa', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (2451, 'property', 'name', 127, 'cn', '有替代称号', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (2452, 'property', 'comment', 127, 'en', 'This property establishes a relationship of equivalence between two instances of E41 Appellation independent from any item identified by them. It is a dynamic asymmetric relationship, where the range expresses the derivative, if such a direction can be established. Otherwise, the relationship is symmetric. The relationship is not transitive.
-The equivalence applies to all cases of use of an instance of E41 Appellation. Multiple names assigned to an object, which are not equivalent for all things identified with a specific instance of E41 Appellation, should be modelled as repeated values of P1 is identified by (identifies). 
+The equivalence applies to all cases of use of an instance of E41 Appellation. Multiple names assigned to an object, which are not equivalent for all things identified with a specific instance of E41 Appellation, should be modelled as repeated values of P1 is identified by (identifies).
 P139.1 has type allows the type of derivation, such as “transliteration from Latin 1 to ASCII” be refined..
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (2453, 'property', 'name', 128, 'de', 'wies Merkmal zu', '2015-06-11 19:26:28.25822', NULL);
@@ -3231,9 +3231,9 @@ INSERT INTO i18n VALUES (2500, 'property', 'name_inverse', 132, 'en', 'gained me
 INSERT INTO i18n VALUES (2501, 'property', 'name_inverse', 132, 'de', 'erwarb Mitglied durch', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (2502, 'property', 'name_inverse', 132, 'cn', '获得成员於', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (2503, 'property', 'comment', 132, 'en', 'This property identifies the instance of E74 Group of which an instance of E39 Actor becomes a member through an instance of E85 Joining.
-Although a Joining activity normally concerns only one instance of E74 Group, it is possible to imagine circumstances under which becoming member of one Group implies becoming member of another Group as well. 
+Although a Joining activity normally concerns only one instance of E74 Group, it is possible to imagine circumstances under which becoming member of one Group implies becoming member of another Group as well.
 Joining events allow for describing people becoming members of a group with a more detailed path from E74 Group through P144 joined with (gained member by), E85 Joining, P143 joined (was joined by) to E39 Actor, compared to the shortcut offered by P107 has current or former member (is current or former member of).
-The property P144.1 kind of member can be used to specify the type of membership or the role the member has in the group. 
+The property P144.1 kind of member can be used to specify the type of membership or the role the member has in the group.
 ', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (2504, 'property', 'name', 133, 'en', 'separated', '2015-06-11 19:26:28.25822', NULL);
 INSERT INTO i18n VALUES (2505, 'property', 'name', 133, 'de', 'entließ', '2015-06-11 19:26:28.25822', NULL);
@@ -3349,14 +3349,14 @@ INSERT INTO i18n VALUES (2570, 'property', 'comment', 149, 'en', 'OA10 is used t
 
 
 --
--- Name: i18n_id_seq; Type: SEQUENCE SET; Schema: crm; Owner: openatlas_master
+-- Name: i18n_id_seq; Type: SEQUENCE SET; Schema: model; Owner: openatlas_master
 --
 
 SELECT pg_catalog.setval('i18n_id_seq', 2570, true);
 
 
 --
--- Data for Name: property; Type: TABLE DATA; Schema: crm; Owner: openatlas_master
+-- Data for Name: property; Type: TABLE DATA; Schema: model; Owner: openatlas_master
 --
 
 INSERT INTO property VALUES (1, 'P1', 40, 1, 'is identified by', 'identifies', '2015-06-11 19:26:28.25822', NULL);
@@ -3511,40 +3511,40 @@ INSERT INTO property VALUES (149, 'OA9', 51, 70, 'appears for the last time in',
 
 
 --
--- Data for Name: link; Type: TABLE DATA; Schema: crm; Owner: openatlas_master
+-- Data for Name: link; Type: TABLE DATA; Schema: model; Owner: openatlas_master
 --
 
 
 
 --
--- Name: link_id_seq; Type: SEQUENCE SET; Schema: crm; Owner: openatlas_master
+-- Name: link_id_seq; Type: SEQUENCE SET; Schema: model; Owner: openatlas_master
 --
 
 SELECT pg_catalog.setval('link_id_seq', 1, false);
 
 
 --
--- Data for Name: link_property; Type: TABLE DATA; Schema: crm; Owner: openatlas_master
+-- Data for Name: link_property; Type: TABLE DATA; Schema: model; Owner: openatlas_master
 --
 
 
 
 --
--- Name: link_property_id_seq; Type: SEQUENCE SET; Schema: crm; Owner: openatlas_master
+-- Name: link_property_id_seq; Type: SEQUENCE SET; Schema: model; Owner: openatlas_master
 --
 
 SELECT pg_catalog.setval('link_property_id_seq', 1, false);
 
 
 --
--- Name: property_id_seq; Type: SEQUENCE SET; Schema: crm; Owner: openatlas_master
+-- Name: property_id_seq; Type: SEQUENCE SET; Schema: model; Owner: openatlas_master
 --
 
 SELECT pg_catalog.setval('property_id_seq', 149, true);
 
 
 --
--- Data for Name: property_inheritance; Type: TABLE DATA; Schema: crm; Owner: openatlas_master
+-- Data for Name: property_inheritance; Type: TABLE DATA; Schema: model; Owner: openatlas_master
 --
 
 INSERT INTO property_inheritance VALUES (1, 11, 10, '2015-06-11 19:26:28.25822', NULL);
@@ -3624,7 +3624,7 @@ INSERT INTO property_inheritance VALUES (74, 10, 139, '2015-06-11 19:26:28.25822
 
 
 --
--- Name: property_inheritance_id_seq; Type: SEQUENCE SET; Schema: crm; Owner: openatlas_master
+-- Name: property_inheritance_id_seq; Type: SEQUENCE SET; Schema: model; Owner: openatlas_master
 --
 
 SELECT pg_catalog.setval('property_inheritance_id_seq', 74, true);

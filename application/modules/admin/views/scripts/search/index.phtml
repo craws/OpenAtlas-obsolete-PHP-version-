@@ -8,7 +8,7 @@ $table['header'] = [_('name'), _('class'), _('first'), _('last')];
 foreach ($this->entities as $entity) {
     $table['data'][] = [
         $this->link($entity),
-        $this->link($entity->getClass()),
+        $this->link($entity->class),
         $entity->first,
         $entity->last
     ];

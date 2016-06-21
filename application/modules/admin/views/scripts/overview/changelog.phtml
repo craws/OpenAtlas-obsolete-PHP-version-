@@ -1,7 +1,16 @@
 <?
     $this->breadcrumb = [$this->link('overview'), $this->ucstring('changelog')];
 
-    $versions['1.6.0']['date'] = '';
+    $versions['2.0.0']['date'] = '19.06.2016';
+    $versions['2.0.0']['data']['feature'] = [
+        428 => 'Dynamic Types',
+        687 => 'Remove required restriction from type fields'
+    ];
+    $versions['2.0.0']['data']['fix'] = [
+        688 => 'Translation errors',
+        689 => 'Show/Hide buttons'
+    ];
+    $versions['1.6.0']['date'] = '04.05.2016';
     $versions['1.6.0']['data']['feature'] = [
         340 => 'Multiuser capability',
         672 => 'Add multiple sources for event/actor/place',

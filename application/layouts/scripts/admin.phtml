@@ -18,7 +18,7 @@
         <script type="text/javascript" src="/js/jquery/tablesorter/tablesorter.min.js"></script>
         <script type="text/javascript" src="/js/jquery/tablesorter/tablesorter.widgets.js"></script>
         <script type="text/javascript" src="/js/jquery/tablesorter/tablesorter.pager.js"></script>
-        <script type="text/javascript" src="/js/jquery/ui/ui.min.js"></script>
+        <script type="text/javascript" src="/js/jquery/ui/jquery-ui.min.js"></script>
         <script type="text/javascript" src="/js/jquery/jstree/jstree.min.js"></script>
         <script type="text/javascript" src="/js/jquery/jstree/jstree.search.js"></script>
         <script type="text/javascript" src="/js/jquery/validation/validate.min.js"></script>
@@ -57,7 +57,23 @@
                 menubar: false,
                 toolbar_items_size : 'small',
                 relative_urls : false
-             });
+            });
+            $(document).ready(function () {
+                show = '<?= $this->ucstring('show') ?>';
+                hide = '<?= $this->ucstring('hide') ?>';
+                $("#dateSwitcher").click(function () {
+                    $(".dateSwitch").toggleClass('display-none');
+                    $(this).text(function(i, text){
+                        return text === show ? hide : show;
+                    })
+                });
+                $("#placeSwitcher").click(function () {
+                    $(".placeSwitch").toggleClass('display-none');
+                    $(this).text(function(i, text){
+                        return text === show ? hide : show;
+                    })
+                });
+            });
         </script>
         <? foreach (['admin_style.css', 'admin_color.css', 'admin_images.css'] as $css): ?>
             <link rel="stylesheet" href="/css/<?= $css ?>?v=<?= $version ?>" />
@@ -66,7 +82,7 @@
             <? endif ?>
         <? endforeach ?>
         <? if ($user->group == 'readonly'): ?>
-            <style type="text/css">.buttonBar, table td.value a.button, .button.add  { display: none; }</style>
+            <style type="text/css">.buttonBar, table td.value a.button, .button.add {display: none;}</style>
         <? endif ?>
     </head>
     <body>

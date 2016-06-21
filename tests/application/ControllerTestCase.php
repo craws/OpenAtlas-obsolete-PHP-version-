@@ -16,6 +16,7 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase {
     protected $source2Id = '1008';
     protected $carrierId = '1009';
     protected $subEventId = '1010';
+    protected $customHierarchyId = '1011';
 
     public function setUp() {
         $this->bootstrap = new Zend_Application(APPLICATION_ENV, ['config' => [
@@ -44,7 +45,7 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase {
         $db = Zend_DB_Table::getDefaultAdapter();
         $db->exec(file_get_contents('../data/install/structure.sql'));
         $db->exec(file_get_contents('../data/install/data_web.sql'));
-        $db->exec(file_get_contents('../data/install/data_crm.sql'));
+        $db->exec(file_get_contents('../data/install/data_model.sql'));
         $db->exec(file_get_contents('../data/install/data_node.sql'));
         $db->exec(file_get_contents('../data/install/data_test.sql'));
     }

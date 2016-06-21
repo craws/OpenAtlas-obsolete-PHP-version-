@@ -12,8 +12,8 @@ foreach ($this->properties as $property) {
         $this->link($property, 'view', $property->code),
         $property->nameTranslated,
         $property->nameInverseTranslated,
-        $this->link($property->getDomain()),
-        $this->link($property->getRange())
+        $this->link($property->domain),
+        $this->link($property->range)
     ];
 }
 $this->table = $table;
