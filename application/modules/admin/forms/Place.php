@@ -2,7 +2,7 @@
 
 /* Copyright 2016 by Alexander Watzinger and others. Please see the file README.md for licensing information */
 
-class Admin_Form_Place extends Craws\Form\Table {
+class Admin_Form_Place extends Admin_Form_Base {
 
     public function init() {
         $this->setName('placeForm')->setMethod('post');
@@ -12,21 +12,9 @@ class Admin_Form_Place extends Craws\Form\Table {
             'required' => true,
             'label' => $this->getView()->ucstring('name'),
         ]);
-        $this->addElement('hidden', 'siteId', ['decorators' => ['ViewHelper']]);
-        $this->addElement('text', 'siteButton', [
-            'label' => $this->getView()->ucstring('site'),
-            'required' => true,
-            'class' => 'tableSelect required',
-            'readonly' => true,
-            'onfocus' => 'this.blur()',
-            'placeholder' => $this->getView()->ucstring('select'),
-            'attribs' => ['readonly' => 'true'],
-        ]);
-        $this->addElement('hidden', 'administrativeId', ['decorators' => ['ViewHelper']]);
-        $this->addElement('hidden', 'historicalId', ['decorators' => ['ViewHelper']]);
         $this->addElement('button', 'aliasAdd', ['label' => '+']);
         $this->addElement('hidden', 'aliasId', ['value' => 1]);
-        Admin_Form_Abstract::addDates($this, ['begin', 'begin2', 'end', 'end2']);
+        $this->addDates(['begin', 'begin2', 'end', 'end2']);
         $this->addElement('text', 'easting', [
             'label' => $this->getView()->ucstring('easting'),
             'validators' => array(array('Float', true, array('locale' => 'en'))),

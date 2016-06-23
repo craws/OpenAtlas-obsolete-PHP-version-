@@ -8,7 +8,7 @@ class Craws_View_Helper_TableLog extends Zend_View_Helper_Abstract {
         if (Zend_Registry::get('user')->getSetting('layout') == 'advanced') {
             $log = Model_UserLogMapper::getLogForView($tableName, $id);
             $entity = Model_EntityMapper::getById($id);
-            $table['data'][_('class')] = $this->view->link($entity->getClass());
+            $table['data'][_('class')] = $this->view->link($entity->class);
             if ($log['created']) {
                 $table['data'][_('created')] = $this->view->printDate($log['created']) . ' ' . $log['creator_name'];
             }

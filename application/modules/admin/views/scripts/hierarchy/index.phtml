@@ -1,24 +1,67 @@
-<? $this->breadcrumb = [$this->ucstring('hierarchy')]; ?>
-<? $tabUl = ''; ?>
-<? $tabDiv = ''; ?>
-<? foreach ($this->types as $id => $type): ?>
-    <? $tabUl .= '<li><a href="#tab' . $type->id . '">' . $type->name . '</a></li>' ?>
-    <? $tabDiv .= '<div id="tab' . $type->id . '"><p><a id="add' . $type->id . '" class="button add" onclick="addForm('; ?>
-    <? $tabDiv .= $type->id . ', ' . (int) $type->directed . ');">+</a></p><div id="form' . $type->id . '"></div>'; ?>
-    <? if ($type->subs): ?>
-        <? global $printRecursiveTypes; ?>
-        <? $printRecursiveTypes = ''; ?>
-        <? $tabDiv .= recursiveTypes($type); ?>
-    <? endif ?>
-    <? $tabDiv .= '</div>'; ?>
-<? endforeach ?>
-<div id="tabs">
-    <ul><?= $tabUl ?></ul>
-    <?= $tabDiv ?>
+<?
+$this->breadcrumb = [$this->ucstring('hierarchy')];
+$tabUl['system'] = '';
+$tabDiv['system'] = '';
+$tabUl['custom'] = '';
+$tabDiv['custom'] = '';
+foreach ($this->nodes as $id => $node) {
+    $menu = ($node->system) ? 'system' : 'custom';
+    $tabUl[$menu] .= '<li><a href="#tab' . $node->id . '">' . $node->name . '</a></li>';
+    $tabDiv[$menu] .= '<div id="tab' . $node->id . '">';
+    if (!$node->system && (in_array(Zend_Registry::get('user')->group, ['admin', 'manager']))) {
+        $tabDiv[$menu] .= '<div class="buttonBar">
+            <a href="/admin/hierarchy/update-hierarchy/id/' . $node->id . '">' . $this->ucstring('edit') . '</a>' .
+            $this->link($node, 'delete') . '</div>';
+    }
+    $tabDiv[$menu] .= '<p><strong>' . $node->name . '</strong></p>';
+    if ($node->description) {
+        $tabDiv[$menu] .= '<p style="width:700px;">' . $node->description . '</p>';
+    }
+    if ($node->forms) {
+        $tabDiv[$menu] .= '<p><strong>' . $this->ucstring('forms') . '</strong></br></br>';
+        foreach ($node->forms as $form) {
+            $tabDiv[$menu] .= $form['name'] . '</br>';
+        }
+        $tabDiv[$menu] .= '</p>';
+    }
+    $tabDiv[$menu] .= '<div class="buttonBar" style="margin-bottom:0.5em;"><a id="add' . $node->id . '"
+        onclick="addForm(' . $node->id . ', ' . (int) $node->directional . ');">+</a></div>';
+    $tabDiv[$menu] .= '<div style="margin-bottom:0.5em;" id="form' . $node->id . '"></div>';
+    if ($node->subs) {
+        global $printRecursiveTypes;
+        $printRecursiveTypes = '';
+        $tabDiv[$menu] .= recursiveTypes($node);
+    }
+    $tabDiv[$menu] .= '</div>';
+}
+if (in_array(Zend_Registry::get('user')->group, ['admin', 'manager'])) {
+    $tabUl['custom'] .= '<a class="button" href="/admin/hierarchy/insert-hierarchy">+ ' . $this->ucstring('hierarchy') . '</a>';
+}
+?>
+<div id="tabsMenu" class="tabsContainer">
+    <ul>
+        <li><a href="#menuTabSystem"><?= $this->ucstring('system') ?></a></li>
+        <li><a href="#menuTabCustom"><?= $this->ucstring('custom') ?></a></li>
+    </ul>
+    <div id="menuTabSystem" style="padding: 0;" class="tabContent">
+        <div id="tabsSystem" class="tabsContainer">
+            <ul><?= $tabUl['system'] ?></ul>
+            <?= $tabDiv['system'] ?>
+        </div>
+    </div>
+    <div id="menuTabCustom" style="padding: 0;" class="tabContent">
+        <div id="tabsCustom" class="tabsContainer">
+            <ul><?= $tabUl['custom'] ?></ul>
+            <?= $tabDiv['custom'] ?>
+        </div>
+    </div>
 </div>
 <script type="text/javascript">
-    $(function () {
-        $("#tabs").tabs().addClass("ui-tabs-vertical");
+    $(document).ready(function () {
+        $("#tabsMenu").tabs();
+        $("#tabsSystem").tabs().addClass("ui-tabs-vertical");
+        $("#tabsCustom").tabs().addClass("ui-tabs-vertical");
+        openParentTab();
     });
     function validateName() {
         if ($.trim($("#name").val()).length > 0) {
@@ -27,39 +70,54 @@
         alert("<?= $this->ucstring('error_name_empty') ?>");
         return false;
     }
-    function addForm(superId, directed) {
+    function addForm(superId, directional) {
         $(".insertTypeForm").remove();
         form = '<form onsubmit="return validateName();" class="insertTypeForm" id="insertTypeForm" method="post" action="/admin/hierarchy/insert/superId/' + superId + '">';
         form += '<input type="text" name="name" id="name" class="required" placeholder="<?= $this->ucstring('name') ?>">';
-        if (directed === 1) {
+        if (directional === 1) {
             form += '<input type="text" name="inverse" placeholder="<?= $this->ucstring('inverse') ?>">';
         }
         form += '<input type="submit" class="submit" value="<?= $this->ucstring('add') ?>"></form>';
         $('#form' + superId).append(form);
     }
+
+    function openParentTab() {
+        locationHash = location.hash.substring(1);
+        console.log(locationHash);
+        if (locationHash) {
+            var hash = $('#' + locationHash);
+            if (hash.length) {
+                if (hash.closest(".tabContent").length) {
+                    var tabNumber = hash.closest(".tabContent").index();
+                    $("#tabsMenu").tabs({active: tabNumber - 1});
+                    hash.get(0).scrollIntoView();
+                    setTimeout(function () {
+                        hash.get(0).scrollIntoView();
+                    }, 1000);
+                }
+            }
+        }
+    }
 </script>
 <?
 
-function recursiveTypes($type, $level = 0) {
+function recursiveTypes($node, $level = 0) {
     global $printRecursiveTypes;
-    foreach ($type->subs as $subType) {
-        if ($subType->subs) {
-            $printRecursiveTypes .= printType($subType, $level);
-            recursiveTypes($subType, $level + 1);
+    foreach ($node->subs as $subNode) {
+        if ($subNode->subs) {
+            $printRecursiveTypes .= printType($subNode, $level);
+            recursiveTypes($subNode, $level + 1);
         } else {
-            $printRecursiveTypes .= printType($subType, $level);
+            $printRecursiveTypes .= printType($subNode, $level);
         }
     }
     return $printRecursiveTypes;
 }
 
-function printType($type, $level) {
-    $directed = 0;
-    if ($type->directed) {
-        $directed = 1;
-    }
-    $html = '<a style="margin-left:' . $level . 'em;" href="/admin/hierarchy/view/id/' . $type->id . '">' . $type->name . '</a> ';
-    $html .= '<a class="button add" id="add' . $type->id . '" onclick="addForm(' . $type->id . ', ' . $directed . ');">+</a> ';
-    $html .= '<div style="margin-top:0.4em;margin-bottom:0.4em;margin-left:' . $level . 'em;" id="form' . $type->id . '"></div>';
+function printType($node, $level) {
+    $directional = ($node->directional) ? 1 : 0;
+    $html = '<a style="margin-left:' . $level . 'em;" href="/admin/hierarchy/view/id/' . $node->id . '">' . $node->name . '</a> ';
+    $html .= '<a class="button add" id="add' . $node->id . '" onclick="addForm(' . $node->id . ', ' . $directional . ');">+</a> ';
+    $html .= '<div style="margin-top:0.4em;margin-bottom:0.4em;margin-left:' . $level . 'em;" id="form' . $node->id . '"></div>';
     return $html;
 }

@@ -302,11 +302,11 @@ $allProperties = array_merge($properties, $shortcuts);
 if ($dbTruncate) {
     echo "truncating tables" . $linebreak . $linebreak;
     pg_query($con, 'TRUNCATE
-    crm.class,
-    crm.class_inheritance,
-    crm.i18n,
-    crm.property,
-    crm.property_inheritance
+    model.class,
+    model.class_inheritance,
+    model.i18n,
+    model.property,
+    model.property_inheritance
     RESTART IDENTITY CASCADE;') or dbError("Truncation", __LINE__);
 }
 
@@ -320,7 +320,7 @@ $countPropertyInheritance = 0;
 $countComments = 0;
 $countNameTranslations = 0;
 
-$sqlClass = 'INSERT INTO crm.class (code, name) VALUES ($1, $2) RETURNING id;';
+$sqlClass = 'INSERT INTO model.class (code, name) VALUES ($1, $2) RETURNING id;';
 foreach ($allClasses as $code => $class) {
     $query = pg_query_params($con, $sqlClass, [$code, $class['name']]) or dbError("class", __LINE__);
     $row = pg_fetch_row($query);
@@ -328,12 +328,12 @@ foreach ($allClasses as $code => $class) {
     $countClass++;
 }
 
-$sqlClassName = "INSERT INTO crm.i18n (table_name, table_field, table_id, language_code, text)
+$sqlClassName = "INSERT INTO model.i18n (table_name, table_field, table_id, language_code, text)
   VALUES ('class', 'name', $1, $2, $3);";
-$sqlClassComment = "INSERT INTO crm.i18n (table_name, table_field, table_id, language_code, text)
+$sqlClassComment = "INSERT INTO model.i18n (table_name, table_field, table_id, language_code, text)
   VALUES ('class', 'comment', $1, $2, $3);";
-$sqlClassSuper = 'INSERT INTO crm.class_inheritance (super_id, sub_id) VALUES (
-  (SELECT id FROM crm.class WHERE code LIKE $1),$2);';
+$sqlClassSuper = 'INSERT INTO model.class_inheritance (super_id, sub_id) VALUES (
+  (SELECT id FROM model.class WHERE code LIKE $1),$2);';
 foreach ($allClasses as $code => $class) {
     foreach ($class['subClassOf'] as $superClass) {
         pg_query_params($con, $sqlClassSuper, [$superClass, $class['id']]) or dbError("subClass", __LINE__);
@@ -349,12 +349,12 @@ foreach ($allClasses as $code => $class) {
     }
 }
 
-$sqlProperty = 'INSERT INTO crm.property (code, name, name_inverse, domain_class_id, range_class_id) VALUES (
+$sqlProperty = 'INSERT INTO model.property (code, name, name_inverse, domain_class_id, range_class_id) VALUES (
   $1,
   $2,
   $3,
-  (SELECT id FROM crm.class WHERE code LIKE $4),
-  (SELECT id FROM crm.class WHERE code LIKE $5)) RETURNING id;';
+  (SELECT id FROM model.class WHERE code LIKE $4),
+  (SELECT id FROM model.class WHERE code LIKE $5)) RETURNING id;';
 foreach ($allProperties as $code => $property) {
     $query = pg_query_params($con, $sqlProperty, [
         $code,
@@ -367,14 +367,14 @@ foreach ($allProperties as $code => $property) {
     $countProperty++;
 }
 
-$sqlPropertyName = "INSERT INTO crm.i18n (table_name, table_field, table_id, language_code, text)
+$sqlPropertyName = "INSERT INTO model.i18n (table_name, table_field, table_id, language_code, text)
   VALUES ('property', 'name', $1, $2, $3);";
-$sqlPropertyNameInverse = "INSERT INTO crm.i18n (table_name, table_field, table_id, language_code, text)
+$sqlPropertyNameInverse = "INSERT INTO model.i18n (table_name, table_field, table_id, language_code, text)
   VALUES ('property', 'name_inverse', $1, $2, $3);";
-$sqlPropertyComment = "INSERT INTO crm.i18n (table_name, table_field, table_id, language_code, text)
+$sqlPropertyComment = "INSERT INTO model.i18n (table_name, table_field, table_id, language_code, text)
   VALUES ('property', 'comment', $1, $2, $3);";
-$sqlPropertySuper = 'INSERT INTO crm.property_inheritance (super_id, sub_id) VALUES (
-  (SELECT id FROM crm.property WHERE code LIKE $1),$2);';
+$sqlPropertySuper = 'INSERT INTO model.property_inheritance (super_id, sub_id) VALUES (
+  (SELECT id FROM model.property WHERE code LIKE $1),$2);';
 
 foreach ($allProperties as $code => $property) {
     foreach ($property['label'] as $languageCode => $text) {

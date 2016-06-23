@@ -2,12 +2,12 @@
 
 /* Copyright 2016 by Alexander Watzinger and others. Please see the file README.md for licensing information */
 
-class Admin_Form_Actor extends Craws\Form\Table {
+class Admin_Form_Actor extends Admin_Form_Base {
 
     public function init() {
         $this->setName('actorForm')->setMethod('post');
         $this->setAction($this->getView()->url());
-        Admin_Form_Abstract::addDates($this, ['begin', 'begin2', 'end', 'end2']);
+        $this->addDates(['begin', 'begin2', 'end', 'end2']);
         $this->addElement('checkbox', 'birth', [
             'label' => $this->getView()->ucstring('birth'),
             'checkedValue' => 1,
@@ -24,15 +24,6 @@ class Admin_Form_Actor extends Craws\Form\Table {
             'label' => $this->getView()->ucstring('name'),
         ]);
         $this->addElement('textarea', 'description', ['label' => $this->getView()->ucstring('description')]);
-        $this->addElement('hidden', 'genderId', ['decorators' => ['ViewHelper']]);
-        $this->addElement('text', 'genderButton', [
-            'label' => 'Gender',
-            'class' => 'tableSelect',
-            'readonly' => true,
-            'onfocus' => 'this.blur()',
-            'placeholder' => $this->getView()->ucstring('select'),
-            'attribs' => ['readonly' => 'true'],
-        ]);
         $this->addElement('hidden', 'residenceId', ['decorators' => ['ViewHelper']]);
         $this->addElement('text', 'residenceButton', [
             'label' => $this->getView()->ucstring('residence'),
@@ -93,11 +84,9 @@ class Admin_Form_Actor extends Craws\Form\Table {
             $aliasIndex++;
         }
         $this->populate(['aliasId' => $aliasIndex]);
-        if ($actor->getClass()->code != 'E21') {
+        if ($actor->class->code != 'E21') {
             $this->removeElement('birth');
             $this->removeElement('death');
-            $this->removeElement('genderId');
-            $this->removeElement('genderButton');
         }
     }
 

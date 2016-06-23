@@ -6,7 +6,6 @@ class Admin_ActorControllerTest extends ControllerTestCase {
 
     private $formValues = [
         'name' => 'Hector',
-        'gender' => '',
         'description' => 'Hector',
         'beginYear' => '23',
         'beginMonth' => '12',
@@ -26,7 +25,7 @@ class Admin_ActorControllerTest extends ControllerTestCase {
         $this->formValues['residenceId'] = $this->objectId;
         $this->formValues['appearsFirstId'] = $this->objectId;
         $this->formValues['appearsLastId'] = $this->objectId;
-        $this->formValues['genderId'] = Model_NodeMapper::getByNodeCategoryName('type', 'Gender', 'Female')->id;
+        $this->formValues['genderId'] = Model_NodeMapper::getByNodeCategoryName('Gender', 'Female')->id;
     }
 
     public function testIndex() {
@@ -39,11 +38,10 @@ class Admin_ActorControllerTest extends ControllerTestCase {
     }
 
     public function testCrud() {
-        $this->dispatch('admin/actor/insert'); // test errror if code is missing
-        $this->resetRequest()->resetResponse();
+        //$this->dispatch('admin/actor/insert'); // test errror if code is missing
+        //$this->resetRequest()->resetResponse();
         $this->dispatch('admin/actor/insert/code/E21/');
         $this->request->setMethod('POST')->setPost($this->formValues);
-        $this->dispatch('admin/actor/insert/code/E21/sourceId/' . $this->sourceId);
         $this->dispatch('admin/actor/insert/code/E21/sourceId/' . $this->sourceId);
         $this->resetRequest()->resetResponse();
         $actors = Model_EntityMapper::getByCodes('Person');
@@ -71,6 +69,10 @@ class Admin_ActorControllerTest extends ControllerTestCase {
         $this->request->setMethod('POST')->setPost($this->formValues);
         $this->dispatch('admin/actor/update/id/' . $legalBodies[0]->id);
         $this->resetRequest()->resetResponse();
+        $this->formValues['name'] = '';
+        $this->request->setMethod('POST')->setPost($this->formValues);
+        $this->dispatch('admin/actor/update/id/' . $legalBodies[0]->id); // test invalid form
+        $this->resetRequest()->resetResponse();
         $this->dispatch('admin/actor/view/id/' . $legalBodies[0]->id);
     }
 
@@ -82,7 +84,7 @@ class Admin_ActorControllerTest extends ControllerTestCase {
 
     public function testRelation() {
         $this->dispatch('admin/actor/insert-relation/id/' . $this->actorId);
-        $relation = Model_NodeMapper::getByNodeCategoryName('type', 'Actor Actor Relation', 'Kindredship');
+        $relation = Model_NodeMapper::getByNodeCategoryName('Actor Actor Relation', 'Kindredship');
         $this->request->setMethod('POST')->setPost([
             'typeId' => $relation->id,
             'typeButton' => $relation->name,

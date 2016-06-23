@@ -6,10 +6,10 @@ class Craws_View_Helper_Description extends Zend_View_Helper_Abstract {
 
     public function description(\Model_Entity $entity) {
         if ($entity->description) {
-            $html = '<div class="description">';
-            $html .= '<p class="descriptionTitle">' . $this->view->ucstring('description') . '</p>';
-            $html .= '<p>' . $entity->description . '</p>';
-            $html .= '</div>';
+            $html = '<div class="description">
+                    <p class="descriptionTitle">' . $this->view->ucstring('description') . '</p>
+                    <p>' . $entity->description . '</p>
+                    </div>';
             return $html;
         }
         return;

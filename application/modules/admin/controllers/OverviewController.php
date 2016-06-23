@@ -62,18 +62,9 @@ class Admin_OverviewController extends Zend_Controller_Action {
         $form = new Admin_Form_Test();
         $classes = Zend_Registry::get('classes');
         $properties = Zend_Registry::get('properties');
-        $types = [];
-        foreach (['place', 'type'] as $typeName) {
-            foreach (Zend_Registry::get($typeName) as $type) {
-                if ($type->expandable) {
-                    $types[] = $type;
-                }
-            }
-        }
         $this->view->count = [];
         $this->view->count['classes'] = count($classes);
         $this->view->count['properties'] = count($properties);
-        $this->view->count['types'] = count($types);
         $this->view->form = $form;
         if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
             return;
@@ -83,10 +74,10 @@ class Admin_OverviewController extends Zend_Controller_Action {
         $property = $properties[$this->_getParam('property')];
         $whitelistDomains = Zend_Registry::get('config')->get('linkcheckIgnoreDomains')->toArray();
         $this->view->testResult = [];
-        if (!in_array($domain->code, $property->getDomain()->getSubRecursive())) {
+        if (!in_array($domain->code, $property->domain->getSubRecursive())) {
             $this->view->testResult['domainError'] = true;
         }
-        if (!in_array($range->code, $property->getRange()->getSubRecursive())) {
+        if (!in_array($range->code, $property->range->getSubRecursive())) {
             $this->view->testResult['rangeError'] = true;
         }
         if (in_array($domain->code, $whitelistDomains)) {

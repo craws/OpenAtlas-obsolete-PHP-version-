@@ -4,30 +4,35 @@
 
 class Craws_View_Helper_DisplayTreeOverlay extends Zend_View_Helper_Abstract {
 
-    public function displayTreeOverlay($name, $treeData, $multi = false) {
-        $html = '<div id="' . $name . 'Overlay" class="overlay"><div id="' . $name . 'Dialog" class="overlayContainer">
-            <input class="treeFilter" id="' . $name . 'Search" placeholder="Filter"/><div id="' . $name . 'Tree"></div>
-            </div></div>';
+    public function displayTreeOverlay($hierarchy, $treeData) {
+        if (!is_a($hierarchy, 'Model_Node')) {
+            $hierarchy = Model_NodeMapper::getHierarchyByName($hierarchy);
+        }
+        $html = '<div id="' . $hierarchy->nameClean . 'Overlay" class="overlay">
+                    <div id="' . $hierarchy->nameClean . 'Dialog" class="overlayContainer">
+                        <input class="treeFilter" id="' . $hierarchy->nameClean . 'Search" placeholder="Filter"/>
+                        <div id="' . $hierarchy->nameClean . 'Tree"></div>
+                    </div>
+                </div>';
         $html .= '<script type="text/javascript">$(document).ready(function () {';
-
-        if ($multi) {
-            $html .= 'createTreeOverlay("' . $name . '", "' . $this->view->ucstring($name) . '", true);
-                $("#' . $name . 'Tree").jstree({
+        if ($hierarchy->multiple) {
+            $html .= 'createTreeOverlay("' . $hierarchy->nameClean . '", "' . $hierarchy->name . '", true);
+                $("#' . $hierarchy->nameClean . 'Tree").jstree({
                     "search": {"case_insensitive": true, "show_only_matches": true},
                     "plugins": ["search", "checkbox"],
                     "checkbox": { "three_state" : false },
                     "core": ' . $treeData . '});';
         } else {
-            $html .= 'createTreeOverlay("' . $name . '", "' . $this->view->ucstring($name) . '");
-                $("#' . $name . 'Tree").jstree({
+            $html .= 'createTreeOverlay("' . $hierarchy->nameClean . '", "' . $hierarchy->name . '");
+                $("#' . $hierarchy->nameClean . 'Tree").jstree({
                     "search": {"case_insensitive": true, "show_only_matches": true},
                     "plugins": ["search"],
                     "core": ' . $treeData . '});
-                    $("#' . $name . 'Tree").on("select_node.jstree", function (e, data) {
-                    selectFromTree("' . $name . '", data.node.id, data.node.text);});';
+                    $("#' . $hierarchy->nameClean . 'Tree").on("select_node.jstree", function (e, data) {
+                    selectFromTree("' . $hierarchy->nameClean . '", data.node.id, data.node.text);});';
         }
-        $html .= '$("#' . $name . 'Search").keyup(function () {
-                $("#' . $name . 'Tree").jstree("search", $(this).val());});';
+        $html .= '$("#' . $hierarchy->nameClean . 'Search").keyup(function () {
+                $("#' . $hierarchy->nameClean . 'Tree").jstree("search", $(this).val());});';
         $html .= '});</script>';
         return $html;
     }

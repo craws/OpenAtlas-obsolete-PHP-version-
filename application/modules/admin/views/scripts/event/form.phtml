@@ -6,7 +6,7 @@
         <?= $form->name->renderLabel() ?>
         <div class="tableCell"><?= $form->name->renderViewHelper() ?></div>
     </div>
-    <?= $this->displayTreeSelectMulti('type', $form, $this->types) ?>
+    <?= $this->displayTreeSelect($this->hierarchies, $form) ?>
     <?= $this->displayTableSelect('super', $form); ?>
     <?= $this->displayTableSelect('place', $form); ?>
     <?= $this->render('dateForm.phtml'); ?>
@@ -39,13 +39,12 @@
         $superTable = ['id' => 'super', 'pager' => true, 'filter' => true];
         $superTable['header'] = [_('name'), _('class'), _('first'), _('last')];
         foreach ($this->events as $super) {
-            if ((isset($this->event) && $this->event->id == $super->id) ||
-                $super->name == Zend_Registry::get('config')->get('eventRootName')) {
+            if ((isset($this->event) && $this->event->id == $super->id) || $super->id == $this->rootEvent->id) {
                 continue;  // dont show root or same event
             }
             $superTable['data'][] = [
                 '<a onclick="selectFromTable(this, \'super\', ' . $super->id . ')">' . $super->name . '</a>',
-                $super->getClass()->nameTranslated,
+                $super->class->nameTranslated,
                 $super->first,
                 $super->last,
             ];
@@ -81,7 +80,7 @@
             foreach ($this->actors as $actor) {
                 $recipientTable['data'][] = [
                     '<a onclick="selectFromTable(this, \'recipient\', ' . $actor->id . ')">' . $actor->name . '</a>',
-                    $actor->getClass()->nameTranslated,
+                    $actor->class->nameTranslated,
                     $actor->first,
                     $actor->last,
                 ];
@@ -99,7 +98,7 @@
             foreach ($this->actors as $actor) {
                 $donorTable['data'][] = [
                     '<a onclick="selectFromTable(this, \'donor\', ' . $actor->id . ')">' . $actor->name . '</a>',
-                    $actor->getClass()->nameTranslated,
+                    $actor->class->nameTranslated,
                     $actor->first,
                     $actor->last,
                 ];
@@ -127,7 +126,10 @@
         </div>
     </div>
 <? endif ?>
-<?= $this->displayTreeOverlay('type', $this->typeTreeData, true) ?>
+<? foreach ($this->hierarchies as $hierarchy) : ?>
+    <? $dataVariable = $hierarchy->nameClean . 'TreeData'; ?>
+    <?= $this->displayTreeOverlay($hierarchy->nameClean, $this->$dataVariable); ?>
+<? endforeach ?>
 <script type="text/javascript">
     $(document).ready(function () {
         createOverlay("super", "<?= $this->ucstring('event') ?>");

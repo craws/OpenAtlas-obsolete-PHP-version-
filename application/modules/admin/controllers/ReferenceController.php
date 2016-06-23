@@ -4,7 +4,6 @@
 
 class Admin_ReferenceController extends Zend_Controller_Action {
 
-
     public function deleteAction() {
         Model_EntityMapper::getById($this->_getParam('id'))->delete();
         $this->_helper->message('info_delete');
@@ -17,15 +16,14 @@ class Admin_ReferenceController extends Zend_Controller_Action {
 
     public function insertAction() {
         $form = new Admin_Form_Reference();
-        $rootType = $this->_getParam('type');
+        $rootType = Model_NodeMapper::getHierarchyByName($this->_getParam('type'));
+        $hierarchies = $form->addHierarchies($rootType->name);
         if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
             $this->view->form = $form;
-            $this->view->rootType = $rootType;
-            $this->view->typeTreeData = Model_NodeMapper::getTreeData('type', $rootType);
             return;
         }
         $reference = Model_EntityMapper::insert('E31', $form->getValue('name'), $form->getValue('description'));
-        Model_LinkMapper::insert('P2', $reference, Model_EntityMapper::getById($this->_getParam('typeId')));
+        self::save($form, $reference, $hierarchies);
         $this->_helper->message('info_insert');
         // @codeCoverageIgnoreStart
         if ($form->getElement('continue')->getValue()) {
@@ -39,50 +37,69 @@ class Admin_ReferenceController extends Zend_Controller_Action {
         $reference = Model_EntityMapper::getById($this->_getParam('id'));
         $this->view->reference = $reference;
         $form = new Admin_Form_Reference();
+        $referenceRootType = null;
+        $referenceType = null;
+        $types = Model_LinkMapper::getLinkedEntities($reference, 'P2');
+        foreach ($types as $type) {
+            if (!$type->system) {
+                continue;
+            }
+            $rootType = ($type->rootId) ? Model_NodeMapper::getById($type->rootId) : $type;
+            switch ($rootType->name) {
+                case 'Bibliography':
+                case 'Edition':
+                    $referenceType = $type;
+                    $referenceRootType = $rootType;
+                    break 2;
+            }
+        }
+        $hierarchies = $form->addHierarchies($rootType->name, $reference);
         $this->view->form = $form;
-        $type = Model_LinkMapper::getLinkedEntity($reference, 'P2');
-        $rootType = Model_EntityMapper::getById($type->rootId);
         if (!$this->getRequest()->isPost()) {
             $form->populate([
                 'name' => $reference->name,
                 'description' => $reference->description,
-                'typeId' => $type->id,
-                'typeButton' => $type->name,
+                'typeId' => $referenceType->id,
                 'modified' => ($reference->modified) ? $reference->modified->getTimestamp() : 0
             ]);
-            $this->view->typeTreeData = Model_NodeMapper::getTreeData('type', $rootType->name, $type);
+            if ($referenceType->rootId) {
+                $form->populate(['typeButton' => $referenceType->name]);
+            }
+            $this->view->typeTreeData = Model_NodeMapper::getTreeData($referenceRootType->name, $referenceType);
             return;
         }
         $formValid = $form->isValid($this->getRequest()->getPost());
         $modified = Model_EntityMapper::checkIfModified($reference, $form->modified->getValue());
+        // @codeCoverageIgnoreStart
         if ($modified) {
             $log = Model_UserLogMapper::getLogForView('entity', $reference->id);
             $this->view->modifier = $log['modifier_name'];
         }
+        // @codeCoverageIgnoreEnd
         if (!$formValid || $modified) {
-            $this->view->typeTreeData = Model_NodeMapper::getTreeData('type', $rootType->name);
+            $this->view->typeTreeData = Model_NodeMapper::getTreeData($referenceRootType->name);
             $this->_helper->message('error_modified');
             return;
         }
         $reference->name = $form->getValue('name');
         $reference->description = $form->getValue('description');
         $reference->update();
-        Model_LinkMapper::getLink($reference, 'P2')->delete();
-        Model_LinkMapper::insert('P2', $reference, Model_EntityMapper::getById($this->_getParam('typeId')));
+        foreach (Model_LinkMapper::getLinks($reference, ['P2']) as $link) {
+            $link->delete();
+        }
+        self::save($form, $reference, $hierarchies);
         $this->_helper->message('info_update');
         return $this->_helper->redirector->gotoUrl('/admin/reference/view/id/' . $reference->id);
     }
 
     public function viewAction() {
         $reference = Model_EntityMapper::getById($this->_getParam('id'));
-        $type = Model_LinkMapper::getLinkedEntity($reference, 'P2');
-        $typeRoot = Model_NodeMapper::getById($type->rootId);
         $actorLinks = [];
         $sourceLinks = [];
         $eventLinks = [];
         $placeLinks = [];
         foreach (Model_LinkMapper::getLinks($reference, 'P67') as $link) {
-            $code = $link->getRange()->getClass()->code;
+            $code = $link->range->class->code;
             if ($code == 'E33') {
                 $sourceLinks[] = $link;
             } else if ($code == 'E18') {
@@ -94,11 +111,23 @@ class Admin_ReferenceController extends Zend_Controller_Action {
             }
         }
         $this->view->reference = $reference;
-        $this->view->referenceType = Model_NodeMapper::getNodeByEntity('type', $typeRoot->name, $reference);
+        $this->view->referenceType = Model_LinkMapper::getLinkedEntity($reference, 'P2');
         $this->view->actorLinks = $actorLinks;
         $this->view->sourceLinks = $sourceLinks;
         $this->view->eventLinks = $eventLinks;
         $this->view->placeLinks = $placeLinks;
     }
 
+    private function save(Zend_Form $form, Model_Entity $entity, array $hierarchies) {
+        foreach ($hierarchies as $hierarchy) {
+            $idField = $hierarchy->nameClean . 'Id';
+            if ($form->getValue($idField)) {
+                foreach (explode(",", $form->getValue($idField)) as $id) {
+                    Model_LinkMapper::insert('P2', $entity, Model_NodeMapper::getById($id));
+                }
+            } else if ($hierarchy->system) {
+                Model_LinkMapper::insert('P2', $entity, $hierarchy);
+            }
+        }
+    }
 }

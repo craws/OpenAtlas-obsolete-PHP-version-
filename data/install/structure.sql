@@ -2,10 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.1
--- Dumped by pg_dump version 9.5.1
-
--- CREATE EXTENSION postgis;
+-- Dumped from database version 9.5.3
+-- Dumped by pg_dump version 9.5.3
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -15,6 +13,7 @@ SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET row_security = off;
 
+-- CREATE EXTENSION postgis;
 
 SET search_path = web, pg_catalog;
 
@@ -22,8 +21,26 @@ ALTER TABLE IF EXISTS ONLY web.user_settings DROP CONSTRAINT IF EXISTS user_sett
 ALTER TABLE IF EXISTS ONLY web."user" DROP CONSTRAINT IF EXISTS user_group_id_fkey;
 ALTER TABLE IF EXISTS ONLY web.user_bookmarks DROP CONSTRAINT IF EXISTS user_bookmarks_user_id_fkey;
 ALTER TABLE IF EXISTS ONLY web.user_bookmarks DROP CONSTRAINT IF EXISTS user_bookmarks_entity_id_fkey;
+ALTER TABLE IF EXISTS ONLY web.hierarchy_form DROP CONSTRAINT IF EXISTS type_form_type_id_fkey;
+ALTER TABLE IF EXISTS ONLY web.hierarchy_form DROP CONSTRAINT IF EXISTS type_form_form_id_fkey;
 ALTER TABLE IF EXISTS ONLY web.i18n DROP CONSTRAINT IF EXISTS i18n_language_id_fkey;
 ALTER TABLE IF EXISTS ONLY web.i18n DROP CONSTRAINT IF EXISTS i18n_item_id_fkey;
+ALTER TABLE IF EXISTS ONLY web.hierarchy DROP CONSTRAINT IF EXISTS hierarchy_id_fkey;
+SET search_path = model, pg_catalog;
+
+ALTER TABLE IF EXISTS ONLY model.property DROP CONSTRAINT IF EXISTS property_range_class_id_fkey;
+ALTER TABLE IF EXISTS ONLY model.property_inheritance DROP CONSTRAINT IF EXISTS property_inheritance_super_id_fkey;
+ALTER TABLE IF EXISTS ONLY model.property_inheritance DROP CONSTRAINT IF EXISTS property_inheritance_sub_id_fkey;
+ALTER TABLE IF EXISTS ONLY model.property DROP CONSTRAINT IF EXISTS property_domain_class_id_fkey;
+ALTER TABLE IF EXISTS ONLY model.link DROP CONSTRAINT IF EXISTS link_range_id_fkey;
+ALTER TABLE IF EXISTS ONLY model.link_property DROP CONSTRAINT IF EXISTS link_property_range_id_fkey;
+ALTER TABLE IF EXISTS ONLY model.link_property DROP CONSTRAINT IF EXISTS link_property_property_id_fkey;
+ALTER TABLE IF EXISTS ONLY model.link DROP CONSTRAINT IF EXISTS link_property_id_fkey;
+ALTER TABLE IF EXISTS ONLY model.link_property DROP CONSTRAINT IF EXISTS link_property_domain_id_fkey;
+ALTER TABLE IF EXISTS ONLY model.link DROP CONSTRAINT IF EXISTS link_domain_id_fkey;
+ALTER TABLE IF EXISTS ONLY model.entity DROP CONSTRAINT IF EXISTS entity_class_id_fkey;
+ALTER TABLE IF EXISTS ONLY model.class_inheritance DROP CONSTRAINT IF EXISTS class_inheritance_super_id_fkey;
+ALTER TABLE IF EXISTS ONLY model.class_inheritance DROP CONSTRAINT IF EXISTS class_inheritance_sub_id_fkey;
 SET search_path = log, pg_catalog;
 
 ALTER TABLE IF EXISTS ONLY log.detail DROP CONSTRAINT IF EXISTS detail_log_id_fkey;
@@ -33,23 +50,11 @@ ALTER TABLE IF EXISTS ONLY gis.polygon DROP CONSTRAINT IF EXISTS polygon_entity_
 ALTER TABLE IF EXISTS ONLY gis.point DROP CONSTRAINT IF EXISTS point_entity_id_fkey;
 ALTER TABLE IF EXISTS ONLY gis.linestring DROP CONSTRAINT IF EXISTS linestring_entity_id_fkey;
 ALTER TABLE IF EXISTS ONLY gis.centerpoint DROP CONSTRAINT IF EXISTS centerpoint_entity_id_fkey;
-SET search_path = crm, pg_catalog;
-
-ALTER TABLE IF EXISTS ONLY crm.property DROP CONSTRAINT IF EXISTS property_range_class_id_fkey;
-ALTER TABLE IF EXISTS ONLY crm.property_inheritance DROP CONSTRAINT IF EXISTS property_inheritance_super_id_fkey;
-ALTER TABLE IF EXISTS ONLY crm.property_inheritance DROP CONSTRAINT IF EXISTS property_inheritance_sub_id_fkey;
-ALTER TABLE IF EXISTS ONLY crm.property DROP CONSTRAINT IF EXISTS property_domain_class_id_fkey;
-ALTER TABLE IF EXISTS ONLY crm.link DROP CONSTRAINT IF EXISTS link_range_id_fkey;
-ALTER TABLE IF EXISTS ONLY crm.link_property DROP CONSTRAINT IF EXISTS link_property_range_id_fkey;
-ALTER TABLE IF EXISTS ONLY crm.link_property DROP CONSTRAINT IF EXISTS link_property_property_id_fkey;
-ALTER TABLE IF EXISTS ONLY crm.link DROP CONSTRAINT IF EXISTS link_property_id_fkey;
-ALTER TABLE IF EXISTS ONLY crm.link_property DROP CONSTRAINT IF EXISTS link_property_domain_id_fkey;
-ALTER TABLE IF EXISTS ONLY crm.link DROP CONSTRAINT IF EXISTS link_domain_id_fkey;
-ALTER TABLE IF EXISTS ONLY crm.entity DROP CONSTRAINT IF EXISTS entity_class_id_fkey;
-ALTER TABLE IF EXISTS ONLY crm.class_inheritance DROP CONSTRAINT IF EXISTS class_inheritance_super_id_fkey;
-ALTER TABLE IF EXISTS ONLY crm.class_inheritance DROP CONSTRAINT IF EXISTS class_inheritance_sub_id_fkey;
 SET search_path = web, pg_catalog;
 
+DROP TRIGGER IF EXISTS update_modified ON web.form;
+DROP TRIGGER IF EXISTS update_modified ON web.hierarchy;
+DROP TRIGGER IF EXISTS update_modified ON web.hierarchy_form;
 DROP TRIGGER IF EXISTS update_modified ON web.user_bookmarks;
 DROP TRIGGER IF EXISTS update_modified ON web.user_settings;
 DROP TRIGGER IF EXISTS update_modified ON web.content;
@@ -57,6 +62,16 @@ DROP TRIGGER IF EXISTS update_modified ON web.language;
 DROP TRIGGER IF EXISTS update_modified ON web.i18n;
 DROP TRIGGER IF EXISTS update_modified ON web."group";
 DROP TRIGGER IF EXISTS update_modified ON web."user";
+SET search_path = model, pg_catalog;
+
+DROP TRIGGER IF EXISTS update_modified ON model.link_property;
+DROP TRIGGER IF EXISTS update_modified ON model.property_inheritance;
+DROP TRIGGER IF EXISTS update_modified ON model.link;
+DROP TRIGGER IF EXISTS update_modified ON model.entity;
+DROP TRIGGER IF EXISTS update_modified ON model.property;
+DROP TRIGGER IF EXISTS update_modified ON model.i18n;
+DROP TRIGGER IF EXISTS update_modified ON model.class_inheritance;
+DROP TRIGGER IF EXISTS update_modified ON model.class;
 SET search_path = gis, pg_catalog;
 
 DROP TRIGGER IF EXISTS update_modified ON gis.polygon;
@@ -64,16 +79,6 @@ DROP TRIGGER IF EXISTS update_modified ON gis.linestring;
 DROP TRIGGER IF EXISTS update_modified ON gis.point;
 DROP TRIGGER IF EXISTS update_modified ON gis.centerpoint;
 DROP TRIGGER IF EXISTS geometry_creation ON gis.centerpoint;
-SET search_path = crm, pg_catalog;
-
-DROP TRIGGER IF EXISTS update_modified ON crm.link_property;
-DROP TRIGGER IF EXISTS update_modified ON crm.property_inheritance;
-DROP TRIGGER IF EXISTS update_modified ON crm.link;
-DROP TRIGGER IF EXISTS update_modified ON crm.entity;
-DROP TRIGGER IF EXISTS update_modified ON crm.property;
-DROP TRIGGER IF EXISTS update_modified ON crm.i18n;
-DROP TRIGGER IF EXISTS update_modified ON crm.class_inheritance;
-DROP TRIGGER IF EXISTS update_modified ON crm.class;
 SET search_path = web, pg_catalog;
 
 ALTER TABLE IF EXISTS ONLY web."user" DROP CONSTRAINT IF EXISTS user_username_key;
@@ -84,6 +89,9 @@ ALTER TABLE IF EXISTS ONLY web.user_log DROP CONSTRAINT IF EXISTS user_log_pkey;
 ALTER TABLE IF EXISTS ONLY web."user" DROP CONSTRAINT IF EXISTS user_email_key;
 ALTER TABLE IF EXISTS ONLY web.user_bookmarks DROP CONSTRAINT IF EXISTS user_bookmarks_user_id_entity_id_key;
 ALTER TABLE IF EXISTS ONLY web.user_bookmarks DROP CONSTRAINT IF EXISTS user_bookmarks_pkey;
+ALTER TABLE IF EXISTS ONLY web.hierarchy DROP CONSTRAINT IF EXISTS type_pkey;
+ALTER TABLE IF EXISTS ONLY web.hierarchy DROP CONSTRAINT IF EXISTS type_name_key;
+ALTER TABLE IF EXISTS ONLY web.hierarchy_form DROP CONSTRAINT IF EXISTS type_form_pkey;
 ALTER TABLE IF EXISTS ONLY web.settings DROP CONSTRAINT IF EXISTS settings_pkey;
 ALTER TABLE IF EXISTS ONLY web.settings DROP CONSTRAINT IF EXISTS settings_name_group_key;
 ALTER TABLE IF EXISTS ONLY web.language DROP CONSTRAINT IF EXISTS language_shortform_key;
@@ -91,8 +99,26 @@ ALTER TABLE IF EXISTS ONLY web.language DROP CONSTRAINT IF EXISTS language_pkey;
 ALTER TABLE IF EXISTS ONLY web.language DROP CONSTRAINT IF EXISTS language_name_key;
 ALTER TABLE IF EXISTS ONLY web.i18n DROP CONSTRAINT IF EXISTS i18n_pkey;
 ALTER TABLE IF EXISTS ONLY web.i18n DROP CONSTRAINT IF EXISTS i18n_field_foreign_id_language_id_key;
+ALTER TABLE IF EXISTS ONLY web.hierarchy_form DROP CONSTRAINT IF EXISTS hierarchy_form_hierarchy_id_form_id_key;
 ALTER TABLE IF EXISTS ONLY web."group" DROP CONSTRAINT IF EXISTS group_pkey;
+ALTER TABLE IF EXISTS ONLY web.form DROP CONSTRAINT IF EXISTS form_pkey;
+ALTER TABLE IF EXISTS ONLY web.form DROP CONSTRAINT IF EXISTS form_name_key;
 ALTER TABLE IF EXISTS ONLY web.content DROP CONSTRAINT IF EXISTS content_pkey;
+SET search_path = model, pg_catalog;
+
+ALTER TABLE IF EXISTS ONLY model.property DROP CONSTRAINT IF EXISTS property_pkey;
+ALTER TABLE IF EXISTS ONLY model.property_inheritance DROP CONSTRAINT IF EXISTS property_inheritance_pkey;
+ALTER TABLE IF EXISTS ONLY model.property DROP CONSTRAINT IF EXISTS property_code_key;
+ALTER TABLE IF EXISTS ONLY model.link_property DROP CONSTRAINT IF EXISTS link_property_pkey;
+ALTER TABLE IF EXISTS ONLY model.link DROP CONSTRAINT IF EXISTS link_pkey;
+ALTER TABLE IF EXISTS ONLY model.i18n DROP CONSTRAINT IF EXISTS i18n_table_name_table_field_table_id_language_code_key;
+ALTER TABLE IF EXISTS ONLY model.i18n DROP CONSTRAINT IF EXISTS i18n_pkey;
+ALTER TABLE IF EXISTS ONLY model.entity DROP CONSTRAINT IF EXISTS entity_pkey;
+ALTER TABLE IF EXISTS ONLY model.class DROP CONSTRAINT IF EXISTS class_pkey;
+ALTER TABLE IF EXISTS ONLY model.class DROP CONSTRAINT IF EXISTS class_name_key;
+ALTER TABLE IF EXISTS ONLY model.class_inheritance DROP CONSTRAINT IF EXISTS class_inheritance_super_id_sub_id_key;
+ALTER TABLE IF EXISTS ONLY model.class_inheritance DROP CONSTRAINT IF EXISTS class_inheritance_pkey;
+ALTER TABLE IF EXISTS ONLY model.class DROP CONSTRAINT IF EXISTS class_code_key;
 SET search_path = log, pg_catalog;
 
 ALTER TABLE IF EXISTS ONLY log.log DROP CONSTRAINT IF EXISTS log_pkey;
@@ -104,21 +130,6 @@ ALTER TABLE IF EXISTS ONLY gis.point DROP CONSTRAINT IF EXISTS point_pkey;
 ALTER TABLE IF EXISTS ONLY gis.linestring DROP CONSTRAINT IF EXISTS linestring_pkey;
 ALTER TABLE IF EXISTS ONLY gis.centerpoint DROP CONSTRAINT IF EXISTS centerpoint_pkey;
 ALTER TABLE IF EXISTS ONLY gis.centerpoint DROP CONSTRAINT IF EXISTS centerpoint_entity_id_key;
-SET search_path = crm, pg_catalog;
-
-ALTER TABLE IF EXISTS ONLY crm.property DROP CONSTRAINT IF EXISTS property_pkey;
-ALTER TABLE IF EXISTS ONLY crm.property_inheritance DROP CONSTRAINT IF EXISTS property_inheritance_pkey;
-ALTER TABLE IF EXISTS ONLY crm.property DROP CONSTRAINT IF EXISTS property_code_key;
-ALTER TABLE IF EXISTS ONLY crm.link_property DROP CONSTRAINT IF EXISTS link_property_pkey;
-ALTER TABLE IF EXISTS ONLY crm.link DROP CONSTRAINT IF EXISTS link_pkey;
-ALTER TABLE IF EXISTS ONLY crm.i18n DROP CONSTRAINT IF EXISTS i18n_table_name_table_field_table_id_language_code_key;
-ALTER TABLE IF EXISTS ONLY crm.i18n DROP CONSTRAINT IF EXISTS i18n_pkey;
-ALTER TABLE IF EXISTS ONLY crm.entity DROP CONSTRAINT IF EXISTS entity_pkey;
-ALTER TABLE IF EXISTS ONLY crm.class DROP CONSTRAINT IF EXISTS class_pkey;
-ALTER TABLE IF EXISTS ONLY crm.class DROP CONSTRAINT IF EXISTS class_name_key;
-ALTER TABLE IF EXISTS ONLY crm.class_inheritance DROP CONSTRAINT IF EXISTS class_inheritance_super_id_sub_id_key;
-ALTER TABLE IF EXISTS ONLY crm.class_inheritance DROP CONSTRAINT IF EXISTS class_inheritance_pkey;
-ALTER TABLE IF EXISTS ONLY crm.class DROP CONSTRAINT IF EXISTS class_code_key;
 SET search_path = web, pg_catalog;
 
 ALTER TABLE IF EXISTS web.user_settings ALTER COLUMN id DROP DEFAULT;
@@ -128,8 +139,21 @@ ALTER TABLE IF EXISTS web."user" ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE IF EXISTS web.settings ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE IF EXISTS web.language ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE IF EXISTS web.i18n ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE IF EXISTS web.hierarchy_form ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE IF EXISTS web.hierarchy ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE IF EXISTS web."group" ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE IF EXISTS web.form ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE IF EXISTS web.content ALTER COLUMN id DROP DEFAULT;
+SET search_path = model, pg_catalog;
+
+ALTER TABLE IF EXISTS model.property_inheritance ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE IF EXISTS model.property ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE IF EXISTS model.link_property ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE IF EXISTS model.link ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE IF EXISTS model.i18n ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE IF EXISTS model.entity ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE IF EXISTS model.class_inheritance ALTER COLUMN id DROP DEFAULT;
+ALTER TABLE IF EXISTS model.class ALTER COLUMN id DROP DEFAULT;
 SET search_path = log, pg_catalog;
 
 ALTER TABLE IF EXISTS log.log ALTER COLUMN id DROP DEFAULT;
@@ -140,16 +164,6 @@ ALTER TABLE IF EXISTS gis.polygon ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE IF EXISTS gis.point ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE IF EXISTS gis.linestring ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE IF EXISTS gis.centerpoint ALTER COLUMN id DROP DEFAULT;
-SET search_path = crm, pg_catalog;
-
-ALTER TABLE IF EXISTS crm.property_inheritance ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE IF EXISTS crm.property ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE IF EXISTS crm.link_property ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE IF EXISTS crm.link ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE IF EXISTS crm.i18n ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE IF EXISTS crm.entity ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE IF EXISTS crm.class_inheritance ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE IF EXISTS crm.class ALTER COLUMN id DROP DEFAULT;
 SET search_path = web, pg_catalog;
 
 DROP SEQUENCE IF EXISTS web.user_settings_id_seq;
@@ -160,6 +174,8 @@ DROP SEQUENCE IF EXISTS web.user_id_seq;
 DROP SEQUENCE IF EXISTS web.user_bookmarks_id_seq;
 DROP TABLE IF EXISTS web.user_bookmarks;
 DROP TABLE IF EXISTS web."user";
+DROP SEQUENCE IF EXISTS web.type_id_seq;
+DROP SEQUENCE IF EXISTS web.type_form_id_seq;
 DROP SEQUENCE IF EXISTS web.settings_id_seq;
 DROP TABLE IF EXISTS web.settings;
 DROP SEQUENCE IF EXISTS web.language_id_seq;
@@ -167,9 +183,31 @@ DROP TABLE IF EXISTS web.language;
 DROP SEQUENCE IF EXISTS web.item_id_seq;
 DROP SEQUENCE IF EXISTS web.i18n_id_seq;
 DROP TABLE IF EXISTS web.i18n;
+DROP TABLE IF EXISTS web.hierarchy_form;
+DROP TABLE IF EXISTS web.hierarchy;
 DROP SEQUENCE IF EXISTS web.group_id_seq;
 DROP TABLE IF EXISTS web."group";
+DROP SEQUENCE IF EXISTS web.form_id_seq;
+DROP TABLE IF EXISTS web.form;
 DROP TABLE IF EXISTS web.content;
+SET search_path = model, pg_catalog;
+
+DROP SEQUENCE IF EXISTS model.property_inheritance_id_seq;
+DROP TABLE IF EXISTS model.property_inheritance;
+DROP SEQUENCE IF EXISTS model.property_id_seq;
+DROP TABLE IF EXISTS model.property;
+DROP SEQUENCE IF EXISTS model.link_property_id_seq;
+DROP TABLE IF EXISTS model.link_property;
+DROP SEQUENCE IF EXISTS model.link_id_seq;
+DROP TABLE IF EXISTS model.link;
+DROP SEQUENCE IF EXISTS model.i18n_id_seq;
+DROP TABLE IF EXISTS model.i18n;
+DROP SEQUENCE IF EXISTS model.entity_id_seq;
+DROP TABLE IF EXISTS model.entity;
+DROP SEQUENCE IF EXISTS model.class_inheritance_id_seq;
+DROP TABLE IF EXISTS model.class_inheritance;
+DROP SEQUENCE IF EXISTS model.class_id_seq;
+DROP TABLE IF EXISTS model.class;
 SET search_path = log, pg_catalog;
 
 DROP SEQUENCE IF EXISTS log.log_id_seq;
@@ -186,43 +224,16 @@ DROP SEQUENCE IF EXISTS gis.linestring_id_seq;
 DROP TABLE IF EXISTS gis.linestring;
 DROP SEQUENCE IF EXISTS gis.centerpoint_id_seq;
 DROP TABLE IF EXISTS gis.centerpoint;
-SET search_path = crm, pg_catalog;
+SET search_path = model, pg_catalog;
 
-DROP SEQUENCE IF EXISTS crm.property_inheritance_id_seq;
-DROP TABLE IF EXISTS crm.property_inheritance;
-DROP SEQUENCE IF EXISTS crm.property_id_seq;
-DROP TABLE IF EXISTS crm.property;
-DROP SEQUENCE IF EXISTS crm.link_property_id_seq;
-DROP TABLE IF EXISTS crm.link_property;
-DROP SEQUENCE IF EXISTS crm.link_id_seq;
-DROP TABLE IF EXISTS crm.link;
-DROP SEQUENCE IF EXISTS crm.i18n_id_seq;
-DROP TABLE IF EXISTS crm.i18n;
-DROP SEQUENCE IF EXISTS crm.entity_id_seq;
-DROP TABLE IF EXISTS crm.entity;
-DROP SEQUENCE IF EXISTS crm.class_inheritance_id_seq;
-DROP TABLE IF EXISTS crm.class_inheritance;
-DROP SEQUENCE IF EXISTS crm.class_id_seq;
-DROP TABLE IF EXISTS crm.class;
+DROP FUNCTION IF EXISTS model.update_modified();
 SET search_path = gis, pg_catalog;
 
 DROP FUNCTION IF EXISTS gis.geometry_creation();
-SET search_path = crm, pg_catalog;
-
-DROP FUNCTION IF EXISTS crm.update_modified();
 DROP SCHEMA IF EXISTS web;
+DROP SCHEMA IF EXISTS model;
 DROP SCHEMA IF EXISTS log;
 DROP SCHEMA IF EXISTS gis;
-DROP SCHEMA IF EXISTS crm;
---
--- Name: crm; Type: SCHEMA; Schema: -; Owner: openatlas_master
---
-
-CREATE SCHEMA crm;
-
-
-ALTER SCHEMA crm OWNER TO openatlas_master;
-
 --
 -- Name: gis; Type: SCHEMA; Schema: -; Owner: openatlas_master
 --
@@ -242,6 +253,15 @@ CREATE SCHEMA log;
 ALTER SCHEMA log OWNER TO openatlas_master;
 
 --
+-- Name: model; Type: SCHEMA; Schema: -; Owner: openatlas_master
+--
+
+CREATE SCHEMA model;
+
+
+ALTER SCHEMA model OWNER TO openatlas_master;
+
+--
 -- Name: web; Type: SCHEMA; Schema: -; Owner: openatlas_master
 --
 
@@ -249,28 +269,6 @@ CREATE SCHEMA web;
 
 
 ALTER SCHEMA web OWNER TO openatlas_master;
-
-SET search_path = crm, pg_catalog;
-
---
--- Name: update_modified(); Type: FUNCTION; Schema: crm; Owner: openatlas_master
---
-
-CREATE FUNCTION update_modified() RETURNS trigger
-    LANGUAGE plpgsql
-    AS $$
-BEGIN
-
-   NEW.modified = now();
-
-   RETURN NEW;
-
-END;
-
-$$;
-
-
-ALTER FUNCTION crm.update_modified() OWNER TO openatlas_master;
 
 SET search_path = gis, pg_catalog;
 
@@ -306,330 +304,31 @@ $$;
 
 ALTER FUNCTION gis.geometry_creation() OWNER TO openatlas_master;
 
-SET search_path = crm, pg_catalog;
-
-SET default_tablespace = '';
-
-SET default_with_oids = false;
+SET search_path = model, pg_catalog;
 
 --
--- Name: class; Type: TABLE; Schema: crm; Owner: openatlas_master
+-- Name: update_modified(); Type: FUNCTION; Schema: model; Owner: openatlas_master
 --
 
-CREATE TABLE class (
-    id integer NOT NULL,
-    code text NOT NULL,
-    name text NOT NULL,
-    created timestamp without time zone DEFAULT now() NOT NULL,
-    modified timestamp without time zone
-);
+CREATE FUNCTION update_modified() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
 
+   NEW.modified = now();
 
-ALTER TABLE class OWNER TO openatlas_master;
+   RETURN NEW;
 
---
--- Name: COLUMN class.code; Type: COMMENT; Schema: crm; Owner: openatlas_master
---
+END;
 
-COMMENT ON COLUMN class.code IS 'e.g. E21';
+$$;
 
 
---
--- Name: COLUMN class.name; Type: COMMENT; Schema: crm; Owner: openatlas_master
---
-
-COMMENT ON COLUMN class.name IS 'e.g. Person';
-
-
---
--- Name: class_id_seq; Type: SEQUENCE; Schema: crm; Owner: openatlas_master
---
-
-CREATE SEQUENCE class_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE class_id_seq OWNER TO openatlas_master;
-
---
--- Name: class_id_seq; Type: SEQUENCE OWNED BY; Schema: crm; Owner: openatlas_master
---
-
-ALTER SEQUENCE class_id_seq OWNED BY class.id;
-
-
---
--- Name: class_inheritance; Type: TABLE; Schema: crm; Owner: openatlas_master
---
-
-CREATE TABLE class_inheritance (
-    id integer NOT NULL,
-    super_id integer NOT NULL,
-    sub_id integer NOT NULL,
-    created timestamp without time zone DEFAULT now() NOT NULL,
-    modfied timestamp without time zone
-);
-
-
-ALTER TABLE class_inheritance OWNER TO openatlas_master;
-
---
--- Name: class_inheritance_id_seq; Type: SEQUENCE; Schema: crm; Owner: openatlas_master
---
-
-CREATE SEQUENCE class_inheritance_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE class_inheritance_id_seq OWNER TO openatlas_master;
-
---
--- Name: class_inheritance_id_seq; Type: SEQUENCE OWNED BY; Schema: crm; Owner: openatlas_master
---
-
-ALTER SEQUENCE class_inheritance_id_seq OWNED BY class_inheritance.id;
-
-
---
--- Name: entity; Type: TABLE; Schema: crm; Owner: openatlas_master
---
-
-CREATE TABLE entity (
-    id integer NOT NULL,
-    class_id integer NOT NULL,
-    name text NOT NULL,
-    description text,
-    value_integer integer,
-    value_timestamp timestamp without time zone,
-    created timestamp without time zone DEFAULT now() NOT NULL,
-    modified timestamp without time zone
-);
-
-
-ALTER TABLE entity OWNER TO openatlas_master;
-
---
--- Name: entity_id_seq; Type: SEQUENCE; Schema: crm; Owner: openatlas_master
---
-
-CREATE SEQUENCE entity_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE entity_id_seq OWNER TO openatlas_master;
-
---
--- Name: entity_id_seq; Type: SEQUENCE OWNED BY; Schema: crm; Owner: openatlas_master
---
-
-ALTER SEQUENCE entity_id_seq OWNED BY entity.id;
-
-
---
--- Name: i18n; Type: TABLE; Schema: crm; Owner: openatlas_master
---
-
-CREATE TABLE i18n (
-    id integer NOT NULL,
-    table_name text NOT NULL,
-    table_field text NOT NULL,
-    table_id integer NOT NULL,
-    language_code text NOT NULL,
-    text text NOT NULL,
-    created timestamp without time zone DEFAULT now() NOT NULL,
-    modified timestamp without time zone
-);
-
-
-ALTER TABLE i18n OWNER TO openatlas_master;
-
---
--- Name: i18n_id_seq; Type: SEQUENCE; Schema: crm; Owner: openatlas_master
---
-
-CREATE SEQUENCE i18n_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE i18n_id_seq OWNER TO openatlas_master;
-
---
--- Name: i18n_id_seq; Type: SEQUENCE OWNED BY; Schema: crm; Owner: openatlas_master
---
-
-ALTER SEQUENCE i18n_id_seq OWNED BY i18n.id;
-
-
---
--- Name: link; Type: TABLE; Schema: crm; Owner: openatlas_master
---
-
-CREATE TABLE link (
-    id integer NOT NULL,
-    property_id integer NOT NULL,
-    domain_id integer NOT NULL,
-    range_id integer NOT NULL,
-    description text,
-    created timestamp without time zone DEFAULT now() NOT NULL,
-    modified timestamp without time zone
-);
-
-
-ALTER TABLE link OWNER TO openatlas_master;
-
---
--- Name: link_id_seq; Type: SEQUENCE; Schema: crm; Owner: openatlas_master
---
-
-CREATE SEQUENCE link_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE link_id_seq OWNER TO openatlas_master;
-
---
--- Name: link_id_seq; Type: SEQUENCE OWNED BY; Schema: crm; Owner: openatlas_master
---
-
-ALTER SEQUENCE link_id_seq OWNED BY link.id;
-
-
---
--- Name: link_property; Type: TABLE; Schema: crm; Owner: openatlas_master
---
-
-CREATE TABLE link_property (
-    id integer NOT NULL,
-    property_id integer NOT NULL,
-    domain_id integer NOT NULL,
-    range_id integer NOT NULL,
-    description text,
-    created timestamp without time zone DEFAULT now() NOT NULL,
-    modified timestamp without time zone
-);
-
-
-ALTER TABLE link_property OWNER TO openatlas_master;
-
---
--- Name: link_property_id_seq; Type: SEQUENCE; Schema: crm; Owner: openatlas_master
---
-
-CREATE SEQUENCE link_property_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE link_property_id_seq OWNER TO openatlas_master;
-
---
--- Name: link_property_id_seq; Type: SEQUENCE OWNED BY; Schema: crm; Owner: openatlas_master
---
-
-ALTER SEQUENCE link_property_id_seq OWNED BY link_property.id;
-
-
---
--- Name: property; Type: TABLE; Schema: crm; Owner: openatlas_master
---
-
-CREATE TABLE property (
-    id integer NOT NULL,
-    code text NOT NULL,
-    range_class_id integer NOT NULL,
-    domain_class_id integer NOT NULL,
-    name text NOT NULL,
-    name_inverse text,
-    created timestamp without time zone DEFAULT now() NOT NULL,
-    modified timestamp without time zone
-);
-
-
-ALTER TABLE property OWNER TO openatlas_master;
-
---
--- Name: property_id_seq; Type: SEQUENCE; Schema: crm; Owner: openatlas_master
---
-
-CREATE SEQUENCE property_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE property_id_seq OWNER TO openatlas_master;
-
---
--- Name: property_id_seq; Type: SEQUENCE OWNED BY; Schema: crm; Owner: openatlas_master
---
-
-ALTER SEQUENCE property_id_seq OWNED BY property.id;
-
-
-SET default_with_oids = true;
-
---
--- Name: property_inheritance; Type: TABLE; Schema: crm; Owner: openatlas_master
---
-
-CREATE TABLE property_inheritance (
-    id integer NOT NULL,
-    super_id integer NOT NULL,
-    sub_id integer NOT NULL,
-    created timestamp without time zone DEFAULT now() NOT NULL,
-    modified timestamp without time zone
-);
-
-
-ALTER TABLE property_inheritance OWNER TO openatlas_master;
-
---
--- Name: property_inheritance_id_seq; Type: SEQUENCE; Schema: crm; Owner: openatlas_master
---
-
-CREATE SEQUENCE property_inheritance_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE property_inheritance_id_seq OWNER TO openatlas_master;
-
---
--- Name: property_inheritance_id_seq; Type: SEQUENCE OWNED BY; Schema: crm; Owner: openatlas_master
---
-
-ALTER SEQUENCE property_inheritance_id_seq OWNED BY property_inheritance.id;
-
+ALTER FUNCTION model.update_modified() OWNER TO openatlas_master;
 
 SET search_path = gis, pg_catalog;
+
+SET default_tablespace = '';
 
 SET default_with_oids = false;
 
@@ -878,7 +577,328 @@ ALTER TABLE log_id_seq OWNER TO openatlas_master;
 ALTER SEQUENCE log_id_seq OWNED BY log.id;
 
 
+SET search_path = model, pg_catalog;
+
+--
+-- Name: class; Type: TABLE; Schema: model; Owner: openatlas_master
+--
+
+CREATE TABLE class (
+    id integer NOT NULL,
+    code text NOT NULL,
+    name text NOT NULL,
+    created timestamp without time zone DEFAULT now() NOT NULL,
+    modified timestamp without time zone
+);
+
+
+ALTER TABLE class OWNER TO openatlas_master;
+
+--
+-- Name: COLUMN class.code; Type: COMMENT; Schema: model; Owner: openatlas_master
+--
+
+COMMENT ON COLUMN class.code IS 'e.g. E21';
+
+
+--
+-- Name: COLUMN class.name; Type: COMMENT; Schema: model; Owner: openatlas_master
+--
+
+COMMENT ON COLUMN class.name IS 'e.g. Person';
+
+
+--
+-- Name: class_id_seq; Type: SEQUENCE; Schema: model; Owner: openatlas_master
+--
+
+CREATE SEQUENCE class_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE class_id_seq OWNER TO openatlas_master;
+
+--
+-- Name: class_id_seq; Type: SEQUENCE OWNED BY; Schema: model; Owner: openatlas_master
+--
+
+ALTER SEQUENCE class_id_seq OWNED BY class.id;
+
+
+--
+-- Name: class_inheritance; Type: TABLE; Schema: model; Owner: openatlas_master
+--
+
+CREATE TABLE class_inheritance (
+    id integer NOT NULL,
+    super_id integer NOT NULL,
+    sub_id integer NOT NULL,
+    created timestamp without time zone DEFAULT now() NOT NULL,
+    modfied timestamp without time zone
+);
+
+
+ALTER TABLE class_inheritance OWNER TO openatlas_master;
+
+--
+-- Name: class_inheritance_id_seq; Type: SEQUENCE; Schema: model; Owner: openatlas_master
+--
+
+CREATE SEQUENCE class_inheritance_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE class_inheritance_id_seq OWNER TO openatlas_master;
+
+--
+-- Name: class_inheritance_id_seq; Type: SEQUENCE OWNED BY; Schema: model; Owner: openatlas_master
+--
+
+ALTER SEQUENCE class_inheritance_id_seq OWNED BY class_inheritance.id;
+
+
+--
+-- Name: entity; Type: TABLE; Schema: model; Owner: openatlas_master
+--
+
+CREATE TABLE entity (
+    id integer NOT NULL,
+    class_id integer NOT NULL,
+    name text NOT NULL,
+    description text,
+    value_integer integer,
+    value_timestamp timestamp without time zone,
+    created timestamp without time zone DEFAULT now() NOT NULL,
+    modified timestamp without time zone
+);
+
+
+ALTER TABLE entity OWNER TO openatlas_master;
+
+--
+-- Name: entity_id_seq; Type: SEQUENCE; Schema: model; Owner: openatlas_master
+--
+
+CREATE SEQUENCE entity_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE entity_id_seq OWNER TO openatlas_master;
+
+--
+-- Name: entity_id_seq; Type: SEQUENCE OWNED BY; Schema: model; Owner: openatlas_master
+--
+
+ALTER SEQUENCE entity_id_seq OWNED BY entity.id;
+
+
+--
+-- Name: i18n; Type: TABLE; Schema: model; Owner: openatlas_master
+--
+
+CREATE TABLE i18n (
+    id integer NOT NULL,
+    table_name text NOT NULL,
+    table_field text NOT NULL,
+    table_id integer NOT NULL,
+    language_code text NOT NULL,
+    text text NOT NULL,
+    created timestamp without time zone DEFAULT now() NOT NULL,
+    modified timestamp without time zone
+);
+
+
+ALTER TABLE i18n OWNER TO openatlas_master;
+
+--
+-- Name: i18n_id_seq; Type: SEQUENCE; Schema: model; Owner: openatlas_master
+--
+
+CREATE SEQUENCE i18n_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE i18n_id_seq OWNER TO openatlas_master;
+
+--
+-- Name: i18n_id_seq; Type: SEQUENCE OWNED BY; Schema: model; Owner: openatlas_master
+--
+
+ALTER SEQUENCE i18n_id_seq OWNED BY i18n.id;
+
+
+--
+-- Name: link; Type: TABLE; Schema: model; Owner: openatlas_master
+--
+
+CREATE TABLE link (
+    id integer NOT NULL,
+    property_id integer NOT NULL,
+    domain_id integer NOT NULL,
+    range_id integer NOT NULL,
+    description text,
+    created timestamp without time zone DEFAULT now() NOT NULL,
+    modified timestamp without time zone
+);
+
+
+ALTER TABLE link OWNER TO openatlas_master;
+
+--
+-- Name: link_id_seq; Type: SEQUENCE; Schema: model; Owner: openatlas_master
+--
+
+CREATE SEQUENCE link_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE link_id_seq OWNER TO openatlas_master;
+
+--
+-- Name: link_id_seq; Type: SEQUENCE OWNED BY; Schema: model; Owner: openatlas_master
+--
+
+ALTER SEQUENCE link_id_seq OWNED BY link.id;
+
+
+--
+-- Name: link_property; Type: TABLE; Schema: model; Owner: openatlas_master
+--
+
+CREATE TABLE link_property (
+    id integer NOT NULL,
+    property_id integer NOT NULL,
+    domain_id integer NOT NULL,
+    range_id integer NOT NULL,
+    description text,
+    created timestamp without time zone DEFAULT now() NOT NULL,
+    modified timestamp without time zone
+);
+
+
+ALTER TABLE link_property OWNER TO openatlas_master;
+
+--
+-- Name: link_property_id_seq; Type: SEQUENCE; Schema: model; Owner: openatlas_master
+--
+
+CREATE SEQUENCE link_property_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE link_property_id_seq OWNER TO openatlas_master;
+
+--
+-- Name: link_property_id_seq; Type: SEQUENCE OWNED BY; Schema: model; Owner: openatlas_master
+--
+
+ALTER SEQUENCE link_property_id_seq OWNED BY link_property.id;
+
+
+--
+-- Name: property; Type: TABLE; Schema: model; Owner: openatlas_master
+--
+
+CREATE TABLE property (
+    id integer NOT NULL,
+    code text NOT NULL,
+    range_class_id integer NOT NULL,
+    domain_class_id integer NOT NULL,
+    name text NOT NULL,
+    name_inverse text,
+    created timestamp without time zone DEFAULT now() NOT NULL,
+    modified timestamp without time zone
+);
+
+
+ALTER TABLE property OWNER TO openatlas_master;
+
+--
+-- Name: property_id_seq; Type: SEQUENCE; Schema: model; Owner: openatlas_master
+--
+
+CREATE SEQUENCE property_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE property_id_seq OWNER TO openatlas_master;
+
+--
+-- Name: property_id_seq; Type: SEQUENCE OWNED BY; Schema: model; Owner: openatlas_master
+--
+
+ALTER SEQUENCE property_id_seq OWNED BY property.id;
+
+
+SET default_with_oids = true;
+
+--
+-- Name: property_inheritance; Type: TABLE; Schema: model; Owner: openatlas_master
+--
+
+CREATE TABLE property_inheritance (
+    id integer NOT NULL,
+    super_id integer NOT NULL,
+    sub_id integer NOT NULL,
+    created timestamp without time zone DEFAULT now() NOT NULL,
+    modified timestamp without time zone
+);
+
+
+ALTER TABLE property_inheritance OWNER TO openatlas_master;
+
+--
+-- Name: property_inheritance_id_seq; Type: SEQUENCE; Schema: model; Owner: openatlas_master
+--
+
+CREATE SEQUENCE property_inheritance_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE property_inheritance_id_seq OWNER TO openatlas_master;
+
+--
+-- Name: property_inheritance_id_seq; Type: SEQUENCE OWNED BY; Schema: model; Owner: openatlas_master
+--
+
+ALTER SEQUENCE property_inheritance_id_seq OWNED BY property_inheritance.id;
+
+
 SET search_path = web, pg_catalog;
+
+SET default_with_oids = false;
 
 --
 -- Name: content; Type: TABLE; Schema: web; Owner: openatlas_master
@@ -892,6 +912,42 @@ CREATE TABLE content (
 
 
 ALTER TABLE content OWNER TO openatlas_master;
+
+--
+-- Name: form; Type: TABLE; Schema: web; Owner: openatlas_master
+--
+
+CREATE TABLE form (
+    id integer NOT NULL,
+    name text NOT NULL,
+    created timestamp without time zone DEFAULT now() NOT NULL,
+    modified timestamp without time zone,
+    extendable integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE form OWNER TO openatlas_master;
+
+--
+-- Name: form_id_seq; Type: SEQUENCE; Schema: web; Owner: openatlas_master
+--
+
+CREATE SEQUENCE form_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE form_id_seq OWNER TO openatlas_master;
+
+--
+-- Name: form_id_seq; Type: SEQUENCE OWNED BY; Schema: web; Owner: openatlas_master
+--
+
+ALTER SEQUENCE form_id_seq OWNED BY form.id;
+
 
 --
 -- Name: group; Type: TABLE; Schema: web; Owner: openatlas_master
@@ -929,6 +985,53 @@ ALTER SEQUENCE group_id_seq OWNED BY "group".id;
 
 
 --
+-- Name: hierarchy; Type: TABLE; Schema: web; Owner: openatlas_master
+--
+
+CREATE TABLE hierarchy (
+    id integer NOT NULL,
+    name text NOT NULL,
+    multiple integer DEFAULT 0 NOT NULL,
+    created timestamp without time zone DEFAULT now() NOT NULL,
+    modified timestamp without time zone,
+    system integer DEFAULT 0 NOT NULL,
+    extendable integer DEFAULT 0 NOT NULL,
+    directional integer DEFAULT 0 NOT NULL
+);
+
+
+ALTER TABLE hierarchy OWNER TO openatlas_master;
+
+--
+-- Name: COLUMN hierarchy.id; Type: COMMENT; Schema: web; Owner: openatlas_master
+--
+
+COMMENT ON COLUMN hierarchy.id IS 'same as model.entity.id';
+
+
+--
+-- Name: COLUMN hierarchy.name; Type: COMMENT; Schema: web; Owner: openatlas_master
+--
+
+COMMENT ON COLUMN hierarchy.name IS 'same as model.entity.name, to ensure unique root type names';
+
+
+--
+-- Name: hierarchy_form; Type: TABLE; Schema: web; Owner: openatlas_master
+--
+
+CREATE TABLE hierarchy_form (
+    id integer NOT NULL,
+    hierarchy_id integer NOT NULL,
+    form_id integer NOT NULL,
+    created timestamp without time zone DEFAULT now() NOT NULL,
+    modified timestamp without time zone
+);
+
+
+ALTER TABLE hierarchy_form OWNER TO openatlas_master;
+
+--
 -- Name: i18n; Type: TABLE; Schema: web; Owner: openatlas_master
 --
 
@@ -939,7 +1042,7 @@ CREATE TABLE i18n (
     item_id integer NOT NULL,
     language_id integer NOT NULL,
     created timestamp without time zone DEFAULT now() NOT NULL,
-    modified timestamp with time zone
+    modified timestamp without time zone
 );
 
 
@@ -1064,6 +1167,48 @@ ALTER TABLE settings_id_seq OWNER TO openatlas_master;
 --
 
 ALTER SEQUENCE settings_id_seq OWNED BY settings.id;
+
+
+--
+-- Name: type_form_id_seq; Type: SEQUENCE; Schema: web; Owner: openatlas_master
+--
+
+CREATE SEQUENCE type_form_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE type_form_id_seq OWNER TO openatlas_master;
+
+--
+-- Name: type_form_id_seq; Type: SEQUENCE OWNED BY; Schema: web; Owner: openatlas_master
+--
+
+ALTER SEQUENCE type_form_id_seq OWNED BY hierarchy_form.id;
+
+
+--
+-- Name: type_id_seq; Type: SEQUENCE; Schema: web; Owner: openatlas_master
+--
+
+CREATE SEQUENCE type_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE type_id_seq OWNER TO openatlas_master;
+
+--
+-- Name: type_id_seq; Type: SEQUENCE OWNED BY; Schema: web; Owner: openatlas_master
+--
+
+ALTER SEQUENCE type_id_seq OWNED BY hierarchy.id;
 
 
 --
@@ -1222,64 +1367,6 @@ ALTER TABLE user_settings_id_seq OWNER TO openatlas_master;
 ALTER SEQUENCE user_settings_id_seq OWNED BY user_settings.id;
 
 
-SET search_path = crm, pg_catalog;
-
---
--- Name: id; Type: DEFAULT; Schema: crm; Owner: openatlas_master
---
-
-ALTER TABLE ONLY class ALTER COLUMN id SET DEFAULT nextval('class_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: crm; Owner: openatlas_master
---
-
-ALTER TABLE ONLY class_inheritance ALTER COLUMN id SET DEFAULT nextval('class_inheritance_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: crm; Owner: openatlas_master
---
-
-ALTER TABLE ONLY entity ALTER COLUMN id SET DEFAULT nextval('entity_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: crm; Owner: openatlas_master
---
-
-ALTER TABLE ONLY i18n ALTER COLUMN id SET DEFAULT nextval('i18n_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: crm; Owner: openatlas_master
---
-
-ALTER TABLE ONLY link ALTER COLUMN id SET DEFAULT nextval('link_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: crm; Owner: openatlas_master
---
-
-ALTER TABLE ONLY link_property ALTER COLUMN id SET DEFAULT nextval('link_property_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: crm; Owner: openatlas_master
---
-
-ALTER TABLE ONLY property ALTER COLUMN id SET DEFAULT nextval('property_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: crm; Owner: openatlas_master
---
-
-ALTER TABLE ONLY property_inheritance ALTER COLUMN id SET DEFAULT nextval('property_inheritance_id_seq'::regclass);
-
-
 SET search_path = gis, pg_catalog;
 
 --
@@ -1326,6 +1413,64 @@ ALTER TABLE ONLY detail ALTER COLUMN id SET DEFAULT nextval('detail_id_seq'::reg
 ALTER TABLE ONLY log ALTER COLUMN id SET DEFAULT nextval('log_id_seq'::regclass);
 
 
+SET search_path = model, pg_catalog;
+
+--
+-- Name: id; Type: DEFAULT; Schema: model; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY class ALTER COLUMN id SET DEFAULT nextval('class_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: model; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY class_inheritance ALTER COLUMN id SET DEFAULT nextval('class_inheritance_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: model; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY entity ALTER COLUMN id SET DEFAULT nextval('entity_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: model; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY i18n ALTER COLUMN id SET DEFAULT nextval('i18n_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: model; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY link ALTER COLUMN id SET DEFAULT nextval('link_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: model; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY link_property ALTER COLUMN id SET DEFAULT nextval('link_property_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: model; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY property ALTER COLUMN id SET DEFAULT nextval('property_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: model; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY property_inheritance ALTER COLUMN id SET DEFAULT nextval('property_inheritance_id_seq'::regclass);
+
+
 SET search_path = web, pg_catalog;
 
 --
@@ -1339,7 +1484,28 @@ ALTER TABLE ONLY content ALTER COLUMN id SET DEFAULT nextval('item_id_seq'::regc
 -- Name: id; Type: DEFAULT; Schema: web; Owner: openatlas_master
 --
 
+ALTER TABLE ONLY form ALTER COLUMN id SET DEFAULT nextval('form_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: web; Owner: openatlas_master
+--
+
 ALTER TABLE ONLY "group" ALTER COLUMN id SET DEFAULT nextval('group_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: web; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY hierarchy ALTER COLUMN id SET DEFAULT nextval('type_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: web; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY hierarchy_form ALTER COLUMN id SET DEFAULT nextval('type_form_id_seq'::regclass);
 
 
 --
@@ -1389,112 +1555,6 @@ ALTER TABLE ONLY user_log ALTER COLUMN id SET DEFAULT nextval('user_log_id_seq':
 --
 
 ALTER TABLE ONLY user_settings ALTER COLUMN id SET DEFAULT nextval('user_settings_id_seq'::regclass);
-
-
-SET search_path = crm, pg_catalog;
-
---
--- Name: class_code_key; Type: CONSTRAINT; Schema: crm; Owner: openatlas_master
---
-
-ALTER TABLE ONLY class
-    ADD CONSTRAINT class_code_key UNIQUE (code);
-
-
---
--- Name: class_inheritance_pkey; Type: CONSTRAINT; Schema: crm; Owner: openatlas_master
---
-
-ALTER TABLE ONLY class_inheritance
-    ADD CONSTRAINT class_inheritance_pkey PRIMARY KEY (id);
-
-
---
--- Name: class_inheritance_super_id_sub_id_key; Type: CONSTRAINT; Schema: crm; Owner: openatlas_master
---
-
-ALTER TABLE ONLY class_inheritance
-    ADD CONSTRAINT class_inheritance_super_id_sub_id_key UNIQUE (super_id, sub_id);
-
-
---
--- Name: class_name_key; Type: CONSTRAINT; Schema: crm; Owner: openatlas_master
---
-
-ALTER TABLE ONLY class
-    ADD CONSTRAINT class_name_key UNIQUE (name);
-
-
---
--- Name: class_pkey; Type: CONSTRAINT; Schema: crm; Owner: openatlas_master
---
-
-ALTER TABLE ONLY class
-    ADD CONSTRAINT class_pkey PRIMARY KEY (id);
-
-
---
--- Name: entity_pkey; Type: CONSTRAINT; Schema: crm; Owner: openatlas_master
---
-
-ALTER TABLE ONLY entity
-    ADD CONSTRAINT entity_pkey PRIMARY KEY (id);
-
-
---
--- Name: i18n_pkey; Type: CONSTRAINT; Schema: crm; Owner: openatlas_master
---
-
-ALTER TABLE ONLY i18n
-    ADD CONSTRAINT i18n_pkey PRIMARY KEY (id);
-
-
---
--- Name: i18n_table_name_table_field_table_id_language_code_key; Type: CONSTRAINT; Schema: crm; Owner: openatlas_master
---
-
-ALTER TABLE ONLY i18n
-    ADD CONSTRAINT i18n_table_name_table_field_table_id_language_code_key UNIQUE (table_name, table_field, table_id, language_code);
-
-
---
--- Name: link_pkey; Type: CONSTRAINT; Schema: crm; Owner: openatlas_master
---
-
-ALTER TABLE ONLY link
-    ADD CONSTRAINT link_pkey PRIMARY KEY (id);
-
-
---
--- Name: link_property_pkey; Type: CONSTRAINT; Schema: crm; Owner: openatlas_master
---
-
-ALTER TABLE ONLY link_property
-    ADD CONSTRAINT link_property_pkey PRIMARY KEY (id);
-
-
---
--- Name: property_code_key; Type: CONSTRAINT; Schema: crm; Owner: openatlas_master
---
-
-ALTER TABLE ONLY property
-    ADD CONSTRAINT property_code_key UNIQUE (code);
-
-
---
--- Name: property_inheritance_pkey; Type: CONSTRAINT; Schema: crm; Owner: openatlas_master
---
-
-ALTER TABLE ONLY property_inheritance
-    ADD CONSTRAINT property_inheritance_pkey PRIMARY KEY (id);
-
-
---
--- Name: property_pkey; Type: CONSTRAINT; Schema: crm; Owner: openatlas_master
---
-
-ALTER TABLE ONLY property
-    ADD CONSTRAINT property_pkey PRIMARY KEY (id);
 
 
 SET search_path = gis, pg_catalog;
@@ -1557,6 +1617,112 @@ ALTER TABLE ONLY log
     ADD CONSTRAINT log_pkey PRIMARY KEY (id);
 
 
+SET search_path = model, pg_catalog;
+
+--
+-- Name: class_code_key; Type: CONSTRAINT; Schema: model; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY class
+    ADD CONSTRAINT class_code_key UNIQUE (code);
+
+
+--
+-- Name: class_inheritance_pkey; Type: CONSTRAINT; Schema: model; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY class_inheritance
+    ADD CONSTRAINT class_inheritance_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: class_inheritance_super_id_sub_id_key; Type: CONSTRAINT; Schema: model; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY class_inheritance
+    ADD CONSTRAINT class_inheritance_super_id_sub_id_key UNIQUE (super_id, sub_id);
+
+
+--
+-- Name: class_name_key; Type: CONSTRAINT; Schema: model; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY class
+    ADD CONSTRAINT class_name_key UNIQUE (name);
+
+
+--
+-- Name: class_pkey; Type: CONSTRAINT; Schema: model; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY class
+    ADD CONSTRAINT class_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: entity_pkey; Type: CONSTRAINT; Schema: model; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY entity
+    ADD CONSTRAINT entity_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: i18n_pkey; Type: CONSTRAINT; Schema: model; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY i18n
+    ADD CONSTRAINT i18n_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: i18n_table_name_table_field_table_id_language_code_key; Type: CONSTRAINT; Schema: model; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY i18n
+    ADD CONSTRAINT i18n_table_name_table_field_table_id_language_code_key UNIQUE (table_name, table_field, table_id, language_code);
+
+
+--
+-- Name: link_pkey; Type: CONSTRAINT; Schema: model; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY link
+    ADD CONSTRAINT link_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: link_property_pkey; Type: CONSTRAINT; Schema: model; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY link_property
+    ADD CONSTRAINT link_property_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: property_code_key; Type: CONSTRAINT; Schema: model; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY property
+    ADD CONSTRAINT property_code_key UNIQUE (code);
+
+
+--
+-- Name: property_inheritance_pkey; Type: CONSTRAINT; Schema: model; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY property_inheritance
+    ADD CONSTRAINT property_inheritance_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: property_pkey; Type: CONSTRAINT; Schema: model; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY property
+    ADD CONSTRAINT property_pkey PRIMARY KEY (id);
+
+
 SET search_path = web, pg_catalog;
 
 --
@@ -1568,11 +1734,35 @@ ALTER TABLE ONLY content
 
 
 --
+-- Name: form_name_key; Type: CONSTRAINT; Schema: web; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY form
+    ADD CONSTRAINT form_name_key UNIQUE (name);
+
+
+--
+-- Name: form_pkey; Type: CONSTRAINT; Schema: web; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY form
+    ADD CONSTRAINT form_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: group_pkey; Type: CONSTRAINT; Schema: web; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY "group"
     ADD CONSTRAINT group_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: hierarchy_form_hierarchy_id_form_id_key; Type: CONSTRAINT; Schema: web; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY hierarchy_form
+    ADD CONSTRAINT hierarchy_form_hierarchy_id_form_id_key UNIQUE (hierarchy_id, form_id);
 
 
 --
@@ -1629,6 +1819,30 @@ ALTER TABLE ONLY settings
 
 ALTER TABLE ONLY settings
     ADD CONSTRAINT settings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: type_form_pkey; Type: CONSTRAINT; Schema: web; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY hierarchy_form
+    ADD CONSTRAINT type_form_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: type_name_key; Type: CONSTRAINT; Schema: web; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY hierarchy
+    ADD CONSTRAINT type_name_key UNIQUE (name);
+
+
+--
+-- Name: type_pkey; Type: CONSTRAINT; Schema: web; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY hierarchy
+    ADD CONSTRAINT type_pkey PRIMARY KEY (id);
 
 
 --
@@ -1695,64 +1909,6 @@ ALTER TABLE ONLY "user"
     ADD CONSTRAINT user_username_key UNIQUE (username);
 
 
-SET search_path = crm, pg_catalog;
-
---
--- Name: update_modified; Type: TRIGGER; Schema: crm; Owner: openatlas_master
---
-
-CREATE TRIGGER update_modified BEFORE UPDATE ON class FOR EACH ROW EXECUTE PROCEDURE update_modified();
-
-
---
--- Name: update_modified; Type: TRIGGER; Schema: crm; Owner: openatlas_master
---
-
-CREATE TRIGGER update_modified BEFORE UPDATE ON class_inheritance FOR EACH ROW EXECUTE PROCEDURE update_modified();
-
-
---
--- Name: update_modified; Type: TRIGGER; Schema: crm; Owner: openatlas_master
---
-
-CREATE TRIGGER update_modified BEFORE UPDATE ON i18n FOR EACH ROW EXECUTE PROCEDURE update_modified();
-
-
---
--- Name: update_modified; Type: TRIGGER; Schema: crm; Owner: openatlas_master
---
-
-CREATE TRIGGER update_modified BEFORE UPDATE ON property FOR EACH ROW EXECUTE PROCEDURE update_modified();
-
-
---
--- Name: update_modified; Type: TRIGGER; Schema: crm; Owner: openatlas_master
---
-
-CREATE TRIGGER update_modified BEFORE UPDATE ON entity FOR EACH ROW EXECUTE PROCEDURE update_modified();
-
-
---
--- Name: update_modified; Type: TRIGGER; Schema: crm; Owner: openatlas_master
---
-
-CREATE TRIGGER update_modified BEFORE UPDATE ON link FOR EACH ROW EXECUTE PROCEDURE update_modified();
-
-
---
--- Name: update_modified; Type: TRIGGER; Schema: crm; Owner: openatlas_master
---
-
-CREATE TRIGGER update_modified BEFORE UPDATE ON property_inheritance FOR EACH ROW EXECUTE PROCEDURE update_modified();
-
-
---
--- Name: update_modified; Type: TRIGGER; Schema: crm; Owner: openatlas_master
---
-
-CREATE TRIGGER update_modified BEFORE UPDATE ON link_property FOR EACH ROW EXECUTE PROCEDURE update_modified();
-
-
 SET search_path = gis, pg_catalog;
 
 --
@@ -1766,28 +1922,86 @@ CREATE TRIGGER geometry_creation BEFORE INSERT ON centerpoint FOR EACH ROW EXECU
 -- Name: update_modified; Type: TRIGGER; Schema: gis; Owner: openatlas_master
 --
 
-CREATE TRIGGER update_modified BEFORE UPDATE ON centerpoint FOR EACH ROW EXECUTE PROCEDURE crm.update_modified();
+CREATE TRIGGER update_modified BEFORE UPDATE ON centerpoint FOR EACH ROW EXECUTE PROCEDURE model.update_modified();
 
 
 --
 -- Name: update_modified; Type: TRIGGER; Schema: gis; Owner: openatlas_master
 --
 
-CREATE TRIGGER update_modified BEFORE UPDATE ON point FOR EACH ROW EXECUTE PROCEDURE crm.update_modified();
+CREATE TRIGGER update_modified BEFORE UPDATE ON point FOR EACH ROW EXECUTE PROCEDURE model.update_modified();
 
 
 --
 -- Name: update_modified; Type: TRIGGER; Schema: gis; Owner: openatlas_master
 --
 
-CREATE TRIGGER update_modified BEFORE UPDATE ON linestring FOR EACH ROW EXECUTE PROCEDURE crm.update_modified();
+CREATE TRIGGER update_modified BEFORE UPDATE ON linestring FOR EACH ROW EXECUTE PROCEDURE model.update_modified();
 
 
 --
 -- Name: update_modified; Type: TRIGGER; Schema: gis; Owner: openatlas_master
 --
 
-CREATE TRIGGER update_modified BEFORE UPDATE ON polygon FOR EACH ROW EXECUTE PROCEDURE crm.update_modified();
+CREATE TRIGGER update_modified BEFORE UPDATE ON polygon FOR EACH ROW EXECUTE PROCEDURE model.update_modified();
+
+
+SET search_path = model, pg_catalog;
+
+--
+-- Name: update_modified; Type: TRIGGER; Schema: model; Owner: openatlas_master
+--
+
+CREATE TRIGGER update_modified BEFORE UPDATE ON class FOR EACH ROW EXECUTE PROCEDURE update_modified();
+
+
+--
+-- Name: update_modified; Type: TRIGGER; Schema: model; Owner: openatlas_master
+--
+
+CREATE TRIGGER update_modified BEFORE UPDATE ON class_inheritance FOR EACH ROW EXECUTE PROCEDURE update_modified();
+
+
+--
+-- Name: update_modified; Type: TRIGGER; Schema: model; Owner: openatlas_master
+--
+
+CREATE TRIGGER update_modified BEFORE UPDATE ON i18n FOR EACH ROW EXECUTE PROCEDURE update_modified();
+
+
+--
+-- Name: update_modified; Type: TRIGGER; Schema: model; Owner: openatlas_master
+--
+
+CREATE TRIGGER update_modified BEFORE UPDATE ON property FOR EACH ROW EXECUTE PROCEDURE update_modified();
+
+
+--
+-- Name: update_modified; Type: TRIGGER; Schema: model; Owner: openatlas_master
+--
+
+CREATE TRIGGER update_modified BEFORE UPDATE ON entity FOR EACH ROW EXECUTE PROCEDURE update_modified();
+
+
+--
+-- Name: update_modified; Type: TRIGGER; Schema: model; Owner: openatlas_master
+--
+
+CREATE TRIGGER update_modified BEFORE UPDATE ON link FOR EACH ROW EXECUTE PROCEDURE update_modified();
+
+
+--
+-- Name: update_modified; Type: TRIGGER; Schema: model; Owner: openatlas_master
+--
+
+CREATE TRIGGER update_modified BEFORE UPDATE ON property_inheritance FOR EACH ROW EXECUTE PROCEDURE update_modified();
+
+
+--
+-- Name: update_modified; Type: TRIGGER; Schema: model; Owner: openatlas_master
+--
+
+CREATE TRIGGER update_modified BEFORE UPDATE ON link_property FOR EACH ROW EXECUTE PROCEDURE update_modified();
 
 
 SET search_path = web, pg_catalog;
@@ -1796,155 +2010,70 @@ SET search_path = web, pg_catalog;
 -- Name: update_modified; Type: TRIGGER; Schema: web; Owner: openatlas_master
 --
 
-CREATE TRIGGER update_modified BEFORE UPDATE ON "user" FOR EACH ROW EXECUTE PROCEDURE crm.update_modified();
+CREATE TRIGGER update_modified BEFORE UPDATE ON "user" FOR EACH ROW EXECUTE PROCEDURE model.update_modified();
 
 
 --
 -- Name: update_modified; Type: TRIGGER; Schema: web; Owner: openatlas_master
 --
 
-CREATE TRIGGER update_modified BEFORE UPDATE ON "group" FOR EACH ROW EXECUTE PROCEDURE crm.update_modified();
+CREATE TRIGGER update_modified BEFORE UPDATE ON "group" FOR EACH ROW EXECUTE PROCEDURE model.update_modified();
 
 
 --
 -- Name: update_modified; Type: TRIGGER; Schema: web; Owner: openatlas_master
 --
 
-CREATE TRIGGER update_modified BEFORE UPDATE ON i18n FOR EACH ROW EXECUTE PROCEDURE crm.update_modified();
+CREATE TRIGGER update_modified BEFORE UPDATE ON i18n FOR EACH ROW EXECUTE PROCEDURE model.update_modified();
 
 
 --
 -- Name: update_modified; Type: TRIGGER; Schema: web; Owner: openatlas_master
 --
 
-CREATE TRIGGER update_modified BEFORE UPDATE ON language FOR EACH ROW EXECUTE PROCEDURE crm.update_modified();
+CREATE TRIGGER update_modified BEFORE UPDATE ON language FOR EACH ROW EXECUTE PROCEDURE model.update_modified();
 
 
 --
 -- Name: update_modified; Type: TRIGGER; Schema: web; Owner: openatlas_master
 --
 
-CREATE TRIGGER update_modified BEFORE UPDATE ON content FOR EACH ROW EXECUTE PROCEDURE crm.update_modified();
+CREATE TRIGGER update_modified BEFORE UPDATE ON content FOR EACH ROW EXECUTE PROCEDURE model.update_modified();
 
 
 --
 -- Name: update_modified; Type: TRIGGER; Schema: web; Owner: openatlas_master
 --
 
-CREATE TRIGGER update_modified BEFORE UPDATE ON user_settings FOR EACH ROW EXECUTE PROCEDURE crm.update_modified();
+CREATE TRIGGER update_modified BEFORE UPDATE ON user_settings FOR EACH ROW EXECUTE PROCEDURE model.update_modified();
 
 
 --
 -- Name: update_modified; Type: TRIGGER; Schema: web; Owner: openatlas_master
 --
 
-CREATE TRIGGER update_modified BEFORE UPDATE ON user_bookmarks FOR EACH ROW EXECUTE PROCEDURE crm.update_modified();
-
-
-SET search_path = crm, pg_catalog;
-
---
--- Name: class_inheritance_sub_id_fkey; Type: FK CONSTRAINT; Schema: crm; Owner: openatlas_master
---
-
-ALTER TABLE ONLY class_inheritance
-    ADD CONSTRAINT class_inheritance_sub_id_fkey FOREIGN KEY (sub_id) REFERENCES class(id) ON UPDATE CASCADE ON DELETE CASCADE;
+CREATE TRIGGER update_modified BEFORE UPDATE ON user_bookmarks FOR EACH ROW EXECUTE PROCEDURE model.update_modified();
 
 
 --
--- Name: class_inheritance_super_id_fkey; Type: FK CONSTRAINT; Schema: crm; Owner: openatlas_master
+-- Name: update_modified; Type: TRIGGER; Schema: web; Owner: openatlas_master
 --
 
-ALTER TABLE ONLY class_inheritance
-    ADD CONSTRAINT class_inheritance_super_id_fkey FOREIGN KEY (super_id) REFERENCES class(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: entity_class_id_fkey; Type: FK CONSTRAINT; Schema: crm; Owner: openatlas_master
---
-
-ALTER TABLE ONLY entity
-    ADD CONSTRAINT entity_class_id_fkey FOREIGN KEY (class_id) REFERENCES class(id) ON UPDATE CASCADE ON DELETE CASCADE;
+CREATE TRIGGER update_modified BEFORE UPDATE ON hierarchy_form FOR EACH ROW EXECUTE PROCEDURE model.update_modified();
 
 
 --
--- Name: link_domain_id_fkey; Type: FK CONSTRAINT; Schema: crm; Owner: openatlas_master
+-- Name: update_modified; Type: TRIGGER; Schema: web; Owner: openatlas_master
 --
 
-ALTER TABLE ONLY link
-    ADD CONSTRAINT link_domain_id_fkey FOREIGN KEY (domain_id) REFERENCES entity(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: link_property_domain_id_fkey; Type: FK CONSTRAINT; Schema: crm; Owner: openatlas_master
---
-
-ALTER TABLE ONLY link_property
-    ADD CONSTRAINT link_property_domain_id_fkey FOREIGN KEY (domain_id) REFERENCES link(id) ON UPDATE CASCADE ON DELETE CASCADE;
+CREATE TRIGGER update_modified BEFORE UPDATE ON hierarchy FOR EACH ROW EXECUTE PROCEDURE model.update_modified();
 
 
 --
--- Name: link_property_id_fkey; Type: FK CONSTRAINT; Schema: crm; Owner: openatlas_master
+-- Name: update_modified; Type: TRIGGER; Schema: web; Owner: openatlas_master
 --
 
-ALTER TABLE ONLY link
-    ADD CONSTRAINT link_property_id_fkey FOREIGN KEY (property_id) REFERENCES property(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: link_property_property_id_fkey; Type: FK CONSTRAINT; Schema: crm; Owner: openatlas_master
---
-
-ALTER TABLE ONLY link_property
-    ADD CONSTRAINT link_property_property_id_fkey FOREIGN KEY (property_id) REFERENCES property(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: link_property_range_id_fkey; Type: FK CONSTRAINT; Schema: crm; Owner: openatlas_master
---
-
-ALTER TABLE ONLY link_property
-    ADD CONSTRAINT link_property_range_id_fkey FOREIGN KEY (range_id) REFERENCES entity(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: link_range_id_fkey; Type: FK CONSTRAINT; Schema: crm; Owner: openatlas_master
---
-
-ALTER TABLE ONLY link
-    ADD CONSTRAINT link_range_id_fkey FOREIGN KEY (range_id) REFERENCES entity(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: property_domain_class_id_fkey; Type: FK CONSTRAINT; Schema: crm; Owner: openatlas_master
---
-
-ALTER TABLE ONLY property
-    ADD CONSTRAINT property_domain_class_id_fkey FOREIGN KEY (domain_class_id) REFERENCES class(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: property_inheritance_sub_id_fkey; Type: FK CONSTRAINT; Schema: crm; Owner: openatlas_master
---
-
-ALTER TABLE ONLY property_inheritance
-    ADD CONSTRAINT property_inheritance_sub_id_fkey FOREIGN KEY (sub_id) REFERENCES property(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: property_inheritance_super_id_fkey; Type: FK CONSTRAINT; Schema: crm; Owner: openatlas_master
---
-
-ALTER TABLE ONLY property_inheritance
-    ADD CONSTRAINT property_inheritance_super_id_fkey FOREIGN KEY (super_id) REFERENCES property(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: property_range_class_id_fkey; Type: FK CONSTRAINT; Schema: crm; Owner: openatlas_master
---
-
-ALTER TABLE ONLY property
-    ADD CONSTRAINT property_range_class_id_fkey FOREIGN KEY (range_class_id) REFERENCES class(id) ON UPDATE CASCADE ON DELETE CASCADE;
+CREATE TRIGGER update_modified BEFORE UPDATE ON form FOR EACH ROW EXECUTE PROCEDURE model.update_modified();
 
 
 SET search_path = gis, pg_catalog;
@@ -1954,7 +2083,7 @@ SET search_path = gis, pg_catalog;
 --
 
 ALTER TABLE ONLY centerpoint
-    ADD CONSTRAINT centerpoint_entity_id_fkey FOREIGN KEY (entity_id) REFERENCES crm.entity(id) ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT centerpoint_entity_id_fkey FOREIGN KEY (entity_id) REFERENCES model.entity(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -1962,7 +2091,7 @@ ALTER TABLE ONLY centerpoint
 --
 
 ALTER TABLE ONLY linestring
-    ADD CONSTRAINT linestring_entity_id_fkey FOREIGN KEY (entity_id) REFERENCES crm.entity(id) ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT linestring_entity_id_fkey FOREIGN KEY (entity_id) REFERENCES model.entity(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -1970,7 +2099,7 @@ ALTER TABLE ONLY linestring
 --
 
 ALTER TABLE ONLY point
-    ADD CONSTRAINT point_entity_id_fkey FOREIGN KEY (entity_id) REFERENCES crm.entity(id) ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT point_entity_id_fkey FOREIGN KEY (entity_id) REFERENCES model.entity(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -1978,7 +2107,7 @@ ALTER TABLE ONLY point
 --
 
 ALTER TABLE ONLY polygon
-    ADD CONSTRAINT polygon_entity_id_fkey FOREIGN KEY (entity_id) REFERENCES crm.entity(id) ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT polygon_entity_id_fkey FOREIGN KEY (entity_id) REFERENCES model.entity(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 SET search_path = log, pg_catalog;
@@ -1991,7 +2120,121 @@ ALTER TABLE ONLY detail
     ADD CONSTRAINT detail_log_id_fkey FOREIGN KEY (log_id) REFERENCES log(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
+SET search_path = model, pg_catalog;
+
+--
+-- Name: class_inheritance_sub_id_fkey; Type: FK CONSTRAINT; Schema: model; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY class_inheritance
+    ADD CONSTRAINT class_inheritance_sub_id_fkey FOREIGN KEY (sub_id) REFERENCES class(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: class_inheritance_super_id_fkey; Type: FK CONSTRAINT; Schema: model; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY class_inheritance
+    ADD CONSTRAINT class_inheritance_super_id_fkey FOREIGN KEY (super_id) REFERENCES class(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: entity_class_id_fkey; Type: FK CONSTRAINT; Schema: model; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY entity
+    ADD CONSTRAINT entity_class_id_fkey FOREIGN KEY (class_id) REFERENCES class(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: link_domain_id_fkey; Type: FK CONSTRAINT; Schema: model; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY link
+    ADD CONSTRAINT link_domain_id_fkey FOREIGN KEY (domain_id) REFERENCES entity(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: link_property_domain_id_fkey; Type: FK CONSTRAINT; Schema: model; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY link_property
+    ADD CONSTRAINT link_property_domain_id_fkey FOREIGN KEY (domain_id) REFERENCES link(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: link_property_id_fkey; Type: FK CONSTRAINT; Schema: model; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY link
+    ADD CONSTRAINT link_property_id_fkey FOREIGN KEY (property_id) REFERENCES property(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: link_property_property_id_fkey; Type: FK CONSTRAINT; Schema: model; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY link_property
+    ADD CONSTRAINT link_property_property_id_fkey FOREIGN KEY (property_id) REFERENCES property(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: link_property_range_id_fkey; Type: FK CONSTRAINT; Schema: model; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY link_property
+    ADD CONSTRAINT link_property_range_id_fkey FOREIGN KEY (range_id) REFERENCES entity(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: link_range_id_fkey; Type: FK CONSTRAINT; Schema: model; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY link
+    ADD CONSTRAINT link_range_id_fkey FOREIGN KEY (range_id) REFERENCES entity(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: property_domain_class_id_fkey; Type: FK CONSTRAINT; Schema: model; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY property
+    ADD CONSTRAINT property_domain_class_id_fkey FOREIGN KEY (domain_class_id) REFERENCES class(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: property_inheritance_sub_id_fkey; Type: FK CONSTRAINT; Schema: model; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY property_inheritance
+    ADD CONSTRAINT property_inheritance_sub_id_fkey FOREIGN KEY (sub_id) REFERENCES property(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: property_inheritance_super_id_fkey; Type: FK CONSTRAINT; Schema: model; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY property_inheritance
+    ADD CONSTRAINT property_inheritance_super_id_fkey FOREIGN KEY (super_id) REFERENCES property(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: property_range_class_id_fkey; Type: FK CONSTRAINT; Schema: model; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY property
+    ADD CONSTRAINT property_range_class_id_fkey FOREIGN KEY (range_class_id) REFERENCES class(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
 SET search_path = web, pg_catalog;
+
+--
+-- Name: hierarchy_id_fkey; Type: FK CONSTRAINT; Schema: web; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY hierarchy
+    ADD CONSTRAINT hierarchy_id_fkey FOREIGN KEY (id) REFERENCES model.entity(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
 
 --
 -- Name: i18n_item_id_fkey; Type: FK CONSTRAINT; Schema: web; Owner: openatlas_master
@@ -2010,11 +2253,27 @@ ALTER TABLE ONLY i18n
 
 
 --
+-- Name: type_form_form_id_fkey; Type: FK CONSTRAINT; Schema: web; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY hierarchy_form
+    ADD CONSTRAINT type_form_form_id_fkey FOREIGN KEY (form_id) REFERENCES form(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: type_form_type_id_fkey; Type: FK CONSTRAINT; Schema: web; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY hierarchy_form
+    ADD CONSTRAINT type_form_type_id_fkey FOREIGN KEY (hierarchy_id) REFERENCES hierarchy(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
 -- Name: user_bookmarks_entity_id_fkey; Type: FK CONSTRAINT; Schema: web; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY user_bookmarks
-    ADD CONSTRAINT user_bookmarks_entity_id_fkey FOREIGN KEY (entity_id) REFERENCES crm.entity(id) ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT user_bookmarks_entity_id_fkey FOREIGN KEY (entity_id) REFERENCES model.entity(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --

@@ -7,7 +7,7 @@ class Admin_PlaceController extends Zend_Controller_Action {
     public function addAction() {
         $origin = Model_EntityMapper::getById($this->_getParam('id'));
         $array = Zend_Registry::get('config')->get('codeView')->toArray();
-        $controller = $array[$origin->getClass()->code];
+        $controller = $array[$origin->class->code];
         $this->view->controller = $controller;
         $this->view->menuHighlight = $controller;
         $this->view->origin = $origin;
@@ -32,23 +32,20 @@ class Admin_PlaceController extends Zend_Controller_Action {
             $this->view->menuHighlight = 'source';
         }
         $form = new Admin_Form_Place();
+        $hierarchies = $form->addHierarchies('Place');
         $form->addElement($form->createElement('text', 'alias0', ['belongsTo' => 'alias']));
         if ($this->getRequest()->isPost()) {
-            Admin_Form_Abstract::preValidation($form, $this->getRequest()->getPost());
+            $form->preValidation($this->getRequest()->getPost());
         }
         if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
             $this->view->form = $form;
             $this->view->source = $source;
-            $this->view->siteTreeData = Model_NodeMapper::getTreeData('type', 'site');
-            $this->view->administrativeTreeData = Model_NodeMapper::getTreeData('place', 'administrative unit');
-            $this->view->historicalTreeData = Model_NodeMapper::getTreeData('place', 'historical place');
             return;
         }
         $object = Model_EntityMapper::insert('E18', $form->getValue('name'), $form->getValue('description'));
-        Model_LinkMapper::insert('P2', $object, Model_EntityMapper::getById($form->getValue('siteId')));
         $place = Model_EntityMapper::insert('E53', 'Location of ' . $form->getValue('name'));
         Model_LinkMapper::insert('P53', $object, $place);
-        self::save($form, $object, $place);
+        self::save($form, $object, $place, $hierarchies);
         if ($source) {
             Model_LinkMapper::insert('P67', $source, $object);
         }
@@ -77,7 +74,7 @@ class Admin_PlaceController extends Zend_Controller_Action {
             $this->_helper->message('info_insert');
         }
         $array = Zend_Registry::get('config')->get('codeView')->toArray();
-        $controller = $array[$entity->getClass()->code];
+        $controller = $array[$entity->class->code];
         return $this->_helper->redirector->gotoUrl('/admin/' . $controller . '/view/id/' . $entity->id . '/#tabPlace');
     }
 
@@ -85,6 +82,7 @@ class Admin_PlaceController extends Zend_Controller_Action {
         $object = Model_EntityMapper::getById($this->_getParam('id'));
         $place = Model_LinkMapper::getLinkedEntity($object, 'P53');
         $form = new Admin_Form_Place();
+        $hierarchies = $form->addHierarchies('Place', $object);
         $this->view->form = $form;
         $this->view->object = $object;
         $aliasIndex = 0;
@@ -106,7 +104,7 @@ class Admin_PlaceController extends Zend_Controller_Action {
             self::prepareDefaultUpdate($form, $object, $place);
             return;
         }
-        Admin_Form_Abstract::preValidation($form, $this->getRequest()->getPost());
+        $form->preValidation($this->getRequest()->getPost());
         $formValid = $form->isValid($this->getRequest()->getPost());
         $modified = Model_EntityMapper::checkIfModified($object, $form->modified->getValue());
         if ($modified) {
@@ -114,9 +112,6 @@ class Admin_PlaceController extends Zend_Controller_Action {
             $this->view->modifier = $log['modifier_name'];
         }
         if (!$formValid || $modified) {
-            $this->view->siteTreeData = Model_NodeMapper::getTreeData('type', 'site');
-            $this->view->administrativeTreeData = Model_NodeMapper::getTreeData('place', 'administrative unit');
-            $this->view->historicalTreeData = Model_NodeMapper::getTreeData('place', 'historical place');
             $this->_helper->message('error_modified');
             return;
         }
@@ -126,7 +121,6 @@ class Admin_PlaceController extends Zend_Controller_Action {
         foreach (Model_LinkMapper::getLinks($object, 'P2') as $objectLink) {
             $objectLink->delete();
         }
-        Model_LinkMapper::insert('P2', $object, Model_EntityMapper::getById($form->getValue('siteId')));
         $place->name = 'Location of ' . $form->getValue('name');
         $place->update();
         Model_GisMapper::deleteByEntity($place);
@@ -136,7 +130,7 @@ class Admin_PlaceController extends Zend_Controller_Action {
         foreach (Model_LinkMapper::getLinks($place, 'P89') as $link) {
             $link->delete();
         }
-        self::save($form, $object, $place);
+        self::save($form, $object, $place, $hierarchies);
         $this->_helper->message('info_update');
         return $this->_helper->redirector->gotoUrl('/admin/place/view/id/' . $object->id);
     }
@@ -151,12 +145,10 @@ class Admin_PlaceController extends Zend_Controller_Action {
         }
         // @codeCoverageIgnoreEnd
         $this->view->object = $object;
-        $this->view->events = Model_LinkMapper::getLinkedEntities($place, 'P7', true);
         $this->view->aliases = Model_LinkMapper::getLinkedEntities($object, 'P1');
-        $this->view->site = Model_NodeMapper::getNodeByEntity('type', 'Site', $object);
-        $this->view->administrative = Model_NodeMapper::getNodesByEntity('place', 'Administrative Unit', $place);
-        $this->view->historicals = Model_NodeMapper::getNodesByEntity('place', 'Historical Place', $place);
         $this->view->dates = Model_DateMapper::getDates($object);
+        $this->view->administrative = Model_NodeMapper::getNodesByEntity('Administrative Unit', $object);
+        $this->view->historicals = Model_NodeMapper::getNodesByEntity('Historical Place', $object);
         $this->view->events = array_merge(
             Model_LinkMapper::getLinkedEntities($place, 'P7', true), Model_LinkMapper::getLinkedEntities($object, 'P24', true)
         );
@@ -168,7 +160,7 @@ class Admin_PlaceController extends Zend_Controller_Action {
         $sourceLinks = [];
         $referenceLinks = [];
         foreach (Model_LinkMapper::getLinks($object, 'P67', true) as $link) {
-            switch ($link->getDomain()->getClass()->code) {
+            switch ($link->domain->class->code) {
                 case 'E31':
                     $referenceLinks[] = $link;
                     break;
@@ -182,12 +174,9 @@ class Admin_PlaceController extends Zend_Controller_Action {
     }
 
     private function prepareDefaultUpdate(Zend_Form $form, Model_Entity $object, Model_Entity $place) {
-        $site = Model_NodeMapper::getNodeByEntity('type', 'Site', $object);
         $form->populate([
             'name' => $object->name,
             'description' => $object->description,
-            'siteId' => $site->id,
-            'siteButton' => $site->name,
             'modified' => ($object->modified) ? $object->modified->getTimestamp() : 0
         ]);
         $gis = Model_GisMapper::getByEntity($place);
@@ -196,30 +185,28 @@ class Admin_PlaceController extends Zend_Controller_Action {
             $form->populate(['easting' => $gis->easting, 'northing' => $gis->northing]);
         }
         // @codeCoverageIgnoreEnd
-        Admin_Form_Abstract::populateDates($form, $object, ['OA1' => 'begin', 'OA2' => 'end']);
-        $this->view->siteTreeData = Model_NodeMapper::getTreeData('type', 'site', $site);
-        $administratives = Model_NodeMapper::getNodesByEntity('place', 'Administrative Unit', $place);
-        $this->view->administratives = $administratives;
-        $this->view->administrativeTreeData = Model_NodeMapper::getTreeData('place', 'administrative unit', $administratives);
-        $historicals = Model_NodeMapper::getNodesByEntity('place', 'Historical Place', $place);
-        $this->view->historicals = $historicals;
-        $this->view->historicalTreeData = Model_NodeMapper::getTreeData('place', 'historical place', $historicals);
-        $this->view->object = $object;
+        $form->populateDates($object, ['OA1' => 'begin', 'OA2' => 'end']);
         return;
     }
 
-    private function save(Zend_Form $form, Model_Entity $object, Model_Entity $place) {
+    private function save(Zend_Form $form, Model_Entity $object, Model_Entity $place, array $hierarchies) {
+        foreach ($hierarchies as $hierarchy) {
+            $idField = $hierarchy->nameClean . 'Id';
+            if ($form->getValue($idField)) {
+                if ($hierarchy->propertyToEntity == 'P89') {
+                    foreach (explode(",", $form->getValue($idField)) as $id) {
+                        Model_LinkMapper::insert($hierarchy->propertyToEntity, $place, Model_NodeMapper::getById($id));
+                    }
+                } else {
+                    foreach (explode(",", $form->getValue($idField)) as $id) {
+                        Model_LinkMapper::insert($hierarchy->propertyToEntity, $object, Model_NodeMapper::getById($id));
+                    }
+                }
+            } else if ($hierarchy->system && $hierarchy->propertyToEntity != 'P89') {
+                Model_LinkMapper::insert($hierarchy->propertyToEntity, $object, $hierarchy);
+            }
+        }
         Model_DateMapper::saveDates($object, $form);
-        if ($form->getValue('administrativeId')) {
-            foreach (explode(",", $form->getValue('administrativeId')) as $id) {
-                Model_LinkMapper::insert('P89', $place, Model_EntityMapper::getById($id));
-            }
-        }
-        if ($form->getValue('historicalId')) {
-            foreach (explode(",", $form->getValue('historicalId')) as $id) {
-                Model_LinkMapper::insert('P89', $place, Model_EntityMapper::getById($id));
-            }
-        }
         $data = $form->getValues();
         foreach (array_unique($data['alias']) as $name) {
             if (trim($name)) {
@@ -236,7 +223,6 @@ class Admin_PlaceController extends Zend_Controller_Action {
             $gis->insert();
         }
         // @codeCoverageIgnoreEnd
-
     }
 
 }

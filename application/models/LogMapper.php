@@ -22,7 +22,8 @@ class Model_LogMapper extends Model_AbstractMapper {
     }
 
     public static function delete(Model_Log $log) {
-        $statement = Zend_Db_Table::getDefaultAdapter()->prepare('DELETE FROM log.log WHERE id = :id;');
+        $sql = 'DELETE FROM log.log WHERE id = :id;';
+        $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->bindValue(':id', $log->id);
         $statement->execute();
     }
@@ -80,7 +81,8 @@ class Model_LogMapper extends Model_AbstractMapper {
     }
 
     public static function deleteAll() {
-        $statement = Zend_Db_Table::getDefaultAdapter()->prepare('TRUNCATE TABLE log.log RESTART IDENTITY CASCADE;');
+        $sql = 'TRUNCATE TABLE log.log RESTART IDENTITY CASCADE;';
+        $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->execute();
     }
 

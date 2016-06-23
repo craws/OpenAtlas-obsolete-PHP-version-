@@ -45,7 +45,7 @@
         }
         $table['data'][] = [
             $this->link($entity),
-            $this->link($entity->getClass()),
+            $this->link($entity->class),
             $entity->first,
             $entity->last,
             $log['creator_name'],
@@ -64,7 +64,7 @@
     foreach ($this->bookmarks as $entity) {
         $table['data'][] = [
             $this->link($entity),
-            $this->link($entity->getClass()),
+            $this->link($entity->class),
             $entity->first,
             $entity->last,
             $this->bookmarkToggle($entity->id)

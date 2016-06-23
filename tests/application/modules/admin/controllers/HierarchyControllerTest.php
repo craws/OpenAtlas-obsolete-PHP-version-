@@ -14,13 +14,13 @@ class Admin_HierarchyControllerTest extends ControllerTestCase {
     }
 
     public function testView() {
-        $id = Model_NodeMapper::getByNodeCategoryName('place', 'Administrative Unit', 'Austria')->id;
+        $id = Model_NodeMapper::getByNodeCategoryName('Administrative Unit', 'Austria')->id;
         $this->dispatch('admin/hierarchy/view/id/' . $id);
-        Model_NodeMapper::getByNodeCategoryName('place', 'You shall not be', 'found'); // test not found
+        Model_NodeMapper::getByNodeCategoryName('You shall not be', 'found'); // test not found
     }
 
-    public function testCrud() {
-        $kindredship = Model_NodeMapper::getByNodeCategoryName('type', 'Actor Actor Relation', 'Parent of (Child of)');
+    public function testCrudNode() {
+        $kindredship = Model_NodeMapper::getByNodeCategoryName('Actor Actor Relation', 'Parent of (Child of)');
         $this->request->setMethod('POST')->setPost([]);
         $this->dispatch('admin/hierarchy/insert/superId/' . $kindredship->superId);
         $this->resetRequest()->resetResponse();
@@ -38,22 +38,48 @@ class Admin_HierarchyControllerTest extends ControllerTestCase {
         $this->request->setMethod('POST')->setPost($formValues);
         $this->dispatch('admin/hierarchy/update/id/' . $kindredship->superId);
         $this->resetRequest()->resetResponse();
+        $this->dispatch('admin/hierarchy/update/id/' . $kindredship->rootId); // test forbidden
+        $this->resetRequest()->resetResponse();
+        $formValues['super'] = $kindredship->superId;
+        $this->request->setMethod('POST')->setPost($formValues);
+        $this->dispatch('admin/hierarchy/update/id/' . $kindredship->id);
         $this->dispatch('admin/hierarchy/delete/id/' . $kindredship->superId);
         $this->resetRequest()->resetResponse();
         $this->dispatch('admin/hierarchy/delete/id/' . $kindredship->id);
         $this->resetRequest()->resetResponse();
-        $battle = Model_NodeMapper::getByNodeCategoryName('type', 'Event', 'Battle');
-        $formValues['super'] = $battle->superId;
+    }
+
+    public function testCrudHierarchy() {
+        $formValues = [
+            'name' => 'new name',
+            'description' => 'description',
+            'multiple' => 1
+        ];
+        $this->dispatch('admin/hierarchy/insert-hierarchy');
         $this->request->setMethod('POST')->setPost($formValues);
-        $this->dispatch('admin/hierarchy/update/id/' . $battle->id);
+        $this->dispatch('admin/hierarchy/insert-hierarchy');
         $this->resetRequest()->resetResponse();
-        $this->dispatch('admin/hierarchy/update/id/' . $battle->rootId); // test forbidden
+        $hierarchy = Model_NodeMapper::getHierarchyByName('Gender');
+        $this->request->setMethod('POST')->setPost($formValues);
+        $this->dispatch('admin/hierarchy/update-hierarchy/id/' . $hierarchy->id);
+        // test unique hierarchy names
         $this->resetRequest()->resetResponse();
-        $this->dispatch('admin/hierarchy/delete/id/' . $battle->rootId); // test forbidden
+        $formValues['name'] = 'Gender';
+        $this->request->setMethod('POST')->setPost($formValues);
+        $this->dispatch('admin/hierarchy/insert-hierarchy');
+        $this->resetRequest()->resetResponse();
+        $this->dispatch('admin/hierarchy/update-hierarchy/id/' . $this->customHierarchyId);
+        $this->resetRequest()->resetResponse();
+        $this->request->setMethod('POST')->setPost($formValues);
+        $this->dispatch('admin/hierarchy/update-hierarchy/id/' . $this->customHierarchyId); // test existing name
+        $this->resetRequest()->resetResponse();
+        $formValues['name'] = 'a complete new name';
+        $this->request->setMethod('POST')->setPost($formValues);
+        $this->dispatch('admin/hierarchy/update-hierarchy/id/' . $this->customHierarchyId);
     }
 
     public function testDeleteDenied() {
-        $charter = Model_NodeMapper::getByNodeCategoryName('type', 'Source', 'Charter');
+        $charter = Model_NodeMapper::getByNodeCategoryName('Source', 'Charter');
         $this->dispatch('admin/hierarchy/delete/id/' . $charter->id);
     }
 

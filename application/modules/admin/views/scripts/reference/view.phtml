@@ -1,6 +1,6 @@
 <? $reference = $this->reference; ?>
 <? $this->breadcrumb = [$this->link('reference', null, 'reference'), $reference->name]; ?>
-<div id="tabs">
+<div id="tabs" class="tabsContainer">
     <ul>
         <li><a href="#tabInfo"><?= $this->ucstring('info') ?></a></li>
         <li><a href="#tabEvent"><?= $this->ucstring('events') ?> (<?= count($this->eventLinks) ?>)</a></li>
@@ -15,7 +15,13 @@
             <?= $this->bookmarkToggle($reference->id) ?>
         </div>
         <h1><?= $reference->name ?></h1>
-        <? $table['data'][_('type')] = $this->link($this->referenceType); ?>
+        <?
+            $table['data'] = [];
+            foreach ($this->getNodesForView($reference) as $rootName => $nodes) {
+                $table['data'][$rootName] = implode('<br/>', $nodes);
+            }
+            $this->table = $this->tableLog($table, 'entity', $reference->id);
+        ?>
         <? $this->table = $this->tableLog($table, 'entity', $reference->id); ?>
         <?= $this->render('tableDataItem.phtml'); ?>
         <?= $this->description($reference) ?>
@@ -25,16 +31,16 @@
         $tableEvent = ['id' => 'event', 'pager' => true, 'filter' => true];
         $tableEvent['header'] = [_('page'), _('event'), _('first'), _('last'), '', ''];
         foreach ($this->eventLinks as $link) {
-            $text = $this->translate('refers_to') . ': ' . $link->getRange()->name;
+            $text = $this->translate('refers_to') . ': ' . $link->range->name;
             $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_remove', $text)) .
                 "')\" ";
             $deleteLink = '<div><a href="/admin/function/unlink/id/' . $link->id . '/entityId/' . $reference->id .
                 '/#tabEvent' . '" class="button"' . $confirm . '>' . $this->ucstring('remove') . '</a></div>';
             $tableEvent['data'][] = [
                 $link->description,
-                $this->link($link->getRange()),
-                $link->getRange()->first,
-                $link->getRange()->last,
+                $this->link($link->range),
+                $link->range->first,
+                $link->range->last,
                 '<a class="button" href="/admin/biblio/update/origin/reference/id/' . $link->id . '">' .
                     $this->ucstring('edit') . '</a>',
                 $deleteLink
@@ -49,14 +55,14 @@
         $tableSource = ['id' => 'source', 'pager' => true, 'filter' => true];
         $tableSource['header'] = [_('source'), _('type'), _('page'), '', ''];
         foreach ($this->sourceLinks as $link) {
-            $text = $this->translate('refers_to') . ': ' . $link->getRange()->name;
+            $text = $this->translate('refers_to') . ': ' . $link->range->name;
             $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_remove', $text)) .
                 "')\" ";
             $deleteLink = '<div><a href="/admin/function/unlink/id/' . $link->id . '/entityId/' . $reference->id .
                 '/#tabSource' . '" class="button"' . $confirm . '>' . $this->ucstring('remove') . '</a></div>';
             $tableSource['data'][] = [
-                $this->link($link->getRange()),
-                Model_NodeMapper::getNodeByEntity('type', 'Source', $link->getRange())->name,
+                $this->link($link->range),
+                Model_NodeMapper::getNodeByEntity('Source', $link->range)->name,
                 $link->description,
                 '<a class="button" href="/admin/biblio/update/origin/reference/id/' . $link->id . '">' .
                     $this->ucstring('edit') . '</a>',
@@ -72,17 +78,17 @@
         $tableActor = ['id' => 'actor', 'pager' => true, 'filter' => true];
         $tableActor['header'] = [_('page'), _('actor'), _('class'), _('first'), _('last'), '', ''];
         foreach ($this->actorLinks as $link) {
-            $text = $this->translate('refers_to') . ': ' . $link->getRange()->name;
+            $text = $this->translate('refers_to') . ': ' . $link->range->name;
             $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_remove', $text)) .
                 "')\" ";
             $deleteLink = '<a href="/admin/function/unlink/id/' . $link->id . '/entityId/' . $reference->id .
                 '/#tabActor' . '" class="button"' . $confirm . '>' . $this->ucstring('remove') . '</a>';
             $tableActor['data'][] = [
                 $link->description,
-                $this->link($link->getRange()),
-                $link->getRange()->getClass()->nameTranslated,
-                $link->getRange()->first,
-                $link->getRange()->last,
+                $this->link($link->range),
+                $link->range->class->nameTranslated,
+                $link->range->first,
+                $link->range->last,
                 '<a class="button" href="/admin/biblio/update/origin/reference/id/' . $link->id . '">' .
                     $this->ucstring('edit') . '</a>',
                 $deleteLink
@@ -97,17 +103,17 @@
         $tablePlace = ['id' => 'place', 'pager' => true, 'filter' => true];
         $tablePlace['header'] = [_('page'), _('name'), _('type'), _('first'), _('last'), '', ''];
         foreach ($this->placeLinks as $link) {
-            $text = $this->translate('refers_to') . ': ' . $link->getRange()->name;
+            $text = $this->translate('refers_to') . ': ' . $link->range->name;
             $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_remove', $text)) .
                 "')\" ";
             $deleteLink = '<a href="/admin/function/unlink/id/' . $link->id . '/entityId/' . $reference->id .
                 '/#tabPlace' . '" class="button"' . $confirm . '>' . $this->ucstring('remove') . '</a>';
             $tablePlace['data'][] = [
                 $link->description,
-                $this->link($link->getRange()),
-                Model_NodeMapper::getNodeByEntity('type', 'Site', $link->getRange())->name,
-                $link->getRange()->first,
-                $link->getRange()->last,
+                $this->link($link->range),
+                Model_NodeMapper::getNodeByEntity('Site', $link->range)->name,
+                $link->range->first,
+                $link->range->last,
                 '<a class="button" href="/admin/biblio/update/origin/reference/id/' .
                     $link->id . '">' . $this->ucstring('edit') . '</a>',
                 $deleteLink

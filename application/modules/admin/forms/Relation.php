@@ -2,28 +2,12 @@
 
 /* Copyright 2016 by Alexander Watzinger and others. Please see the file README.md for licensing information */
 
-class Admin_Form_Relation extends Craws\Form\Table {
+class Admin_Form_Relation extends Admin_Form_Base {
 
     public function init() {
         $this->setName('relationForm')->setMethod('post');
         $this->setAction($this->getView()->url());
-        Admin_Form_Abstract::addDates($this, ['begin', 'begin2', 'end', 'end2']);
-        $this->addElement('hidden', 'typeId', ['decorators' => ['ViewHelper']]);
-        $this->addElement('text', 'typeButton', [
-            'label' => 'Actor Actor Relation',
-            'class' => 'tableSelect required',
-            'required' => true,
-            'readonly' => true,
-            'onfocus' => 'this.blur()',
-            'placeholder' => $this->getView()->ucstring('select'),
-            'attribs' => ['readonly' => 'true'],
-        ]);
-        $this->addElement('checkbox', 'inverse', [
-            'label' => $this->getView()->ucstring('inverse'),
-            'checkedValue' => 1,
-            'uncheckedValue' => 0,
-            'value' => 0,
-        ]);
+        $this->addDates(['begin', 'begin2', 'end', 'end2']);
         $this->addElement('hidden', 'relatedActorIds', [
             'decorators' => ['ViewHelper'],
             'required' => true,

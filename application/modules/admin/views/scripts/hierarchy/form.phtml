@@ -1,0 +1,29 @@
+<? $form = $this->form; ?>
+<?= $this->displayErrors($form); ?>
+<?= $form->renderForm(false); ?>
+<div>
+    <div class="tableRow">
+        <?= $form->name->renderLabel() ?>
+        <div class="tableCell"><?= $form->name->renderViewHelper() ?></div>
+    </div>
+    <div class="tableRow">
+        <? if (!$this->hierarchy || !$this->hierarchy->multiple): ?>
+            <label><?= $this->ucstring('multiple') ?></label>
+            <span class="tooltip" title="<?= $this->ucstring('tip_hierarchy_multiple') ?>">i</span>
+        <? endif ?>
+        <div class="tableCell"><?= $form->multiple->renderViewHelper() ?></div>
+    </div>
+    <div class="tableRow">
+        <label><?= $this->ucstring('forms') ?></label>
+        <span class="tooltip" title="<?= $this->ucstring('tip_hierarchy_forms') ?>">i</span>
+        <div class="tableCell"><?= $form->forms->renderViewHelper() ?></div>
+    </div>
+    <div style="margin-top:1em;">
+        <?= $form->description->renderLabel() ?>
+        <div><?= $form->description->renderViewHelper() ?></div>
+    </div>
+    <div style="margin-top:1em;">
+        <?= $form->formSubmit->renderViewHelper() ?>
+    </div>
+</div>
+<?= '</form>' ?>

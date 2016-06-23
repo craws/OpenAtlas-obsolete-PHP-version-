@@ -57,7 +57,9 @@ class Acl extends \Zend_Acl {
         $this->add(new \Zend_Acl_Resource('admin:hierarchy:delete'));
         $this->add(new \Zend_Acl_Resource('admin:hierarchy:index'));
         $this->add(new \Zend_Acl_Resource('admin:hierarchy:insert'));
+        $this->add(new \Zend_Acl_Resource('admin:hierarchy:insert-hierarchy'));
         $this->add(new \Zend_Acl_Resource('admin:hierarchy:update'));
+        $this->add(new \Zend_Acl_Resource('admin:hierarchy:update-hierarchy'));
         $this->add(new \Zend_Acl_Resource('admin:hierarchy:view'));
 
         $this->add(new \Zend_Acl_Resource('admin:index:index'));
@@ -185,7 +187,6 @@ class Acl extends \Zend_Acl {
         $this->allow('readonly', 'admin:source:index');
         $this->allow('readonly', 'admin:source:view');
 
-
         /* editor */
         $this->allow('editor', 'admin:actor:add');
         $this->allow('editor', 'admin:actor:delete');
@@ -221,8 +222,6 @@ class Acl extends \Zend_Acl {
         $this->allow('editor', 'admin:member:member');
         $this->allow('editor', 'admin:member:update');
 
-
-
         $this->allow('editor', 'admin:place:add');
         $this->allow('editor', 'admin:place:delete');
         $this->allow('editor', 'admin:place:insert');
@@ -256,6 +255,9 @@ class Acl extends \Zend_Acl {
         $this->allow('manager', 'admin:content:insert');
         $this->allow('manager', 'admin:content:update');
         $this->allow('manager', 'admin:content:view');
+
+        $this->allow('manager', 'admin:hierarchy:insert-hierarchy');
+        $this->allow('manager', 'admin:hierarchy:update-hierarchy');
 
         /* admin */
         $this->allow('admin');

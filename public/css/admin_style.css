@@ -50,7 +50,7 @@ span.tooltip {
     overflow: visible;
 }
 
-#tabs {
+.tabsContainer {
     background: none;
 }
 
@@ -145,11 +145,11 @@ select::-ms-expand { /* for IE 11 */
     display: none;
 }
 
-#tabs .ui-widget-header {
+.tabsContainer .ui-widget-header {
     border: none;
 }
 
-#tabs .ui-widget-header, .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default,
+.tabsContainer .ui-widget-header, .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default,
 .ui-state-active, .ui-widget-content .ui-state-active, .ui-widget-header .ui-state-active {
     background: none;
     border: none;
@@ -299,21 +299,21 @@ h2 {
     font-weight: bold;
 }
 
-#tabs {
+.tabsContainer {
     display: inline-block;
 }
 
-#tabs .ui-widget-header {
+.tabsContainer .ui-widget-header, .ui-widget-header {
     border: none;
     background: none;
     background-color: inherit;
 }
 
-#tabs .ui-corner-all {
+.tabsContainer .ui-corner-all, .ui-corner-all {
     border-radius: 0;
 }
 
-#tabs.ui-widget-content {
+.tabsContainer.ui-widget-content {
     border: none;
 }
 
@@ -328,7 +328,7 @@ h2 {
     padding: 1em;
 }
 
-#tabs .pagesize, .overlayContainer .pagesize {
+.tabsContainer .pagesize, .overlayContainer .pagesize {
     font-size: 0.9em;
 }
 

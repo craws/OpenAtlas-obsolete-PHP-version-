@@ -8,3 +8,7 @@ require_once 'Zend/Application.php';
 require_once 'Zend/Loader/Autoloader.php';
 Zend_Loader_Autoloader::getInstance();
 require_once 'ControllerTestCase.php';
+
+ini_set('error_reporting', E_ALL);
+ini_set('display_errors', '1');
+ini_set('display_startup_errors', '1');

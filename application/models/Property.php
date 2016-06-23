@@ -5,49 +5,33 @@
 class Model_Property extends Model_AbstractObject {
 
     public $code;
+    public $commentTranslated;
+    public $domain;
     public $name;
-    public $nameTranslated;
     public $nameInverse;
     public $nameInverseTranslated;
-    public $commentTranslated;
-    private $domain;
-    private $range;
-    private $super = [];
-    private $sub = [];
-
-    public function getDomain() {
-        return $this->domain;
-    }
-
-    public function setDomain(Model_Class $domain) {
-        $this->domain = $domain;
-    }
-
-    public function getRange() {
-        return $this->range;
-    }
-
-    public function setRange(Model_Class $range) {
-        $this->range = $range;
-    }
+    public $nameTranslated;
+    public $range;
+    public $super = [];
+    public $sub = [];
 
     public function getCodeName() {
         return $this->code . " " . $this->nameTranslated;
     }
 
-    function getSuper() {
+    public function getSuper() {
         return $this->super;
     }
 
-    function addSuper(Model_Property $super) {
+    public function addSuper(Model_Property $super) {
         $this->super[] = $super;
     }
 
-    function getSub() {
+    public function getSub() {
         return $this->sub;
     }
 
-    function addSub(Model_Property $sub) {
+    public function addSub(Model_Property $sub) {
         $this->sub[] = $sub;
     }
 

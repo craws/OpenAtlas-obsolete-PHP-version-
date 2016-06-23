@@ -7,7 +7,7 @@ class Admin_ActorController extends Zend_Controller_Action {
     public function addAction() {
         $origin = Model_EntityMapper::getById($this->_getParam('id'));
         $array = Zend_Registry::get('config')->get('codeView')->toArray();
-        $controller = $array[$origin->getClass()->code];
+        $controller = $array[$origin->class->code];
         $this->view->actors = Model_EntityMapper::getByCodes('Actor');
         $this->view->controller = $controller;
         $this->view->menuHighlight = $controller;
@@ -26,11 +26,6 @@ class Admin_ActorController extends Zend_Controller_Action {
 
     public function insertAction() {
         $class = Model_ClassMapper::getByCode($this->_getParam('code'));
-        if (!$class) {
-            $this->getHelper('viewRenderer')->setNoRender(true);
-            $this->_helper->message('error_missing_class');
-            return;
-        }
         $source = null;
         $event = null;
         if ($this->_getParam('sourceId')) {
@@ -41,32 +36,29 @@ class Admin_ActorController extends Zend_Controller_Action {
             $this->view->menuHighlight = 'event';
         }
         $form = new Admin_Form_Actor();
+        $hierarchies = $form->addHierarchies($this->getFormName($this->_getParam('code')));
         if ($class->code != 'E21') {
             $form->removeElement('birth');
             $form->removeElement('death');
-            $form->removeElement('genderId');
-            $form->removeElement('genderButton');
         }
         $form->addElement($form->createElement('text', 'alias0', ['belongsTo' => 'alias']));
         if ($this->getRequest()->isPost()) {
-            Admin_Form_Abstract::preValidation($form, $this->getRequest()->getPost());
+            $form->preValidation($this->getRequest()->getPost());
         }
         if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
             $this->view->className = $class->nameTranslated;
             $this->view->event = $event;
             $this->view->form = $form;
+            $this->view->hierarchies = $hierarchies;
             $this->view->objects = Model_EntityMapper::getByCodes('PhysicalObject');
             $this->view->source = $source;
-            if ($class->code == 'E21') {
-                $this->view->genderTreeData = Model_NodeMapper::getTreeData('type', 'gender');
-            }
             return;
         }
         $actor = Model_EntityMapper::insert($class->id, $form->getValue('name'), $form->getValue('description'));
         if ($source) {
             Model_LinkMapper::insert('P67', $source, $actor);
         }
-        self::save($actor, $form);
+        self::save($actor, $form, $hierarchies);
         $this->_helper->message('info_insert');
         $url = '/admin/actor/view/id/' . $actor->id;
         // @codeCoverageIgnoreStart
@@ -96,7 +88,7 @@ class Admin_ActorController extends Zend_Controller_Action {
             $this->_helper->message('info_insert');
         }
         $array = Zend_Registry::get('config')->get('codeView')->toArray();
-        $controller = $array[$entity->getClass()->code];
+        $controller = $array[$entity->class->code];
         return $this->_helper->redirector->gotoUrl('/admin/' . $controller . '/view/id/' . $entity->id . '/#tabActor');
     }
 
@@ -106,21 +98,21 @@ class Admin_ActorController extends Zend_Controller_Action {
         $form = new Admin_Form_Actor();
         $form->prepareUpdate($actor);
         $this->view->form = $form;
+        $hierarchies = $form->addHierarchies($this->getFormName($actor->class->code), $actor);
         if (!$this->getRequest()->isPost()) {
             self::prepareDefaultUpdate($form, $actor);
             return;
         }
-        Admin_Form_Abstract::preValidation($form, $this->getRequest()->getPost());
+        $form->preValidation($this->getRequest()->getPost());
         $formValid = $form->isValid($this->getRequest()->getPost());
         $modified = Model_EntityMapper::checkIfModified($actor, $form->modified->getValue());
+        // @codeCoverageIgnoreStart
         if ($modified) {
             $log = Model_UserLogMapper::getLogForView('entity', $actor->id);
             $this->view->modifier = $log['modifier_name'];
         }
+        // @codeCoverageIgnoreEnd
         if (!$formValid || $modified) {
-            if ($actor->getClass()->code == 'E21') {
-                $this->view->genderTreeData = Model_NodeMapper::getTreeData('type', 'gender');
-            }
             $this->view->objects = Model_EntityMapper::getByCodes('PhysicalObject');
             $this->_helper->message('error_modified');
             return;
@@ -134,7 +126,7 @@ class Admin_ActorController extends Zend_Controller_Action {
         foreach (Model_LinkMapper::getLinks($actor, ['P2', 'P74', 'OA8', 'OA9']) as $link) {
             $link->delete();
         }
-        self::save($actor, $form);
+        self::save($actor, $form, $hierarchies);
         $this->_helper->message('info_update');
         return $this->_helper->redirector->gotoUrl('/admin/actor/view/id/' . $actor->id);
     }
@@ -144,13 +136,12 @@ class Admin_ActorController extends Zend_Controller_Action {
         $this->view->actor = $actor;
         $this->view->aliases = Model_LinkMapper::getLinkedEntities($actor, 'P131');
         $this->view->dates = Model_DateMapper::getDates($actor);
-        $this->view->gender = Model_NodeMapper::getNodeByEntity('type', 'Gender', $actor);
         $this->view->relationInverseLinks = Model_LinkMapper::getLinks($actor, 'OA7', true);
         $this->view->relationLinks = Model_LinkMapper::getLinks($actor, 'OA7');
         $sourceLinks = [];
         $referenceLinks = [];
         foreach (Model_LinkMapper::getLinks($actor, 'P67', true) as $link) {
-            switch ($link->getDomain()->getClass()->code) {
+            switch ($link->domain->class->code) {
                 case 'E31':
                     $referenceLinks[] = $link;
                     break;
@@ -164,7 +155,7 @@ class Admin_ActorController extends Zend_Controller_Action {
         $eventLinks = Model_LinkMapper::getLinks($actor, ['P11', 'P14', 'P22', 'P23'], true);
         $this->view->eventLinks = $eventLinks;
         $this->view->memberOfLinks = Model_LinkMapper::getLinks($actor, 'P107', true);
-        if ($actor->getClass()->code != 'E21') {
+        if ($actor->class->code != 'E21') {
             $this->view->memberLinks = Model_LinkMapper::getLinks($actor, 'P107');
         }
         $objects = [];
@@ -187,7 +178,7 @@ class Admin_ActorController extends Zend_Controller_Action {
             $this->view->last = $object;
         }
         foreach ($eventLinks as $link) {
-            $event = $link->getDomain();
+            $event = $link->domain;
             $place = Model_LinkMapper::getLinkedEntity($event, 'P7');
             if ($place) {
                 $objects[] = Model_LinkMapper::getLinkedEntity($place, 'P53', true);
@@ -198,6 +189,24 @@ class Admin_ActorController extends Zend_Controller_Action {
             }
         }
         $this->view->objects = $objects;
+    }
+
+    private function getFormName($code) {
+        switch ($code) {
+            case 'E21':
+                $formName = 'Person';
+                break;
+            case 'E74':
+                $formName = 'Group';
+                break;
+            case 'E40':
+                $formName = 'Legal Body';
+                break;
+            default:
+                echo $this->view->ucstring('error_missing_class');
+                exit;
+        }
+        return $formName;
     }
 
     private function prepareDefaultUpdate(Zend_Form $form, Model_Entity $actor) {
@@ -216,33 +225,33 @@ class Admin_ActorController extends Zend_Controller_Action {
                 ]);
             }
         }
-        Admin_Form_Abstract::populateDates($form, $actor, ['OA1' => 'begin', 'OA3' => 'begin', 'OA2' => 'end', 'OA4' => 'end']);
-        if ($actor->getClass()->code == 'E21') {
-            $gender = Model_NodeMapper::getNodeByEntity('type', 'Gender', $actor);
-            if ($gender) {
-                $form->populate(['genderId' => $gender->id, 'genderButton' => $gender->name]);
-            }
-            $this->view->genderTreeData = Model_NodeMapper::getTreeData('type', 'gender', $gender);
-        }
+        $form->populateDates($actor, ['OA1' => 'begin', 'OA3' => 'begin', 'OA2' => 'end', 'OA4' => 'end']);
         $this->view->objects = Model_EntityMapper::getByCodes('PhysicalObject');
     }
 
-    private function save(Model_Entity $actor, Zend_Form $form) {
-        Model_DateMapper::saveDates($actor, $form);
+    private function save(Model_Entity $entity, Zend_Form $form, array $hierarchies) {
+        foreach ($hierarchies as $hierarchy) {
+            $idField = $hierarchy->nameClean . 'Id';
+            if ($form->getValue($idField)) {
+                foreach (explode(",", $form->getValue($idField)) as $id) {
+                    Model_LinkMapper::insert('P2', $entity, Model_NodeMapper::getById($id));
+                }
+            } else if ($hierarchy->system) {
+                Model_LinkMapper::insert('P2', $entity, $hierarchy);
+            }
+        }
+        Model_DateMapper::saveDates($entity, $form);
         foreach (['residenceId' => 'P74', 'appearsFirstId' => 'OA8', 'appearsLastId' => 'OA9'] as $formField => $propertyCode) {
             if ($form->getValue($formField)) {
                 $place = Model_LinkMapper::getLinkedEntity($form->getValue($formField), 'P53');
-                Model_LinkMapper::insert($propertyCode, $actor, $place);
+                Model_LinkMapper::insert($propertyCode, $entity, $place);
             }
-        }
-        if ($form->getValue('genderId')) {
-            Model_LinkMapper::insert('P2', $actor, Model_EntityMapper::getById($form->getValue('genderId')));
         }
         $data = $form->getValues();
         foreach (array_unique($data['alias']) as $name) {
             if (trim($name)) {
                 $alias = Model_EntityMapper::insert('E82', trim($name));
-                Model_LinkMapper::insert('P131', $actor, $alias);
+                Model_LinkMapper::insert('P131', $entity, $alias);
             }
         }
     }

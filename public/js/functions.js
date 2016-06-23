@@ -151,15 +151,6 @@ function ajaxBookmark(entityId) {
     });
 }
 
-$(document).ready(function () {
-    $("#dateSwitcher").click(function () {
-        $(".dateSwitch").toggleClass('display-none');
-    });
-    $("#placeSwitcher").click(function () {
-        $(".placeSwitch").toggleClass('display-none');
-    });
-});
-
 function resizeText(multiplier) {
     if (document.body.style.fontSize === "") {
         document.body.style.fontSize = "1.0em";
