@@ -1,6 +1,6 @@
 INFO
 ====
-Watch out for database role in SQLs and change "openatlas_master" if needed.
+Watch out for database role in SQLs and change "openatlas_dpp" if needed.
 
 1.6.0 to 2.0.0 Upgrade
 ======================
@@ -17,14 +17,14 @@ CREATE TABLE web.form (
     modified timestamp without time zone
 
 );
-ALTER TABLE web.form OWNER TO openatlas_master;
+ALTER TABLE web.form OWNER TO openatlas_dpp;
 CREATE SEQUENCE web.form_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-ALTER TABLE web.form_id_seq OWNER TO openatlas_master;
+ALTER TABLE web.form_id_seq OWNER TO openatlas_dpp;
 ALTER SEQUENCE web.form_id_seq OWNED BY web.form.id;
 
 CREATE TABLE web.hierarchy (
@@ -37,7 +37,7 @@ CREATE TABLE web.hierarchy (
     created timestamp without time zone DEFAULT now() NOT NULL,
     modified timestamp without time zone
 );
-ALTER TABLE web.hierarchy OWNER TO openatlas_master;
+ALTER TABLE web.hierarchy OWNER TO openatlas_dpp;
 COMMENT ON COLUMN web.hierarchy.id IS 'same as model.entity.id';
 COMMENT ON COLUMN web.hierarchy.name IS 'same as model.entity.name, to ensure unique root type names';
 
@@ -47,7 +47,7 @@ CREATE SEQUENCE web.hierarchy_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-ALTER TABLE web.hierarchy_id_seq OWNER TO openatlas_master;
+ALTER TABLE web.hierarchy_id_seq OWNER TO openatlas_dpp;
 ALTER SEQUENCE web.hierarchy_id_seq OWNED BY web.hierarchy.id;
 
 CREATE TABLE web.hierarchy_form (
@@ -57,7 +57,7 @@ CREATE TABLE web.hierarchy_form (
     created timestamp without time zone DEFAULT now() NOT NULL,
     modified timestamp without time zone
 );
-ALTER TABLE web.hierarchy_form OWNER TO openatlas_master;
+ALTER TABLE web.hierarchy_form OWNER TO openatlas_dpp;
 
 CREATE SEQUENCE web.hierarchy_form_id_seq
     START WITH 1
@@ -65,7 +65,7 @@ CREATE SEQUENCE web.hierarchy_form_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-ALTER TABLE web.hierarchy_form_id_seq OWNER TO openatlas_master;
+ALTER TABLE web.hierarchy_form_id_seq OWNER TO openatlas_dpp;
 ALTER SEQUENCE web.hierarchy_form_id_seq OWNED BY web.hierarchy_form.id;
 
 ALTER TABLE ONLY web.hierarchy ALTER COLUMN id SET DEFAULT nextval('web."hierarchy_id_seq"'::regclass);
@@ -181,14 +181,14 @@ CREATE TABLE user_bookmarks (
     created timestamp without time zone DEFAULT now() NOT NULL,
     modified timestamp without time zone
 );
-ALTER TABLE user_bookmarks OWNER TO openatlas_master;
+ALTER TABLE user_bookmarks OWNER TO openatlas_dpp;
 CREATE SEQUENCE user_bookmarks_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-ALTER TABLE user_bookmarks_id_seq OWNER TO openatlas_master;
+ALTER TABLE user_bookmarks_id_seq OWNER TO openatlas_dpp;
 ALTER SEQUENCE user_bookmarks_id_seq OWNED BY user_bookmarks.id;
 ALTER TABLE ONLY user_bookmarks ALTER COLUMN id SET DEFAULT nextval('user_bookmarks_id_seq'::regclass);
 ALTER TABLE ONLY user_bookmarks ADD CONSTRAINT user_bookmarks_pkey PRIMARY KEY (id);
