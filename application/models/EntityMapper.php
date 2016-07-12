@@ -60,7 +60,7 @@ class Model_EntityMapper extends \Model_AbstractMapper {
     }
 
     public static function getLatest($limit) {
-        $codes = array_merge (
+        $codes = array_merge(
             Zend_Registry::get('config')->get('code' . 'Source')->toArray(),
             Zend_Registry::get('config')->get('code' . 'Event')->toArray(),
             Zend_Registry::get('config')->get('code' . 'Actor')->toArray(),
@@ -80,6 +80,9 @@ class Model_EntityMapper extends \Model_AbstractMapper {
     }
 
     public static function getById($id) {
+        if (in_array($id, Zend_Registry::get('nodesIds'))) {
+            return Model_NodeMapper::getById($id);
+        }
         $sql = self::$sql . ' WHERE e.id = :id GROUP BY e.id, c.code;';
         $row = parent::getRowById($sql, $id);
         return self::populate(new Model_Entity(), $row);
@@ -118,23 +121,6 @@ class Model_EntityMapper extends \Model_AbstractMapper {
     }
 
     protected static function populate(Model_Entity $entity, array $row) {
-        if (
-            APPLICATION_ENV == 'development' &&
-            Zend_Registry::isRegistered('nodesIds') &&
-            is_a($entity, 'Model_entity') &&
-            in_array($row['id'], Zend_Registry::get('nodesIds'))) {
-
-            $trace = debug_backtrace();
-            $caller = $trace[2];
-            if (!in_array($caller['function'], ['tablelog'])) {
-                echo "Entity populate called by {$caller['function']}";
-                if (isset($caller['class'])) {
-                    echo " in {$caller['class']}";
-                }
-                exit;
-                throw new \Zend_Application_Bootstrap_Exception("Entity populate instead of using existing node");
-            }
-        }
         $classes = Zend_Registry::get('classes');
         $entity->id = $row['id'];
         $entity->class = $classes[$row['class_id']];
@@ -213,6 +199,7 @@ class Model_EntityMapper extends \Model_AbstractMapper {
     }
 
     /* checks if an entry was modified since opening the update form */
+
     public static function checkIfModified(Model_Entity $entity, $modified) {
         if ($entity->modified && $entity->modified->getTimestamp() > $modified) {
             return true;

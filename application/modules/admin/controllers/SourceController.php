@@ -110,7 +110,7 @@ class Admin_SourceController extends Zend_Controller_Action {
             return;
         }
         $text = Model_EntityMapper::insert('E33', $form->getValue('name'), $form->getValue('description'));
-        Model_LinkMapper::insert('P2', $text, Model_EntityMapper::getById($form->getValue('type')));
+        Model_LinkMapper::insert('P2', $text, Model_NodeMapper::getById($form->getValue('type')));
         Model_LinkMapper::insert('P73', $source, $text);
         $this->_helper->message('info_insert');
         return $this->_helper->redirector->gotoUrl('/admin/source/view/id/' . $source->id . '#tabText');
@@ -144,7 +144,7 @@ class Admin_SourceController extends Zend_Controller_Action {
         $text->description = $form->getValue('description');
         $text->update();
         $typeLink->delete();
-        Model_LinkMapper::insert('P2', $text, Model_EntityMapper::getById($form->getValue('type')));
+        Model_LinkMapper::insert('P2', $text, Model_NodeMapper::getById($form->getValue('type')));
         $this->_helper->message('info_update');
         return $this->_helper->redirector->gotoUrl('/admin/source/view/id/' . $source->id . '#tabText');
     }
