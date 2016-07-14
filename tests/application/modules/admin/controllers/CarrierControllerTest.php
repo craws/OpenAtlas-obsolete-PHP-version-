@@ -26,12 +26,12 @@ class Admin_CarrierControllerTest extends ControllerTestCase {
         $this->dispatch('admin/carrier/insert');
         $this->resetRequest()->resetResponse();
         $this->dispatch('admin/carrier/update/id/' . $this->carrierId);
+        $this->formValues['information_carrierId'] = '';
         $this->request->setMethod('POST')->setPost($this->formValues);
         $this->dispatch('admin/carrier/update/id/' . $this->carrierId);
         $this->resetRequest()->resetResponse();
         $this->dispatch('admin/carrier/update/id/' . $this->carrierId); // test with type which is not a root type
         $this->resetRequest()->resetResponse();
-        $this->formValues['name'] = '';
         $this->request->setMethod('POST')->setPost($this->formValues);
         $this->dispatch('admin/carrier/update/id/' . $this->carrierId); // test invalid form
         $this->resetRequest()->resetResponse();

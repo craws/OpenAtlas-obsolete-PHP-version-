@@ -58,6 +58,7 @@ class Admin_PlaceControllerTest extends ControllerTestCase {
         $this->resetRequest()->resetResponse();
         $this->dispatch('admin/place/update/id/' . $this->objectId);
         $this->resetRequest()->resetResponse();
+        $this->formValues['siteId'] = ''; // test empty root type
         $this->request->setMethod('POST')->setPost($this->formValues);
         $this->dispatch('admin/place/update/id/' . $placeId);
         $this->resetRequest()->resetResponse();

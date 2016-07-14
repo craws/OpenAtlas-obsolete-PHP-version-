@@ -12,7 +12,7 @@ class Admin_MemberControllerTest extends ControllerTestCase {
     public function testCrud() {
         $formValues = [
             'relatedActorIds' => $this->actorId,
-            'memberId' => Model_NodeMapper::getByNodeCategoryName('Actor Function', 'King')->id,
+            'actor_functionId' => Model_NodeMapper::getByNodeCategoryName('Actor Function', 'King')->id,
             'relatedActorButton' => 'Placeholder',
             'beginYear' => '23'
         ];
@@ -23,6 +23,7 @@ class Admin_MemberControllerTest extends ControllerTestCase {
         $this->resetRequest()->resetResponse();
         $this->dispatch('admin/member/update/id/' . $links[0]->id . '/originActorId/' . $this->actorId);
         $this->resetRequest()->resetResponse();
+        $formValues['actor_functionId'] = '';
         $this->request->setMethod('POST')->setPost($formValues);
         $this->dispatch('admin/member/update/id/' . $links[0]->id . '/originActorId/' . $this->actorId);
         $this->resetRequest()->resetResponse();

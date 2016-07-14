@@ -165,14 +165,23 @@ class Model_LinkMapper extends Model_AbstractMapper {
     }
 
     public static function delete(Model_Link $link) {
-        self::deleteDates($link);
+        foreach (['OA5', 'OA6'] as $code) {
+            foreach (Model_LinkPropertyMapper::getLinks($link, $code) as $dateLink) {
+                parent::deleteAbstract('model.entity', $dateLink->range->id);
+            }
+        }
         parent::deleteAbstract('model.link', $link->id);
     }
 
-    public static function deleteDates(Model_Link $link) {
-        foreach (['OA1', 'OA2'] as $code) {
-            foreach (Model_LinkPropertyMapper::getLinks($link, $code) as $dateLink) {
-                parent::deleteAbstract('model.entity', $dateLink->range->id);
+    public static function insertTypeLinks(Model_Entity $entity, Zend_Form $form, array $hierarchies) {
+        foreach ($hierarchies as $hierarchy) {
+            $idField = $hierarchy->nameClean . 'Id';
+            if ($form->getValue($idField)) {
+                foreach (explode(",", $form->getValue($idField)) as $id) {
+                    Model_LinkMapper::insert('P2', $entity, Model_NodeMapper::getById($id));
+                }
+            } else if ($hierarchy->system) { // if its an empty system type, link the type root
+                Model_LinkMapper::insert('P2', $entity, $hierarchy);
             }
         }
     }

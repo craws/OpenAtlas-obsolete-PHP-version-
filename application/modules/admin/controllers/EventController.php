@@ -33,12 +33,12 @@ class Admin_EventController extends Zend_Controller_Action {
     }
 
     public function insertAction() {
-        $class = Model_ClassMapper::getByCode($this->_getParam('code'));
-        if (!$class) {
+        if (!in_array($this->_getParam('code'), Zend_Registry::get('config')->get('codeEvent')->toArray())) {
             $this->getHelper('viewRenderer')->setNoRender(true);
             $this->_helper->message('error_missing_class');
             return;
         }
+        $class = Model_ClassMapper::getByCode($this->_getParam('code'));
         $source = null;
         if ($this->_getParam('sourceId')) {
             $source = Model_EntityMapper::getById($this->_getParam('sourceId'));
@@ -223,16 +223,7 @@ class Admin_EventController extends Zend_Controller_Action {
     }
 
     private function save(Model_Entity $event, Zend_Form $form, array $hierarchies) {
-        foreach ($hierarchies as $hierarchy) {
-            $idField = $hierarchy->nameClean . 'Id';
-            if ($form->getValue($idField)) {
-                foreach (explode(",", $form->getValue($idField)) as $id) {
-                    Model_LinkMapper::insert('P2', $event, Model_NodeMapper::getById($id));
-                }
-            } else if ($hierarchy->system) {
-                Model_LinkMapper::insert('P2', $event, $hierarchy);
-            }
-        }
+        Model_LinkMapper::insertTypeLinks($event, $form, $hierarchies);
         Model_DateMapper::saveDates($event, $form);
         if ($form->getValue('placeId')) {
             $place = Model_LinkMapper::getLinkedEntity($form->getValue('placeId'), 'P53');

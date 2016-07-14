@@ -15,6 +15,10 @@ class Admin_ClassControllerTest extends ControllerTestCase {
 
     public function testView() {
         $this->dispatch('admin/class/view/id/1');
+        // some tests for coverage
+        Model_ClassMapper::getByCode('007'); // test non existing code
+        Model_PropertyMapper::getByCode('007'); // test non existing code
+        Model_NodeMapper::getHierarchyByName('007'); // test non existing hierarchy name
     }
 
 }

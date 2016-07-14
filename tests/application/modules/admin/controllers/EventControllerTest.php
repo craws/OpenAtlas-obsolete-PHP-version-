@@ -46,8 +46,7 @@ class Admin_EventControllerTest extends ControllerTestCase {
         $this->dispatch('admin/event/link/eventId/' . $this->eventId . '/rangeId/' . $this->source2Id);
     }
 
-
-    public function testCrud() {
+    public function testCrudEvent() {
         $this->dispatch('admin/event/insert'); // test errror if code is missing
         $this->resetRequest()->resetResponse();
         $this->dispatch('admin/event/insert/code/E8');

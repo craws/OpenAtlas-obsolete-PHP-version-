@@ -95,6 +95,8 @@ class Model_NodeMapper extends Model_EntityMapper {
         Model_LogMapper::log('error', 'found no node for: ' . $rootName . ', ' . $name);
     }
 
+    // @codeCoverageIgnoreStart
+    // Ignore coverage because cumbersome to test failures
     public static function getNodeByEntity($rootName, Model_Entity $entity) {
         $nodes = self::getNodesByEntity($rootName, $entity);
         switch (count($nodes)) {
@@ -102,7 +104,6 @@ class Model_NodeMapper extends Model_EntityMapper {
                 return false;
             case 1:
                 return $nodes[0];
-            // @codeCoverageIgnoreStart
         }
         $error = 'Found ' . count($nodes) . ' ' . $rootName . ' nodes for Entity (' . $entity->id . ') instead of one.';
         Model_LogMapper::log('error', 'model', $error);

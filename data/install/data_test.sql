@@ -22,6 +22,7 @@ INSERT INTO entity (id, class_id, name) VALUES
 (1011, (SELECT id FROM class WHERE code='E55'), 'tCustomHierarchy'  );
 
 INSERT INTO hierarchy (id, name, multiple) VALUES (1011, 'tCustomHierarchy', 1);
+INSERT INTO hierarchy_form (hierarchy_id, form_id) VALUES (1011, 1);
 
 INSERT INTO user_bookmarks (user_id, entity_id) VALUES ((SELECT id FROM web."user" WHERE username = 'a'), 1001);
 

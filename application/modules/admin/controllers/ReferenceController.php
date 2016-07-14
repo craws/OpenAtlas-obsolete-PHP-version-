@@ -40,6 +40,8 @@ class Admin_ReferenceController extends Zend_Controller_Action {
         $referenceRootType = null;
         $referenceType = null;
         $types = Model_LinkMapper::getLinkedEntities($reference, 'P2');
+        // @codeCoverageIgnoreStart
+        // Determine if Bibliography or Edition. Difficult to test with complete coverage, needs refactoring
         foreach ($types as $type) {
             if (!$type->system) {
                 continue;
@@ -53,6 +55,7 @@ class Admin_ReferenceController extends Zend_Controller_Action {
                     break 2;
             }
         }
+        // @codeCoverageIgnoreEnd
         $hierarchies = $form->addHierarchies($rootType->name, $reference);
         $this->view->form = $form;
         if (!$this->getRequest()->isPost()) {
@@ -119,15 +122,6 @@ class Admin_ReferenceController extends Zend_Controller_Action {
     }
 
     private function save(Zend_Form $form, Model_Entity $entity, array $hierarchies) {
-        foreach ($hierarchies as $hierarchy) {
-            $idField = $hierarchy->nameClean . 'Id';
-            if ($form->getValue($idField)) {
-                foreach (explode(",", $form->getValue($idField)) as $id) {
-                    Model_LinkMapper::insert('P2', $entity, Model_NodeMapper::getById($id));
-                }
-            } else if ($hierarchy->system) {
-                Model_LinkMapper::insert('P2', $entity, $hierarchy);
-            }
-        }
+        Model_LinkMapper::insertTypeLinks($entity, $form, $hierarchies);
     }
 }

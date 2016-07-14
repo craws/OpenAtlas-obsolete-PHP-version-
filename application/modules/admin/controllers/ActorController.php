@@ -25,6 +25,11 @@ class Admin_ActorController extends Zend_Controller_Action {
     }
 
     public function insertAction() {
+        if (!in_array($this->_getParam('code'), Zend_Registry::get('config')->get('codeActor')->toArray())) {
+            $this->getHelper('viewRenderer')->setNoRender(true);
+            $this->_helper->message('error_missing_class');
+            return;
+        }
         $class = Model_ClassMapper::getByCode($this->_getParam('code'));
         $source = null;
         $event = null;
@@ -202,9 +207,6 @@ class Admin_ActorController extends Zend_Controller_Action {
             case 'E40':
                 $formName = 'Legal Body';
                 break;
-            default:
-                echo $this->view->ucstring('error_missing_class');
-                exit;
         }
         return $formName;
     }
@@ -230,16 +232,7 @@ class Admin_ActorController extends Zend_Controller_Action {
     }
 
     private function save(Model_Entity $entity, Zend_Form $form, array $hierarchies) {
-        foreach ($hierarchies as $hierarchy) {
-            $idField = $hierarchy->nameClean . 'Id';
-            if ($form->getValue($idField)) {
-                foreach (explode(",", $form->getValue($idField)) as $id) {
-                    Model_LinkMapper::insert('P2', $entity, Model_NodeMapper::getById($id));
-                }
-            } else if ($hierarchy->system) {
-                Model_LinkMapper::insert('P2', $entity, $hierarchy);
-            }
-        }
+        Model_LinkMapper::insertTypeLinks($entity, $form, $hierarchies);
         Model_DateMapper::saveDates($entity, $form);
         foreach (['residenceId' => 'P74', 'appearsFirstId' => 'OA8', 'appearsLastId' => 'OA9'] as $formField => $propertyCode) {
             if ($form->getValue($formField)) {

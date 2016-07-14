@@ -15,8 +15,4 @@ class Model_Node extends Model_Entity {
     public $system = null;
     public $subs = [];
 
-    public function addSub(Model_Node $sub) {
-        $this->subs[] = $sub;
-    }
-
 }

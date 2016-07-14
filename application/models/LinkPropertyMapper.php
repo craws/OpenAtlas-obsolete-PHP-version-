@@ -63,9 +63,12 @@ class Model_LinkPropertyMapper extends Model_AbstractMapper {
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->bindValue(':range_id', $entity->id);
         $statement->execute();
+        // @codeCoverageIgnoreStart
+        // Ignore coverage because cumbersome to test (an involvement with a type would be needed in data_test.sql)
         foreach ($statement->fetchAll() as $row) {
             $objects[] = self::populate($row);
         }
+        // @codeCoverageIgnoreEnd
         return $objects;
     }
 
@@ -97,8 +100,17 @@ class Model_LinkPropertyMapper extends Model_AbstractMapper {
         return $link;
     }
 
-    public static function delete(Model_Link $link) {
-        parent::deleteAbstract('model.link', $link->id);
+    public static function insertTypeLinks(Model_Link $link, Zend_Form $form, array $hierarchies) {
+        foreach ($hierarchies as $hierarchy) {
+            $idField = $hierarchy->nameClean . 'Id';
+            if ($form->getValue($idField)) {
+                foreach (explode(",", $form->getValue($idField)) as $id) {
+                    Model_LinkPropertyMapper::insert('P2', $link, Model_NodeMapper::getById($id));
+                }
+            } else if ($hierarchy->system) {
+                Model_LinkPropertyMapper::insert('P2', $link, $hierarchy);
+            }
+        }
     }
 
 }

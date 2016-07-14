@@ -67,16 +67,7 @@ class Admin_RelationController extends Zend_Controller_Action {
     }
 
     private function save(Model_Link $link, Zend_Form $form, array $hierarchies) {
-        foreach ($hierarchies as $hierarchy) {
-            $idField = $hierarchy->nameClean . 'Id';
-            if ($form->getValue($idField)) {
-                foreach (explode(",", $form->getValue($idField)) as $id) {
-                    Model_LinkPropertyMapper::insert('P2', $link, Model_NodeMapper::getById($id));
-                }
-            } else if ($hierarchy->system) {
-                Model_LinkPropertyMapper::insert('P2', $link, $hierarchy);
-            }
-        }
+        Model_LinkPropertyMapper::insertTypeLinks($link, $form, $hierarchies); 
         Model_DateMapper::saveLinkDates($link, $form);
     }
 

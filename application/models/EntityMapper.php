@@ -40,6 +40,8 @@ class Model_EntityMapper extends \Model_AbstractMapper {
         foreach ($rows as $row) {
             $entity = self::populate(new Model_Entity(), $row);
             switch ($entity->class->code) {
+                // @codeCoverageIgnoreStart
+                // Ignore coverage because cumbersome to test
                 case 'E82':
                     $entityForAlias = Model_LinkMapper::getLinkedEntity($entity, 'P131', true);
                     if (!isset($entitites[$entityForAlias->id])) { // otherwise the one with dates would be overwriten
@@ -52,6 +54,7 @@ class Model_EntityMapper extends \Model_AbstractMapper {
                         $entitites[$entityForAlias->id] = $entityForAlias;
                     }
                     break;
+                // @codeCoverageIgnoreEnd
                 default:
                     $entitites[$entity->id] = $entity;
             }
