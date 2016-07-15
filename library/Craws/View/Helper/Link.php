@@ -79,6 +79,7 @@ class Craws_View_Helper_Link extends Zend_View_Helper_Abstract {
         }
         $array = Zend_Registry::get('config')->get('codeView')->toArray();
         // @codeCoverageIgnoreStart
+        // Ignore coverage because cumbersome to test this failure
         if (!$array[$object->class->code]) {
             return '"</a><span style="color:red;">undefined code ' . $object->class->code . ' for link <';
         }

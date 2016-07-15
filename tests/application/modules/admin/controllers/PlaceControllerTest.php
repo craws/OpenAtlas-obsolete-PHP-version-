@@ -15,7 +15,9 @@ class Admin_PlaceControllerTest extends ControllerTestCase {
         'endMonth' => '',
         'endDay' => '',
         'endComment' => '',
-        'alias' => ['alias0' => 'Newcastle']
+        'alias' => ['alias0' => 'Newcastle'],
+        'easting' => 1,
+        'northing' => 1
     ];
 
     public function setUp() {
@@ -37,14 +39,14 @@ class Admin_PlaceControllerTest extends ControllerTestCase {
         $this->dispatch('admin/place/add/id/' . $this->sourceId);
     }
 
-    public function testCrud() {
+    public function testCrudPlace() {
         $this->dispatch('admin/place/insert');
         $this->resetRequest()->resetResponse();
         $this->request->setMethod('POST')->setPost($this->formValues);
         $this->dispatch('admin/place/insert/sourceId/' . $this->sourceId);
         $this->resetRequest()->resetResponse();
         $this->request->setMethod('POST')->setPost($this->formValues);
-        $this->dispatch('admin/place/insert'); // insert again without gis cause of problems with st_makepoint in phpunit
+        $this->dispatch('admin/place/insert');
         $this->resetRequest()->resetResponse();
         $places = Model_EntityMapper::getByCodes('PhysicalObject');
         $placeId = $places[0]->id;

@@ -1,7 +1,8 @@
-SET search_path = model, web;
+SET search_path = model, web, public;
 
 INSERT INTO "user" (username, password, active, email, group_id) VALUES
-('testUser', '$2a$08$cVEBAnh6MIp/KEcEoMcYAOOK9B70eeq9FVQ6pNxKJK8UBfsKQeW5ycVEBAnh6MIp/KEcEoMcYAQ', 1, 'nobody@craws.net', 2);
+('testUser', '$2a$08$cVEBAnh6MIp/KEcEoMcYAOOK9B70eeq9FVQ6pNxKJK8UBfsKQeW5ycVEBAnh6MIp/KEcEoMcYAQ', 1, 'nobody@craws.net', 2),
+('testUser2', '$2a$08$cVEBAnh6MIp/KEcEoMcYAOOK9B70eeq9FVQ6pNxKJK8UBfsKQeW5ycVEBAnh6MIp/KEcEoMcYAQ', 0, 'everybody@craws.net', 2);
 
 INSERT INTO user_settings (user_id, name, value) VALUES
 ((SELECT id FROM "user" WHERE username = 'a'), 'layout', 'advanced'),
@@ -19,7 +20,7 @@ INSERT INTO entity (id, class_id, name) VALUES
 (1008, (SELECT id FROM class WHERE code='E33'), 'tDocument2'  ),
 (1009, (SELECT id FROM class WHERE code='E84'), 'tCarrier'    ),
 (1010, (SELECT id FROM class WHERE code='E8' ), 'tSubEvent'   ),
-(1011, (SELECT id FROM class WHERE code='E55'), 'tCustomHierarchy'  );
+(1011, (SELECT id FROM class WHERE code='E55'), 'tCustomHierarchy');
 
 INSERT INTO hierarchy (id, name, multiple) VALUES (1011, 'tCustomHierarchy', 1);
 INSERT INTO hierarchy_form (hierarchy_id, form_id) VALUES (1011, 1);
@@ -48,3 +49,5 @@ INSERT INTO link (property_id, domain_id, range_id) VALUES
 ((SELECT id FROM property WHERE code='P2'  ), (SELECT id FROM entity WHERE name='tBiblio'  ), (SELECT id FROM entity WHERE name='Book')),
 ((SELECT id FROM property WHERE code='P2'  ), (SELECT id FROM entity WHERE name='tCarrier' ), (SELECT id FROM entity WHERE name='Information Carrier')),
 ((SELECT id FROM property WHERE code='OA8' ), (SELECT id FROM entity WHERE name='tCarrier' ), (SELECT id FROM entity WHERE name='tPlace'));
+
+INSERT INTO gis.centerpoint (entity_id, easting, northing) VALUES (1003, 1, 1);

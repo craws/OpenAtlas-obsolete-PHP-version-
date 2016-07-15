@@ -24,12 +24,7 @@ class Acl extends \Zend_Controller_Plugin_Abstract {
                 $requestUri = \Zend_Controller_Front::getInstance()->getRequest()->getRequestUri();
                 $session = new \Zend_Session_Namespace('lastRequest');
                 $session->lastRequestUri = $requestUri;
-                return;
             }
-            $request->setModuleName('default');
-            $request->setControllerName('error');
-            $request->setActionName('forbidden');
-            return;
         }
     }
 

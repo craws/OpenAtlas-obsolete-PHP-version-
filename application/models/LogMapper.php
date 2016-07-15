@@ -88,11 +88,11 @@ class Model_LogMapper extends Model_AbstractMapper {
 
     public static function log($priorityName, $type, $message = '') {
         $priority = array_search($priorityName, self::$logLevels);
-        // @codeCoverageIgnoreStart
         if (!$priority || $priority > Model_SettingsMapper::getSetting('general', 'log_level')) {
             return;
         }
-        // @codeCoverageIgnoreEnd
+        $ip = (filter_input(INPUT_SERVER, 'REMOTE_ADDR')) ? filter_input(INPUT_SERVER, 'REMOTE_ADDR') : '';
+        $agent = (filter_input(INPUT_SERVER, 'HTTP_USER_AGENT')) ? filter_input(INPUT_SERVER, 'HTTP_USER_AGENT') : '';
         $sql = 'INSERT INTO log.log (priority, type, message, user_id, ip, agent)
             VALUES (:priority, :type, :message, :user_id, :ip, :agent) RETURNING id;';
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
@@ -100,17 +100,7 @@ class Model_LogMapper extends Model_AbstractMapper {
         $statement->bindValue(':type', $type);
         $statement->bindValue(':message', $message);
         $statement->bindValue(':user_id', Zend_Registry::get('user')->id);
-        $ip = null;
-        // @codeCoverageIgnoreStart
-        if (filter_input(INPUT_SERVER, 'REMOTE_ADDR')) {
-            $ip = filter_input(INPUT_SERVER, 'REMOTE_ADDR');
-        }
         $statement->bindValue(':ip', $ip);
-        $agent = null;
-        if (filter_input(INPUT_SERVER, 'HTTP_USER_AGENT')) {
-            $agent = filter_input(INPUT_SERVER, 'HTTP_USER_AGENT');
-        }
-        // @codeCoverageIgnoreEnd
         $statement->bindValue(':agent', $agent);
         $statement->execute();
         $result = $statement->fetch(PDO::FETCH_ASSOC);
@@ -128,6 +118,7 @@ class Model_LogMapper extends Model_AbstractMapper {
         foreach (Zend_Controller_Front::getInstance()->getRequest()->getParams() as $key => $value) {
             if (is_a($value, 'arrayObject')) {
                 // @codeCoverageIgnoreStart
+                // Ignore coverage because cumbersome to test
                 foreach ($value as $objectKey => $objectValue) {
                     if (is_a($objectValue, 'Exception')) {
                         $logDetails[$objectKey] = $objectValue->getMessage();

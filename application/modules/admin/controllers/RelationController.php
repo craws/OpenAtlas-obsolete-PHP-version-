@@ -67,7 +67,7 @@ class Admin_RelationController extends Zend_Controller_Action {
     }
 
     private function save(Model_Link $link, Zend_Form $form, array $hierarchies) {
-        Model_LinkPropertyMapper::insertTypeLinks($link, $form, $hierarchies); 
+        Model_LinkPropertyMapper::insertTypeLinks($link, $form, $hierarchies);
         Model_DateMapper::saveLinkDates($link, $form);
     }
 

@@ -19,6 +19,7 @@ class Admin_OverviewController extends Zend_Controller_Action {
         $this->view->form = $form;
         $this->view->feedbackReceiver = $receivers[0];
         // @codeCoverageIgnoreStart
+        // Ignore coverage because no mail in testing
         if ($this->getRequest()->isPost() && $form->isValid($this->getRequest()->getPost()) &&
             Model_SettingsMapper::getSetting('module', 'mail')) {
             $mail = new Zend_Mail('utf-8');

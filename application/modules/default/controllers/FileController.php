@@ -9,10 +9,8 @@ class FileController extends Zend_Controller_Action {
             case 'schema':
                 $image = file_get_contents(APPLICATION_PATH . '/../data/documentation/openatlas_schema.png');
                 header('Content-type: image/jpg');
-                // @codeCoverageIgnoreStart
                 echo $image;
                 return;
-                // @codeCoverageIgnoreEnd
             default:
                 return;
         }

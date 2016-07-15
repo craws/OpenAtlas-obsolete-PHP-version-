@@ -42,6 +42,7 @@ class Model_LinkMapper extends Model_AbstractMapper {
             case 1:
                 return $links[0];
                 // @codeCoverageIgnoreStart
+                // Ignore coverage because cumbersome to test this failure
         }
         $error = 'Found ' . count($links) . ' ' . $code . ' links for (' . $entity->name . ')' . ' instead one.';
         if (is_a($entity, 'Model_Entity')) {
@@ -132,6 +133,7 @@ class Model_LinkMapper extends Model_AbstractMapper {
         $whitelistDomains = Zend_Registry::get('config')->get('linkcheckIgnoreDomains')->toArray();
         if (!in_array($domain->class->code, $whitelistDomains)) {
             // @codeCoverageIgnoreStart
+            // To do: remove CoverageIgnore after refactoring insert function
             if (!in_array($domain->class->code, $property->domain->getSubRecursive())) {
                 $error = 'Wrong domain ' . $domain->class->code . ' for ' . $property->code;
                 Model_LogMapper::log('error', 'model', $error);

@@ -139,11 +139,9 @@ class Admin_PlaceController extends Zend_Controller_Action {
         $object = Model_EntityMapper::getById($this->_getParam('id'));
         $place = Model_LinkMapper::getLinkedEntity($object, 'P53');
         $this->view->gis = Model_GisMapper::getByEntity($place);
-        // @codeCoverageIgnoreStart
         if ($this->view->gis) {
             $this->view->jsonData = Model_GisMapper::getJsonData();
         }
-        // @codeCoverageIgnoreEnd
         $this->view->object = $object;
         $this->view->aliases = Model_LinkMapper::getLinkedEntities($object, 'P1');
         $this->view->dates = Model_DateMapper::getDates($object);
@@ -180,11 +178,9 @@ class Admin_PlaceController extends Zend_Controller_Action {
             'modified' => ($object->modified) ? $object->modified->getTimestamp() : 0
         ]);
         $gis = Model_GisMapper::getByEntity($place);
-        // @codeCoverageIgnoreStart
         if ($gis) {
             $form->populate(['easting' => $gis->easting, 'northing' => $gis->northing]);
         }
-        // @codeCoverageIgnoreEnd
         $form->populateDates($object, ['OA1' => 'begin', 'OA2' => 'end']);
         return;
     }
@@ -214,7 +210,6 @@ class Admin_PlaceController extends Zend_Controller_Action {
                 Model_LinkMapper::insert('P1', $object, $alias);
             }
         }
-        // @codeCoverageIgnoreStart
         if ($form->getValue('easting') && $form->getValue('northing')) {
             $gis = new Model_Gis();
             $gis->setEntity($place);
@@ -222,7 +217,6 @@ class Admin_PlaceController extends Zend_Controller_Action {
             $gis->northing = $form->getValue('northing');
             $gis->insert();
         }
-        // @codeCoverageIgnoreEnd
     }
 
 }

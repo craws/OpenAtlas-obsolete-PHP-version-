@@ -96,7 +96,7 @@ class Model_NodeMapper extends Model_EntityMapper {
     }
 
     // @codeCoverageIgnoreStart
-    // Ignore coverage because cumbersome to test failures
+    // Ignore coverage because cumbersome to test this failure
     public static function getNodeByEntity($rootName, Model_Entity $entity) {
         $nodes = self::getNodesByEntity($rootName, $entity);
         switch (count($nodes)) {

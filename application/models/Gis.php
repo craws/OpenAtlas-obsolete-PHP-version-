@@ -2,7 +2,6 @@
 
 /* Copyright 2016 by Alexander Watzinger and others. Please see the file README.md for licensing information */
 
-// @codeCoverageIgnoreStart
 class Model_Gis extends Model_AbstractObject {
 
     public $northing;
@@ -18,4 +17,3 @@ class Model_Gis extends Model_AbstractObject {
     }
 
 }
-// @codeCoverageIgnoreEnd

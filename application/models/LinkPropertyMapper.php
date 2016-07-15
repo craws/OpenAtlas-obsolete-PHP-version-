@@ -36,6 +36,7 @@ class Model_LinkPropertyMapper extends Model_AbstractMapper {
             case 1:
                 return $links[0];
             // @codeCoverageIgnoreStart
+            // Ignore coverage because cumbersome to test this failure
         }
         $error = 'Found ' . count($links) . ' ' . $code . ' property links for link(' . $link->id . ') instead one.';
         Model_LogMapper::log('error', 'model', $error);

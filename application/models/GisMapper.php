@@ -4,7 +4,6 @@
 
 class Model_GisMapper extends Model_AbstractMapper {
 
-    // @codeCoverageIgnoreStart
     public static function insert(Model_Gis $gis) {
         $sql = 'INSERT INTO gis.centerpoint (entity_id, easting, northing)
             VALUES (:entity_id, :easting, :northing) RETURNING id;';
@@ -16,9 +15,7 @@ class Model_GisMapper extends Model_AbstractMapper {
         $result = $statement->fetch(PDO::FETCH_ASSOC);
         Model_UserLogMapper::insert('entity', $result['id'], 'gis insert');
     }
-    // @codeCoverageIgnoreEnd
 
-    // @codeCoverageIgnoreStart
     public static function getJsonData($objects = false) {
         if (!$objects) {
             $objects = Model_EntityMapper::getByCodes('PhysicalObject');
@@ -30,8 +27,7 @@ class Model_GisMapper extends Model_AbstractMapper {
             $gis = Model_GisMapper::getByEntity($place);
             if ($gis) {
                 $name = str_replace('"', '\"', $object->name);
-                // $type names deactivated because of performance issues
-                //$type = Model_NodeMapper::getNodeByEntity('Site', $object);
+                $type = Model_NodeMapper::getNodeByEntity('Site', $object);
                 $typeName = str_replace('"', '\"', '');
                 $description = str_replace('"', '\"', $object->description);
                 $json['marker'] .= '{"type": "Feature","geometry":{"type": "Point","coordinates": [' . $gis->easting .
@@ -49,8 +45,11 @@ class Model_GisMapper extends Model_AbstractMapper {
         if ($json['marker']) {
             return $json;
         }
+        // @codeCoverageIgnoreStart
+        // Ignore because to cumbersome to test closing bracket
     }
     // @codeCoverageIgnoreEnd
+
 
     public static function getByEntity(Model_Entity $entity) {
         $sql = 'SELECT easting, northing FROM gis.centerpoint WHERE entity_id = :entity_id;';
@@ -58,7 +57,6 @@ class Model_GisMapper extends Model_AbstractMapper {
         $statement->bindValue(':entity_id', $entity->id);
         $statement->execute();
         $result = $statement->fetch();
-        // @codeCoverageIgnoreStart
         if ($result) {
             $gis = new Model_Gis();
             $gis->easting = $result['easting'];
@@ -66,7 +64,6 @@ class Model_GisMapper extends Model_AbstractMapper {
             $gis->setEntity($entity);
             return $gis;
         }
-        // @codeCoverageIgnoreEnd
         return false;
     }
 

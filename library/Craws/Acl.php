@@ -263,6 +263,7 @@ class Acl extends \Zend_Acl {
         $this->allow('admin');
 
         // @codeCoverageIgnoreStart
+        // Ignore coverage because no mail in testing
         if ($moduleSettings['mail']) {
             $this->add(new \Zend_Acl_Resource('admin:index:reset-password'));
             $this->add(new \Zend_Acl_Resource('admin:index:reset-confirm'));

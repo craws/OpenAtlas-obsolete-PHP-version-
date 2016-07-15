@@ -32,11 +32,9 @@ class Model_AbstractMapper {
         if (!$date) {
             return null;
         }
-        // @codeCoverageIgnoreStart
         if (is_a($date, "Zend_Date")) {
             return $date;
         }
-        // @codeCoverageIgnoreEnd
         if (strpos($date, 'BC') !== FALSE) { // looks like zend date ignores bc in a postgresql timestamp string
             return $zendDate = new Zend_Date('-' . $date, Zend_Date::ISO_8601, 'en');
         }
@@ -48,11 +46,9 @@ class Model_AbstractMapper {
             return null;
         }
         $year = $date->get(Zend_Date::YEAR);
-        // @codeCoverageIgnoreStart
         if ($year < -4713) {
             return null; // postgresql timestamps not possible before -4713
         }
-        // @codeCoverageIgnoreEnd
         $date->setLocale('en');
         if ($year[0] != '-') {
             $string = $date->get(Zend_Date::MONTH_NAME_SHORT) . ', ' . $date->get(Zend_Date::DAY) . ' ' .

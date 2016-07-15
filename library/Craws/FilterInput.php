@@ -16,9 +16,7 @@ class FilterInput extends \Zend_Controller_Action_Helper_Abstract {
                 $string = str_replace($find, '_', strtolower(trim($string)));
                 $find1 = array('/[^._a-z0-9\-<>]/', '/[\-]+/', '/<[^>]*>/'); // delete and replace rest of special chars
                 return preg_replace($find1, array('', '_', ''), $string);
-            // @codeCoverageIgnoreStart
         }
     }
 
-    // @codeCoverageIgnoreEnd
 }

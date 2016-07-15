@@ -6,6 +6,7 @@ class OfflineController extends Zend_Controller_Action {
         $offline = Model_SettingsMapper::getSetting('general', 'offline');
         $maintenance = Model_SettingsMapper::getSetting('general', 'maintenance');
         // @codeCoverageIgnoreStart
+        // Ignore coverage because cumbersome to maintenance mode
         if (!$offline && !$maintenance) {
             return $this->_helper->redirector->gotoUrl('/');
         }
