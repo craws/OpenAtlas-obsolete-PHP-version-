@@ -52,9 +52,7 @@ class Craws_View_Helper_Link extends Zend_View_Helper_Abstract {
             $tab = '/#tab' . $tab;
         }
         $onclick = '';
-        if ($label) {
-            $label = $this->view->ucstring($label);
-        } else if ($action == 'update') {
+        if ($action == 'update') {
             $label = $this->view->ucstring('edit');
         } else if ($action == 'delete') {
             $label = $this->view->ucstring('delete');
@@ -65,7 +63,7 @@ class Craws_View_Helper_Link extends Zend_View_Helper_Abstract {
         } else {
             $label = $object->name;
         }
-        $link = '<a href="/admin/' . $this->getController($object) . '/' . $action . '/id/' . $object->id . $tab . '"' .
+        $link = '<a href="/' . $this->getController($object) . '/' . $action . '/id/' . $object->id . $tab . '"' .
             $onclick . '>' . $label . '</a>';
         return $link;
     }
@@ -79,12 +77,11 @@ class Craws_View_Helper_Link extends Zend_View_Helper_Abstract {
         }
         $array = Zend_Registry::get('config')->get('codeView')->toArray();
         // @codeCoverageIgnoreStart
-        // Ignore coverage because cumbersome to test this failure
         if (!$array[$object->class->code]) {
             return '"</a><span style="color:red;">undefined code ' . $object->class->code . ' for link <';
         }
         // @codeCoverageIgnoreEnd
-        return $array[$object->class->code];
+        return 'admin/' . $array[$object->class->code];
     }
 
 }

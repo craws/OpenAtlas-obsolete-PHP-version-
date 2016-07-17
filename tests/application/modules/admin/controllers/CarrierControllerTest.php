@@ -20,7 +20,8 @@ class Admin_CarrierControllerTest extends ControllerTestCase {
             'name' => 'Cryptonomicum',
             'information_carrierId' => $type->id,
             'desc' => 'desc',
-            'objectId' => $this->objectId
+            'objectId' => $this->objectId,
+            'continue' => 1
         ];
         $this->request->setMethod('POST')->setPost($this->formValues);
         $this->dispatch('admin/carrier/insert');

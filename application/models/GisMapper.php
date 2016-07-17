@@ -46,7 +46,6 @@ class Model_GisMapper extends Model_AbstractMapper {
             return $json;
         }
         // @codeCoverageIgnoreStart
-        // Ignore because to cumbersome to test closing bracket
     }
     // @codeCoverageIgnoreEnd
 

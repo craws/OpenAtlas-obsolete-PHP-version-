@@ -118,7 +118,6 @@ class Model_LogMapper extends Model_AbstractMapper {
         foreach (Zend_Controller_Front::getInstance()->getRequest()->getParams() as $key => $value) {
             if (is_a($value, 'arrayObject')) {
                 // @codeCoverageIgnoreStart
-                // Ignore coverage because cumbersome to test
                 foreach ($value as $objectKey => $objectValue) {
                     if (is_a($objectValue, 'Exception')) {
                         $logDetails[$objectKey] = $objectValue->getMessage();

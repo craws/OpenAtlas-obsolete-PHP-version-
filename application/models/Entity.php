@@ -15,7 +15,6 @@ class Model_Entity extends Model_AbstractObject {
     public function getNameDirected($inverse = false) {
         $array = explode('(', $this->name);
         // @codeCoverageIgnoreStart
-        // Ignore coverage because cumbersome to test
         if ($inverse && isset($array[1])) {
             return trim(str_replace(['(', ')'], '', $array[1]));
         }

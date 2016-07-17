@@ -32,9 +32,6 @@ class Acl extends \Zend_Acl {
         $this->add(new \Zend_Acl_Resource('admin:carrier:update'));
         $this->add(new \Zend_Acl_Resource('admin:carrier:view'));
 
-        $this->add(new \Zend_Acl_Resource('admin:class:index'));
-        $this->add(new \Zend_Acl_Resource('admin:class:view'));
-
         $this->add(new \Zend_Acl_Resource('admin:content:index'));
         $this->add(new \Zend_Acl_Resource('admin:content:insert'));
         $this->add(new \Zend_Acl_Resource('admin:content:update'));
@@ -79,7 +76,6 @@ class Acl extends \Zend_Acl {
 
         $this->add(new \Zend_Acl_Resource('admin:overview:feedback'));
         $this->add(new \Zend_Acl_Resource('admin:overview:index'));
-        $this->add(new \Zend_Acl_Resource('admin:overview:model'));
 
         $this->add(new \Zend_Acl_Resource('admin:place:add'));
         $this->add(new \Zend_Acl_Resource('admin:place:delete'));
@@ -92,9 +88,6 @@ class Acl extends \Zend_Acl {
         $this->add(new \Zend_Acl_Resource('admin:profile:index'));
         $this->add(new \Zend_Acl_Resource('admin:profile:password'));
         $this->add(new \Zend_Acl_Resource('admin:profile:update'));
-
-        $this->add(new \Zend_Acl_Resource('admin:property:index'));
-        $this->add(new \Zend_Acl_Resource('admin:property:view'));
 
         $this->add(new \Zend_Acl_Resource('admin:reference:delete'));
         $this->add(new \Zend_Acl_Resource('admin:reference:index'));
@@ -127,21 +120,32 @@ class Acl extends \Zend_Acl {
         $this->add(new \Zend_Acl_Resource('admin:user:update'));
         $this->add(new \Zend_Acl_Resource('admin:user:view'));
 
+        $this->add(new \Zend_Acl_Resource('default:about:index'));
         $this->add(new \Zend_Acl_Resource('default:changelog:index'));
+        $this->add(new \Zend_Acl_Resource('default:class:index'));
+        $this->add(new \Zend_Acl_Resource('default:class:view'));
         $this->add(new \Zend_Acl_Resource('default:contact:index'));
         $this->add(new \Zend_Acl_Resource('default:credits:index'));
         $this->add(new \Zend_Acl_Resource('default:error:error'));
         $this->add(new \Zend_Acl_Resource('default:file:view'));
         $this->add(new \Zend_Acl_Resource('default:index:index'));
+        $this->add(new \Zend_Acl_Resource('default:model:index'));
         $this->add(new \Zend_Acl_Resource('default:offline:index'));
+        $this->add(new \Zend_Acl_Resource('default:property:index'));
+        $this->add(new \Zend_Acl_Resource('default:property:view'));
+
 
         /* guest (not logged in) */
+        $this->allow('guest', 'default:about:index');
         $this->allow('guest', 'default:changelog:index');
+        $this->allow('guest', 'default:class:index');
+        $this->allow('guest', 'default:class:view');
         $this->allow('guest', 'default:contact:index');
         $this->allow('guest', 'default:credits:index');
         $this->allow('guest', 'default:error:error');
         $this->allow('guest', 'default:file:view');
         $this->allow('guest', 'default:index:index');
+        $this->allow('guest', 'default:model:index');
         $this->allow('guest', 'default:offline:index');
 
         $this->allow('guest', 'admin:index:index');
@@ -153,9 +157,6 @@ class Acl extends \Zend_Acl {
 
         $this->allow('readonly', 'admin:carrier:view');
 
-        $this->allow('readonly', 'admin:class:index');
-        $this->allow('readonly', 'admin:class:view');
-
         $this->allow('readonly', 'admin:event:index');
         $this->allow('readonly', 'admin:event:view');
 
@@ -166,18 +167,13 @@ class Acl extends \Zend_Acl {
 
         $this->allow('readonly', 'admin:overview:feedback');
         $this->allow('readonly', 'admin:overview:index');
-        $this->allow('readonly', 'admin:overview:model');
 
         $this->allow('readonly', 'admin:place:index');
         $this->allow('readonly', 'admin:place:view');
 
         $this->allow('readonly', 'admin:profile:index');
-
         $this->allow('readonly', 'admin:profile:password');
         $this->allow('readonly', 'admin:profile:update');
-
-        $this->allow('readonly', 'admin:property:index');
-        $this->allow('readonly', 'admin:property:view');
 
         $this->allow('readonly', 'admin:reference:index');
         $this->allow('readonly', 'admin:reference:view');

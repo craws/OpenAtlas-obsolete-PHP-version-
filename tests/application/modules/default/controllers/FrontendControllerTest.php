@@ -14,14 +14,35 @@ class FrontendControllerTest extends ControllerTestCase {
         Zend_Registry::set('settings', $settings);
         $this->dispatch('offline');
         $this->resetRequest()->resetResponse();
-        $this->dispatch('/');
+        $this->dispatch('about');
         $this->assertModule('default');
-        $this->assertController('index');
+        $this->assertController('about');
         $this->assertResponseCode(200, 'Response code = ' . $this->getResponse()->getHttpResponseCode());
+        $this->dispatch('/');
         $this->resetRequest()->resetResponse();
-        $this->dispatch('default/contact');
-        $this->dispatch('default/changelog');
-        $this->dispatch('default/credits');
+        $this->dispatch('contact');
+        $this->resetRequest()->resetResponse();
+        $this->dispatch('changelog');
+        $this->resetRequest()->resetResponse();
+        $this->dispatch('credits');
+        $this->resetRequest()->resetResponse();
+        $this->dispatch('class');
+        $this->dispatch('class/view/id/' . Model_ClassMapper::getByCode('E1')->id);
+        $this->resetRequest()->resetResponse();
+        $this->dispatch('property');
+        $this->dispatch('property/view/id/' . Model_PropertyMapper::getByCode('P2')->id);
+    }
+
+    public function testModelAction() {
+        $this->login();
+        $this->dispatch('model');
+        $this->resetRequest()->resetResponse();
+        $this->request->setMethod('POST')->setPost([
+            'domain' => Model_ClassMapper::getByCode('E61')->id,
+            'range' => Model_ClassMapper::getByCode('E61')->id,
+            'property' => Model_PropertyMapper::getByCode('P20')->id
+        ]);
+        $this->dispatch('model');
     }
 
 }

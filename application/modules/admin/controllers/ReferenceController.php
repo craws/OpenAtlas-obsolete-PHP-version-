@@ -20,17 +20,17 @@ class Admin_ReferenceController extends Zend_Controller_Action {
         $hierarchies = $form->addHierarchies($rootType->name);
         if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
             $this->view->form = $form;
+            $this->view->rootType = $rootType->name;
             return;
         }
         $reference = Model_EntityMapper::insert('E31', $form->getValue('name'), $form->getValue('description'));
         self::save($form, $reference, $hierarchies);
         $this->_helper->message('info_insert');
-        // @codeCoverageIgnoreStart
+        $url = '/admin/reference/view/id/' . $reference->id;
         if ($form->getElement('continue')->getValue()) {
-            return $this->_helper->redirector->gotoUrl('/admin/reference/insert/type/' . $rootType);
+            $url = '/admin/reference/insert/type/' . $rootType->name;
         }
-        // @codeCoverageIgnoreEnd
-        return $this->_helper->redirector->gotoUrl('/admin/reference/view/id/' . $reference->id);
+        return $this->_helper->redirector->gotoUrl($url);
     }
 
     public function updateAction() {

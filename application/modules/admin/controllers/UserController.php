@@ -7,7 +7,6 @@ class Admin_UserController extends Zend_Controller_Action {
     public function deleteAction() {
         $user = Model_UserMapper::getById($this->_getParam('id'));
         // @codeCoverageIgnoreStart
-        // Ignore coverage because cumbersome to test this failure
         if ($user->group == 'admin' && Zend_Registry::get('user')->group != 'admin') {
             $this->_helper->message('error_forbidden');
             return $this->_helper->redirector->gotoUrl('/admin/user');
@@ -29,7 +28,6 @@ class Admin_UserController extends Zend_Controller_Action {
 
     public function updateAction() {
         // @codeCoverageIgnoreStart
-        // Ignore coverage because cumbersome to test this failure
         $user = Model_UserMapper::getById($this->_getParam('id'));
         if ($user->group == 'admin' && Zend_Registry::get('user')->group != 'admin') {
             echo $this->view->ucstring('error_forbidden');

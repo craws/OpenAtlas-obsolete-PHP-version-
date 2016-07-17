@@ -14,7 +14,8 @@ class Admin_MemberControllerTest extends ControllerTestCase {
             'relatedActorIds' => $this->actorId,
             'actor_functionId' => Model_NodeMapper::getByNodeCategoryName('Actor Function', 'King')->id,
             'relatedActorButton' => 'Placeholder',
-            'beginYear' => '23'
+            'beginYear' => '23',
+            'continue' => 1
         ];
         $this->dispatch('admin/member/insert/id/' . $this->groupId);
         $this->request->setMethod('POST')->setPost($formValues);

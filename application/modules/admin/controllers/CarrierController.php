@@ -24,12 +24,11 @@ class Admin_CarrierController extends Zend_Controller_Action {
         $carrier = Model_EntityMapper::insert('E84', $form->getValue('name'), $form->getValue('description'));
         self::save($form, $carrier, $hierarchies);
         $this->_helper->message('info_insert');
-        // @codeCoverageIgnoreStart
+        $url = '/admin/carrier/view/id/' . $carrier->id;
         if ($form->getElement('continue')->getValue()) {
-            return $this->_helper->redirector->gotoUrl('/admin/carrier/insert');
+            $url = '/admin/carrier/insert';
         }
-        // @codeCoverageIgnoreEnd
-        return $this->_helper->redirector->gotoUrl('/admin/carrier/view/id/' . $carrier->id);
+        return $this->_helper->redirector->gotoUrl($url);
     }
 
     public function updateAction() {

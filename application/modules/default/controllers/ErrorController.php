@@ -17,7 +17,6 @@ class ErrorController extends Zend_Controller_Action {
             $this->_helper->message('error_non_existing_id');
         } else {
             // @codeCoverageIgnoreStart
-            // Ignore coverage because cumbersome to test
             $string = (is_array($exception)) ? '<br>' . implode('<br>', $exception) : $exception;
             $this->_helper->log('critical', 'error', 'error_application' . ': ' . $string);
             $this->_helper->message('error_application');

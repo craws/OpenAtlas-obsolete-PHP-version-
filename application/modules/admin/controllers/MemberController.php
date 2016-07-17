@@ -20,12 +20,11 @@ class Admin_MemberController extends Zend_Controller_Action {
             self::save($link, $form, $hierarchies);
         }
         $this->_helper->message('info_insert');
-        // @codeCoverageIgnoreStart
+        $url = '/admin/actor/view/id/' . $group->id . '/#tabMember';
         if ($form->getElement('continue')->getValue()) {
-            return $this->_helper->redirector->gotoUrl('/admin/member/insert/id/' . $group->id);
+            $url = '/admin/member/insert/id/' . $group->id;
         }
-        // @codeCoverageIgnoreEnd
-        return $this->_helper->redirector->gotoUrl('/admin/actor/view/id/' . $group->id . '/#tabMember');
+        return $this->_helper->redirector->gotoUrl($url);
     }
 
     public function memberAction() {
@@ -46,12 +45,11 @@ class Admin_MemberController extends Zend_Controller_Action {
             self::save($link, $form, $hierarchies);
         }
         $this->_helper->message('info_insert');
-        // @codeCoverageIgnoreStart
+        $url = '/admin/actor/view/id/' . $member->id . '/#tabMemberOf';
         if ($form->getElement('continue')->getValue()) {
-            return $this->_helper->redirector->gotoUrl('/admin/member/member/id/' . $member->id);
+            $url = '/admin/member/member/id/' . $member->id;
         }
-        // @codeCoverageIgnoreEnd
-        return $this->_helper->redirector->gotoUrl('/admin/actor/view/id/' . $member->id . '/#tabMemberOf');
+        return $this->_helper->redirector->gotoUrl($url);
     }
 
     public function updateAction() {

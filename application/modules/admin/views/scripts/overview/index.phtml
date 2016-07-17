@@ -15,10 +15,6 @@
     <? if (!$namespace->lastLogin): ?>
         <p style="margin-top:1em;"><?= $this->translate('first_login') ?></p>
     <? endif ?>
-    <p style="margin-top:1em;">
-        <a href="/admin/overview/model"><?= $this->ucstring('model') ?></a> -
-        <a href="https://github.com/craws/OpenAtlas" onclick="window.open(this.href); return false;">GitHub</a>
-    </p>
     <p><?= $this->translate('feedback_teaser') ?>
         <a href="/admin/overview/feedback"><?= $this->ucstring('feedback') ?></a>
     </p>

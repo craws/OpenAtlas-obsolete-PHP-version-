@@ -22,7 +22,8 @@ class Admin_ReferenceControllerTest extends ControllerTestCase {
         $this->formValues = [
             'name' => 'Cryptonomicum',
             'editionId' => Model_NodeMapper::getByNodeCategoryName('Bibliography', 'Book')->id,
-            'desc' => 'desc'
+            'desc' => 'description',
+            'continue' => 1
         ];
         $this->request->setMethod('POST')->setPost($this->formValues);
         $this->dispatch('admin/reference/insert/type/edition');

@@ -24,12 +24,11 @@ class Admin_RelationController extends Zend_Controller_Action {
             self::save($link, $form, $hierarchies);
         }
         $this->_helper->message('info_insert');
-        // @codeCoverageIgnoreStart
+        $url = '/admin/actor/view/id/' . $actor->id . '/#tabRelation';
         if ($form->getElement('continue')->getValue()) {
-            return $this->_helper->redirector->gotoUrl('/admin/relation/insert/id/' . $actor->id);
+            $url = '/admin/relation/insert/id/' . $actor->id;
         }
-        // @codeCoverageIgnoreEnd
-        return $this->_helper->redirector->gotoUrl('/admin/actor/view/id/' . $actor->id . '/#tabRelation');
+        return $this->_helper->redirector->gotoUrl($url);
     }
 
     public function updateAction() {

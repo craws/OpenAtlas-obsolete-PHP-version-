@@ -16,7 +16,6 @@ class Model_SettingsMapper {
             }
             return $settings;
             // @codeCoverageIgnoreStart
-            // Ignore coverage because cumbersome to test this failure
         }
         echo "Something is rotten in the state of Denmark (no settings).";
         exit;

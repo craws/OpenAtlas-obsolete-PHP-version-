@@ -1,9 +1,5 @@
+<? $this->breadcrumb = ['<a href="model">' . $this->ucstring('model') . '</a>', $this->ucstring('property')]; ?>
 <?
-$this->breadcrumb = [
-    $this->link('overview'),
-    '<a href="/admin/overview/model">' . $this->ucstring('model') . '</a>',
-    $this->ucstring('property')
-];
 
 $table = ['id' => 'property', 'pager' => true, 'filter' => true];
 $table['header'] = [_('code'), _('name'), _('inverse'), _('domain'), _('range')];
@@ -18,6 +14,7 @@ foreach ($this->properties as $property) {
 }
 $this->table = $table;
 ?>
+<? $this->addScriptPath(APPLICATION_PATH . '/modules/admin/views/scripts'); ?>
 <?= $this->render('tableSorter.phtml'); ?>
 <script type="text/javascript">
     $.tablesorter.addParser({

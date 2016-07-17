@@ -6,7 +6,10 @@ INSERT INTO "user" (username, password, active, email, group_id) VALUES
 
 INSERT INTO user_settings (user_id, name, value) VALUES
 ((SELECT id FROM "user" WHERE username = 'a'), 'layout', 'advanced'),
-((SELECT id FROM "user" WHERE username = 'testUser'), 'layout', 'advanced');
+((SELECT id FROM "user" WHERE username = 'a'), 'language', '1'),
+((SELECT id FROM "user" WHERE username = 'a'), 'table_rows', '20'),
+((SELECT id FROM "user" WHERE username = 'testUser'), 'layout', 'advanced')
+;
 
 INSERT INTO entity (id, class_id, name) VALUES
 (1000, (SELECT id FROM class WHERE code='E21'), 'tActor'      ),
