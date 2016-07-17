@@ -1,3 +1,8 @@
 <? $this->breadcrumb = [$this->ucstring('about')]; ?>
-<p><a href="https://github.com/craws/OpenAtlas" onclick="window.open(this.href); return false;">GitHub</a></p>
-<div style="width:800px;"><?= $this->intro ?></div>
+<div style="width:1000px;"><?= $this->intro ?></div>
+<? $openatlas = '<a href="http://openatlas.eu/" onclick="window.open(this.href); return false;">OpenAtlas</a>'; ?>
+<? $github = '<a href="https://github.com/craws/OpenAtlas" onclick="window.open(this.href); return false;">GitHub</a>'; ?>
+<? $cidoc = '<a href="http://www.cidoc-crm.org/" onclick="window.open(this.href); return false;">CIDOC CRM</a>'; ?>
+<? $redmine = '<a href="http://redmine.craws.net/projects/uni/wiki" onclick="window.open(this.href); return false;">Wiki</a>'; ?>
+<? $demo = '<a href="http://openatlas.craws.net" onclick="window.open(this.href); return false;">Demo</a>'; ?>
+<div style="width:1000px;"><?= nl2br($this->translate('intro', $openatlas, $github, $cidoc, $redmine, $demo)) ?></div>
