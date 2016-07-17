@@ -2,7 +2,7 @@
 <? $version = Zend_Registry::get('config')->get('version') ?>
 <? $user = Zend_Registry::get('user'); ?>
 <? $controller = Zend_Controller_Front::getInstance()->getRequest()->getControllerName(); ?>
-<? $menu = ['index' => _('home'), 'contact' => _('contact')]; ?>
+<? $menu = ['index' => _('home'), 'changelog' => _('changelog'), 'contact' => _('contact')]; ?>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -44,10 +44,10 @@
                         <a href="/admin/profile"><?= $this->ucstring('profile') ?></a> |
                         <a href="/admin/index/logout"><?= $this->ucstring('logout') ?></a>
                     </div>
-                    <div id="changelog">
-                        <a href="/admin/overview/changelog"><?= $this->ucstring('version') ?> <?= $version ?></a>
-                    </div>
                 <? endif ?>
+                <div id="changelog">
+                    <a href="/default/changelog"><?= $this->ucstring('version') ?> <?= $version ?></a>
+                </div>
                 <div id="languageMenu">
                     <?= $this->languageMenu() ?>
                     <div class="languageSeparator">|</div>
@@ -67,6 +67,19 @@
                 </div>
             <? endforeach ?>
         </div>
+        <? if (isset($this->breadcrumb)) : ?>
+            <div id="breadcrumb">
+                <? $breadcrumb = []; ?>
+                <? foreach ($this->breadcrumb as $crumb): ?>
+                    <? if (is_array($crumb)): ?>
+                        <? $breadcrumb[] = '<div><a href="' . $crumb[1] . '">' . $crumb[0] . '</a></div>'; ?>
+                    <? else: ?>
+                        <? $breadcrumb[] = '<div><span>' . $crumb . '</span></div>'; ?>
+                    <? endif ?>
+                <? endforeach ?>
+                <?= implode(' <div class="separator">></div> ', $breadcrumb) ?>
+            </div>
+        <? endif ?>
         <div id="content">
             <?= $this->layout()->content ?>
             <? if (strpos(filter_input(INPUT_SERVER, 'HTTP_HOST'), 'craws.net') !== false): ?>

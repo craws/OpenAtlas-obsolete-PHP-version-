@@ -15,7 +15,6 @@ class Admin_OverviewControllerTest extends ControllerTestCase {
         $this->dispatch('admin/overview');
         $this->assertController('overview');
         $this->dispatch('admin/overview/feedback');
-        $this->dispatch('admin/overview/changelog');
         $this->dispatch('admin/overview/credits');
     }
 

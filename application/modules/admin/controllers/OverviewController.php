@@ -5,10 +5,6 @@
 class Admin_OverviewController extends Zend_Controller_Action {
 
 
-    public function changelogAction() {
-
-    }
-
     public function creditsAction() {
 
     }
