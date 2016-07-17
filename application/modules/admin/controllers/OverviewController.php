@@ -5,10 +5,6 @@
 class Admin_OverviewController extends Zend_Controller_Action {
 
 
-    public function creditsAction() {
-
-    }
-
     public function feedbackAction() {
         $form = new Admin_Form_Feedback();
         $receivers = Zend_Registry::get('config')->get('mailRecipientsFeedback')->toArray();

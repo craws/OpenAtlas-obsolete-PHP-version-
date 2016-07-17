@@ -77,7 +77,6 @@ class Acl extends \Zend_Acl {
         $this->add(new \Zend_Acl_Resource('admin:member:member'));
         $this->add(new \Zend_Acl_Resource('admin:member:update'));
 
-        $this->add(new \Zend_Acl_Resource('admin:overview:credits'));
         $this->add(new \Zend_Acl_Resource('admin:overview:feedback'));
         $this->add(new \Zend_Acl_Resource('admin:overview:index'));
         $this->add(new \Zend_Acl_Resource('admin:overview:model'));
@@ -130,6 +129,7 @@ class Acl extends \Zend_Acl {
 
         $this->add(new \Zend_Acl_Resource('default:changelog:index'));
         $this->add(new \Zend_Acl_Resource('default:contact:index'));
+        $this->add(new \Zend_Acl_Resource('default:credits:index'));
         $this->add(new \Zend_Acl_Resource('default:error:error'));
         $this->add(new \Zend_Acl_Resource('default:file:view'));
         $this->add(new \Zend_Acl_Resource('default:index:index'));
@@ -138,6 +138,7 @@ class Acl extends \Zend_Acl {
         /* guest (not logged in) */
         $this->allow('guest', 'default:changelog:index');
         $this->allow('guest', 'default:contact:index');
+        $this->allow('guest', 'default:credits:index');
         $this->allow('guest', 'default:error:error');
         $this->allow('guest', 'default:file:view');
         $this->allow('guest', 'default:index:index');
@@ -163,7 +164,6 @@ class Acl extends \Zend_Acl {
         $this->allow('readonly', 'admin:hierarchy:index');
         $this->allow('readonly', 'admin:hierarchy:view');
 
-        $this->allow('readonly', 'admin:overview:credits');
         $this->allow('readonly', 'admin:overview:feedback');
         $this->allow('readonly', 'admin:overview:index');
         $this->allow('readonly', 'admin:overview:model');
