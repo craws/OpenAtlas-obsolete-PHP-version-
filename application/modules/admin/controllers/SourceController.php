@@ -16,9 +16,8 @@ class Admin_SourceController extends Zend_Controller_Action {
             return;
         }
         foreach ($this->getRequest()->getPost() as $sourceId) {
-            $source = Model_EntityMapper::getById((int) $sourceId);
-            if (!Model_LinkMapper::linkExists('P67', $source, $origin)) {
-                Model_LinkMapper::insert('P67', $source, $origin);
+            if (!Model_LinkMapper::linkExists('P67', $sourceId, $origin)) {
+                Model_LinkMapper::insert('P67', $sourceId, $origin);
             }
         }
         return $this->_helper->redirector->gotoUrl('/admin/' . $controller . '/view/id/' . $origin->id . '/#tabSource');

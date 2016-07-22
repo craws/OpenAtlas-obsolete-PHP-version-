@@ -14,9 +14,8 @@ class Admin_MemberController extends Zend_Controller_Action {
             $this->view->form = $form;
             return;
         }
-        foreach (explode(",", $form->getValue('relatedActorIds')) as $id) {
-            $member = Model_EntityMapper::getById($id);
-            $link = Model_LinkMapper::insert('P107', $group, $member, $this->_getParam('description'));
+        foreach (explode(",", $form->getValue('relatedActorIds')) as $relatedActorId) {
+            $link = Model_LinkMapper::insert('P107', $group, $relatedActorId, $this->_getParam('description'));
             self::save($link, $form, $hierarchies);
         }
         $this->_helper->message('info_insert');
@@ -39,9 +38,8 @@ class Admin_MemberController extends Zend_Controller_Action {
             $this->view->form = $form;
             return;
         }
-        foreach (explode(",", $form->getValue('relatedActorIds')) as $id) {
-            $group = Model_EntityMapper::getById($id);
-            $link = Model_LinkMapper::insert('P107', $group, $member, $this->_getParam('description'));
+        foreach (explode(",", $form->getValue('relatedActorIds')) as $relatedActorId) {
+            $link = Model_LinkMapper::insert('P107', $relatedActorId, $member, $this->_getParam('description'));
             self::save($link, $form, $hierarchies);
         }
         $this->_helper->message('info_insert');

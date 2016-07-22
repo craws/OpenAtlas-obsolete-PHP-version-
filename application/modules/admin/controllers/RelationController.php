@@ -14,12 +14,11 @@ class Admin_RelationController extends Zend_Controller_Action {
             $this->view->form = $form;
             return;
         }
-        foreach (explode(",", $form->getValue('relatedActorIds')) as $id) {
-            $relatedActor = Model_EntityMapper::getById($id);
+        foreach (explode(",", $form->getValue('relatedActorIds')) as $relatedActorId) {
             if ($form->getValue('inverse')) {
-                $link = Model_LinkMapper::insert('OA7', $relatedActor, $actor, $this->_getParam('description'));
+                $link = Model_LinkMapper::insert('OA7', $relatedActorId, $actor, $this->_getParam('description'));
             } else {
-                $link = Model_LinkMapper::insert('OA7', $actor, $relatedActor, $this->_getParam('description'));
+                $link = Model_LinkMapper::insert('OA7', $actor, $relatedActorId, $this->_getParam('description'));
             }
             self::save($link, $form, $hierarchies);
         }

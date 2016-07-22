@@ -63,7 +63,7 @@ class Model_LinkMapper extends Model_AbstractMapper {
     }
 
     private static function getLinksByCode($entity, $code, $inverse) {
-        $entity_id = (is_a($entity, 'Model_Entity')) ? $entity->id : $entity;
+        $entityId = (is_a($entity, 'Model_Entity')) ? $entity->id : $entity;
         $sql = self::$sqlSelect . ', e.name FROM model.link l JOIN model.entity e ON l.range_id = e.id
             WHERE l.property_id = :property_id AND l.domain_id = :entity_id ORDER BY e.name;';
         if ($inverse) {
@@ -72,7 +72,7 @@ class Model_LinkMapper extends Model_AbstractMapper {
         }
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->bindValue(':property_id', Model_PropertyMapper::getByCode($code)->id);
-        $statement->bindValue(':entity_id', $entity_id);
+        $statement->bindValue(':entity_id', $entityId);
         $statement->execute();
         $objects = [];
         foreach ($statement->fetchAll() as $row) {
@@ -100,13 +100,16 @@ class Model_LinkMapper extends Model_AbstractMapper {
         return $link;
     }
 
-    public static function linkExists($code, Model_Entity $domain, Model_Entity $range) {
+    /* domain and range parameter can be an id (integer) or a Model_Entity object */
+    public static function linkExists($propertyCode, $domain, $range) {
+        $domainId = (is_a($domain, 'Model_Entity')) ? $domain->id : $domain;
+        $rangeId = (is_a($range, 'Model_Entity')) ? $range->id : $range;
         $sql = 'SELECT id FROM model.link
             WHERE property_id = :property_id AND domain_id = :domain_id AND range_id = :range_id;';
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
-        $statement->bindValue(':property_id', Model_PropertyMapper::getByCode($code)->id);
-        $statement->bindValue(':domain_id', $domain->id);
-        $statement->bindValue(':range_id', $range->id);
+        $statement->bindValue(':property_id', Model_PropertyMapper::getByCode($propertyCode)->id);
+        $statement->bindValue(':domain_id', $domainId);
+        $statement->bindValue(':range_id', $rangeId);
         $statement->execute();
         if ($statement->fetchAll()) {
             return true;
@@ -127,31 +130,20 @@ class Model_LinkMapper extends Model_AbstractMapper {
         Model_UserLogMapper::insert('link', $link->id, 'update');
     }
 
-    public static function insert($code, Model_Entity $domain, Model_Entity $range, $description = null) {
-        $property = Model_PropertyMapper::getByCode($code);
-        $whitelistDomains = Zend_Registry::get('config')->get('linkcheckIgnoreDomains')->toArray();
-        if (!in_array($domain->class->code, $whitelistDomains)) {
-            // @codeCoverageIgnoreStart
-            // To do: remove CoverageIgnore after refactoring insert function
-            if (!in_array($domain->class->code, $property->domain->getSubRecursive())) {
-                $error = 'Wrong domain ' . $domain->class->code . ' for ' . $property->code;
-                Model_LogMapper::log('error', 'model', $error);
-                echo $error;
-                exit;
-            } else if (!in_array($range->class->code, $property->range->getSubRecursive())) {
-                $error = 'Wrong range ' . $range->class->code . ' for ' . $property->code;
-                Model_LogMapper::log('error', 'model', $error);
-                echo $error;
-                exit;
-            }
-            // @codeCoverageIgnoreEnd
+    /* domain and range parameter can be an id (integer) or a Model_Entity object */
+    public static function insert($propertyCode, $domain, $range, $description = null) {
+        $property = Model_PropertyMapper::getByCode($propertyCode);
+        if (in_array(APPLICATION_ENV, ['development', 'testing'])) {
+            self::checkLink($property, $domain, $range);
         }
+        $domainId = (is_a($domain, 'Model_Entity')) ? $domain->id : $domain;
+        $rangeId = (is_a($range, 'Model_Entity')) ? $range->id : $range;
         $sql = 'INSERT INTO model.link (property_id, domain_id, range_id, description)
             VALUES (:property_id, :domain_id, :range_id, :description) RETURNING id;';
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->bindValue(':property_id', $property->id);
-        $statement->bindValue(':domain_id', $domain->id);
-        $statement->bindValue(':range_id', $range->id);
+        $statement->bindValue(':domain_id', $domainId);
+        $statement->bindValue(':range_id', $rangeId);
         if ($description) {
             $statement->bindValue(':description', \Craws\FilterInput::filter($description, 'crm'));
         } else {
@@ -179,11 +171,33 @@ class Model_LinkMapper extends Model_AbstractMapper {
             $idField = $hierarchy->nameClean . 'Id';
             if ($form->getValue($idField)) {
                 foreach (explode(",", $form->getValue($idField)) as $id) {
-                    Model_LinkMapper::insert('P2', $entity, Model_NodeMapper::getById($id));
+                    Model_LinkMapper::insert('P2', $entity, $id);
                 }
             } else if ($hierarchy->system) { // if its an empty system type, link the type root
                 Model_LinkMapper::insert('P2', $entity, $hierarchy);
             }
+        }
+    }
+
+    private static function checkLink($property, $domainParam, $rangeParam) {
+        $whitelistDomains = Zend_Registry::get('config')->get('linkcheckIgnoreDomains')->toArray();
+        $domain = (is_a($domain, 'Model_Entity')) ? $domainParam : Model_EntityMapper::getById($domain);
+        $range = (is_a($range, 'Model_Entity')) ? $rangeParam : Model_EntityMapper::getById($range);
+        if (!in_array($domain->class->code, $whitelistDomains)) {
+            // @codeCoverageIgnoreStart
+            // To do: test for invalid links and remove CoverageIgnore
+            if (!in_array($domain->class->code, $property->domain->getSubRecursive())) {
+                $error = 'Wrong domain ' . $domain->class->code . ' for ' . $property->code;
+                Model_LogMapper::log('error', 'model', $error);
+                echo $error;
+                exit;
+            } else if (!in_array($range->class->code, $property->range->getSubRecursive())) {
+                $error = 'Wrong range ' . $range->class->code . ' for ' . $property->code;
+                Model_LogMapper::log('error', 'model', $error);
+                echo $error;
+                exit;
+            }
+            // @codeCoverageIgnoreEnd
         }
     }
 

@@ -87,6 +87,8 @@ class Admin_EventController extends Zend_Controller_Action {
     }
 
     public function linkAction() {
+        /* this is only used to add one event to source, change to multiple select overlay #703 */
+        /* also, rangeId is a domainId and always a source */
         $event = Model_EntityMapper::getById($this->_getParam('eventId'));
         $entity = Model_EntityMapper::getById($this->_getParam('rangeId'));
         if (Model_LinkMapper::linkExists('P67', $entity, $event)) {
@@ -229,20 +231,17 @@ class Admin_EventController extends Zend_Controller_Action {
             $place = Model_LinkMapper::getLinkedEntity($form->getValue('placeId'), 'P53');
             Model_LinkMapper::insert('P7', $event, $place);
         }
-        $superEvent = $this->rootEvent;
-        if ($form->getValue('superId')) {
-            $superEvent = Model_EntityMapper::getById($form->getValue('superId'));
-        }
-        Model_LinkMapper::insert('P117', $event, $superEvent);
+        $superEventId = ($form->getValue('superId')) ? $form->getValue('superId') : $this->rootEvent->id;
+        Model_LinkMapper::insert('P117', $event, $superEventId);
         if ($event->class->name == 'Acquisition') {
             if ($this->_getParam('recipientId')) {
-                Model_LinkMapper::insert('P22', $event, Model_EntityMapper::getById($this->_getParam('recipientId')));
+                Model_LinkMapper::insert('P22', $event, $this->_getParam('recipientId'));
             }
             if ($this->_getParam('donorId')) {
-                Model_LinkMapper::insert('P23', $event, Model_EntityMapper::getById($this->_getParam('donorId')));
+                Model_LinkMapper::insert('P23', $event, $this->_getParam('donorId'));
             }
             if ($this->_getParam('acquisitionPlaceId')) {
-                Model_LinkMapper::insert('P24', $event, Model_EntityMapper::getById($this->_getParam('acquisitionPlaceId')));
+                Model_LinkMapper::insert('P24', $event, $this->_getParam('acquisitionPlaceId'));
             }
         }
     }

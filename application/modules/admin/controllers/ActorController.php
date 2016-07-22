@@ -84,6 +84,8 @@ class Admin_ActorController extends Zend_Controller_Action {
     }
 
     public function linkAction() {
+        /* this is only used to add one actor to source, change to multiple select overlay #703 */
+        /* also, rangeId is a domainId and always a source */
         $actor = Model_EntityMapper::getById($this->_getParam('actorId'));
         $entity = Model_EntityMapper::getById($this->_getParam('rangeId'));
         if (Model_LinkMapper::linkExists('P67', $entity, $actor)) {

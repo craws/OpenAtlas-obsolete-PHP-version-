@@ -65,6 +65,8 @@ class Admin_PlaceController extends Zend_Controller_Action {
     }
 
     public function linkAction() {
+        /* this is only used to add one place to source, change to multiple select overlay #703 */
+        /* also, rangeId is a domainId and always a source */
         $place = Model_EntityMapper::getById($this->_getParam('placeId'));
         $entity = Model_EntityMapper::getById($this->_getParam('rangeId'));
         if (Model_LinkMapper::linkExists('P67', $entity, $place)) {
@@ -191,11 +193,11 @@ class Admin_PlaceController extends Zend_Controller_Action {
             if ($form->getValue($idField)) {
                 if ($hierarchy->propertyToEntity == 'P89') {
                     foreach (explode(",", $form->getValue($idField)) as $id) {
-                        Model_LinkMapper::insert($hierarchy->propertyToEntity, $place, Model_NodeMapper::getById($id));
+                        Model_LinkMapper::insert($hierarchy->propertyToEntity, $place, $id);
                     }
                 } else {
                     foreach (explode(",", $form->getValue($idField)) as $id) {
-                        Model_LinkMapper::insert($hierarchy->propertyToEntity, $object, Model_NodeMapper::getById($id));
+                        Model_LinkMapper::insert($hierarchy->propertyToEntity, $object, $id);
                     }
                 }
             } else if ($hierarchy->system && $hierarchy->propertyToEntity != 'P89') {
