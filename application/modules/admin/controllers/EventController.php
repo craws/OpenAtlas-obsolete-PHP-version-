@@ -72,14 +72,11 @@ class Admin_EventController extends Zend_Controller_Action {
         // @codeCoverageIgnoreStart
         if ($actor) {
             $url = '/admin/involvement/insert/origin/actor/eventId/' . $event->id . '/actorId/' . $actor->id;
-        }
-        if ($form->getElement('continue')->getValue() && $source) {
+        } else if ($form->getElement('continue')->getValue() && $source) {
             $url = '/admin/event/insert/code/' . $class->code . '/sourceId/' . $source->id;
-        }
-        if ($form->getElement('continue')->getValue()) {
+        } else if ($form->getElement('continue')->getValue()) {
             $url = '/admin/event/insert/code/' . $class->code;
-        }
-        if ($source) {
+        } else if ($source) {
             $url = '/admin/source/view/id/' . $source->id . '/#tabEvent';
         }
         // @codeCoverageIgnoreEnd

@@ -74,29 +74,24 @@ class Admin_SourceController extends Zend_Controller_Action {
             Model_LinkMapper::insert('P67', $source, $object);
         }
         $this->_helper->message('info_insert');
+        $url = '/admin/source/view/id/' . $source->id;
         // @codeCoverageIgnoreStart
         if ($form->getElement('continue')->getValue() && $event) {
-            return $this->_helper->redirector->gotoUrl('/admin/source/insert/eventId/' . $event->id);
+            $url = '/admin/source/insert/eventId/' . $event->id;
+        } else if ($form->getElement('continue')->getValue() && $actor) {
+            $url = '/admin/source/insert/actorId/' . $actor->id;
+        } else if ($form->getElement('continue')->getValue() && $object) {
+            $url = '/admin/source/insert/objectId/' . $object->id;
+        } else if ($form->getElement('continue')->getValue()) {
+            $url = '/admin/source/insert';
+        } else if ($event) {
+            $url = '/admin/event/view/id/' . $event->id . '/#tabSource';
+        } else if ($actor) {
+            $url = '/admin/actor/view/id/' . $actor->id . '/#tabSource';
+        } else if ($object) {
+            $url = '/admin/place/view/id/' . $object->id . '/#tabSource';
         }
-        if ($form->getElement('continue')->getValue() && $actor) {
-            return $this->_helper->redirector->gotoUrl('/admin/source/insert/actorId/' . $actor->id);
-        }
-        if ($form->getElement('continue')->getValue() && $object) {
-            return $this->_helper->redirector->gotoUrl('/admin/source/insert/objectId/' . $object->id);
-        }
-        if ($form->getElement('continue')->getValue()) {
-            return $this->_helper->redirector->gotoUrl('/admin/source/insert');
-        }
-        if ($event) {
-            return $this->_helper->redirector->gotoUrl('/admin/event/view/id/' . $event->id . '/#tabSource');
-        }
-        if ($actor) {
-            return $this->_helper->redirector->gotoUrl('/admin/actor/view/id/' . $actor->id . '/#tabSource');
-        }
-        if ($object) {
-            return $this->_helper->redirector->gotoUrl('/admin/place/view/id/' . $object->id . '/#tabSource');
-        }
-        return $this->_helper->redirector->gotoUrl('/admin/source/view/id/' . $source->id);
+        return $this->_helper->redirector->gotoUrl($url);
         // @codeCoverageIgnoreEnd
     }
 

@@ -50,18 +50,17 @@ class Admin_PlaceController extends Zend_Controller_Action {
             Model_LinkMapper::insert('P67', $source, $object);
         }
         $this->_helper->message('info_insert');
+        $url = '/admin/place/view/id/' . $object->id;
         // @codeCoverageIgnoreStart
         if ($form->getElement('continue')->getValue() && $source) {
-            return $this->_helper->redirector->gotoUrl('/admin/place/insert/sourceId/' . $source->id);
-        }
-        if ($form->getElement('continue')->getValue()) {
-            return $this->_helper->redirector->gotoUrl('/admin/place/insert');
-        }
-        if ($source) {
-            return $this->_helper->redirector->gotoUrl('/admin/source/view/id/' . $source->id . '/#tabPlace');
+            $url = '/admin/place/insert/sourceId/' . $source->id;
+        } else if ($form->getElement('continue')->getValue()) {
+            $url = '/admin/place/insert';
+        } else if ($source) {
+            $url = '/admin/source/view/id/' . $source->id . '/#tabPlace';
         }
         // @codeCoverageIgnoreEnd
-        return $this->_helper->redirector->gotoUrl('/admin/place/view/id/' . $object->id);
+        return $this->_helper->redirector->gotoUrl($url);
     }
 
     public function linkAction() {

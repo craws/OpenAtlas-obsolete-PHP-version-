@@ -133,7 +133,7 @@ class Model_LinkMapper extends Model_AbstractMapper {
     /* domain and range parameter can be an id (integer) or a Model_Entity object */
     public static function insert($propertyCode, $domain, $range, $description = null) {
         $property = Model_PropertyMapper::getByCode($propertyCode);
-        if (in_array(APPLICATION_ENV, ['development', 'testing'])) {
+        if (in_array(APPLICATION_ENV, ['development', 'unittest'])) {
             self::checkLink($property, $domain, $range);
         }
         $domainId = (is_a($domain, 'Model_Entity')) ? $domain->id : $domain;
@@ -181,8 +181,8 @@ class Model_LinkMapper extends Model_AbstractMapper {
 
     private static function checkLink($property, $domainParam, $rangeParam) {
         $whitelistDomains = Zend_Registry::get('config')->get('linkcheckIgnoreDomains')->toArray();
-        $domain = (is_a($domain, 'Model_Entity')) ? $domainParam : Model_EntityMapper::getById($domain);
-        $range = (is_a($range, 'Model_Entity')) ? $rangeParam : Model_EntityMapper::getById($range);
+        $domain = (is_a($domainParam, 'Model_Entity')) ? $domainParam : Model_EntityMapper::getById($domainParam);
+        $range = (is_a($rangeParam, 'Model_Entity')) ? $rangeParam : Model_EntityMapper::getById($rangeParam);
         if (!in_array($domain->class->code, $whitelistDomains)) {
             // @codeCoverageIgnoreStart
             // To do: test for invalid links and remove CoverageIgnore
