@@ -35,10 +35,6 @@ class Admin_PlaceControllerTest extends ControllerTestCase {
         $this->dispatch('admin/place');
     }
 
-    public function testAdd() {
-        $this->dispatch('admin/place/add/id/' . $this->sourceId);
-    }
-
     public function testCrudPlace() {
         $this->dispatch('admin/place/insert');
         $this->resetRequest()->resetResponse();

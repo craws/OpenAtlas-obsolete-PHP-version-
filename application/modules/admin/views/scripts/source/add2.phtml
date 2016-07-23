@@ -1,0 +1,27 @@
+<?php
+
+$source = $this->source;
+$this->breadcrumb = [
+    $this->link('source'),
+    $this->link($source),
+    $this->ucstring('add') . ' ' . $this->ucstring($this->type)];
+$table = ['id' => 'actor', 'pager' => true, 'filter' => true];
+$table['header'] = [$this->type, _('first'), _('last'), ''];
+foreach ($this->entities as $entity) {
+    if (!Model_LinkMapper::linkExists('P67', $source, $entity)) {
+        $table['data'][] = [
+            $this->link($entity),
+            $entity->first,
+            $entity->last,
+            '<input id="' . $entity->id . '" name="' . $entity->id . '" type="checkbox" value="' . $entity->id . '">'
+        ];
+    }
+}
+?>
+<form id="addSourceForm" name="addSource2Form" class="table" method="post">
+<? $this->table = $table; ?>
+<?= $this->render('tableSorter.phtml'); ?>
+<? if(isset($table['data'])): ?>
+    <button name="formSubmit" id="formSubmit" type="submit"><?= $this->ucstring('add') ?></button>
+<? endif ?>
+</form>

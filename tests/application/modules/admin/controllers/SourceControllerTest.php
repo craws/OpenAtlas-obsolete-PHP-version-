@@ -24,6 +24,12 @@ class Admin_SourceControllerTest extends ControllerTestCase {
         $this->dispatch('admin/source/view/id/' . $this->sourceId);
     }
 
+    public function testAdd2() {
+        $this->dispatch('admin/source/add2/type/actor/id/' . $this->sourceId);
+        $this->request->setMethod('POST')->setPost([0 => $this->actorId, 1 => $this->eventId]);
+        $this->dispatch('admin/source/add2/type/actor/id/' . $this->sourceId);
+    }
+
     public function testCrud() {
         $this->dispatch('admin/source/insert/code/E33');
         $this->resetRequest()->resetResponse();

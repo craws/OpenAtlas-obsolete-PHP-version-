@@ -36,16 +36,6 @@ class Admin_EventControllerTest extends ControllerTestCase {
         $this->dispatch('admin/event/view/id/' . $this->eventId);
     }
 
-    public function testAdd() {
-        $this->dispatch('admin/event/add/id/' . $this->sourceId);
-    }
-
-    public function testLink() {
-        $this->dispatch('admin/event/link/eventId/' . $this->eventId . '/rangeId/' . $this->sourceId); // test existing
-        $this->resetRequest()->resetResponse();
-        $this->dispatch('admin/event/link/eventId/' . $this->eventId . '/rangeId/' . $this->source2Id);
-    }
-
     public function testCrudEvent() {
         $this->dispatch('admin/event/insert'); // test errror if code is missing
         $this->resetRequest()->resetResponse();

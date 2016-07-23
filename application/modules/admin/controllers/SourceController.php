@@ -4,6 +4,7 @@
 
 class Admin_SourceController extends Zend_Controller_Action {
 
+    /* add sources to an entity */
     public function addAction() {
         $origin = Model_EntityMapper::getById($this->_getParam('id'));
         $array = Zend_Registry::get('config')->get('codeView')->toArray();
@@ -21,6 +22,25 @@ class Admin_SourceController extends Zend_Controller_Action {
             }
         }
         return $this->_helper->redirector->gotoUrl('/admin/' . $controller . '/view/id/' . $origin->id . '/#tabSource');
+    }
+
+    /* add enitities to a source */
+    public function add2Action() {
+        $source = Model_EntityMapper::getById($this->_getParam('id'));
+        $type = ucfirst($this->_getParam('type'));
+        $entityType = ($type == 'Place') ? Model_EntityMapper::getByCodes('PhysicalObject') : Model_EntityMapper::getByCodes($type);
+        if (!$this->getRequest()->isPost()) {
+            $this->view->entities = $entityType;
+            $this->view->type = $type;
+            $this->view->source = $source;
+            return;
+        }
+        foreach ($this->getRequest()->getPost() as $entityId) {
+            if (!Model_LinkMapper::linkExists('P67', $source->id, $entityId)) {
+                Model_LinkMapper::insert('P67', $source->id, $entityId);
+            }
+        }
+        return $this->_helper->redirector->gotoUrl('/admin/source/view/id/' . $source->id . '/#tab' . $type);
     }
 
     public function deleteAction() {

@@ -16,11 +16,9 @@ class Acl extends \Zend_Acl {
         $this->addRole(new \Zend_Acl_Role('manager'), 'editor');
         $this->addRole(new \Zend_Acl_Role('admin'), 'manager');
 
-        $this->add(new \Zend_Acl_Resource('admin:actor:add'));
         $this->add(new \Zend_Acl_Resource('admin:actor:delete'));
         $this->add(new \Zend_Acl_Resource('admin:actor:index'));
         $this->add(new \Zend_Acl_Resource('admin:actor:insert'));
-        $this->add(new \Zend_Acl_Resource('admin:actor:link'));
         $this->add(new \Zend_Acl_Resource('admin:actor:update'));
         $this->add(new \Zend_Acl_Resource('admin:actor:view'));
 
@@ -37,11 +35,9 @@ class Acl extends \Zend_Acl {
         $this->add(new \Zend_Acl_Resource('admin:content:update'));
         $this->add(new \Zend_Acl_Resource('admin:content:view'));
 
-        $this->add(new \Zend_Acl_Resource('admin:event:add'));
         $this->add(new \Zend_Acl_Resource('admin:event:delete'));
         $this->add(new \Zend_Acl_Resource('admin:event:index'));
         $this->add(new \Zend_Acl_Resource('admin:event:insert'));
-        $this->add(new \Zend_Acl_Resource('admin:event:link'));
         $this->add(new \Zend_Acl_Resource('admin:event:update'));
         $this->add(new \Zend_Acl_Resource('admin:event:view'));
 
@@ -77,11 +73,9 @@ class Acl extends \Zend_Acl {
         $this->add(new \Zend_Acl_Resource('admin:overview:feedback'));
         $this->add(new \Zend_Acl_Resource('admin:overview:index'));
 
-        $this->add(new \Zend_Acl_Resource('admin:place:add'));
         $this->add(new \Zend_Acl_Resource('admin:place:delete'));
         $this->add(new \Zend_Acl_Resource('admin:place:index'));
         $this->add(new \Zend_Acl_Resource('admin:place:insert'));
-        $this->add(new \Zend_Acl_Resource('admin:place:link'));
         $this->add(new \Zend_Acl_Resource('admin:place:update'));
         $this->add(new \Zend_Acl_Resource('admin:place:view'));
 
@@ -105,6 +99,7 @@ class Acl extends \Zend_Acl {
         $this->add(new \Zend_Acl_Resource('admin:settings:update'));
 
         $this->add(new \Zend_Acl_Resource('admin:source:add'));
+        $this->add(new \Zend_Acl_Resource('admin:source:add2'));
         $this->add(new \Zend_Acl_Resource('admin:source:delete'));
         $this->add(new \Zend_Acl_Resource('admin:source:index'));
         $this->add(new \Zend_Acl_Resource('admin:source:insert'));
@@ -184,10 +179,8 @@ class Acl extends \Zend_Acl {
         $this->allow('readonly', 'admin:source:view');
 
         /* editor */
-        $this->allow('editor', 'admin:actor:add');
         $this->allow('editor', 'admin:actor:delete');
         $this->allow('editor', 'admin:actor:insert');
-        $this->allow('editor', 'admin:actor:link');
         $this->allow('editor', 'admin:actor:update');
 
         $this->allow('editor', 'admin:biblio:insert');
@@ -197,10 +190,8 @@ class Acl extends \Zend_Acl {
         $this->allow('editor', 'admin:carrier:delete');
         $this->allow('editor', 'admin:carrier:update');
 
-        $this->allow('editor', 'admin:event:add');
         $this->allow('editor', 'admin:event:delete');
         $this->allow('editor', 'admin:event:insert');
-        $this->allow('editor', 'admin:event:link');
         $this->allow('editor', 'admin:event:update');
 
         $this->allow('editor', 'admin:function:add-field');
@@ -218,10 +209,8 @@ class Acl extends \Zend_Acl {
         $this->allow('editor', 'admin:member:member');
         $this->allow('editor', 'admin:member:update');
 
-        $this->allow('editor', 'admin:place:add');
         $this->allow('editor', 'admin:place:delete');
         $this->allow('editor', 'admin:place:insert');
-        $this->allow('editor', 'admin:place:link');
         $this->allow('editor', 'admin:place:update');
 
         $this->allow('editor', 'admin:reference:delete');
@@ -233,6 +222,7 @@ class Acl extends \Zend_Acl {
         $this->allow('editor', 'admin:relation:update');
 
         $this->allow('editor', 'admin:source:add');
+        $this->allow('editor', 'admin:source:add2');
         $this->allow('editor', 'admin:source:delete');
         $this->allow('editor', 'admin:source:insert');
         $this->allow('editor', 'admin:source:text-add');

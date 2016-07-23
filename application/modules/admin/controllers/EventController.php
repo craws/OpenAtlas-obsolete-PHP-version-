@@ -9,16 +9,6 @@ class Admin_EventController extends Zend_Controller_Action {
         $this->view->rootEvent = $this->rootEvent;
     }
 
-    public function addAction() {
-        $origin = Model_EntityMapper::getById($this->_getParam('id'));
-        $array = Zend_Registry::get('config')->get('codeView')->toArray();
-        $controller = $array[$origin->class->code];
-        $this->view->controller = $controller;
-        $this->view->events = Model_EntityMapper::getByCodes('Event');
-        $this->view->menuHighlight = $controller;
-        $this->view->origin = $origin;
-    }
-
     public function deleteAction() {
         $event = Model_EntityMapper::getById($this->_getParam('id'));
         if ($event->id != $this->rootEvent->id) {
@@ -81,22 +71,6 @@ class Admin_EventController extends Zend_Controller_Action {
         }
         // @codeCoverageIgnoreEnd
         return $this->_helper->redirector->gotoUrl($url);
-    }
-
-    public function linkAction() {
-        /* this is only used to add one event to source, change to multiple select overlay #703 */
-        /* also, rangeId is a domainId and always a source */
-        $event = Model_EntityMapper::getById($this->_getParam('eventId'));
-        $entity = Model_EntityMapper::getById($this->_getParam('rangeId'));
-        if (Model_LinkMapper::linkExists('P67', $entity, $event)) {
-            $this->_helper->message('error_link_exists');
-        } else {
-            Model_LinkMapper::insert('P67', $entity, $event);
-            $this->_helper->message('info_insert');
-        }
-        $array = Zend_Registry::get('config')->get('codeView')->toArray();
-        $controller = $array[$entity->class->code];
-        return $this->_helper->redirector->gotoUrl('/admin/' . $controller . '/view/id/' . $entity->id . '/#tabEvent');
     }
 
     public function updateAction() {

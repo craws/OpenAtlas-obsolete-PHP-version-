@@ -4,16 +4,6 @@
 
 class Admin_ActorController extends Zend_Controller_Action {
 
-    public function addAction() {
-        $origin = Model_EntityMapper::getById($this->_getParam('id'));
-        $array = Zend_Registry::get('config')->get('codeView')->toArray();
-        $controller = $array[$origin->class->code];
-        $this->view->actors = Model_EntityMapper::getByCodes('Actor');
-        $this->view->controller = $controller;
-        $this->view->menuHighlight = $controller;
-        $this->view->origin = $origin;
-    }
-
     public function deleteAction() {
         Model_EntityMapper::getById($this->_getParam('id'))->delete();
         $this->_helper->message('info_delete');
@@ -78,22 +68,6 @@ class Admin_ActorController extends Zend_Controller_Action {
         }
         // @codeCoverageIgnoreEnd
         return $this->_helper->redirector->gotoUrl($url);
-    }
-
-    public function linkAction() {
-        /* this is only used to add one actor to source, change to multiple select overlay #703 */
-        /* also, rangeId is a domainId and always a source */
-        $actor = Model_EntityMapper::getById($this->_getParam('actorId'));
-        $entity = Model_EntityMapper::getById($this->_getParam('rangeId'));
-        if (Model_LinkMapper::linkExists('P67', $entity, $actor)) {
-            $this->_helper->message('error_link_exists');
-        } else {
-            Model_LinkMapper::insert('P67', $entity, $actor);
-            $this->_helper->message('info_insert');
-        }
-        $array = Zend_Registry::get('config')->get('codeView')->toArray();
-        $controller = $array[$entity->class->code];
-        return $this->_helper->redirector->gotoUrl('/admin/' . $controller . '/view/id/' . $entity->id . '/#tabActor');
     }
 
     public function updateAction() {
