@@ -178,9 +178,9 @@ if (myurl.indexOf('update') >= 0) {
 if (myurl.indexOf('insert') >= 0) {
     var coordcaptureon = true;
 }
-if (!coordcaptureon) {
-    captureButton.removeFrom(map);
-}
+//if (!coordcaptureon) {
+//    captureButton.removeFrom(map);
+//}
 
 map.on('click', function (e) {
     if (capture) {
