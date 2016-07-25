@@ -98,7 +98,6 @@ class Admin_IndexController extends Zend_Controller_Action {
 
     // @codeCoverageIgnoreStart
     // Ignore coverage because no mail in testing
-
     public function resetConfirmAction() {
         $user = Model_UserMapper::getByResetCode($this->_getParam('code'));
         if (!$user) {

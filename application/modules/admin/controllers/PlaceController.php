@@ -41,7 +41,6 @@ class Admin_PlaceController extends Zend_Controller_Action {
         }
         $this->_helper->message('info_insert');
         $url = '/admin/place/view/id/' . $object->id;
-        // @codeCoverageIgnoreStart
         if ($form->getElement('continue')->getValue() && $source) {
             $url = '/admin/place/insert/sourceId/' . $source->id;
         } else if ($form->getElement('continue')->getValue()) {
@@ -49,7 +48,6 @@ class Admin_PlaceController extends Zend_Controller_Action {
         } else if ($source) {
             $url = '/admin/source/view/id/' . $source->id . '/#tabPlace';
         }
-        // @codeCoverageIgnoreEnd
         return $this->_helper->redirector->gotoUrl($url);
     }
 

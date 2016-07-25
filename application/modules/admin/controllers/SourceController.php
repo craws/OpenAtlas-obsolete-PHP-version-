@@ -95,7 +95,6 @@ class Admin_SourceController extends Zend_Controller_Action {
         }
         $this->_helper->message('info_insert');
         $url = '/admin/source/view/id/' . $source->id;
-        // @codeCoverageIgnoreStart
         if ($form->getElement('continue')->getValue() && $event) {
             $url = '/admin/source/insert/eventId/' . $event->id;
         } else if ($form->getElement('continue')->getValue() && $actor) {
@@ -112,7 +111,6 @@ class Admin_SourceController extends Zend_Controller_Action {
             $url = '/admin/place/view/id/' . $object->id . '/#tabSource';
         }
         return $this->_helper->redirector->gotoUrl($url);
-        // @codeCoverageIgnoreEnd
     }
 
     public function textAddAction() {

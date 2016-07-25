@@ -90,12 +90,10 @@ class Admin_InvolvementController extends Zend_Controller_Action {
         $newLink = Model_LinkMapper::insert($activity->code, $event, $actor, $form->getValue('description'));
         self::save($newLink, $form, $hierarchies);
         $this->_helper->message('info_update');
-        // @codeCoverageIgnoreStart
         if ($this->_getParam('origin') == 'event') {
             return $this->_helper->redirector->gotoUrl('/admin/event/view/id/' . $event->id . '/#tabActor');
         }
         return $this->_helper->redirector->gotoUrl('/admin/actor/view/id/' . $actor->id . '/#tabEvent');
-        // @codeCoverageIgnoreEnd
     }
 
     private function save(Model_Link $link, Zend_Form $form, array $hierarchies) {

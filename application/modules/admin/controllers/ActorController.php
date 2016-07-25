@@ -56,7 +56,6 @@ class Admin_ActorController extends Zend_Controller_Action {
         self::save($actor, $form, $hierarchies);
         $this->_helper->message('info_insert');
         $url = '/admin/actor/view/id/' . $actor->id;
-        // @codeCoverageIgnoreStart
         if ($event) {
             $url = '/admin/involvement/insert/origin/event/eventId/' . $event->id . '/actorId/' . $actor->id;
         } else if ($form->getElement('continue')->getValue() && $source) {
@@ -66,7 +65,6 @@ class Admin_ActorController extends Zend_Controller_Action {
         } else if ($source) {
             $url = '/admin/source/view/id/' . $source->id . '/#tabActor';
         }
-        // @codeCoverageIgnoreEnd
         return $this->_helper->redirector->gotoUrl($url);
     }
 

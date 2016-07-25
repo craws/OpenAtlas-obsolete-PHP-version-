@@ -59,7 +59,6 @@ class Admin_EventController extends Zend_Controller_Action {
         }
         $this->_helper->message('info_insert');
         $url = '/admin/event/view/id/' . $event->id;
-        // @codeCoverageIgnoreStart
         if ($actor) {
             $url = '/admin/involvement/insert/origin/actor/eventId/' . $event->id . '/actorId/' . $actor->id;
         } else if ($form->getElement('continue')->getValue() && $source) {
@@ -69,7 +68,6 @@ class Admin_EventController extends Zend_Controller_Action {
         } else if ($source) {
             $url = '/admin/source/view/id/' . $source->id . '/#tabEvent';
         }
-        // @codeCoverageIgnoreEnd
         return $this->_helper->redirector->gotoUrl($url);
     }
 
