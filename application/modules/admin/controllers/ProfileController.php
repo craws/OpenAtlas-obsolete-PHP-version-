@@ -11,14 +11,12 @@ class Admin_ProfileController extends Zend_Controller_Action {
             'theme' => $user->getSetting('theme'),
             'layout' => $user->getSetting('layout'),
         ]);
-        // @codeCoverageIgnoreStart
         if ($user->getSetting('language')) {
             $form->populate(['language' => $user->getSetting('language')]);
         }
         if ($user->getSetting('table_rows')) {
            $form->populate(['tableRows' => $user->getSetting('table_rows')]);
         }
-        // @codeCoverageIgnoreEnd
         if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
             $this->view->form = $form;
             $this->view->user = $user;

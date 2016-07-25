@@ -2,10 +2,10 @@
 
 /* Copyright 2016 by Alexander Watzinger and others. Please see the file README.md for licensing information */
 
-class Admin_ClassController extends Zend_Controller_Action {
+class ClassController extends Zend_Controller_Action {
 
     public function init() {
-        $this->view->menuHighlight = 'overview';
+        $this->view->menuHighlight = 'model';
     }
 
     public function indexAction() {

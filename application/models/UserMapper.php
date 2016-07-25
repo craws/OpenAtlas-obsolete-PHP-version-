@@ -69,6 +69,7 @@ class Model_UserMapper extends Model_AbstractMapper {
     }
 
     // @codeCoverageIgnoreStart
+    // Ignore coverage because no mail in testing
     public static function getByResetCode($resetCode) {
         if (!$resetCode) {
             return false;
@@ -83,7 +84,6 @@ class Model_UserMapper extends Model_AbstractMapper {
         }
         return self::getById($row['id']);
     }
-
     // @codeCoverageIgnoreEnd
 
     public static function getByEmail($email) {

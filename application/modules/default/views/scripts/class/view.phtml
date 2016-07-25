@@ -1,16 +1,16 @@
 <?
     $class = $this->class;
     $this->breadcrumb = [
-        $this->link('overview'),
-        '<a href="/admin/overview/model">' . $this->ucstring('model') . '</a>',
-        '<a href="/admin/class">' . $this->ucstring('class') . '</a>',
+        '<a href="/model">' . $this->ucstring('model') . '</a>',
+        '<a href="/class">' . $this->ucstring('class') . '</a>',
         $class->code
-    ]
+    ];
 ?>
 <div style="float:left;padding-right:2em;">
     <p><strong><?= $this->ucstring('info') ?></strong></p>
     <? $table['data'] = [_('code') => $class->code, _('name') => $class->nameTranslated]; ?>
     <? $this->table = $table; ?>
+    <? $this->addScriptPath(APPLICATION_PATH . '/modules/admin/views/scripts'); ?>
     <? echo $this->render('tableDataItem.phtml'); ?>
 </div>
 <?

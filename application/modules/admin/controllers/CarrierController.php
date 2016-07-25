@@ -24,12 +24,11 @@ class Admin_CarrierController extends Zend_Controller_Action {
         $carrier = Model_EntityMapper::insert('E84', $form->getValue('name'), $form->getValue('description'));
         self::save($form, $carrier, $hierarchies);
         $this->_helper->message('info_insert');
-        // @codeCoverageIgnoreStart
+        $url = '/admin/carrier/view/id/' . $carrier->id;
         if ($form->getElement('continue')->getValue()) {
-            return $this->_helper->redirector->gotoUrl('/admin/carrier/insert');
+            $url = '/admin/carrier/insert';
         }
-        // @codeCoverageIgnoreEnd
-        return $this->_helper->redirector->gotoUrl('/admin/carrier/view/id/' . $carrier->id);
+        return $this->_helper->redirector->gotoUrl($url);
     }
 
     public function updateAction() {
@@ -98,20 +97,11 @@ class Admin_CarrierController extends Zend_Controller_Action {
     }
 
     private function save(Zend_Form $form, Model_Entity $entity, array $hierarchies) {
-        foreach ($hierarchies as $hierarchy) {
-            $idField = $hierarchy->nameClean . 'Id';
-            if ($form->getValue($idField)) {
-                foreach (explode(",", $form->getValue($idField)) as $id) {
-                    Model_LinkMapper::insert('P2', $entity, Model_NodeMapper::getById($id));
-                }
-            } else if ($hierarchy->system) {
-                Model_LinkMapper::insert('P2', $entity, $hierarchy);
-            }
-        }
+        Model_LinkMapper::insertTypeLinks($entity, $form, $hierarchies);
+        Model_DateMapper::saveDates($entity, $form);
         if ($form->getValue('objectId')) {
             $place = Model_LinkMapper::getLinkedEntity($form->getValue('objectId'), 'P53');
             Model_LinkMapper::insert('OA8', $entity, $place);
         }
-        Model_DateMapper::saveDates($entity, $form);
     }
 }

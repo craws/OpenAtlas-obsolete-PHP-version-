@@ -49,9 +49,8 @@ class Admin_InvolvementController extends Zend_Controller_Action {
             $link = Model_LinkMapper::insert($activity->code, $event, $actor, $form->getValue('description'));
             self::save($link, $form, $hierarchies);
         } else {
-            foreach (explode(",", $form->getValue('actorIds')) as $id) {
-                $actor = Model_EntityMapper::getById($id);
-                $link = Model_LinkMapper::insert($activity->code, $event, $actor, $form->getValue('description'));
+            foreach (explode(",", $form->getValue('actorIds')) as $actorId) {
+                $link = Model_LinkMapper::insert($activity->code, $event, $actorId, $form->getValue('description'));
                 self::save($link, $form, $hierarchies);
             }
         }

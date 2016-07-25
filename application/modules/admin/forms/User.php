@@ -25,6 +25,7 @@ class Admin_Form_User extends Craws\Form\Table {
         $groups = Model_GroupMapper::getAll();
         foreach ($groups as $group) {
             // @codeCoverageIgnoreStart
+            // Ignore coverage because always testing as admin
             if ($group->name == 'admin' && Zend_Registry::get('user')->group != 'admin') {
                 continue;
             }

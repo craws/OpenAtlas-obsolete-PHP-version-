@@ -4,16 +4,6 @@
 
 class Admin_ActorController extends Zend_Controller_Action {
 
-    public function addAction() {
-        $origin = Model_EntityMapper::getById($this->_getParam('id'));
-        $array = Zend_Registry::get('config')->get('codeView')->toArray();
-        $controller = $array[$origin->class->code];
-        $this->view->actors = Model_EntityMapper::getByCodes('Actor');
-        $this->view->controller = $controller;
-        $this->view->menuHighlight = $controller;
-        $this->view->origin = $origin;
-    }
-
     public function deleteAction() {
         Model_EntityMapper::getById($this->_getParam('id'))->delete();
         $this->_helper->message('info_delete');
@@ -25,6 +15,11 @@ class Admin_ActorController extends Zend_Controller_Action {
     }
 
     public function insertAction() {
+        if (!in_array($this->_getParam('code'), Zend_Registry::get('config')->get('codeActor')->toArray())) {
+            $this->getHelper('viewRenderer')->setNoRender(true);
+            $this->_helper->message('error_missing_class');
+            return;
+        }
         $class = Model_ClassMapper::getByCode($this->_getParam('code'));
         $source = null;
         $event = null;
@@ -64,32 +59,15 @@ class Admin_ActorController extends Zend_Controller_Action {
         // @codeCoverageIgnoreStart
         if ($event) {
             $url = '/admin/involvement/insert/origin/event/eventId/' . $event->id . '/actorId/' . $actor->id;
-        }
-        if ($form->getElement('continue')->getValue() && $source) {
+        } else if ($form->getElement('continue')->getValue() && $source) {
             $url = '/admin/actor/insert/sourceId/' . $source->id . '/code/' . $class->code;
-        }
-        if ($form->getElement('continue')->getValue()) {
+        } else if ($form->getElement('continue')->getValue()) {
             $url = '/admin/actor/insert/code/' . $class->code;
-        }
-        if ($source) {
+        } else if ($source) {
             $url = '/admin/source/view/id/' . $source->id . '/#tabActor';
         }
         // @codeCoverageIgnoreEnd
         return $this->_helper->redirector->gotoUrl($url);
-    }
-
-    public function linkAction() {
-        $actor = Model_EntityMapper::getById($this->_getParam('actorId'));
-        $entity = Model_EntityMapper::getById($this->_getParam('rangeId'));
-        if (Model_LinkMapper::linkExists('P67', $entity, $actor)) {
-            $this->_helper->message('error_link_exists');
-        } else {
-            Model_LinkMapper::insert('P67', $entity, $actor);
-            $this->_helper->message('info_insert');
-        }
-        $array = Zend_Registry::get('config')->get('codeView')->toArray();
-        $controller = $array[$entity->class->code];
-        return $this->_helper->redirector->gotoUrl('/admin/' . $controller . '/view/id/' . $entity->id . '/#tabActor');
     }
 
     public function updateAction() {
@@ -202,9 +180,6 @@ class Admin_ActorController extends Zend_Controller_Action {
             case 'E40':
                 $formName = 'Legal Body';
                 break;
-            default:
-                echo $this->view->ucstring('error_missing_class');
-                exit;
         }
         return $formName;
     }
@@ -230,16 +205,7 @@ class Admin_ActorController extends Zend_Controller_Action {
     }
 
     private function save(Model_Entity $entity, Zend_Form $form, array $hierarchies) {
-        foreach ($hierarchies as $hierarchy) {
-            $idField = $hierarchy->nameClean . 'Id';
-            if ($form->getValue($idField)) {
-                foreach (explode(",", $form->getValue($idField)) as $id) {
-                    Model_LinkMapper::insert('P2', $entity, Model_NodeMapper::getById($id));
-                }
-            } else if ($hierarchy->system) {
-                Model_LinkMapper::insert('P2', $entity, $hierarchy);
-            }
-        }
+        Model_LinkMapper::insertTypeLinks($entity, $form, $hierarchies);
         Model_DateMapper::saveDates($entity, $form);
         foreach (['residenceId' => 'P74', 'appearsFirstId' => 'OA8', 'appearsLastId' => 'OA9'] as $formField => $propertyCode) {
             if ($form->getValue($formField)) {

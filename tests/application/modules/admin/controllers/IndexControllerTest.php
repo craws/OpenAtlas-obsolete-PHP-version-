@@ -18,8 +18,12 @@ class Admin_IndexControllerTest extends ControllerTestCase {
     public function testLoginLogout() {
         $this->login();
         $this->assertTrue(Zend_Auth::getInstance()->hasIdentity());
+        $this->dispatch('admin/index/index'); // test redirect to overview if already logged in
+        $this->resetRequest()->resetResponse();
         $this->dispatch('admin/index/logout');
         $this->assertFalse(Zend_Auth::getInstance()->hasIdentity());
+        $this->resetRequest()->resetResponse();
+        $this->loginInactiveUser();
         $this->resetRequest()->resetResponse();
         $this->dispatch('admin/index/logout');
         $this->request->setMethod('POST')->setPost(['username' => $this->defaultUsername, 'password' => 'wrong password']);

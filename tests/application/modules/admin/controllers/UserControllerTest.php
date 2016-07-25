@@ -37,7 +37,7 @@ class Admin_UserControllerTest extends ControllerTestCase {
         Model_LanguageMapper::getByShortform('en');
     }
 
-    public function testCrud() {
+    public function testCrudUser() {
         $this->dispatch('admin/user/insert');
         $this->dispatch('admin/user/insert');
         $this->request->setMethod('POST')->setPost($this->formValues);
@@ -56,9 +56,25 @@ class Admin_UserControllerTest extends ControllerTestCase {
             'username' => $this->testString,
             'active' => 0,
             'group' => 1,
-            'email' => ''
+            'email' => 'test@craws.net'
         ]);
         $this->dispatch('admin/user/update/id/' . $user1->id);
+        $this->resetRequest()->resetResponse();
+        $this->request->setMethod('POST')->setPost([
+            'username' => 'a',
+            'active' => 0,
+            'group' => 1,
+            'email' => ''
+        ]);
+        $this->dispatch('admin/user/update/id/' . $user1->id); // test existing username
+        $this->resetRequest()->resetResponse();
+        $this->request->setMethod('POST')->setPost([
+            'username' => $this->testString,
+            'active' => 0,
+            'group' => 1,
+            'email' => 'everybody@craws.net'
+        ]);
+        $this->dispatch('admin/user/update/id/' . $user1->id); // test existing email
         $this->resetRequest()->resetResponse();
         $this->dispatch('admin/user/delete/id/' . $user1->id);
         Model_UserMapper::getById('-1', false); // test prevent failure exception
@@ -74,11 +90,6 @@ class Admin_UserControllerTest extends ControllerTestCase {
         $this->formValues['username'] = $this->defaultUsername;
         $this->request->setMethod('POST')->setPost($this->formValues);
         $this->dispatch('admin/user/insert');
-    }
-
-    public function testJunk() {
-        $this->assertFalse(Model_UserMapper::getByEmail($this->testString));
-        $this->assertTrue(is_a(Model_UserMapper::getByEmail($this->defaultEmail), 'Model_User'));
     }
 
 }

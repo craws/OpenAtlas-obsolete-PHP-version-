@@ -32,14 +32,9 @@ class Admin_ActorControllerTest extends ControllerTestCase {
         $this->dispatch('admin/actor');
     }
 
-    public function testAdd() {
-        $this->request->setMethod('POST')->setPost($this->formValues);
-        $this->dispatch('admin/actor/add/id/' . $this->sourceId);
-    }
-
-    public function testCrud() {
-        //$this->dispatch('admin/actor/insert'); // test errror if code is missing
-        //$this->resetRequest()->resetResponse();
+    public function testCrudActor() {
+        $this->dispatch('admin/actor/insert'); // test errror if code is missing
+        $this->resetRequest()->resetResponse();
         $this->dispatch('admin/actor/insert/code/E21/');
         $this->request->setMethod('POST')->setPost($this->formValues);
         $this->dispatch('admin/actor/insert/code/E21/sourceId/' . $this->sourceId);
@@ -56,6 +51,7 @@ class Admin_ActorControllerTest extends ControllerTestCase {
         $this->resetRequest()->resetResponse();
         $this->formValues['birth'] = 0;
         $this->formValues['death'] = 0;
+        $this->formValues['genderId'] = ''; // test empty sytem type
         $this->request->setMethod('POST')->setPost($this->formValues);
         $this->dispatch('admin/actor/update/id/' . $actorId);
         $this->resetRequest()->resetResponse();
@@ -74,12 +70,6 @@ class Admin_ActorControllerTest extends ControllerTestCase {
         $this->dispatch('admin/actor/update/id/' . $legalBodies[0]->id); // test invalid form
         $this->resetRequest()->resetResponse();
         $this->dispatch('admin/actor/view/id/' . $legalBodies[0]->id);
-    }
-
-    public function testLink() {
-        $this->dispatch('admin/actor/link/actorId/' . $this->actorId . '/rangeId/' . $this->sourceId);
-        $this->resetRequest()->resetResponse();
-        $this->dispatch('admin/actor/link/actorId/' . $this->actorId . '/rangeId/' . $this->sourceId); // test existing
     }
 
     public function testRelation() {

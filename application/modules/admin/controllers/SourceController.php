@@ -4,6 +4,7 @@
 
 class Admin_SourceController extends Zend_Controller_Action {
 
+    /* add sources to an entity */
     public function addAction() {
         $origin = Model_EntityMapper::getById($this->_getParam('id'));
         $array = Zend_Registry::get('config')->get('codeView')->toArray();
@@ -16,12 +17,30 @@ class Admin_SourceController extends Zend_Controller_Action {
             return;
         }
         foreach ($this->getRequest()->getPost() as $sourceId) {
-            $source = Model_EntityMapper::getById((int) $sourceId);
-            if (!Model_LinkMapper::linkExists('P67', $source, $origin)) {
-                Model_LinkMapper::insert('P67', $source, $origin);
+            if (!Model_LinkMapper::linkExists('P67', $sourceId, $origin)) {
+                Model_LinkMapper::insert('P67', $sourceId, $origin);
             }
         }
         return $this->_helper->redirector->gotoUrl('/admin/' . $controller . '/view/id/' . $origin->id . '/#tabSource');
+    }
+
+    /* add enitities to a source */
+    public function add2Action() {
+        $source = Model_EntityMapper::getById($this->_getParam('id'));
+        $type = ucfirst($this->_getParam('type'));
+        $entityType = ($type == 'Place') ? Model_EntityMapper::getByCodes('PhysicalObject') : Model_EntityMapper::getByCodes($type);
+        if (!$this->getRequest()->isPost()) {
+            $this->view->entities = $entityType;
+            $this->view->type = $type;
+            $this->view->source = $source;
+            return;
+        }
+        foreach ($this->getRequest()->getPost() as $entityId) {
+            if (!Model_LinkMapper::linkExists('P67', $source->id, $entityId)) {
+                Model_LinkMapper::insert('P67', $source->id, $entityId);
+            }
+        }
+        return $this->_helper->redirector->gotoUrl('/admin/source/view/id/' . $source->id . '/#tab' . $type);
     }
 
     public function deleteAction() {
@@ -75,29 +94,24 @@ class Admin_SourceController extends Zend_Controller_Action {
             Model_LinkMapper::insert('P67', $source, $object);
         }
         $this->_helper->message('info_insert');
+        $url = '/admin/source/view/id/' . $source->id;
         // @codeCoverageIgnoreStart
         if ($form->getElement('continue')->getValue() && $event) {
-            return $this->_helper->redirector->gotoUrl('/admin/source/insert/eventId/' . $event->id);
+            $url = '/admin/source/insert/eventId/' . $event->id;
+        } else if ($form->getElement('continue')->getValue() && $actor) {
+            $url = '/admin/source/insert/actorId/' . $actor->id;
+        } else if ($form->getElement('continue')->getValue() && $object) {
+            $url = '/admin/source/insert/objectId/' . $object->id;
+        } else if ($form->getElement('continue')->getValue()) {
+            $url = '/admin/source/insert';
+        } else if ($event) {
+            $url = '/admin/event/view/id/' . $event->id . '/#tabSource';
+        } else if ($actor) {
+            $url = '/admin/actor/view/id/' . $actor->id . '/#tabSource';
+        } else if ($object) {
+            $url = '/admin/place/view/id/' . $object->id . '/#tabSource';
         }
-        if ($form->getElement('continue')->getValue() && $actor) {
-            return $this->_helper->redirector->gotoUrl('/admin/source/insert/actorId/' . $actor->id);
-        }
-        if ($form->getElement('continue')->getValue() && $object) {
-            return $this->_helper->redirector->gotoUrl('/admin/source/insert/objectId/' . $object->id);
-        }
-        if ($form->getElement('continue')->getValue()) {
-            return $this->_helper->redirector->gotoUrl('/admin/source/insert');
-        }
-        if ($event) {
-            return $this->_helper->redirector->gotoUrl('/admin/event/view/id/' . $event->id . '/#tabSource');
-        }
-        if ($actor) {
-            return $this->_helper->redirector->gotoUrl('/admin/actor/view/id/' . $actor->id . '/#tabSource');
-        }
-        if ($object) {
-            return $this->_helper->redirector->gotoUrl('/admin/place/view/id/' . $object->id . '/#tabSource');
-        }
-        return $this->_helper->redirector->gotoUrl('/admin/source/view/id/' . $source->id);
+        return $this->_helper->redirector->gotoUrl($url);
         // @codeCoverageIgnoreEnd
     }
 
@@ -110,7 +124,7 @@ class Admin_SourceController extends Zend_Controller_Action {
             return;
         }
         $text = Model_EntityMapper::insert('E33', $form->getValue('name'), $form->getValue('description'));
-        Model_LinkMapper::insert('P2', $text, Model_EntityMapper::getById($form->getValue('type')));
+        Model_LinkMapper::insert('P2', $text, Model_NodeMapper::getById($form->getValue('type')));
         Model_LinkMapper::insert('P73', $source, $text);
         $this->_helper->message('info_insert');
         return $this->_helper->redirector->gotoUrl('/admin/source/view/id/' . $source->id . '#tabText');
@@ -144,7 +158,7 @@ class Admin_SourceController extends Zend_Controller_Action {
         $text->description = $form->getValue('description');
         $text->update();
         $typeLink->delete();
-        Model_LinkMapper::insert('P2', $text, Model_EntityMapper::getById($form->getValue('type')));
+        Model_LinkMapper::insert('P2', $text, Model_NodeMapper::getById($form->getValue('type')));
         $this->_helper->message('info_update');
         return $this->_helper->redirector->gotoUrl('/admin/source/view/id/' . $source->id . '#tabText');
     }
@@ -191,16 +205,7 @@ class Admin_SourceController extends Zend_Controller_Action {
     }
 
     private function save(Zend_Form $form, Model_Entity $entity, array $hierarchies) {
-        foreach ($hierarchies as $hierarchy) {
-            $idField = $hierarchy->nameClean . 'Id';
-            if ($form->getValue($idField)) {
-                foreach (explode(",", $form->getValue($idField)) as $id) {
-                    Model_LinkMapper::insert('P2', $entity, Model_NodeMapper::getById($id));
-                }
-            } else if ($hierarchy->system) {
-                Model_LinkMapper::insert('P2', $entity, $hierarchy);
-            }
-        }
+        Model_LinkMapper::insertTypeLinks($entity, $form, $hierarchies);
     }
 
     public function viewAction() {

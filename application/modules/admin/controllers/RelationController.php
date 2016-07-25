@@ -14,22 +14,20 @@ class Admin_RelationController extends Zend_Controller_Action {
             $this->view->form = $form;
             return;
         }
-        foreach (explode(",", $form->getValue('relatedActorIds')) as $id) {
-            $relatedActor = Model_EntityMapper::getById($id);
+        foreach (explode(",", $form->getValue('relatedActorIds')) as $relatedActorId) {
             if ($form->getValue('inverse')) {
-                $link = Model_LinkMapper::insert('OA7', $relatedActor, $actor, $this->_getParam('description'));
+                $link = Model_LinkMapper::insert('OA7', $relatedActorId, $actor, $this->_getParam('description'));
             } else {
-                $link = Model_LinkMapper::insert('OA7', $actor, $relatedActor, $this->_getParam('description'));
+                $link = Model_LinkMapper::insert('OA7', $actor, $relatedActorId, $this->_getParam('description'));
             }
             self::save($link, $form, $hierarchies);
         }
         $this->_helper->message('info_insert');
-        // @codeCoverageIgnoreStart
+        $url = '/admin/actor/view/id/' . $actor->id . '/#tabRelation';
         if ($form->getElement('continue')->getValue()) {
-            return $this->_helper->redirector->gotoUrl('/admin/relation/insert/id/' . $actor->id);
+            $url = '/admin/relation/insert/id/' . $actor->id;
         }
-        // @codeCoverageIgnoreEnd
-        return $this->_helper->redirector->gotoUrl('/admin/actor/view/id/' . $actor->id . '/#tabRelation');
+        return $this->_helper->redirector->gotoUrl($url);
     }
 
     public function updateAction() {
@@ -67,16 +65,7 @@ class Admin_RelationController extends Zend_Controller_Action {
     }
 
     private function save(Model_Link $link, Zend_Form $form, array $hierarchies) {
-        foreach ($hierarchies as $hierarchy) {
-            $idField = $hierarchy->nameClean . 'Id';
-            if ($form->getValue($idField)) {
-                foreach (explode(",", $form->getValue($idField)) as $id) {
-                    Model_LinkPropertyMapper::insert('P2', $link, Model_NodeMapper::getById($id));
-                }
-            } else if ($hierarchy->system) {
-                Model_LinkPropertyMapper::insert('P2', $link, $hierarchy);
-            }
-        }
+        Model_LinkPropertyMapper::insertTypeLinks($link, $form, $hierarchies);
         Model_DateMapper::saveLinkDates($link, $form);
     }
 

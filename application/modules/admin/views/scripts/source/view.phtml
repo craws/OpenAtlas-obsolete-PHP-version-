@@ -34,7 +34,7 @@
     </div>
     <div id="tabActor">
         <div class="buttonBar">
-            <a href="/admin/actor/add/id/<?= $source->id ?>"><?= $this->ucstring('add') ?></a>
+            <a href="/admin/source/add2/type/actor/id/<?= $source->id ?>"><?= $this->ucstring('add') ?></a>
             <? foreach (Zend_Registry::get('config')->get('codeActor')->toArray() as $code): ?>
                 <?= $this->link($code, 'insert', null, $source); ?>
             <? endforeach ?>
@@ -62,7 +62,7 @@
     </div>
     <div id="tabEvent">
         <div class="buttonBar">
-            <a href="/admin/event/add/id/<?= $source->id ?>"><?= $this->ucstring('add') ?></a>
+            <a href="/admin/source/add2/type/event/id/<?= $source->id ?>"><?= $this->ucstring('add') ?></a>
             <? foreach (Zend_Registry::get('config')->get('codeEvent')->toArray() as $code): ?>
                 <?= $this->link($code, 'insert', null, $source); ?>
             <? endforeach ?>
@@ -90,7 +90,7 @@
     </div>
     <div id="tabPlace">
         <div class="buttonBar">
-            <a class="button" href="/admin/place/add/id/<?= $source->id ?>"><?= $this->ucstring('add') ?></a>
+            <a href="/admin/source/add2/type/place/id/<?= $source->id ?>"><?= $this->ucstring('add') ?></a>
             <?= $this->link('E18', 'insert', null, $source); ?>
         </div>
         <?

@@ -49,7 +49,6 @@ class Admin_UserController extends Zend_Controller_Action {
             ]);
             return;
         }
-        // @codeCoverageIgnoreStart
         if ($user->username != $form->getValue('username') && Model_UserMapper::getByUsername($form->getValue('username'))) {
             $this->_helper->message('error_username_exists');
             return;
@@ -58,7 +57,6 @@ class Admin_UserController extends Zend_Controller_Action {
             $this->_helper->message('error_email_exists');
             return;
         }
-        // @codeCoverageIgnoreEnd
         $user->username = $form->getValue('username');
         $user->email = $form->getValue('email');
         $user->realName = $form->getValue('realName');

@@ -5,8 +5,8 @@
 <? $templatePath = APPLICATION_PATH . '/../public/themes/admin/' . $theme; ?>
 <? $validateMessageFile = "/js/jquery/validation/messages_" . Zend_Registry::get('Zend_Locale') . ".js"; ?>
 <? $controller = Zend_Controller_Front::getInstance()->getRequest()->getControllerName(); ?>
-<? $menu = [_('overview'), _('source'), _('event'), _('actor'), _('place'), _('reference'), _('hierarchy'), _('user'),
-    ('log'), _('content'), _('settings'), _('faq')]; ?>
+<? $menu = ['overview', 'source', 'event', 'actor', 'place', 'reference', 'hierarchy', 'user', 'log', 'content',
+    'settings', 'faq']; ?>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -118,7 +118,7 @@
                         <a href="/admin/index/logout"><?= $this->ucstring('logout') ?></a>
                     </div>
                     <div id="changelog">
-                        <a href="/admin/overview/changelog"><?= $this->ucstring('version') ?> <?= $version ?></a>
+                        <a href="/default/changelog"><?= $this->ucstring('version') ?> <?= $version ?></a>
                     </div>
                 <? endif ?>
                 <div id="languageMenu">

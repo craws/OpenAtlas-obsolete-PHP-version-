@@ -20,8 +20,4 @@ class Admin_ContentControllerTest extends ControllerTestCase {
         $this->dispatch('admin/content/update/id/1');
     }
 
-    public function testWrongParameter() {
-        $this->dispatch('admin/content/update/itemId/0');
-    }
-
 }

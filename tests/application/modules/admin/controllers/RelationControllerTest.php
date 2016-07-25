@@ -15,7 +15,8 @@ class Admin_RelationControllerTest extends ControllerTestCase {
         $this->request->setMethod('POST')->setPost([
             'relatedActorIds' => $this->actorId,
             'actor_actor_relationId' => $socialId,
-            'beginYear' => '23'
+            'beginYear' => '23',
+            'continue' => 1
         ]);
         $this->dispatch('admin/relation/insert/id/' . $this->actorId);
         $this->resetRequest()->resetResponse();
