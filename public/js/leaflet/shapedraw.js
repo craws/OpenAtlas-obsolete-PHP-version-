@@ -80,8 +80,8 @@ datainput.onAdd = function (map) {
                 <span><textarea rows='3' cols='70' id='shapedescription' placeholder='here you can enter a description if necessary'/></textarea></span>\
                 <span><input type='text' id='shapename' value='NULL'/></span>\
                 <span><input type='text' id='shapetype' value='NULL'/></span>\
-                <span><input type='text' id='northing' value='NULL'/></span>\
-                <span><input type='text' id='easting' value='NULL'/></span>\
+                <span><label id='eastinglabel' style='display: none'> Easting: </label>\<input type='text' id='popupeasting' placeholder='decimal degrees' /></span>\
+                <span><label id='northinglabel' style='display: none'> Northing:</label>\<input type='text' id='popupnorthing' placeholder='decimal degrees' /></span>\
                 <div style='display: none'>\
                     <label> Coordinates: </label>\
                     <span><textarea rows='4' cols='50' id='shapecoords'/></textarea></span>\
@@ -281,13 +281,13 @@ function returndata() {
 function savetodb()
 {
     document.getElementById('savebtn').style.display = 'none';
-    var shapeparent = $('#shapeparent').val();
     var shapename = $('#shapename').val();
     var shapetype = $('#shapetype').val();
     var shapedescription = $('#shapedescription').val();
     var shapecoords = $('#shapecoords').val();
     var geometrytype = $('#geometrytype').val();
-    var dataString = 'shapeparent=' + shapeparent + '&shapename=' + shapename + '&shapetype=' + shapetype + '&shapedescription=' + shapedescription + '&shapecoords=' + shapecoords + '&geometrytype=' + geometrytype;
+    var dataString = '&shapename=' + shapename + '&shapetype=' + shapetype + '&shapedescription=' + shapedescription + '&shapecoords=' + shapecoords + '&geometrytype=' + geometrytype;
+    alert(dataString);
     $('#placeInfo').val($('#placeInfo').val() + dataString);
     //reloadgeojson();
     closemyform();
@@ -477,30 +477,31 @@ function editclosemyform()
 map.on('click', function (e) {
     if (capture) {
         document.getElementById('markersavebtn').disabled = false;
+        document.getElementById('geometrytype').value = 'point';
         if (typeof (marker) !== 'object') {
             marker = new L.marker(e.latlng, {draggable: true});
             marker.addTo(map);
             var wgs84 = (marker.getLatLng());
-            document.getElementById('northing').value = wgs84.lat;
-            document.getElementById('easting').value = wgs84.lng;
+            document.getElementById('popupnorthing').value = wgs84.lat;
+            document.getElementById('popupeasting').value = wgs84.lng;
         } else {
             marker.setLatLng(e.latlng);
             marker.on('dragend', function (event) {
                 var marker = event.target;
                 var position = marker.getLatLng();
-                document.getElementById('northing').value = position.lat;
-                document.getElementById('easting').value = position.lng;
+                document.getElementById('popupnorthing').value = position.lat;
+                document.getElementById('popupeasting').value = position.lng;
             });
         }
         var wgs84 = marker.getLatLng();
         marker.on('dragend', function (event) {
             var marker = event.target;
             var position = marker.getLatLng();
-            document.getElementById('northing').value = position.lat;
-            document.getElementById('easting').value = position.lng;
+            document.getElementById('popupnorthing').value = position.lat;
+            document.getElementById('popupeasting').value = position.lng;
         });
-        document.getElementById('northing').value = wgs84.lat;
-        document.getElementById('easting').value = wgs84.lng;
+        document.getElementById('popupnorthing').value = wgs84.lat;
+        document.getElementById('popupeasting').value = wgs84.lng;
     }
 });
 
@@ -516,6 +517,10 @@ function drawmarker() {
     document.getElementById('closebtn').style.display = 'none';
     document.getElementById('markerclosebtn').style.display = 'block';
     document.getElementById('markersavebtn').style.display = 'block';
+    document.getElementById('popupeasting').style.display = 'block';
+    document.getElementById('popupnorthing').style.display = 'block';
+    document.getElementById('eastinglabel').style.display = 'block';
+    document.getElementById('northinglabel').style.display = 'block';
     ;
 }
 
@@ -524,15 +529,15 @@ function savemarkertodb()
 {
     capture = false;
     document.getElementById('savebtn').style.display = 'none';
-    var shapeparent = $('#shapeparent').val();
     var shapename = $('#shapename').val();
     var shapetype = $('#shapetype').val();
     var shapedescription = $('#shapedescription').val();
     var shapecoords = $('#shapecoords').val();
     var geometrytype = $('#geometrytype').val();
-    var northing = $('#northing').val();
-    var easting = $('#easting').val();
-    var dataString = '&easting=' + easting + '&northing=' + northing + '&shapeparent=' + shapeparent + '&shapename=' + shapename + '&shapetype=' + shapetype + '&shapedescription=' + shapedescription + '&shapecoords=' + shapecoords + '&geometrytype=' + geometrytype;
+    var northing = $('#popupnorthing').val();
+    var easting = $('#popupeasting').val();
+    var shapetype = 'centerpoint';
+    var dataString = '&easting=' + easting + '&northing=' + northing + '&shapename=' + shapename + '&shapetype=' + shapetype + '&shapedescription=' + shapedescription + '&geometrytype=' + geometrytype;
     alert(dataString);
     closemymarkerform();
 }
