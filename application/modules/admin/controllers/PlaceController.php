@@ -56,10 +56,12 @@ class Admin_PlaceController extends Zend_Controller_Action {
     public function updateAction() {
         $object = Model_EntityMapper::getById($this->_getParam('id'));
         $place = Model_LinkMapper::getLinkedEntity($object, 'P53');
+        $polygon = Model_GisMapper::getPolygons($place);
         $form = new Admin_Form_Place();
         $hierarchies = $form->addHierarchies('Place', $object);
         $this->view->form = $form;
         $this->view->object = $object;
+        $this->view->polygon = $polygon;
         $aliasIndex = 0;
         $aliasElements = Model_LinkMapper::getLinkedEntities($object, 'P1');
         if ($aliasElements) {
@@ -192,6 +194,29 @@ class Admin_PlaceController extends Zend_Controller_Action {
             $gis->northing = $form->getValue('northing');
             $gis->insert();
         }
-    }
+        if ($form->getValue('placeInfo')) {
+            $placeInfo = $form->getValue('placeInfo');
+            parse_str($placeInfo, $output);
+            $geom = "(SELECT ST_GeomFromText('" . $output['geometrytype'] . "'(" . $output['shapecoords'] . ")', 4326))";
+            $geom = "SELECT ST_GeomFromText('polygon(( -112.0781421661377 68.5539591738857, -98.0156421661377 52.738954993199584, -67.0781421661377 68.80957565002588, -112.0781421661377 68.5539591738857))', 4326)";
+           switch($output['geometrytype']) {
+              case 'polygon':
+                  var_dump('inside');
+                  $sql = "
+                    INSERT INTO gis.polygon (entity_id, name, description, type, geom)
+                    VALUES (:entity_id, :name, :description, :type, ST_GeomFromText('polygon(".
+                    $output['shapecoords'] ."
+                    )', 4326));";
+                  $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
+                  $statement->bindValue(':entity_id', $place->id);
+                  $statement->bindValue(':name', $output['shapename']);
+                  $statement->bindValue(':description', $output['shapedescription']);
+                  $statement->bindValue(':type', $output['shapetype']);
+                  $statement->execute();
+                  $result = $statement->fetch(PDO::FETCH_ASSOC);
+                  break;
+          }
+        }
 
+      }
 }

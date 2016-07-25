@@ -160,9 +160,9 @@ function editshape()
         editon = 1;
         editlayer.options.editing || (editlayer.options.editing = {});
         editlayer.editing.enable();
-        
-        
-        
+
+
+
         document.getElementById('geometrytype').value = geometrytype;
         editlayer.on('edit', function () {
             var latLngs = editlayer.getLatLngs();
@@ -283,6 +283,7 @@ function savetodb()
     var geometrytype = $('#geometrytype').val();
     var dataString = 'shapeparent=' + shapeparent + '&shapename=' + shapename + '&shapetype=' + shapetype + '&shapedescription=' + shapedescription + '&shapecoords=' + shapecoords + '&geometrytype=' + geometrytype;
     alert(dataString);
+    $('#placeInfo').val($('#placeInfo').val() + dataString);
     //reloadgeojson();
     closemyform();
     ;
@@ -392,7 +393,7 @@ function setgeojsonwopopup()
         },
         }).addTo(map);
 
-    
+
 
     $.ajax({
         dataType: "json",
@@ -445,7 +446,7 @@ function closemyform() {
     drawlayer.disable();
     var coordcapture = false;
     interon();
-    
+
 }
 
 

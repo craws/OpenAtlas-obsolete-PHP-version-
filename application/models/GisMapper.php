@@ -16,6 +16,23 @@ class Model_GisMapper extends Model_AbstractMapper {
         Model_UserLogMapper::insert('entity', $result['id'], 'gis insert');
     }
 
+    public static function getPolygons(Model_Entity $object) {
+        $sql = 'SELECT id, name, description, type, geom FROM gis.polygon WHERE entity_id = :entity_id;';
+        $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
+        $statement->bindValue(':entity_id', $object->id);
+        $statement->execute();
+        $result = $statement->fetch();
+        if ($result) {
+            $polygon['id'] = $result['id'];
+            $polygon['name'] = $result['name'];
+            $polygon['description'] = $result['description'];
+            $polygon['type'] = $result['type'];
+            $polygon['geom'] = $result['geom'];
+            return $polygon;
+        }
+        return false;
+    }
+
     public static function getJsonData($objects = false) {
         if (!$objects) {
             $objects = Model_EntityMapper::getByCodes('PhysicalObject');

@@ -12,6 +12,7 @@ class Admin_Form_Place extends Admin_Form_Base {
             'required' => true,
             'label' => $this->getView()->ucstring('name'),
         ]);
+        $this->addElement('hidden', 'placeInfo');
         $this->addElement('button', 'aliasAdd', ['label' => '+']);
         $this->addElement('hidden', 'aliasId', ['value' => 1]);
         $this->addDates(['begin', 'begin2', 'end', 'end2']);
