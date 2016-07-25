@@ -7,6 +7,8 @@ Watch out for database role in SQLs and change "openatlas_master" if needed.
 
 BEGIN;
 
+ALTER TABLE gis.linestring RENAME text TO type;
+ALTER TABLE gis.point RENAME text TO type;
 ALTER TABLE gis.polygon RENAME text TO type;
 ALTER TABLE gis.centerpoint ADD COLUMN name text;
 ALTER TABLE gis.centerpoint ADD COLUMN description text;
