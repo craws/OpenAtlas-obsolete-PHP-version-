@@ -17,6 +17,10 @@ var markerimg; // temporary marker for coordinate capture
 var capture = false; // var to store whether control is active or not
 var coordcapture = false;
 var headingtext;
+var myfixpolygon = L.featureGroup();
+
+myfixpolygon.addTo(map);
+
 
 
 
@@ -175,6 +179,7 @@ function editshape()
                 for (i = 0; i < (latLngs.length); i++) {
                     newvector.push(' ' + latLngs[i].lng + ' ' + latLngs[i].lat);
                 }
+                
                 ;
                 if (type === 'polygon') {
                     newvector.push(' ' + latLngs[0].lng + ' ' + latLngs[0].lat); //if polygon add first xy again as last xy to close polygon
@@ -209,6 +214,7 @@ map.on('draw:created', function (e)
     drawnstuff.addLayer(e.layer); //add new geometry to layer
     type = e.layerType; //whatever geometry
     layer = e.layer;
+    var mypoly = (layer).addTo(map)
     var latLngs; //to store coordinates of vertices
     var newvector = []; // array to store coordinates as numbers
     if (type != 'marker') {  //if other type than point then store array of coordinates as variable
@@ -219,8 +225,10 @@ map.on('draw:created', function (e)
         ;
         if (type === 'polygon') {
             newvector.push(' ' + latLngs[0].lng + ' ' + latLngs[0].lat); //if polygon add first xy again as last xy to close polygon
+            
             shapesyntax = '(' + newvector + ')';
             returndata();
+
         }
         ;
         if (type === 'polyline') {
@@ -282,7 +290,6 @@ function savetodb()
     var shapecoords = $('#shapecoords').val();
     var geometrytype = $('#geometrytype').val();
     var dataString = 'shapeparent=' + shapeparent + '&shapename=' + shapename + '&shapetype=' + shapetype + '&shapedescription=' + shapedescription + '&shapecoords=' + shapecoords + '&geometrytype=' + geometrytype;
-    alert(dataString);
     //reloadgeojson();
     closemyform();
     ;
