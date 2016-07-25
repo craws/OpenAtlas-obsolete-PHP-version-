@@ -1,9 +1,16 @@
-function interonoff(element) { //disable map dragging when cursor is e.g. in search input field.
-    $(element).hover(function () {
-        interoff();
-    }, function () {
-        interon();
-    });
+var coordcapture;
+var coordcaptureimg;
+
+function interoff() {
+    capture = false;
+    map.dragging.disable();
+    map.touchZoom.disable();
+    map.doubleClickZoom.disable();
+    map.scrollWheelZoom.disable();
+    map.boxZoom.disable();
+    map.keyboard.disable();
+    if (map.tap)
+        map.tap.disable();
 }
 
 function interon() {
@@ -13,24 +20,124 @@ function interon() {
     map.scrollWheelZoom.enable();
     map.boxZoom.enable();
     map.keyboard.enable();
-    if (map.tap) {
+    if (map.tap)
         map.tap.enable();
-    }
     $('#map').css('cursor', '');
+    if (coordcapture)
+    {
+        document.getElementById('map').style.cursor = 'crosshair';
+        capture = true;
+    }
+    if (coordcaptureimg)
+    {
+        document.getElementById('map').style.cursor = 'crosshair';
+}
+}
+var togglebtn;
+
+function togglebtns()
+{
+    if (togglebtn === 0)
+    {
+        if (typeof (polygonbtn) == 'object')
+        {
+            polygonbtn.removeFrom(map);
+        }
+        ;
+        if (typeof (polylinebtn) == 'object')
+        {
+            polylinebtn.removeFrom(map);
+        }
+        ;
+        if (typeof (imageloadbtn) == 'object')
+        {
+            imageloadbtn.removeFrom(map);
+        }
+        ;
+        if (typeof (areabutton) == 'object')
+        {
+            areabutton.removeFrom(map);
+        }
+        ;
+        if (typeof (pointbutton) == 'object')
+        {
+            pointbutton.removeFrom(map);
+        }
+        ;
+        if (typeof (admunitbutton) == 'object')
+        {
+            admunitbutton.removeFrom(map);
+        }
+        ;
+        if (typeof (histregbutton) == 'object')
+        {
+            histregbutton.removeFrom(map);
+        }
+        ;
+        togglebtn = 1;
+    }
+    else
+    {
+        coordcapture = false;
+        if (typeof (polygonbtn) == 'object')
+        {
+            map.addControl(polygonbtn);
+        }
+        ;
+        if (typeof (polylinebtn) == 'object')
+        {
+            map.addControl(polylinebtn);
+        }
+        ;
+        if (typeof (imageloadbtn) == 'object')
+        {
+            map.addControl(imageloadbtn);
+        }
+        ;
+        if (typeof (areabutton) == 'object')
+        {
+            map.addControl(areabutton);
+        }
+        ;
+        if (typeof (pointbutton) == 'object')
+        {
+            map.addControl(pointbutton);
+        }
+        ;
+        if (typeof (admunitbutton) == 'object')
+        {
+            map.addControl(admunitbutton);
+        }
+        ;
+        if (typeof (histregbutton) == 'object')
+        {
+            map.addControl(histregbutton);
+        }
+        ;
+        //document.getElementById('selectunit').style.display = 'none';
+        $("#jstree").jstree("close_all");
+        $('#jstree').jstree("deselect_all");
+        //document.getElementById('saveadmbtn').disabled = true;
+        togglebtn = 0;
+        capture = false;
+        coordcapture = false;
+        coordcaptureimg = false;
+        marker = '';
+        updategeojson();
+        interon();
+    }
 }
 
-//functions to enable/disable dragging etc. (E.g. when cursor is in an text input field
-function interoff() {
-    map.dragging.disable();
-    map.touchZoom.disable();
-    map.doubleClickZoom.disable();
-    map.scrollWheelZoom.disable();
-    map.boxZoom.disable();
-    map.keyboard.disable();
-    if (map.tap) {
-        map.tap.disable();
-    }
+
+function interonoff(element) { //disable map dragging when cursor is e.g. in search input field.
+    $(element).hover(function () {
+        interoff();
+    }, function () {
+        interon();
+    });
 }
+
+
 
 function setSitesInfo(e) { //set Popup Information of existing sites
     var marker = e.layer;
@@ -42,19 +149,8 @@ function setSitesInfo(e) { //set Popup Information of existing sites
       {autoPanPaddingTopLeft: new L.Point(40, 10), autoPanPaddingBottomRight: new L.Point(50, 10)});
 }
 
-function switchInput() {
-    if (capture) {
-        $('#map').css('cursor', '');
-        capture = false;
-        uncaptureButton.removeFrom(map);
-        captureButton.addTo(map);
-    } else {
-        $('#map').css('cursor', 'crosshair');
-        capture = true;
-        captureButton.removeFrom(map);
-        uncaptureButton.addTo(map);
-    }
-}
+
+
 L.mapbox.accessToken = 'pk.eyJ1Ijoib3BlbmF0bGFzbWFwYm94IiwiYSI6ImNpbHRlYzc3ZDAwMmR3MW02Z3FsYWxwNXcifQ.rwXGRavf1bh9ZW6zQn9cMg';
 
 var map = L.map('map', {fullscreenControl: true}, null).setView([48.61, 16.93], 5);
@@ -70,13 +166,6 @@ L.control.layers(baseMaps).addTo(map);
 L.control.scale().addTo(map);
 var marker; // temporary marker for coordinate capture
 var capture = false; // var to store whether control is active or not
-var captureButton = L.easyButton('topright', 'fa-plus-square-o', function () {
-    switchInput();
-}, 'capture coordinates');
-var uncaptureButton = L.easyButton('topright', 'fa-minus-square-o', function () {
-    switchInput();
-}, 'uncapture coordinates');
-uncaptureButton.removeFrom(map);
 
 // variable to determine if captureButton is added or not (E.g. only added in place edit or insert mode, not in place list)
 var coordcaptureon = false;
