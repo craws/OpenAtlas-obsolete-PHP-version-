@@ -17,9 +17,7 @@ var markerimg; // temporary marker for coordinate capture
 var capture = false; // var to store whether control is active or not
 var coordcapture = false;
 var headingtext;
-var myfixpolygon = L.featureGroup();
 
-myfixpolygon.addTo(map);
 
 
 
@@ -67,9 +65,9 @@ datainput.onAdd = function (map) {
     div.innerHTML += "<div id='insertform' style='display:block'>\
             <form id='shapeform' onmouseover='interoff()' onmouseout='interon()'>\
             <i id='headingtext'>  </i>\
-                <i id='closebtn' title='close without saving' onclick='closemyform()' class='fa'>X</i>\
+                <i id='closebtn' title='close without saving' onclick='closemyformx()' class='fa'>X</i>\
                 <i id='editclosebtn' title='close without saving' onclick='editclosemyform()' class='fa'>X</i>\
-                <i id='markerclosebtn' title='close without saving' onclick='closemymarkerform()' class='fa'>X</i>\
+                <i id='markerclosebtn' title='close without saving' onclick='closemymarkerformx()' class='fa'>X</i>\
 <br>\
                 <p id='p1'>Hello World!</p>\
                 <div style='display: none'>\
@@ -103,8 +101,9 @@ setgeojson();
 
 
 function setpopup(feature, layer) {
-    layer.bindPopup('<div id="popup"><b>' + feature.properties.title + '</b> <br>' +
-            '<i>' + feature.properties.category + '</i> <br> <br>' +
+    layer.bindPopup('<div id="popup"><b>' + feature.properties.parentname + '</b> <br>' +
+        '<div id="popup"><b>' + feature.properties.title + '</b> <br>' +
+                    '<i>' + feature.properties.type + '</i> <br> <br>' +
             '<div style="max-height:140px; overflow-y: auto">' + feature.properties.description + '<br> </div>' +
             '<button onclick="editshape()"/> Edit </button> <button onclick="deleteshape()"/>Delete</button></div>');
 }
@@ -162,20 +161,23 @@ function editshape()
         });
         map.closePopup();
         editon = 1;
-        editlayer.options.editing || (editlayer.options.editing = {});
-        editlayer.editing.enable();
+        var mylayer = L.polygon(editlayer.getLatLngs()).addTo(map);
+        map.removeLayer(editlayer);
+        //alert(editlayer.getLatLngs());
+        mylayer.options.editing || (mylayer.options.editing = {});
+        mylayer.editing.enable();
         
         
         
         document.getElementById('geometrytype').value = geometrytype;
-        editlayer.on('edit', function () {
-            var latLngs = editlayer.getLatLngs();
+        mylayer.on('edit', function () {
+            var latLngs = mylayer.getLatLngs();
             var latLngs; //to store coordinates of vertices
             var newvector = []; // array to store coordinates as numbers
             var type = geometrytype.toLowerCase();
             document.getElementById('editsavebtn').disabled = false;
             if (type != 'marker') {  //if other type than point then store array of coordinates as variable
-                latLngs = editlayer.getLatLngs();
+                latLngs = mylayer.getLatLngs();
                 for (i = 0; i < (latLngs.length); i++) {
                     newvector.push(' ' + latLngs[i].lng + ' ' + latLngs[i].lat);
                 }
@@ -214,7 +216,6 @@ map.on('draw:created', function (e)
     drawnstuff.addLayer(e.layer); //add new geometry to layer
     type = e.layerType; //whatever geometry
     layer = e.layer;
-    var mypoly = (layer).addTo(map)
     var latLngs; //to store coordinates of vertices
     var newvector = []; // array to store coordinates as numbers
     if (type != 'marker') {  //if other type than point then store array of coordinates as variable
@@ -304,15 +305,9 @@ function editsavetodb()
     var shapecoords = $('#shapecoords').val();
     var geometrytype = $('#geometrytype').val();
     var dataString = 'shapename=' + shapename + '&shapetype=' + shapetype + '&shapedescription=' + shapedescription + '&shapecoords=' + shapecoords + '&geometrytype=' + geometrytype + '&uid=' + uid;
-    $.ajax({
-        type: "POST",
-        url: "php/editupdate.php",
-        data: dataString,
-        success: function () {
-            editclosemyform();
-        }
-    });
-}
+    alert(dataString);
+    editclosemyform();
+    }
 
 
 function deleteshape()
@@ -423,9 +418,7 @@ function setgeojsonwopopup()
 }
 
 function resetDrawLayer() {
-    map.removeLayer(drawnstuff);
-    drawnstuff = L.featureGroup();
-    map.addLayer(drawnstuff);
+    drawnstuff.removeLayer(layer);
 }
 
 function resetmyform() {
@@ -433,7 +426,6 @@ function resetmyform() {
     map.closePopup();
     document.getElementById("shapeform").reset();
     document.getElementById("geometrytype").value = geometrytype;
-    resetDrawLayer();
     if (capture = false) {
         drawlayer.enable();
     }
@@ -447,7 +439,16 @@ function resetmyform() {
 function closemyform() {
     datainput.removeFrom(map);
     togglebtns();
-    resetDrawLayer();
+    drawlayer.disable();
+    var coordcapture = false;
+    interon();
+    
+}
+
+function closemyformx() {
+    datainput.removeFrom(map);
+    drawnstuff.removeLayer(layer);
+    togglebtns();
     drawlayer.disable();
     var coordcapture = false;
     interon();
@@ -455,7 +456,16 @@ function closemyform() {
 }
 
 
-function closemymarkerform() {
+function closemymarkerformx() {
+    datainput.removeFrom(map);
+    map.removeLayer(marker);
+    togglebtns();
+    coordcapture = false;
+    capture = false;
+    interon();
+    }
+    
+ function closemymarkerform() {
     datainput.removeFrom(map);
     map.removeLayer(marker);
     togglebtns();
@@ -469,7 +479,7 @@ function editclosemyform()
     editon = 0;
     datainput.removeFrom(map);
     togglebtns();
-    updategeojson();
+    //updategeojson();
     var coordcapture = false;
     interon();
 }
@@ -539,6 +549,7 @@ function savemarkertodb()
     var shapetype = 'centerpoint';
     var dataString = '&easting=' + easting + '&northing=' + northing + '&shapename=' + shapename + '&shapetype=' + shapetype + '&shapedescription=' + shapedescription + '&geometrytype=' + geometrytype;
     alert(dataString);
+    L.marker([northing, easting]).addTo(map);
     closemymarkerform();
 }
 

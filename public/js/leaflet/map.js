@@ -1,3 +1,4 @@
+
 var coordcapture;
 var coordcaptureimg;
 
@@ -232,28 +233,86 @@ baseMaps.Landscape.addTo(map);
 L.control.layers(baseMaps, overlayMaps).addTo(map);
 L.control.scale().addTo(map);
 
-if (myurl.indexOf('place/') >= 0) {
-        //alert('bitte ein geojson hinzufügen von allen polygonen mit der ID des Places');
-        var placepolygons = [{"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"Polygon","coordinates":
-                            [[[16.921749,48.61195],[16.922881,48.611925],[16.923533,48.611902],[16.923899,48.612708],[16.922325,48.612788],[16.921957,48.612428],[16.921749,48.61195]]]},
-                            "properties":{"title":"Hohenau Sst. x2 Gest\u00fctwiese","description":"Ungef\u00e4hre Ausdehnung der Fundstreuung"}}]}];
-            var sitelayer = L.mapbox.featureLayer();
-            sitelayer.setGeoJSON(placepolygons);
-map.removeLayer(sitelayer);
-sitelayer.addTo(map);
-//add points of site
-//zoom to total extend
 
+function setuid(e) {
+    preventpopup();
+    if (editon === 0) {
+        var layer = e.layer;
+        var feature = layer.feature;
+        var uid = feature.properties.uid;
+        geometrytype = feature.geometry.type;
+        selectedshape = uid;
+        editlayer = e.layer;
+        shapename = feature.properties.title;
+        shapetype = feature.properties.category;
+        shapedescription = feature.properties.description;
+        helptext = 'Draw the shape of a physical thing if the precise extend is known';
+        headingtext = 'Shape';
+        if (shapetype == "area") {
+            helptext = "Draw the area in which the physical thing is located. E.g. if its precise shape is not known but known to be within a certain area"
+            headingtext = 'Area';
+        }
+        ;
     }
+}
+
+function setpopup(feature, layer) {
+    layer.bindPopup('<div id="popup"><b>' + feature.properties.parentname + '</b> <br>' +
+        '<div id="popup"><b>' + feature.properties.title + '</b> <br>' +
+                    '<i>' + feature.properties.type + '</i> <br> <br>' +
+            '<div style="max-height:140px; overflow-y: auto">' + feature.properties.description + '<br> </div>' +
+            '<button onclick="editshape()"/> Edit </button> <button onclick="deleteshape()"/>Delete</button></div>');
+}
+
+function setpopup2(feature, layer) {
+    layer.bindPopup('<div id="popup"><b>' + feature.properties.parentname + '</b> <br>' +
+        '<div id="popup"><b>' + feature.properties.title + '</b> <br>' +
+                    '<i>' + feature.properties.type + '</i> <br> <br>' +
+            '<div style="max-height:140px; overflow-y: auto">' + feature.properties.description + '<br> </div>');
+}
+
+
+//if (myurl.indexOf('place/') >= 0) {
+//        //alert('bitte ein geojson hinzufügen von allen polygonen mit der ID des Places');
+//        var placepolygons = [{"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"Polygon","coordinates":
+//                            [[[16.921749,48.61195],[16.922881,48.611925],[16.923533,48.611902],[16.923899,48.612708],[16.922325,48.612788],[16.921957,48.612428],[16.921749,48.61195]]]},
+//                            "properties":{"parentname":"Hohenau", "type":"Shape", "title":"Hohenau Sst. x2 Gest\u00fctwiese","description":"Ungef\u00e4hre Ausdehnung der Fundstreuung"}}]}];
+//    
+//    
+//    var mysites = L.featureGroup({
+//    onEachFeature: setpopup2
+//}).addTo(map);
+// 
+//    L.geoJson(placepolygons, {
+//    onEachFeature: function (feature, layer) {
+//        mysites.addLayer(layer);
+//    }
+//});
+
+//
+//    
+//    
+//mysites.on('click', setuid);
+//            
+//
+//
+////add points of site
+////zoom to total extend
+//
+//    }
     if (myurl.indexOf('update') >= 0) {
         //alert('bitte ein geojson hinzufügen von allen polygonen mit der ID des Places');
         var placepolygons = [{"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"Polygon","coordinates":
                             [[[16.921749,48.61195],[16.922881,48.611925],[16.923533,48.611902],[16.923899,48.612708],[16.922325,48.612788],[16.921957,48.612428],[16.921749,48.61195]]]},
-                            "properties":{"title":"Hohenau Sst. x2 Gest\u00fctwiese","description":"Ungef\u00e4hre Ausdehnung der Fundstreuung"}}]}];
-            var sitelayer = L.mapbox.featureLayer();
-            sitelayer.setGeoJSON(placepolygons);
-map.removeLayer(sitelayer);
-sitelayer.addTo(map);
+                            "properties":{"parentname":"Hohenau", "type":"Shape", "title":"Hohenau Sst. x2 Gest\u00fctwiese","description":"Ungef\u00e4hre Ausdehnung der Fundstreuung"}}]}];
+    
+    var mysites = L.geoJson(placepolygons, {
+    onEachFeature: setpopup
+}).addTo(map);        
+mysites.on('click', setuid);
+    
+    
+    
 //add points of site
 //zoom to total extend
 //add buttons on popup
