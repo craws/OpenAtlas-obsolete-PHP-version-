@@ -1,6 +1,7 @@
 var postGisGeoJSON;
 var selectedshape;
 var editlayer;
+var editmarker;
 var drawnstuff = L.featureGroup();
 var layer;
 var shapesyntax;
@@ -112,12 +113,14 @@ function setpopup(feature, layer) {
 function setuid(e) {
     preventpopup();
     if (editon === 0) {
+        var marker = e.marker
         var layer = e.layer;
         var feature = layer.feature;
         var uid = feature.properties.uid;
         geometrytype = feature.geometry.type;
         selectedshape = uid;
         editlayer = e.layer;
+        editmarker = e.marker;
         shapename = feature.properties.title;
         shapetype = feature.properties.category;
         shapedescription = feature.properties.description;
@@ -137,7 +140,8 @@ function preventpopup(event) {
     }
 }
 
-
+var mylayer;
+var editIcon = L.icon({iconUrl: "/js/leaflet/images/marker-icon_edit.png", iconAnchor: [12,41]});
 function editshape()
 {
     togglebtns();
@@ -161,25 +165,55 @@ function editshape()
         });
         map.closePopup();
         editon = 1;
-        var mylayer = L.polygon(editlayer.getLatLngs()).addTo(map);
+        
+        if (geometrytype === 'Polygon'){
+        mylayer = L.polygon(editlayer.getLatLngs()).addTo(map);
         map.removeLayer(editlayer);
-        //alert(editlayer.getLatLngs());
+        };
+        if (geometrytype === 'Point'){
+        mylayer = L.marker((editlayer.getLatLng()), {draggable: true, icon: editIcon}).addTo(map);
+        map.removeLayer(editlayer);
+        
+        document.getElementById('savebtn').style.display = 'none';
+    document.getElementById('resetbtn').style.display = 'none';
+    document.getElementById('closebtn').style.display = 'none';
+    document.getElementById('editclosebtn').style.display = 'none';
+    document.getElementById('editsavebtn').style.display = 'none';
+    document.getElementById('markerclosebtn').style.display = 'block';
+    document.getElementById('markersavebtn').style.display = 'block';
+    document.getElementById('popupeasting').style.display = 'block';
+    document.getElementById('popupnorthing').style.display = 'block';
+    document.getElementById('eastinglabel').style.display = 'block';
+    document.getElementById('northinglabel').style.display = 'block';
+    var wgs84 = mylayer.getLatLng();
+        mylayer.on('dragend', function (event) {
+            var marker = event.target;
+            var position = marker.getLatLng();
+            document.getElementById('popupnorthing').value = position.lat;
+            document.getElementById('popupeasting').value = position.lng;    
+        });
+        };
         mylayer.options.editing || (mylayer.options.editing = {});
         mylayer.editing.enable();
         
         
         
+        
         document.getElementById('geometrytype').value = geometrytype;
         mylayer.on('edit', function () {
+           
             var latLngs = mylayer.getLatLngs();
             var latLngs; //to store coordinates of vertices
             var newvector = []; // array to store coordinates as numbers
             var type = geometrytype.toLowerCase();
+             alert(type + '2');
             document.getElementById('editsavebtn').disabled = false;
+             
             if (type != 'marker') {  //if other type than point then store array of coordinates as variable
                 latLngs = mylayer.getLatLngs();
                 for (i = 0; i < (latLngs.length); i++) {
                     newvector.push(' ' + latLngs[i].lng + ' ' + latLngs[i].lat);
+                    alert('editgeht');
                 }
                 
                 ;
@@ -187,6 +221,7 @@ function editshape()
                     newvector.push(' ' + latLngs[0].lng + ' ' + latLngs[0].lat); //if polygon add first xy again as last xy to close polygon
                     shapesyntax = '(' + newvector + ')';
                     returndata();
+                    alert('editgehtpoly');
                 }
                 ;
                 if (type === 'linestring') {
@@ -195,10 +230,15 @@ function editshape()
                 }
             }
             ;
-            if (type === 'marker') {
-                latLngs = layer.getLatLng();
+           
+            if (type === 'point') {
+                alert(geometrytype);
+                latLngs = mylayer.getLatLng();
                 newvector = (' ' + latLngs.lng + ' ' + latLngs.lat);
                 shapesyntax = 'ST_GeomFromText(\'POINT(' + newvector + ')\',4326);'
+                document.getElementById('popupnorthing').value = latLngs.lat;
+            document.getElementById('popupeasting').value = latLngs.lng;
+            alert(latLngs);
 
             }
             ;
@@ -305,6 +345,8 @@ function editsavetodb()
     var shapecoords = $('#shapecoords').val();
     var geometrytype = $('#geometrytype').val();
     var dataString = 'shapename=' + shapename + '&shapetype=' + shapetype + '&shapedescription=' + shapedescription + '&shapecoords=' + shapecoords + '&geometrytype=' + geometrytype + '&uid=' + uid;
+    var myeditedlayer = L.polygon(mylayer.getLatLngs()).addTo(map);
+        map.removeLayer(mylayer);
     alert(dataString);
     editclosemyform();
     }
@@ -314,14 +356,9 @@ function deleteshape()
 {
     if (editon === 0) {
         var dataString = 'uid=' + selectedshape + '&geometrytype=' + geometrytype;
-        $.ajax({
-            type: "POST",
-            url: "php/remove.php",
-            data: dataString,
-            success: function () {
-                updategeojson();
-            }
-        });
+        map.removeLayer(editlayer);
+        map.removeLayer(editmarker);
+        alert('@ Alex delete this polygon from database');
     }
 }
 

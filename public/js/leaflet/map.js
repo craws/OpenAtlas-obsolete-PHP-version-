@@ -253,6 +253,11 @@ function setuid(e) {
             headingtext = 'Area';
         }
         ;
+        if (geometrytype == "Point") {
+            helptext = "Drag the marker to the new location"
+            headingtext = 'Point';
+        
+};
     }
 }
 
@@ -272,46 +277,63 @@ function setpopup2(feature, layer) {
 }
 
 
-//if (myurl.indexOf('place/') >= 0) {
-//        //alert('bitte ein geojson hinzufügen von allen polygonen mit der ID des Places');
-//        var placepolygons = [{"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"Polygon","coordinates":
-//                            [[[16.921749,48.61195],[16.922881,48.611925],[16.923533,48.611902],[16.923899,48.612708],[16.922325,48.612788],[16.921957,48.612428],[16.921749,48.61195]]]},
-//                            "properties":{"parentname":"Hohenau", "type":"Shape", "title":"Hohenau Sst. x2 Gest\u00fctwiese","description":"Ungef\u00e4hre Ausdehnung der Fundstreuung"}}]}];
-//    
-//    
-//    var mysites = L.featureGroup({
-//    onEachFeature: setpopup2
-//}).addTo(map);
-// 
-//    L.geoJson(placepolygons, {
-//    onEachFeature: function (feature, layer) {
-//        mysites.addLayer(layer);
-//    }
-//});
-
-//
-//    
-//    
-//mysites.on('click', setuid);
-//            
-//
-//
-////add points of site
-////zoom to total extend
-//
-//    }
-    if (myurl.indexOf('update') >= 0) {
+if (myurl.indexOf('place/') >= 0) {
         //alert('bitte ein geojson hinzufügen von allen polygonen mit der ID des Places');
         var placepolygons = [{"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"Polygon","coordinates":
                             [[[16.921749,48.61195],[16.922881,48.611925],[16.923533,48.611902],[16.923899,48.612708],[16.922325,48.612788],[16.921957,48.612428],[16.921749,48.61195]]]},
                             "properties":{"parentname":"Hohenau", "type":"Shape", "title":"Hohenau Sst. x2 Gest\u00fctwiese","description":"Ungef\u00e4hre Ausdehnung der Fundstreuung"}}]}];
     
+   
+    var mysites = L.featureGroup({
+    onEachFeature: setpopup2
+}).addTo(map);
+ 
+var placepoints =  [{"type": "Feature","geometry":{"type": "Point","coordinates": [16.921476702448,48.611957576557]},
+        "properties":{"parentname":"Hohenau", "type":"Shape", "title":"Hohenau Sst. x2 Gest\u00fctwiese","description":"Ungef\u00e4hre Ausdehnung der Fundstreuung"}},
+    {"type": "Feature","geometry":{"type": "Point","coordinates": [16.923533,48.611902]},
+        "properties": {"title": "Aibling","description":"","marker-color": "#fc4353","sitetype": "","uid": "134"}},
+    {"type": "Feature","geometry":{"type": "Point","coordinates": [16.922333,48.611202]},"properties":{"parentname":"Hohenau", "type":"Shape", 
+            "title":"Hohenau Sst. x2 Gest\u00fctwiese","description":"Ungef\u00e4hre Ausdehnung der Fundstreuung"}},{"type": "Feature","geometry":{"type": 
+                "Point","coordinates": [16.9232533,48.643402]},"properties":{"parentname":"Hohenau", "type":"Shape",
+            "title":"Hohenau Sst. x2 Gest\u00fctwiese","description":"Ungef\u00e4hre Ausdehnung der Fundstreuung"}},]
+    
+    var mypoints = L.geoJson(placepoints, {
+    onEachFeature: setpopup2
+});        
+
+            
+
+
+//add points of site
+//zoom to total extend
+
+    }
+
+if (myurl.indexOf('update') >= 0) {
+        //alert('bitte ein geojson hinzufügen von allen polygonen mit der ID des Places');
+        var placepolygons = [{"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"Polygon","coordinates":
+                            [[[16.921749,48.61195],[16.922881,48.611925],[16.923533,48.611902],[16.923899,48.612708],[16.922325,48.612788],[16.921957,48.612428],[16.921749,48.61195]]]},
+                            "properties":{"parentname":"Hohenau", "type":"Shape", "title":"Hohenau Sst. x2 Gest\u00fctwiese","description":"Ungef\u00e4hre Ausdehnung der Fundstreuung"}}]}];
+    
+    map.removeLayer(mysites);
     var mysites = L.geoJson(placepolygons, {
     onEachFeature: setpopup
 }).addTo(map);        
 mysites.on('click', setuid);
+
+var placepoints =  [{"type": "Feature","geometry":{"type": "Point","coordinates": [16.921476702448,48.611957576557]},
+        "properties":{"parentname":"Hohenau", "type":"Centerpoint", "title":"Hohenau Sst. x2 Gest\u00fctwiese","description":"Ungef\u00e4hre Ausdehnung der Fundstreuung"}},
+    {"type": "Feature","geometry":{"type": "Point","coordinates": [16.923533,48.611902]},
+        "properties": {"parentname":"Hohenau", "type":"Center", "title": "Aibling","description":"","marker-color": "#fc4353","sitetype": "","uid": "134"}},
+    {"type": "Feature","geometry":{"type": "Point","coordinates": [16.922333,48.611202]},"properties":{"parentname":"Hohenau", "type":"Center", 
+            "title":"Hohenau Sst. x2 Gest\u00fctwiese","description":"Ungef\u00e4hre Ausdehnung der Fundstreuung"}},{"type": "Feature","geometry":{"type": 
+                "Point","coordinates": [16.9232533,48.643402]},"properties":{"parentname":"Hohenau", "type":"Shape",
+            "title":"Hohenau Sst. x2 Gest\u00fctwiese","description":"Ungef\u00e4hre Ausdehnung der Fundstreuung"}},]
     
-    
+    var mypoints = L.geoJson(placepoints, {
+    onEachFeature: setpopup
+}).addTo(map);        
+mypoints.on('click', setuid);
     
 //add points of site
 //zoom to total extend
