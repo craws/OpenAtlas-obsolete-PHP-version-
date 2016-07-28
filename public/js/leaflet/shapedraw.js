@@ -18,46 +18,50 @@ var markerimg; // temporary marker for coordinate capture
 var capture = false; // var to store whether control is active or not
 var coordcapture = false;
 var headingtext;
+var parentname = 'Fundortparent';
+var lastclicked;
+var position;
+
 
 
 
 
 
 var polygonbtn = L.easyButton('topright',
-        'fa-pencil-square-o',
-        function () {
-            shapetype = "shape";
-            helptext = 'Draw the shape of a physical thing if the precise extend is known';
-            headingtext = 'Shape';
-            drawpolygon();
-        },
-        'Draw the shape of a physical thing if the precise extend is known'
-        );
+    'fa-pencil-square-o',
+    function () {
+        shapetype = "shape";
+        helptext = 'Draw the shape of a physical thing if the precise extend is known';
+        headingtext = 'Shape';
+        drawpolygon();
+    },
+    'Draw the shape of a physical thing if the precise extend is known'
+    );
 
 var areabutton = L.easyButton('topright',
-        'fa-circle-o-notch',
-        function () {
-            shapetype = "area";
-            helptext = 'Draw the area in which the physical thing is located. E.g. if its precise shape is not known but known to be within a certain area';
-            headingtext = 'Area';
-            drawpolygon();
-        },
-        'Draw the area in which the physical thing is located. E.g. if its precise shape is not known but known to be within a certain area'
-        );
+    'fa-circle-o-notch',
+    function () {
+        shapetype = "area";
+        helptext = 'Draw the area in which the physical thing is located. E.g. if its precise shape is not known but known to be within a certain area';
+        headingtext = 'Area';
+        drawpolygon();
+    },
+    'Draw the area in which the physical thing is located. E.g. if its precise shape is not known but known to be within a certain area'
+    );
 
 var pointbutton = L.easyButton('topright',
-        'fa-map-marker',
-        function () {
-            helptext = 'Set a marker/point at the position where the physical thing is located';
-            headingtext = 'Point';
-            capture = true;
-            coordcapture = true;
-            map.removeLayer(postGisGeoJSON);
-            setgeojsonwopopup();
-            drawmarker();
-        },
-        'Set a marker/point at the position where the physical thing is located'
-        );
+    'fa-map-marker',
+    function () {
+        helptext = 'Set a marker/point at the position where the physical thing is located';
+        headingtext = 'Point';
+        capture = true;
+        coordcapture = true;
+        //map.removeLayer(postGisGeoJSON);
+        setgeojsonwopopup();
+        drawmarker();
+    },
+    'Set a marker/point at the position where the physical thing is located'
+    );
 
 
 var datainput = L.control();
@@ -66,9 +70,9 @@ datainput.onAdd = function (map) {
     div.innerHTML += "<div id='insertform' style='display:block'>\
             <form id='shapeform' onmouseover='interoff()' onmouseout='interon()'>\
             <i id='headingtext'>  </i>\
-                <i id='closebtn' title='close without saving' onclick='closemyformx()' class='fa'>X</i>\
-                <i id='editclosebtn' title='close without saving' onclick='editclosemyform()' class='fa'>X</i>\
-                <i id='markerclosebtn' title='close without saving' onclick='closemymarkerformx()' class='fa'>X</i>\
+                <i id='closebtn' title='close without saving1' onclick='closemyformx()' class='fa'>X</i>\
+                <i id='editclosebtn' title='close without saving2' onclick='editclosemyform()' class='fa'>X</i>\
+                <i id='markerclosebtn' title='close without saving3' onclick='closemymarkerformx()' class='fa'>X</i>\
 <br>\
                 <p id='p1'>Hello World!</p>\
                 <div style='display: none'>\
@@ -101,38 +105,7 @@ setgeojson();
 
 
 
-function setpopup(feature, layer) {
-    layer.bindPopup('<div id="popup"><b>' + feature.properties.parentname + '</b> <br>' +
-        '<div id="popup"><b>' + feature.properties.title + '</b> <br>' +
-                    '<i>' + feature.properties.type + '</i> <br> <br>' +
-            '<div style="max-height:140px; overflow-y: auto">' + feature.properties.description + '<br> </div>' +
-            '<button onclick="editshape()"/> Edit </button> <button onclick="deleteshape()"/>Delete</button></div>');
-}
 
-
-function setuid(e) {
-    preventpopup();
-    if (editon === 0) {
-        var marker = e.marker
-        var layer = e.layer;
-        var feature = layer.feature;
-        var uid = feature.properties.uid;
-        geometrytype = feature.geometry.type;
-        selectedshape = uid;
-        editlayer = e.layer;
-        editmarker = e.marker;
-        shapename = feature.properties.title;
-        shapetype = feature.properties.category;
-        shapedescription = feature.properties.description;
-        helptext = 'Draw the shape of a physical thing if the precise extend is known';
-        headingtext = 'Shape';
-        if (shapetype == "area") {
-            helptext = "Draw the area in which the physical thing is located. E.g. if its precise shape is not known but known to be within a certain area"
-            headingtext = 'Area';
-        }
-        ;
-    }
-}
 
 function preventpopup(event) {
     if (editon === 1) {
@@ -141,7 +114,9 @@ function preventpopup(event) {
 }
 
 var mylayer;
-var editIcon = L.icon({iconUrl: "/js/leaflet/images/marker-icon_edit.png", iconAnchor: [12,41]});
+var myoldlayer;
+var editIcon = L.icon({iconUrl: "/js/leaflet/images/marker-icon_edit.png", iconAnchor: [12, 41]});
+var editedIcon = L.icon({iconUrl: "/js/leaflet/images/marker-icon_edited.png", iconAnchor: [12, 41]});
 function editshape()
 {
     togglebtns();
@@ -157,71 +132,105 @@ function editshape()
         document.getElementById('closebtn').style.display = 'none';
         document.getElementById('editclosebtn').style.display = 'block';
         document.getElementById('editsavebtn').style.display = 'block';
-        //document.getElementById('shapename').value = shapename;
+        document.getElementById('shapename').value = shapename;
         document.getElementById('shapetype').value = shapetype;
         document.getElementById('shapedescription').value = shapedescription;
+        document.getElementById('popupnorthing').value = position.lat;
+                document.getElementById('popupeasting').value = position.lng;
         $("#shapeform").on("input", function () {
             document.getElementById('editsavebtn').disabled = false;
         });
         map.closePopup();
         editon = 1;
-        
-        if (geometrytype === 'Polygon'){
-        mylayer = L.polygon(editlayer.getLatLngs()).addTo(map);
-        map.removeLayer(editlayer);
-        };
-        if (geometrytype === 'Point'){
-        mylayer = L.marker((editlayer.getLatLng()), {draggable: true, icon: editIcon}).addTo(map);
-        map.removeLayer(editlayer);
-        
-        document.getElementById('savebtn').style.display = 'none';
-    document.getElementById('resetbtn').style.display = 'none';
-    document.getElementById('closebtn').style.display = 'none';
-    document.getElementById('editclosebtn').style.display = 'none';
-    document.getElementById('editsavebtn').style.display = 'none';
-    document.getElementById('markerclosebtn').style.display = 'block';
-    document.getElementById('markersavebtn').style.display = 'block';
-    document.getElementById('popupeasting').style.display = 'block';
-    document.getElementById('popupnorthing').style.display = 'block';
-    document.getElementById('eastinglabel').style.display = 'block';
-    document.getElementById('northinglabel').style.display = 'block';
-    var wgs84 = mylayer.getLatLng();
-        mylayer.on('dragend', function (event) {
-            var marker = event.target;
-            var position = marker.getLatLng();
-            document.getElementById('popupnorthing').value = position.lat;
-            document.getElementById('popupeasting').value = position.lng;    
-        });
-        };
+
+        if (geometrytype === 'Polygon') {
+            mylayer = L.polygon(editlayer.getLatLngs()).addTo(map);
+            mylayer.bindPopup('<div id="popup"><b>' + parentname + '</b> <br>' +
+                '<div id="popup"><b>' + shapename + '</b> <br>' +
+                '<i>' + type + '</i> <br> <br>' +
+                '<div style="max-height:140px; overflow-y: auto">' + shapedescription + '<br> </div>' +
+                '<button onclick="editshape()"/> Edit </button> <button onclick="deleteshape()"/>Delete</button></div>');
+            map.removeLayer(editlayer);
+            if (typeof (myoldlayer) == 'object') {
+                map.removeLayer(myoldlayer);
+            }
+            myoldlayer = L.polygon(editlayer.getLatLngs());
+            myoldlayer.bindPopup('<div id="popup"><b>' + parentname + '</b> <br>' +
+                '<div id="popup"><b>' + shapename + '</b> <br>' +
+                '<i>' + type + '</i> <br> <br>' +
+                '<div style="max-height:140px; overflow-y: auto">' + shapedescription + '<br> </div>' +
+                '<button onclick="editshape()"/> Edit </button> <button onclick="deleteshape()"/>Delete</button></div>');
+            map.removeLayer(editlayer);
+        }
+        ;
+
+        if (geometrytype === 'Point') {
+            mylayer = L.marker((editlayer.getLatLng()), {draggable: true, icon: editIcon}).addTo(map);
+            mylayer.bindPopup('<div id="popup"><b>' + parentname + '</b> <br>' +
+                '<div id="popup"><b>' + shapename + '</b> <br>' +
+                '<i>' + type + '</i> <br> <br>' +
+                '<div style="max-height:140px; overflow-y: auto">' + shapedescription + '<br> </div>' +
+                '<button onclick="editshape()"/> Edit </button> <button onclick="deleteshape()"/>Delete</button></div>');
+            if (typeof (myoldlayer) == 'object') {
+                map.removeLayer(myoldlayer);
+            }
+            myoldlayer = L.marker(editlayer.getLatLng());
+            myoldlayer.bindPopup('<div id="popup"><b>' + parentname + '</b> <br>' +
+                '<div id="popup"><b>' + shapename + '</b> <br>' +
+                '<i>' + type + '</i> <br> <br>' +
+                '<div style="max-height:140px; overflow-y: auto">' + shapedescription + '<br> </div>' +
+                '<button onclick="editshape()"/> Edit </button> <button onclick="deleteshape()"/>Delete</button></div>');
+            map.removeLayer(editlayer);
+
+            document.getElementById('savebtn').style.display = 'none';
+            document.getElementById('resetbtn').style.display = 'none';
+            document.getElementById('closebtn').style.display = 'none';
+            document.getElementById('editclosebtn').style.display = 'block';
+            document.getElementById('editsavebtn').style.display = 'none';
+            document.getElementById('markerclosebtn').style.display = 'none';
+            document.getElementById('markersavebtn').style.display = 'block';
+            document.getElementById('popupeasting').style.display = 'block';
+            document.getElementById('popupnorthing').style.display = 'block';
+            document.getElementById('eastinglabel').style.display = 'block';
+            document.getElementById('northinglabel').style.display = 'block';
+            
+            var wgs84 = mylayer.getLatLng();
+            mylayer.on('dragend', function (event) {
+                var marker = event.target;
+                position = marker.getLatLng();
+                document.getElementById('popupnorthing').value = position.lat;
+                document.getElementById('popupeasting').value = position.lng;
+            });
+        }
+        ;
         mylayer.options.editing || (mylayer.options.editing = {});
         mylayer.editing.enable();
-        
-        
-        
-        
+
+
+
+
         document.getElementById('geometrytype').value = geometrytype;
         mylayer.on('edit', function () {
-           
+
             var latLngs = mylayer.getLatLngs();
             var latLngs; //to store coordinates of vertices
             var newvector = []; // array to store coordinates as numbers
             var type = geometrytype.toLowerCase();
-             alert(type + '2');
             document.getElementById('editsavebtn').disabled = false;
-             
+
             if (type != 'marker') {  //if other type than point then store array of coordinates as variable
                 latLngs = mylayer.getLatLngs();
                 for (i = 0; i < (latLngs.length); i++) {
                     newvector.push(' ' + latLngs[i].lng + ' ' + latLngs[i].lat);
-                    alert('editgeht');
+
                 }
-                
+
                 ;
                 if (type === 'polygon') {
                     newvector.push(' ' + latLngs[0].lng + ' ' + latLngs[0].lat); //if polygon add first xy again as last xy to close polygon
                     shapesyntax = '(' + newvector + ')';
                     returndata();
-                    alert('editgehtpoly');
+
                 }
                 ;
                 if (type === 'linestring') {
@@ -230,15 +239,14 @@ function editshape()
                 }
             }
             ;
-           
+
             if (type === 'point') {
-                alert(geometrytype);
                 latLngs = mylayer.getLatLng();
                 newvector = (' ' + latLngs.lng + ' ' + latLngs.lat);
                 shapesyntax = 'ST_GeomFromText(\'POINT(' + newvector + ')\',4326);'
                 document.getElementById('popupnorthing').value = latLngs.lat;
-            document.getElementById('popupeasting').value = latLngs.lng;
-            alert(latLngs);
+                document.getElementById('popupeasting').value = latLngs.lng;
+
 
             }
             ;
@@ -310,7 +318,7 @@ function startdrawing()
     $("#shapeform").on("input", function () {
         document.getElementById('resetbtn').disabled = false;
     })
-            ;
+        ;
 }
 
 
@@ -331,6 +339,7 @@ function savetodb()
     alert(dataString);
     $('#placeInfo').val($('#placeInfo').val() + dataString);
     //reloadgeojson();
+    lastclicked = 'new';
     closemyform();
     ;
 }
@@ -346,10 +355,10 @@ function editsavetodb()
     var geometrytype = $('#geometrytype').val();
     var dataString = 'shapename=' + shapename + '&shapetype=' + shapetype + '&shapedescription=' + shapedescription + '&shapecoords=' + shapecoords + '&geometrytype=' + geometrytype + '&uid=' + uid;
     var myeditedlayer = L.polygon(mylayer.getLatLngs()).addTo(map);
-        map.removeLayer(mylayer);
+    map.removeLayer(mylayer);
     alert(dataString);
     editclosemyform();
-    }
+}
 
 
 function deleteshape()
@@ -363,95 +372,95 @@ function deleteshape()
 }
 
 function reloadgeojson() {
-    $.ajax({
-        dataType: "json",
-        url: "php/" + geometrytype + "_reload.php",
-        success: function (data) {
-            $(data.features).each(function (key, data) {
-                postGisGeoJSON.addData(data);
-                resetDrawLayer();
-            });
-        }
-    }).error(function () {
-    });
+//    $.ajax({
+//        dataType: "json",
+//        url: "php/" + geometrytype + "_reload.php",
+//        success: function (data) {
+//            $(data.features).each(function (key, data) {
+//                postGisGeoJSON.addData(data);
+//                resetDrawLayer();
+//            });
+//        }
+//    }).error(function () {
+//    });
 }
 
 function updategeojson() {
-    map.removeLayer(postGisGeoJSON);
-    setgeojson();
+//    map.removeLayer(postGisGeoJSON);
+//    setgeojson();
 }
 
 function setgeojson()
 {
-    postGisGeoJSON = L.geoJson(undefined, {style: function (feature) {
-            switch (feature.geometry.type) {
-                case 'LineString':
-                    return {color: "#000000", weight: 5}
-                case 'Polygon':
-                    return {fillColor: "#424242", color: "#000000", weight: 3}
-            }
-        },
-        onEachFeature: setpopup}).addTo(map);
-
-    postGisGeoJSON.on('click', setuid);
-
-    $.ajax({
-        dataType: "json",
-        url: "php/linestring_update.php",
-        success: function (data) {
-            $(data.features).each(function (key, data) {
-                postGisGeoJSON.addData(data);
-            });
-        }
-    }).error(function () {
-    });
-    $.ajax({
-        dataType: "json",
-        url: "php/polygon_update.php",
-        success: function (data) {
-            $(data.features).each(function (key, data) {
-                postGisGeoJSON.addData(data);
-            });
-        }
-    }).error(function () {
-    });
+//    postGisGeoJSON = L.geoJson(undefined, {style: function (feature) {
+//            switch (feature.geometry.type) {
+//                case 'LineString':
+//                    return {color: "#000000", weight: 5}
+//                case 'Polygon':
+//                    return {fillColor: "#424242", color: "#000000", weight: 3}
+//            }
+//        },
+//        onEachFeature: setpopup}).addTo(map);
+//
+//    postGisGeoJSON.on('click', setuid);
+//
+//    $.ajax({
+//        dataType: "json",
+//        url: "php/linestring_update.php",
+//        success: function (data) {
+//            $(data.features).each(function (key, data) {
+//                postGisGeoJSON.addData(data);
+//            });
+//        }
+//    }).error(function () {
+//    });
+//    $.ajax({
+//        dataType: "json",
+//        url: "php/polygon_update.php",
+//        success: function (data) {
+//            $(data.features).each(function (key, data) {
+//                postGisGeoJSON.addData(data);
+//            });
+//        }
+//    }).error(function () {
+//    });
 }
 
 
 function setgeojsonwopopup()
 {
-    postGisGeoJSON = L.geoJson(undefined, {style: function (feature) {
-            switch (feature.geometry.type) {
-                case 'LineString':
-                    return {color: "#000000", weight: 5}
-                case 'Polygon':
-                    return {fillColor: "#424242", color: "#000000", weight: 3, clickable: false}
-            }
-        },
-        }).addTo(map);
+//    postGisGeoJSON = L.geoJson(undefined, {style: function (feature) {
+//            switch (feature.geometry.type) {
+//                case 'LineString':
+//                    return {color: "#000000", weight: 5}
+//                case 'Polygon':
+//                    return {fillColor: "#424242", color: "#000000", weight: 3, clickable: false}
+//            }
+//        },
+//        }).addTo(map);
+//
+//    
 
-    
-
-    $.ajax({
-        dataType: "json",
-        url: "php/linestring_update.php",
-        success: function (data) {
-            $(data.features).each(function (key, data) {
-                postGisGeoJSON.addData(data);
-            });
-        }
-    }).error(function () {
-    });
-    $.ajax({
-        dataType: "json",
-        url: "php/polygon_update.php",
-        success: function (data) {
-            $(data.features).each(function (key, data) {
-                postGisGeoJSON.addData(data);
-            });
-        }
-    }).error(function () {
-    });
+//    $.ajax({
+//        dataType: "json",
+//        url: "php/linestring_update.php",
+//        success: function (data) {
+//            $(data.features).each(function (key, data) {
+//                postGisGeoJSON.addData(data);
+//            });
+//        }
+//    }).error(function () {
+//    });
+//    $.ajax({
+//        dataType: "json",
+//        url: "php/polygon_update.php",
+//        success: function (data) {
+//            $(data.features).each(function (key, data) {
+//                postGisGeoJSON.addData(data);
+//            });
+//        }
+//    }).error(function () {
+//    });
 }
 
 function resetDrawLayer() {
@@ -479,7 +488,7 @@ function closemyform() {
     drawlayer.disable();
     var coordcapture = false;
     interon();
-    
+
 }
 
 function closemyformx() {
@@ -489,32 +498,35 @@ function closemyformx() {
     drawlayer.disable();
     var coordcapture = false;
     interon();
-    
+
 }
 
 
 function closemymarkerformx() {
     datainput.removeFrom(map);
-    map.removeLayer(marker);
+
+    map.removeLayer(mylayer);
     togglebtns();
     coordcapture = false;
     capture = false;
     interon();
-    }
-    
- function closemymarkerform() {
+}
+
+function closemymarkerform() {
     datainput.removeFrom(map);
     map.removeLayer(marker);
     togglebtns();
     coordcapture = false;
     capture = false;
     interon();
-    }
+}
 
 function editclosemyform()
 {
     editon = 0;
     datainput.removeFrom(map);
+    map.removeLayer(mylayer);
+    myoldlayer.addTo(map);
     togglebtns();
     //updategeojson();
     var coordcapture = false;
@@ -535,7 +547,7 @@ map.on('click', function (e) {
             marker.setLatLng(e.latlng);
             marker.on('dragend', function (event) {
                 var marker = event.target;
-                var position = marker.getLatLng();
+                position = marker.getLatLng();
                 document.getElementById('popupnorthing').value = position.lat;
                 document.getElementById('popupeasting').value = position.lng;
             });
@@ -543,7 +555,7 @@ map.on('click', function (e) {
         var wgs84 = marker.getLatLng();
         marker.on('dragend', function (event) {
             var marker = event.target;
-            var position = marker.getLatLng();
+            position = marker.getLatLng();
             document.getElementById('popupnorthing').value = position.lat;
             document.getElementById('popupeasting').value = position.lng;
         });
@@ -586,7 +598,13 @@ function savemarkertodb()
     var shapetype = 'centerpoint';
     var dataString = '&easting=' + easting + '&northing=' + northing + '&shapename=' + shapename + '&shapetype=' + shapetype + '&shapedescription=' + shapedescription + '&geometrytype=' + geometrytype;
     alert(dataString);
-    L.marker([northing, easting]).addTo(map);
+    var newmarker = L.marker([northing, easting]).addTo(map);
+    newmarker.bindPopup('<div id="popup"><b>' + parentname + '</b> <br>' +
+                '<div id="popup"><b>' + shapename + '</b> <br>' +
+                '<i>' + type + '</i> <br> <br>' +
+                '<div style="max-height:140px; overflow-y: auto">' + shapedescription + '<br> </div>' +
+                '<button onclick="editshape()"/> Edit </button> <button onclick="deleteshape()"/>Delete</button></div>');
+    
     closemymarkerform();
 }
 

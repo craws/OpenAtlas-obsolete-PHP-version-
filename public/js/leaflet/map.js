@@ -243,9 +243,11 @@ function setuid(e) {
         geometrytype = feature.geometry.type;
         selectedshape = uid;
         editlayer = e.layer;
+        editmarker = e.marker;
         shapename = feature.properties.title;
-        shapetype = feature.properties.category;
+        shapetype = feature.properties.type;
         shapedescription = feature.properties.description;
+        parentname = feature.properties.parentname;
         helptext = 'Draw the shape of a physical thing if the precise extend is known';
         headingtext = 'Shape';
         if (shapetype == "area") {
@@ -284,27 +286,28 @@ if (myurl.indexOf('place/') >= 0) {
                             "properties":{"parentname":"Hohenau", "type":"Shape", "title":"Hohenau Sst. x2 Gest\u00fctwiese","description":"Ungef\u00e4hre Ausdehnung der Fundstreuung"}}]}];
     
    
-    var mysites = L.featureGroup({
+    var mysites = L.geoJson(placepolygons, {
     onEachFeature: setpopup2
-}).addTo(map);
+}).addTo(map);        
+mysites.on('click', setuid);
  
 var placepoints =  [{"type": "Feature","geometry":{"type": "Point","coordinates": [16.921476702448,48.611957576557]},
         "properties":{"parentname":"Hohenau", "type":"Shape", "title":"Hohenau Sst. x2 Gest\u00fctwiese","description":"Ungef\u00e4hre Ausdehnung der Fundstreuung"}},
     {"type": "Feature","geometry":{"type": "Point","coordinates": [16.923533,48.611902]},
-        "properties": {"title": "Aibling","description":"","marker-color": "#fc4353","sitetype": "","uid": "134"}},
+        "properties": {"parentname":"Hohenau", "type":"Shape", "title":"Hohenau Sst. x2 Gest\u00fctwiese","description":"Ungef\u00e4hre Ausdehnung der Fundstreuung"}},
     {"type": "Feature","geometry":{"type": "Point","coordinates": [16.922333,48.611202]},"properties":{"parentname":"Hohenau", "type":"Shape", 
             "title":"Hohenau Sst. x2 Gest\u00fctwiese","description":"Ungef\u00e4hre Ausdehnung der Fundstreuung"}},{"type": "Feature","geometry":{"type": 
                 "Point","coordinates": [16.9232533,48.643402]},"properties":{"parentname":"Hohenau", "type":"Shape",
             "title":"Hohenau Sst. x2 Gest\u00fctwiese","description":"Ungef\u00e4hre Ausdehnung der Fundstreuung"}},]
     
+    
     var mypoints = L.geoJson(placepoints, {
     onEachFeature: setpopup2
-});        
+}).addTo(map);        
+mypoints.on('click', setuid);
 
             
 
-
-//add points of site
 //zoom to total extend
 
     }
@@ -316,19 +319,21 @@ if (myurl.indexOf('update') >= 0) {
                             "properties":{"parentname":"Hohenau", "type":"Shape", "title":"Hohenau Sst. x2 Gest\u00fctwiese","description":"Ungef\u00e4hre Ausdehnung der Fundstreuung"}}]}];
     
     map.removeLayer(mysites);
+    map.removeLayer(mypoints);
     var mysites = L.geoJson(placepolygons, {
     onEachFeature: setpopup
 }).addTo(map);        
 mysites.on('click', setuid);
 
 var placepoints =  [{"type": "Feature","geometry":{"type": "Point","coordinates": [16.921476702448,48.611957576557]},
-        "properties":{"parentname":"Hohenau", "type":"Centerpoint", "title":"Hohenau Sst. x2 Gest\u00fctwiese","description":"Ungef\u00e4hre Ausdehnung der Fundstreuung"}},
+        "properties":{"parentname":"Hohenau", "type":"Shape", "title":"Hohenau Sst. x2 Gest\u00fctwiese","description":"Ungef\u00e4hre Ausdehnung der Fundstreuung"}},
     {"type": "Feature","geometry":{"type": "Point","coordinates": [16.923533,48.611902]},
-        "properties": {"parentname":"Hohenau", "type":"Center", "title": "Aibling","description":"","marker-color": "#fc4353","sitetype": "","uid": "134"}},
-    {"type": "Feature","geometry":{"type": "Point","coordinates": [16.922333,48.611202]},"properties":{"parentname":"Hohenau", "type":"Center", 
+        "properties": {"parentname":"Hohenau", "type":"Shape", "title":"Hohenau Sst. x2 Gest\u00fctwiese","description":"Ungef\u00e4hre Ausdehnung der Fundstreuung"}},
+    {"type": "Feature","geometry":{"type": "Point","coordinates": [16.922333,48.611202]},"properties":{"parentname":"Hohenau", "type":"Shape", 
             "title":"Hohenau Sst. x2 Gest\u00fctwiese","description":"Ungef\u00e4hre Ausdehnung der Fundstreuung"}},{"type": "Feature","geometry":{"type": 
                 "Point","coordinates": [16.9232533,48.643402]},"properties":{"parentname":"Hohenau", "type":"Shape",
             "title":"Hohenau Sst. x2 Gest\u00fctwiese","description":"Ungef\u00e4hre Ausdehnung der Fundstreuung"}},]
+
     
     var mypoints = L.geoJson(placepoints, {
     onEachFeature: setpopup
