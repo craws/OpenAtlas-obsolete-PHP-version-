@@ -38,6 +38,16 @@ class Admin_ActorControllerTest extends ControllerTestCase {
         $this->dispatch('admin/actor/insert/code/E21/');
         $this->request->setMethod('POST')->setPost($this->formValues);
         $this->dispatch('admin/actor/insert/code/E21/sourceId/' . $this->sourceId);
+        $this->assertRedirectRegex('/source\/view/');
+        $this->resetRequest()->resetResponse();
+        $this->formValues['continue'] = 1;
+        $this->request->setMethod('POST')->setPost($this->formValues);
+        $this->dispatch('admin/actor/insert/code/E21/');
+        $this->assertRedirectRegex('/actor\/insert\/code/');
+        $this->resetRequest()->resetResponse();
+        $this->request->setMethod('POST')->setPost($this->formValues);
+        $this->dispatch('admin/actor/insert/code/E21/sourceId/' . $this->sourceId);
+        $this->assertRedirectRegex('/actor\/insert\/sourceId/');
         $this->resetRequest()->resetResponse();
         $actors = Model_EntityMapper::getByCodes('Person');
         $actorId = $actors[0]->id;

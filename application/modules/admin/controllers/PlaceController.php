@@ -58,21 +58,7 @@ class Admin_PlaceController extends Zend_Controller_Action {
         $hierarchies = $form->addHierarchies('Place', $object);
         $this->view->form = $form;
         $this->view->object = $object;
-        $aliasIndex = 0;
-        $aliasElements = Model_LinkMapper::getLinkedEntities($object, 'P1');
-        if ($aliasElements) {
-            foreach ($aliasElements as $alias) {
-                $element = $form->createElement('text', 'alias' . $aliasIndex, ['belongsTo' => 'alias']);
-                $element->setValue($alias->name);
-                $form->addElement($element);
-                $aliasIndex++;
-            }
-        } else {
-            $element = $form->createElement('text', 'alias0', ['belongsTo' => 'alias']);
-            $form->addElement($element);
-            $aliasIndex++;
-        }
-        $form->populate(['aliasId' => $aliasIndex]);
+        $form->prepareUpdate($object);
         if (!$this->getRequest()->isPost()) {
             self::prepareDefaultUpdate($form, $object, $place);
             return;

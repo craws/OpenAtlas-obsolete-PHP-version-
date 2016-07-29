@@ -44,27 +44,36 @@ class Admin_PlaceControllerTest extends ControllerTestCase {
         $this->request->setMethod('POST')->setPost($this->formValues);
         $this->dispatch('admin/place/insert');
         $this->resetRequest()->resetResponse();
-        $places = Model_EntityMapper::getByCodes('PhysicalObject');
-        $placeId = $places[0]->id;
-        $this->dispatch('admin/place/link/placeId/' . $placeId . '/rangeId/' . $this->sourceId);
+        $this->formValues['continue'] = 1;
+        $this->request->setMethod('POST')->setPost($this->formValues);
+        $this->dispatch('admin/place/insert');
         $this->resetRequest()->resetResponse();
-        $this->dispatch('admin/place/link/placeId/' . $placeId . '/rangeId/' . $this->sourceId); // test existing
+        $this->request->setMethod('POST')->setPost($this->formValues);
+        $this->dispatch('admin/place/insert/sourceId/' . $this->sourceId);
         $this->resetRequest()->resetResponse();
-        $this->dispatch('admin/place/link/placeId/' . $placeId . '/rangeId/' . $this->biblioId);
+        $this->dispatch('admin/place/link/placeId/' . $this->objectId . '/rangeId/' . $this->sourceId);
         $this->resetRequest()->resetResponse();
-        $this->dispatch('admin/place/view/id/' . $placeId);
+        $this->dispatch('admin/place/link/placeId/' . $this->objectId . '/rangeId/' . $this->sourceId); // test existing
+        $this->resetRequest()->resetResponse();
+        $this->dispatch('admin/place/link/placeId/' . $this->objectId . '/rangeId/' . $this->biblioId);
+        $this->resetRequest()->resetResponse();
+        $this->dispatch('admin/place/view/id/' . $this->objectId);
         $this->resetRequest()->resetResponse();
         $this->dispatch('admin/place/update/id/' . $this->objectId);
         $this->resetRequest()->resetResponse();
         $this->formValues['siteId'] = ''; // test empty root type
+        $this->formValues['alias'] = '';
         $this->request->setMethod('POST')->setPost($this->formValues);
-        $this->dispatch('admin/place/update/id/' . $placeId);
+        $this->dispatch('admin/place/update/id/' . $this->objectId);
+        $this->resetRequest()->resetResponse();
+        $this->request->setMethod('POST')->setPost($this->formValues);
+        $this->dispatch('admin/place/update/id/' . $this->objectId);
         $this->resetRequest()->resetResponse();
         $this->formValues['easting'] = '1';
         $this->request->setMethod('POST')->setPost($this->formValues);
-        $this->dispatch('admin/place/update/id/' . $placeId);
+        $this->dispatch('admin/place/update/id/' . $this->objectId);
         $this->resetRequest()->resetResponse();
-        $this->dispatch('admin/place/delete/id/' . $placeId);
+        $this->dispatch('admin/place/delete/id/' . $this->objectId);
     }
 
 }

@@ -8,12 +8,12 @@
  *
  * I strive for 100% coverage but make use of CoverageIgnore statements in code and don't cover views.
  *
- * Also, I'm in no way an expert in unittesting. E.g. there are very few assertions, in
+ * Also, I'm in no way an expert in unit testing. E.g. there are very few assertions, in
  * admin/controllers/FunctionControllerTests are a few detached statements and I'm sure there are many more issues
  * which could be done in a more "true unit testing way".
  *
  * Alex
- *  
+ *
  */
 
 class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase {

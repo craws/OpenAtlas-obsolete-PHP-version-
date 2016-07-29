@@ -42,6 +42,20 @@ class Admin_SourceControllerTest extends ControllerTestCase {
         $this->request->setMethod('POST')->setPost($this->formValues);
         $this->dispatch('admin/source/insert/code/E33/objectId/' . $this->placeId);
         $this->resetRequest()->resetResponse();
+        // test insert with continue
+        $this->formValues['continue'] = 1;
+        $this->request->setMethod('POST')->setPost($this->formValues);
+        $this->dispatch('admin/source/insert/code/E33');
+        $this->resetRequest()->resetResponse();
+        $this->request->setMethod('POST')->setPost($this->formValues);
+        $this->dispatch('admin/source/insert/code/E33/eventId/' . $this->eventId);
+        $this->resetRequest()->resetResponse();
+        $this->request->setMethod('POST')->setPost($this->formValues);
+        $this->dispatch('admin/source/insert/code/E33/actorId/' . $this->actorId);
+        $this->resetRequest()->resetResponse();
+        $this->request->setMethod('POST')->setPost($this->formValues);
+        $this->dispatch('admin/source/insert/code/E33/objectId/' . $this->placeId);
+        $this->resetRequest()->resetResponse();
         $this->dispatch('admin/source');
         $this->dispatch('admin/source/update/id/' . $this->sourceId);
         $this->request->setMethod('POST')->setPost($this->formValues);

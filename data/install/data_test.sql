@@ -12,18 +12,20 @@ INSERT INTO user_settings (user_id, name, value) VALUES
 ;
 
 INSERT INTO entity (id, class_id, name) VALUES
-(1000, (SELECT id FROM class WHERE code='E21'), 'tActor'      ),
-(1001, (SELECT id FROM class WHERE code='E33'), 'tSource'     ),
-(1002, (SELECT id FROM class WHERE code='E18'), 'tObject'     ),
-(1003, (SELECT id FROM class WHERE code='E53'), 'tPlace'      ),
-(1004, (SELECT id FROM class WHERE code='E8' ), 'tEvent'      ),
-(1005, (SELECT id FROM class WHERE code='E6' ), 'tDestruction'),
-(1006, (SELECT id FROM class WHERE code='E74'), 'tGroup'      ),
-(1007, (SELECT id FROM class WHERE code='E31'), 'tBiblio'     ),
-(1008, (SELECT id FROM class WHERE code='E33'), 'tDocument2'  ),
-(1009, (SELECT id FROM class WHERE code='E84'), 'tCarrier'    ),
-(1010, (SELECT id FROM class WHERE code='E8' ), 'tSubEvent'   ),
-(1011, (SELECT id FROM class WHERE code='E55'), 'tCustomHierarchy');
+(1000, (SELECT id FROM class WHERE code='E21'), 'tActor'          ),
+(1001, (SELECT id FROM class WHERE code='E33'), 'tSource'         ),
+(1002, (SELECT id FROM class WHERE code='E18'), 'tObject'         ),
+(1003, (SELECT id FROM class WHERE code='E53'), 'tPlace'          ),
+(1004, (SELECT id FROM class WHERE code='E8' ), 'tEvent'          ),
+(1005, (SELECT id FROM class WHERE code='E6' ), 'tDestruction'    ),
+(1006, (SELECT id FROM class WHERE code='E74'), 'tGroup'          ),
+(1007, (SELECT id FROM class WHERE code='E31'), 'tBiblio'         ),
+(1008, (SELECT id FROM class WHERE code='E33'), 'tDocument2'      ),
+(1009, (SELECT id FROM class WHERE code='E84'), 'tCarrier'        ),
+(1010, (SELECT id FROM class WHERE code='E8' ), 'tSubEvent'       ),
+(1011, (SELECT id FROM class WHERE code='E55'), 'tCustomHierarchy'),
+(1012, (SELECT id FROM class WHERE code='E41'), 'tAlias'          )
+;
 
 INSERT INTO hierarchy (id, name, multiple) VALUES (1011, 'tCustomHierarchy', 1);
 INSERT INTO hierarchy_form (hierarchy_id, form_id) VALUES (1011, 1);
@@ -51,6 +53,7 @@ INSERT INTO link (property_id, domain_id, range_id) VALUES
 ((SELECT id FROM property WHERE code='P2'  ), (SELECT id FROM entity WHERE name='tEvent'   ), (SELECT id FROM entity WHERE name='Conflict')),
 ((SELECT id FROM property WHERE code='P2'  ), (SELECT id FROM entity WHERE name='tBiblio'  ), (SELECT id FROM entity WHERE name='Book')),
 ((SELECT id FROM property WHERE code='P2'  ), (SELECT id FROM entity WHERE name='tCarrier' ), (SELECT id FROM entity WHERE name='Information Carrier')),
-((SELECT id FROM property WHERE code='OA8' ), (SELECT id FROM entity WHERE name='tCarrier' ), (SELECT id FROM entity WHERE name='tPlace'));
+((SELECT id FROM property WHERE code='OA8' ), (SELECT id FROM entity WHERE name='tCarrier' ), (SELECT id FROM entity WHERE name='tPlace')),
+((SELECT id FROM property WHERE code='P1'  ), (SELECT id FROM entity WHERE name='tObject'  ), (SELECT id FROM entity WHERE name='tAlias'));
 
 INSERT INTO gis.centerpoint (entity_id, easting, northing) VALUES (1003, 1, 1);
