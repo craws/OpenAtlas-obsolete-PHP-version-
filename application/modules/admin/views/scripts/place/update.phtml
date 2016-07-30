@@ -3,4 +3,5 @@
     <p class="error"><?= $this->translate('error_modified_info', $this->modifier) ?></p>
     <p><a class="button" href="/admin/place/update/id/<?= $this->object->id ?>"><?= $this->ucstring('reload') ?></a></p>
 <? endif ?>
+    <? var_dump($this->polygon); ?>
 <?= $this->render('place/form.phtml'); ?>
