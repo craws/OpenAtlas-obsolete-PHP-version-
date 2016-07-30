@@ -10,7 +10,7 @@
         <?= $this->displayAliasForm($form) ?>
         <?= $this->displayTreeSelect($this->hierarchies, $form) ?>
         <?= $this->render('dateForm.phtml'); ?>
-        <?= $form->placeInfo->renderViewHelper() ?>
+        <?= $form->gisData->renderViewHelper() ?>
         <div class="tableRow">
             <div><label><?= $this->ucstring('label_location_switch') ?></label></div>
             <div class="tableCell"><span id="placeSwitcher" class="button"><?= $this->ucstring('show') ?></span></div>

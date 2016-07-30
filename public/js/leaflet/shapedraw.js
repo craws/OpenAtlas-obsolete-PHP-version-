@@ -22,12 +22,8 @@ var parentname = 'Fundortparent';
 var lastclicked;
 var position;
 
-
-
-
-
-
-var polygonbtn = L.easyButton('topright',
+var polygonbtn = L.easyButton(
+    'topright',
     'fa-pencil-square-o',
     function () {
         shapetype = "shape";
@@ -38,7 +34,8 @@ var polygonbtn = L.easyButton('topright',
     'Draw the shape of a physical thing if the precise extend is known'
     );
 
-var areabutton = L.easyButton('topright',
+var areabutton = L.easyButton(
+    'topright',
     'fa-circle-o-notch',
     function () {
         shapetype = "area";
@@ -47,9 +44,10 @@ var areabutton = L.easyButton('topright',
         drawpolygon();
     },
     'Draw the area in which the physical thing is located. E.g. if its precise shape is not known but known to be within a certain area'
-    );
+);
 
-var pointbutton = L.easyButton('topright',
+var pointbutton = L.easyButton(
+    'topright',
     'fa-map-marker',
     function () {
         helptext = 'Set a marker/point at the position where the physical thing is located';
@@ -62,26 +60,27 @@ var pointbutton = L.easyButton('topright',
         drawmarker();
     },
     'Set a marker/point at the position where the physical thing is located'
-    );
-
+);
 
 var datainput = L.control();
 datainput.onAdd = function (map) {
     var div = L.DomUtil.create('div', 'shapeinput');
-    div.innerHTML += "<div id='insertform' style='display:block'>\
+    div.innerHTML += "\
+        <div id='insertform' style='display:block'>\
             <form id='shapeform' onmouseover='interoff()' onmouseout='interon()'>\
-            <i id='headingtext'>  </i>\
+                <i id='headingtext'>  </i>\
                 <i id='closebtn' title='close without saving1' onclick='closemyformx()' class='fa'>X</i>\
                 <i id='editclosebtn' title='close without saving2' onclick='editclosemyform()' class='fa'>X</i>\
                 <i id='markerclosebtn' title='close without saving3' onclick='closemymarkerformx()' class='fa'>X</i>\
-<br>\
+                <br>\
                 <p id='p1'>Hello World!</p>\
                 <div style='display: none'>\
                     <label> Parent:</label>\
-                    <span><input type='text' id='shapeparent' value='NULL'/></span> </div>\
-                    <div id='namefield' style='display: block'>\
-                    <span><input type='text' id='shapename' placeholder='enter name if desired'/></span> </div>\
-                <span><textarea rows='3' cols='70' id='shapedescription' placeholder='here you can enter a description if necessary'/></textarea></span>\
+                    <span><input type='text' id='shapeparent' value='NULL'/></span>\n\
+                </div>\
+                <div id='namefield' style='display: block'>\
+                <span><input type='text' id='shapename' placeholder='enter name if desired'/></span> </div>\
+                <span><textarea rows='3' cols='70' id='shapedescription' placeholder='here you can enter a description'/></textarea></span>\
                 <span><input type='text' id='shapename' value='NULL'/></span>\
                 <span><input type='text' id='shapetype' value='NULL'/></span>\
                 <span><label id='eastinglabel' style='display: none'> Easting: </label>\<input type='text' id='popupeasting' placeholder='decimal degrees' /></span>\
@@ -90,23 +89,19 @@ datainput.onAdd = function (map) {
                     <label> Coordinates: </label>\
                     <span><textarea rows='4' cols='50' id='shapecoords'/></textarea></span>\
                     <label> Geometrytype: </label>\
-                    <span><input type='text' id='geometrytype'/></span></div>\
+                    <span><input type='text' id='geometrytype'/></span>\n\
+                </div>\
             </form>\
             <input type='button' title='Reset values and shape' id='resetbtn' disabled value='Clear' onclick='resetmyform()'/>\
             <input type='button' title='Save shape' id='savebtn' disabled value='Save' onclick='savetodb()'/>\
             <input type='button' title='Save edits' id='editsavebtn' disabled value='Save' onclick='editsavetodb()'/>\
             <input type='button' title='Save marker' id='markersavebtn' disabled value='Save' onclick='savemarkertodb()'/>\
          </div>";
-
     return div;
     document.getElementById("headingtext").innerHTML = headingtext;
 };
+
 setgeojson();
-
-
-
-
-
 
 function preventpopup(event) {
     if (editon === 1) {
@@ -116,16 +111,13 @@ function preventpopup(event) {
 
 var mylayer;
 var myoldlayer;
-var editIcon = L.icon({iconUrl: "/js/leaflet/images/marker-icon_edit.png", iconAnchor: [12, 41], popupAnchor:  [0, -34]});
-var editedIcon = L.icon({iconUrl: "/js/leaflet/images/marker-icon_edited.png", iconAnchor: [12, 41], popupAnchor:  [0, -34]});
-var newIcon = L.icon({iconUrl: "/js/leaflet/images/marker-icon_new.png", iconAnchor: [12, 41], popupAnchor:  [0, -34]});
+var editIcon = L.icon({iconUrl: "/js/leaflet/images/marker-icon_edit.png", iconAnchor: [12, 41], popupAnchor: [0, -34]});
+var editedIcon = L.icon({iconUrl: "/js/leaflet/images/marker-icon_edited.png", iconAnchor: [12, 41], popupAnchor: [0, -34]});
+var newIcon = L.icon({iconUrl: "/js/leaflet/images/marker-icon_new.png", iconAnchor: [12, 41], popupAnchor: [0, -34]});
 
-function editshape()
-{
+function editshape() {
     togglebtns();
-    if (editon === 0)
-    {
-
+    if (editon === 0) {
         map.addControl(datainput);
         document.getElementById("p1").innerHTML = helptext;
         document.getElementById("headingtext").innerHTML = headingtext;
@@ -139,50 +131,54 @@ function editshape()
         document.getElementById('shapename').value = shapename;
         document.getElementById('shapetype').value = shapetype;
         document.getElementById('shapedescription').value = shapedescription;
-        
         $("#shapeform").on("input", function () {
             document.getElementById('editsavebtn').disabled = false;
         });
         map.closePopup();
         editon = 1;
-
         if (geometrytype === 'Polygon') {
             mylayer = L.polygon(editlayer.getLatLngs()).addTo(map);
-            mylayer.bindPopup('<div id="popup"><b>' + parentname + '</b> <br>' +
+            mylayer.bindPopup(
+                '<div id="popup"><b>' + parentname + '</b> <br>' +
                 '<div id="popup"><b>' + shapename + '</b> <br>' +
                 '<i>' + shapetype + '</i> <br> <br>' +
-                '<div style="max-height:140px; overflow-y: auto">' + shapedescription + '<br> </div>');
+                '<div style="max-height:140px; overflow-y: auto">' + shapedescription + '<br> </div>'
+            );
             map.removeLayer(editlayer);
             if (typeof (myoldlayer) == 'object') {
                 map.removeLayer(myoldlayer);
             }
             myoldlayer = L.polygon(editlayer.getLatLngs());
-            myoldlayer.bindPopup('<div id="popup"><b>' + parentname + '</b> <br>' +
+            myoldlayer.bindPopup(
+                '<div id="popup"><b>' + parentname + '</b> <br>' +
                 '<div id="popup"><b>' + shapename + '</b> <br>' +
                 '<i>' + shapetype + '</i> <br> <br>' +
                 '<div style="max-height:140px; overflow-y: auto">' + shapedescription + '<br> </div>' +
-                '<button onclick="editshape()"/> Edit </button> <button onclick="deleteshape()"/>Delete</button></div>');
+                '<button onclick="editshape()"/> Edit </button> <button onclick="deleteshape()"/>Delete</button></div>'
+            );
             map.removeLayer(editlayer);
         }
-        ;
 
         if (geometrytype === 'Point') {
             mylayer = L.marker((editlayer.getLatLng()), {draggable: true, icon: editIcon}).addTo(map);
-            mylayer.bindPopup('<div id="popup"><b>' + parentname + '</b> <br>' +
+            mylayer.bindPopup(
+                '<div id="popup"><b>' + parentname + '</b> <br>' +
                 '<div id="popup"><b>' + shapename + '</b> <br>' +
                 '<i>' + shapetype + '</i> <br> <br>' +
-                '<div style="max-height:140px; overflow-y: auto">' + shapedescription + '<br> </div>');
+                '<div style="max-height:140px; overflow-y: auto">' + shapedescription + '<br> </div>'
+            );
             if (typeof (myoldlayer) == 'object') {
                 map.removeLayer(myoldlayer);
             }
             myoldlayer = L.marker(editlayer.getLatLng());
-            myoldlayer.bindPopup('<div id="popup"><b>' + parentname + '</b> <br>' +
+            myoldlayer.bindPopup(
+                '<div id="popup"><b>' + parentname + '</b> <br>' +
                 '<div id="popup"><b>' + shapename + '</b> <br>' +
                 '<i>' + shapetype + '</i> <br> <br>' +
                 '<div style="max-height:140px; overflow-y: auto">' + shapedescription + '<br> </div>' +
-                '<button onclick="editshape()"/> Edit </button> <button onclick="deleteshape()"/>Delete</button></div>');
+                '<button onclick="editshape()"/> Edit </button> <button onclick="deleteshape()"/>Delete</button></div>'
+            );
             map.removeLayer(editlayer);
-
             document.getElementById('savebtn').style.display = 'none';
             document.getElementById('resetbtn').style.display = 'none';
             document.getElementById('closebtn').style.display = 'none';
@@ -197,7 +193,6 @@ function editshape()
             document.getElementById('northinglabel').style.display = 'block';
             document.getElementById('popupnorthing').value = position.lat;
             document.getElementById('popupeasting').value = position.lng;
-            
             var wgs84 = mylayer.getLatLng();
             mylayer.on('dragend', function (event) {
                 var marker = event.target;
@@ -207,27 +202,19 @@ function editshape()
                 document.getElementById('editsavebtn').disabled = false;
             });
         }
-        ;
         mylayer.options.editing || (mylayer.options.editing = {});
         mylayer.editing.enable();
-
-
-
-
         document.getElementById('geometrytype').value = geometrytype;
         mylayer.on('edit', function () {
-
             var latLngs = mylayer.getLatLngs();
             var latLngs; //to store coordinates of vertices
             var newvector = []; // array to store coordinates as numbers
             var type = geometrytype.toLowerCase();
             document.getElementById('editsavebtn').disabled = false;
-
             if (type != 'marker') {  //if other type than point then store array of coordinates as variable
                 latLngs = mylayer.getLatLngs();
                 for (i = 0; i < (latLngs.length); i++) {
                     newvector.push(' ' + latLngs[i].lng + ' ' + latLngs[i].lat);
-
                 }
 
                 ;
@@ -235,7 +222,6 @@ function editshape()
                     newvector.push(' ' + latLngs[0].lng + ' ' + latLngs[0].lat); //if polygon add first xy again as last xy to close polygon
                     shapesyntax = '(' + newvector + ')';
                     returndata();
-
                 }
                 ;
                 if (type === 'linestring') {
@@ -243,27 +229,19 @@ function editshape()
                     returndata();
                 }
             }
-            ;
-
             if (type === 'point') {
                 latLngs = mylayer.getLatLng();
                 newvector = (' ' + latLngs.lng + ' ' + latLngs.lat);
                 shapesyntax = 'ST_GeomFromText(\'POINT(' + newvector + ')\',4326);'
                 document.getElementById('popupnorthing').value = latLngs.lat;
                 document.getElementById('popupeasting').value = latLngs.lng;
-
-
             }
-            ;
         });
     }
 }
 
-
-
 //what happens, after stuff is drawn
-map.on('draw:created', function (e)
-{
+map.on('draw:created', function (e) {
     document.getElementById('savebtn').disabled = false;
     document.getElementById('resetbtn').disabled = false;
     drawnstuff.addLayer(e.layer); //add new geometry to layer
@@ -276,46 +254,38 @@ map.on('draw:created', function (e)
         for (i = 0; i < (latLngs.length); i++) {
             newvector.push(' ' + latLngs[i].lng + ' ' + latLngs[i].lat);
         }
-        ;
         if (type === 'polygon') {
-            newvector.push(' ' + latLngs[0].lng + ' ' + latLngs[0].lat); //if polygon add first xy again as last xy to close polygon
+            // if polygon add first xy again as last xy to close polygon
+            newvector.push(' ' + latLngs[0].lng + ' ' + latLngs[0].lat);
             shapesyntax = '(' + newvector + ')';
             returndata();
         }
-        ;
         if (type === 'polyline') {
             shapesyntax = newvector;
             returndata();
         }
     }
-    ;
     if (type === 'marker') {
         latLngs = layer.getLatLng();
         newvector = (' ' + latLngs.lng + ' ' + latLngs.lat);
         shapesyntax = 'ST_GeomFromText(\'POINT(' + newvector + ')\',4326);'
     }
-    
-    ;
 });
 
-function drawpolygon()
-{
+function drawpolygon() {
     drawlayer = new L.Draw.Polygon(map);
     geometrytype = "polygon";
     capture = false;
     startdrawing();
 }
 
-function drawpolyline()
-{
+function drawpolyline() {
     drawlayer = new L.Draw.Polyline(map);
     geometrytype = "linestring";
     startdrawing();
 }
 
-
-function startdrawing()
-{
+function startdrawing() {
     map.addControl(datainput);
     resetmyform();
     map.addLayer(drawnstuff);
@@ -323,18 +293,14 @@ function startdrawing()
     togglebtns();
     $("#shapeform").on("input", function () {
         document.getElementById('resetbtn').disabled = false;
-    })
-        ;
+    });
 }
-
-
 
 function returndata() {
     document.getElementById("shapecoords").value = shapesyntax;
 }
 
-function savetodb()
-{
+function savetodb() {
     document.getElementById('savebtn').style.display = 'none';
     var shapename = $('#shapename').val();
     var shapetype = $('#shapetype').val();
@@ -342,20 +308,17 @@ function savetodb()
     var shapecoords = $('#shapecoords').val();
     var geometrytype = $('#geometrytype').val();
     var dataString = '&shapename=' + shapename + '&shapetype=' + shapetype + '&shapedescription=' + shapedescription + '&shapecoords=' + shapecoords + '&geometrytype=' + geometrytype;
-    alert('@ alex: please save to db: ' + dataString);
-    $('#placeInfo').val($('#placeInfo').val() + dataString);
+    $('#gisData').val($('#gisData').val() + dataString);
     layer.bindPopup('<div id="popup"><b>' + parentname + '</b> (created)<br>' +
-                '<div id="popup"><b>' + shapename + '</b> <br>' +
-                '<i>' + shapetype + '</i> <br> <br>' +
-                '<div style="max-height:140px; overflow-y: auto">' + shapedescription + '<br><br><br> </div>' +
-                '<i> (for re-editing please save or reload the whole place)</i>');
+        '<div id="popup"><b>' + shapename + '</b> <br>' +
+        '<i>' + shapetype + '</i> <br> <br>' +
+        '<div style="max-height:140px; overflow-y: auto">' + shapedescription + '<br><br><br> </div>' +
+        '<i> (for re-editing please save or reload the whole place)</i>');
     layer.addTo(map);
-            closemyform();
-    ;
+    closemyform();
 }
 
-function editsavetodb()
-{
+function editsavetodb() {
     document.getElementById('editsavebtn').style.display = 'none';
     var uid = selectedshape;
     var shapename = $('#shapename').val();
@@ -364,41 +327,38 @@ function editsavetodb()
     var shapecoords = $('#shapecoords').val();
     var geometrytype = $('#geometrytype').val();
     var dataString = 'shapename=' + shapename + '&shapetype=' + shapetype + '&shapedescription=' + shapedescription + '&shapecoords=' + shapecoords + '&geometrytype=' + geometrytype + '&uid=' + uid;
-    if (geometrytype == 'Polygon'){
-    var myeditedlayer = L.polygon(mylayer.getLatLngs()).addTo(map);
-    myeditedlayer.setStyle({fillColor: '#686868'});
-    myeditedlayer.setStyle({color: '#686868'});
+    if (geometrytype == 'Polygon') {
+        var myeditedlayer = L.polygon(mylayer.getLatLngs()).addTo(map);
+        myeditedlayer.setStyle({fillColor: '#686868'});
+        myeditedlayer.setStyle({color: '#686868'});
     }
-
-    if (geometrytype == 'Point'){
-    var myeditedlayer = L.marker((mylayer.getLatLng()), {icon: editedIcon}).addTo(map);
-}
-    myeditedlayer.bindPopup('<div id="popup"><b>' + parentname + '</b> (edited)<br>' +
-                '<div id="popup"><b>' + shapename + '</b> <br>' +
-                '<i>' + shapetype + '</i> <br> <br>' +
-                '<div style="max-height:140px; overflow-y: auto">' + shapedescription + '<br><br><br> </div>' +
-                '<i> (for re-editing please save or reload the whole place)</i>');
+    if (geometrytype == 'Point') {
+        var myeditedlayer = L.marker((mylayer.getLatLng()), {icon: editedIcon}).addTo(map);
+    }
+    myeditedlayer.bindPopup(
+        '<div id="popup"><b>' + parentname + '</b> (edited)<br>' +
+        '<div id="popup"><b>' + shapename + '</b> <br>' +
+        '<i>' + shapetype + '</i> <br> <br>' +
+        '<div style="max-height:140px; overflow-y: auto">' + shapedescription + '<br><br><br> </div>' +
+        '<i> (for re-editing please save or reload the whole place)</i>'
+    );
     map.removeLayer(mylayer);
     alert('@ alex: please update edited record to db: ' + dataString);
     editclosemyformsave();
 }
 
 
-function deleteshape()
-{
+function deleteshape() {
     if (editon === 0) {
         var dataString = 'uid=' + selectedshape + '&geometrytype=' + geometrytype;
-        
         if (typeof (editlayer) == 'object') {
-        map.removeLayer(editlayer);
-    }
+            map.removeLayer(editlayer);
+        }
         if (typeof (editmarker) == 'object') {
-        map.removeLayer(editmarker);
-        var dataString = 'uid=' + selectedshape + '&geometrytype=' + geometrytype;
-        
-    }
-        
-        alert('@ Alex please delete this point/polygon from database: ' + dataString );
+            map.removeLayer(editmarker);
+            var dataString = 'uid=' + selectedshape + '&geometrytype=' + geometrytype;
+        }
+        alert('@ Alex please delete this point/polygon from database: ' + dataString);
     }
 }
 
@@ -470,7 +430,7 @@ function setgeojsonwopopup()
 //        },
 //        }).addTo(map);
 //
-//    
+//
 
 //    $.ajax({
 //        dataType: "json",
@@ -519,7 +479,6 @@ function closemyform() {
     drawlayer.disable();
     var coordcapture = false;
     interon();
-
 }
 
 function closemyformx() {
@@ -529,13 +488,11 @@ function closemyformx() {
     drawlayer.disable();
     var coordcapture = false;
     interon();
-
 }
 
 
 function closemymarkerformx() {
     datainput.removeFrom(map);
-
     map.removeLayer(mylayer);
     togglebtns();
     coordcapture = false;
@@ -552,8 +509,7 @@ function closemymarkerform() {
     interon();
 }
 
-function editclosemyform()
-{
+function editclosemyform() {
     editon = 0;
     datainput.removeFrom(map);
     map.removeLayer(mylayer);
@@ -564,8 +520,7 @@ function editclosemyform()
     interon();
 }
 
-function editclosemyformsave()
-{
+function editclosemyformsave() {
     editon = 0;
     datainput.removeFrom(map);
     map.removeLayer(mylayer);
@@ -575,7 +530,6 @@ function editclosemyformsave()
     var coordcapture = false;
     interon();
 }
-
 
 map.on('click', function (e) {
     if (capture) {
@@ -624,12 +578,9 @@ function drawmarker() {
     document.getElementById('popupnorthing').style.display = 'block';
     document.getElementById('eastinglabel').style.display = 'block';
     document.getElementById('northinglabel').style.display = 'block';
-    ;
 }
 
-
-function savemarkertodb()
-{
+function savemarkertodb() {
     capture = false;
     document.getElementById('savebtn').style.display = 'none';
     var shapename = $('#shapename').val();
@@ -643,12 +594,12 @@ function savemarkertodb()
     var dataString = '&easting=' + easting + '&northing=' + northing + '&shapename=' + shapename + '&shapetype=' + shapetype + '&shapedescription=' + shapedescription + '&geometrytype=' + geometrytype;
     alert('@ alex: please save to db: ' + dataString);
     var newmarker = L.marker(([northing, easting]), {icon: newIcon}).addTo(map);
-    newmarker.bindPopup('<div id="popup"><b>' + parentname + '</b> (created)<br>' +
-                '<div id="popup"><b>' + shapename + '</b> <br>' +
-                '<i>' + shapetype + '</i> <br> <br>' +
-                '<div style="max-height:140px; overflow-y: auto">' + shapedescription + '<br><br><br> </div>' +
-                '<i> (for re-editing please save or reload the whole place)</i>');
-               
+    newmarker.bindPopup(
+        '<div id="popup"><b>' + parentname + '</b> (created)<br>' +
+        '<div id="popup"><b>' + shapename + '</b> <br>' +
+        '<i>' + shapetype + '</i> <br> <br>' +
+        '<div style="max-height:140px; overflow-y: auto">' + shapedescription + '<br><br><br> </div>' +
+        '<i> (for re-editing please save or reload the whole place)</i>'
+    );
     closemymarkerform();
 }
-

@@ -10,8 +10,9 @@ function interoff() {
     map.scrollWheelZoom.disable();
     map.boxZoom.disable();
     map.keyboard.disable();
-    if (map.tap)
+    if (map.tap) {
         map.tap.disable();
+    }
 }
 
 function interon() {
@@ -21,100 +22,67 @@ function interon() {
     map.scrollWheelZoom.enable();
     map.boxZoom.enable();
     map.keyboard.enable();
-    if (map.tap)
+    if (map.tap) {
         map.tap.enable();
+    }
     $('#map').css('cursor', '');
-    if (coordcapture)
-    {
+    if (coordcapture) {
         document.getElementById('map').style.cursor = 'crosshair';
         capture = true;
     }
-    if (coordcaptureimg)
-    {
+    if (coordcaptureimg) {
         document.getElementById('map').style.cursor = 'crosshair';
     }
 }
 var togglebtn;
 
-function togglebtns()
-{
-    if (togglebtn === 0)
-    {
-        if (typeof (polygonbtn) == 'object')
-        {
+function togglebtns() {
+    if (togglebtn === 0) {
+        if (typeof (polygonbtn) == 'object') {
             polygonbtn.removeFrom(map);
         }
-        ;
-        if (typeof (polylinebtn) == 'object')
-        {
+        if (typeof (polylinebtn) == 'object') {
             polylinebtn.removeFrom(map);
         }
-        ;
-        if (typeof (imageloadbtn) == 'object')
-        {
+        if (typeof (imageloadbtn) == 'object') {
             imageloadbtn.removeFrom(map);
         }
-        ;
-        if (typeof (areabutton) == 'object')
-        {
+        if (typeof (areabutton) == 'object') {
             areabutton.removeFrom(map);
         }
-        ;
-        if (typeof (pointbutton) == 'object')
-        {
+        if (typeof (pointbutton) == 'object') {
             pointbutton.removeFrom(map);
         }
-        ;
-        if (typeof (admunitbutton) == 'object')
-        {
+        if (typeof (admunitbutton) == 'object') {
             admunitbutton.removeFrom(map);
         }
-        ;
-        if (typeof (histregbutton) == 'object')
-        {
+        if (typeof (histregbutton) == 'object') {
             histregbutton.removeFrom(map);
         }
-        ;
         togglebtn = 1;
-    }
-    else
-    {
+    } else {
         coordcapture = false;
-        if (typeof (polygonbtn) == 'object')
-        {
+        if (typeof (polygonbtn) == 'object') {
             map.addControl(polygonbtn);
         }
-        ;
-        if (typeof (polylinebtn) == 'object')
-        {
+        if (typeof (polylinebtn) == 'object') {
             map.addControl(polylinebtn);
         }
-        ;
-        if (typeof (imageloadbtn) == 'object')
-        {
+        if (typeof (imageloadbtn) == 'object') {
             map.addControl(imageloadbtn);
         }
-        ;
-        if (typeof (areabutton) == 'object')
-        {
+        if (typeof (areabutton) == 'object') {
             map.addControl(areabutton);
         }
-        ;
-        if (typeof (pointbutton) == 'object')
-        {
+        if (typeof (pointbutton) == 'object') {
             map.addControl(pointbutton);
         }
-        ;
-        if (typeof (admunitbutton) == 'object')
-        {
+        if (typeof (admunitbutton) == 'object') {
             map.addControl(admunitbutton);
         }
-        ;
-        if (typeof (histregbutton) == 'object')
-        {
+        if (typeof (histregbutton) == 'object') {
             map.addControl(histregbutton);
         }
-        ;
         //document.getElementById('selectunit').style.display = 'none';
         $("#jstree").jstree("close_all");
         $('#jstree').jstree("deselect_all");
@@ -147,24 +115,18 @@ function setSitesInfo(e) { //set Popup Information of existing sites
         '<div id="popuptype"><i>' + marker.toGeoJSON().properties.sitetype + '</i> <br> <br></div>' +
         '<div style="max-height:100px; max-width:200px; overflow-y: auto">' + marker.toGeoJSON().properties.description + '<br></div></div>' +
         '<a href="/admin/place/view/id/' + marker.feature.properties.uid + '">Details</a>',
-        {autoPanPaddingTopLeft: new L.Point(40, 10), autoPanPaddingBottomRight: new L.Point(50, 10)});
+        {autoPanPaddingTopLeft: new L.Point(40, 10), autoPanPaddingBottomRight: new L.Point(50, 10)}
+    );
 }
 
-
-
 L.mapbox.accessToken = 'pk.eyJ1Ijoib3BlbmF0bGFzbWFwYm94IiwiYSI6ImNpbHRlYzc3ZDAwMmR3MW02Z3FsYWxwNXcifQ.rwXGRavf1bh9ZW6zQn9cMg';
-
 var map = L.map('map', {fullscreenControl: true}, null).setView([48.61, 16.93], 5);
-// OpenAtlas uses free basemaps from openstreetmap and mapbox.com, change username,
 var baseMaps = {
     Landscape: L.tileLayer('http://{s}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png', {attribution: '&copy; <a href="http://www.thunderforest.com">Thunderforest Landscape '}),
     Openstreetmap: L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap </a> '}),
     Opencyclemap: L.tileLayer('http://{s}.tile.opencyclemap.org/cycle/{z}/{x}/{y}.png', {attribution: '&copy; <a href="http://www.opencyclemap.org/">OpenCycleMap '}),
     GoogleSattelite: L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {subdomains: ['mt0', 'mt1', 'mt2', 'mt3'], attribution: '&copy; Google Maps '}),
 };
-
-
-
 
 var marker; // temporary marker for coordinate capture
 var capture = false; // var to store whether control is active or not
@@ -180,21 +142,17 @@ if (myurl.indexOf('update') >= 0) {
 if (myurl.indexOf('insert') >= 0) {
     var coordcaptureon = true;
 }
-
-
-
 if (jsonMarker != "") {
     var sitesmarkers = L.mapbox.featureLayer(); // define a layer for sitedata
     sitesmarkers.on('layeradd', setSitesInfo); // trigger popup info creation when layer is added
     sitesmarkers.setGeoJSON(jsonMarker); //set layer content to geojson
     map.addLayer(sitesmarkers);
-
     if (!(myurl.indexOf('place/') >= 0)) {
         map.fitBounds(sitesmarkers)
     }
     if (myurl.indexOf('insert') >= 0) {
-      map.fitBounds(sitesmarkers)
-     }
+        map.fitBounds(sitesmarkers)
+    }
     map.panBy(new L.Point(0, -20));
 }
 
@@ -223,16 +181,14 @@ var polygons = [{"type": "FeatureCollection", "features": [{"type": "Feature", "
 var polyglayer = L.mapbox.featureLayer();
 polyglayer.setGeoJSON(polygons);
 
-
 //features to choose in control menu
 var overlayMaps = {
     Sites: sitesmarkers,
     Polygons: polyglayer,
-};
+}
 baseMaps.Landscape.addTo(map);
 L.control.layers(baseMaps, overlayMaps).addTo(map);
 L.control.scale().addTo(map);
-
 
 function setuid(e) {
     preventpopup();
@@ -241,9 +197,9 @@ function setuid(e) {
         var feature = layer.feature;
         var uid = feature.properties.uid;
         geometrytype = feature.geometry.type;
-        if (geometrytype == 'Point'){
-            position =  (e.latlng);
-            }
+        if (geometrytype == 'Point') {
+            position = (e.latlng);
+        }
         selectedshape = uid;
         editlayer = e.layer;
         editmarker = e.marker;
@@ -257,32 +213,33 @@ function setuid(e) {
             helptext = "Draw the area in which the physical thing is located. E.g. if its precise shape is not known but known to be within a certain area"
             headingtext = 'Area';
         }
-        ;
         if (geometrytype == "Point") {
             helptext = "Drag the marker to the new location"
             headingtext = 'Point';
-
         }
-        ;
     }
 }
 
 function setpopup(feature, layer) {
-    layer.bindPopup('<div id="popup"><b>' + feature.properties.parentname + '</b> <br>' +
+    layer.bindPopup(
+        '<div id="popup"><b>' + feature.properties.parentname + '</b> <br>' +
         '<div id="popup"><b>' + feature.properties.title + '</b> <br>' +
         '<i>' + feature.properties.type + '</i> <br> <br>' +
         '<div style="max-height:140px; overflow-y: auto">' + feature.properties.description + '<br> </div>' +
-        '<button onclick="editshape()"/> Edit </button> <button onclick="deleteshape()"/>Delete</button></div>');
+        '<button onclick="editshape()"/> Edit </button> <button onclick="deleteshape()"/>Delete</button></div>'
+        );
 }
 
 function setpopup2(feature, layer) {
-    layer.bindPopup('<div id="popup"><b>' + feature.properties.parentname + '</b> <br>' +
+    layer.bindPopup(
+        '<div id="popup"><b>' + feature.properties.parentname + '</b> <br>' +
         '<div id="popup"><b>' + feature.properties.title + '</b> <br>' +
         '<i>' + feature.properties.type + '</i> <br> <br>' +
-        '<div style="max-height:140px; overflow-y: auto">' + feature.properties.description + '<br> </div>');
+        '<div style="max-height:140px; overflow-y: auto">' + feature.properties.description + '<br> </div>'
+        );
 }
 
-//bitte dynamisch generieren aus der Datenbank jeweils die Geometrien zu den Parent Places
+// bitte dynamisch generieren aus der Datenbank jeweils die Geometrien zu den Parent Places
 var placepoints = [{"type": "Feature", "geometry": {"type": "Point", "coordinates": [16.921476702448, 48.611957576557]},
         "properties": {"uid": 1, "parentname": "Hohenau", "type": "Centerpoint", "title": "Hohenau 1", "description": "Fundstreuung"}},
     {"type": "Feature", "geometry": {"type": "Point", "coordinates": [16.923533, 48.611902]},
@@ -291,61 +248,31 @@ var placepoints = [{"type": "Feature", "geometry": {"type": "Point", "coordinate
             "title": "Hohenau 3", "description": "Ausdehnung der Fundstreuung 3"}}, {"uid": 3, "type": "Feature", "geometry": {"type":
                 "Point", "coordinates": [16.9232533, 48.643402]}, "properties": {"uid": 4, "parentname": "Hohenau", "type": "Centerpoint",
             "title": "Hohenau 4", "description": "Ungef\u00e4hre Ausdehnung der Fundstreuung"}}, ]
-
 var placepolygons = [{"type": "FeatureCollection", "features": [{"type": "Feature", "geometry": {"type": "Polygon", "coordinates":
                         [[[16.921749, 48.61195], [16.922881, 48.611925], [16.923533, 48.601902], [16.923899, 48.612708], [16.922325, 48.612788], [16.921957, 48.612428], [16.921749, 48.61195]]]},
                 "properties": {"uid": 1, "parentname": "Hohenau", "type": "Shape", "title": "Hohenau Sst. x2 Gest\u00fctwiese", "description": "Ungef\u00e4hre Ausdehnung der Fundstreuung"}}]}];
 
-
-
 if (myurl.indexOf('place/') >= 0) {
-
-
-    var mysites = L.geoJson(placepolygons, {
-        onEachFeature: setpopup2
-    }).addTo(map);
+    var mysites = L.geoJson(placepolygons, {onEachFeature: setpopup2}).addTo(map);
     mysites.on('click', setuid);
-
-
-
-    var mypoints = L.geoJson(placepoints, {
-        onEachFeature: setpopup2
-    }).addTo(map);
+    var mypoints = L.geoJson(placepoints, {onEachFeature: setpopup2}).addTo(map);
     mypoints.on('click', setuid);
-
-
-var myextend = L.featureGroup([mysites, mypoints]);
-map.fitBounds(myextend);
-
-
-if (myurl.indexOf('insert') >= 0) {
-      map.fitBounds(sitesmarkers)
-      map.removeLayer(mysites);
-      map.removeLayer(mypoints);
+    var myextend = L.featureGroup([mysites, mypoints]);
+    map.fitBounds(myextend);
+    if (myurl.indexOf('insert') >= 0) {
+        map.fitBounds(sitesmarkers)
+        map.removeLayer(mysites);
+        map.removeLayer(mypoints);
     }
-
-
 }
 
 if (myurl.indexOf('update') >= 0) {
-    
-
     map.removeLayer(mysites);
     map.removeLayer(mypoints);
-    var mysites = L.geoJson(placepolygons, {
-        onEachFeature: setpopup
-    }).addTo(map);
+    var mysites = L.geoJson(placepolygons, {onEachFeature: setpopup}).addTo(map);
     mysites.on('click', setuid);
-
-
-
-
-    var mypoints = L.geoJson(placepoints, {
-        onEachFeature: setpopup
-    }).addTo(map);
+    var mypoints = L.geoJson(placepoints, {onEachFeature: setpopup}).addTo(map);
     mypoints.on('click', setuid);
-    
     var myextend = L.featureGroup([mysites, mypoints]);
-map.fitBounds(myextend);
-
+    map.fitBounds(myextend);
 }

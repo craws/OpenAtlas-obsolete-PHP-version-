@@ -178,9 +178,9 @@ class Admin_PlaceController extends Zend_Controller_Action {
             $gis->northing = $form->getValue('northing');
             $gis->insert();
         }
-        if ($form->getValue('placeInfo')) {
-            $placeInfo = $form->getValue('placeInfo');
-            parse_str($placeInfo, $output);
+        if ($form->getValue('gisData')) {
+            $gisData = $form->getValue('gisData');
+            parse_str($gisData, $output);
             $geom = "(SELECT ST_GeomFromText('" . $output['geometrytype'] . "'(" . $output['shapecoords'] . ")', 4326))";
             $geom = "SELECT ST_GeomFromText('polygon(( -112.0781421661377 68.5539591738857, -98.0156421661377 52.738954993199584, -67.0781421661377 68.80957565002588, -112.0781421661377 68.5539591738857))', 4326)";
            switch($output['geometrytype']) {
