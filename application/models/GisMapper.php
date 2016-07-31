@@ -16,6 +16,30 @@ class Model_GisMapper extends Model_AbstractMapper {
         Model_UserLogMapper::insert('entity', $result['id'], 'gis insert');
     }
 
+    public static function insertPoints(Model_Entity $place, $points) {
+        if (!$points) {
+            return;
+        }
+        foreach ($points as $point) {
+            // TODO parameterize query
+            $sql = "INSERT INTO gis.point (entity_id, name, description, type, geom)
+                VALUES (
+                    :entity_id,
+                    :name,
+                    :description,
+                    :type,
+                    st_geomfromtext('POINT('||" . $point->easting . "||' '||" . $point->northing . "||')',4326)
+                );";
+            $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
+            $statement->bindValue(':entity_id', $place->id);
+            $statement->bindValue(':name', $point->name);
+            $statement->bindValue(':description', $point->description);
+            $statement->bindValue(':type', $point->shapeType);
+            $statement->execute();
+        }
+        Model_UserLogMapper::insert('place', $place->id, 'insert ' . count($points) . 'point(s)');
+    }
+
     public static function getPolygons(Model_Entity $object) {
         $sql = 'SELECT id, name, description, type, geom FROM gis.polygon WHERE entity_id = :entity_id;';
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
@@ -57,7 +81,6 @@ class Model_GisMapper extends Model_AbstractMapper {
                     $object->id . '",';
                 $json['search'] .= '"lat": "' . $gis->easting . '", "lon": "' . $gis->northing . '"},';
             }
-
         }
         if ($json['marker']) {
             return $json;
@@ -65,7 +88,6 @@ class Model_GisMapper extends Model_AbstractMapper {
         // @codeCoverageIgnoreStart
     }
     // @codeCoverageIgnoreEnd
-
 
     public static function getByEntity(Model_Entity $entity) {
         $sql = 'SELECT easting, northing FROM gis.centerpoint WHERE entity_id = :entity_id;';
@@ -81,6 +103,81 @@ class Model_GisMapper extends Model_AbstractMapper {
             return $gis;
         }
         return false;
+    }
+
+
+    public static function getPoints(Model_Entity $entity) {
+        $sql = 'SELECT
+            geom,
+            name,
+            description,
+            type,
+            st_x(st_transform(geom,4326)) as easting,
+            st_y(st_transform(geom,4326)) as northing
+            FROM gis.point WHERE entity_id = :entity_id;';
+        $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
+        $statement->bindValue(':entity_id', $entity->id);
+        $statement->execute();
+        $points = [];
+        foreach ($statement->fetchAll() as $row) {
+            $point = [];
+            $point['name'] = $row['name'];
+            $point['shapeType'] = $row['type'];
+            $point['description'] = $row['description'];
+            $point['geometryType'] = 'centerpoint';
+            $point['easting'] = $row['easting'];
+            $point['northing'] = $row['northing'];
+            $points[] = $point;
+        }
+        return $points;
+    }
+
+    public static function getPoints2(Model_Entity $entity) {
+        $sql = 'SELECT
+            id,
+            name,
+            description,
+            type,
+            st_x(st_transform(geom,4326)) as easting,
+            st_y(st_transform(geom,4326)) as northing
+            FROM gis.point WHERE entity_id = :entity_id;';
+        $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
+        $statement->bindValue(':entity_id', $entity->id);
+        $statement->execute();
+        $points = '[';
+        foreach ($statement->fetchAll() as $row) {
+            /*$geometry = new stdClass();
+            $geometry->type = 'Point';
+            $geometry->coordinates = '[' . $row['easting'] . ',' . $row['northing'] . ']';
+            $properties = new stdClass();
+            $properties->uid = $row['id'];
+            $properties->parentname = $entity->name;
+            $properties->type = 'Centerpoint';
+            $properties->title = $row['name'];
+            $properties->description = $row['description'];
+            $point = new stdClass();
+            $point->type = 'Feature';
+            $point->geometry = $geometry;
+            $point->properties = $properties;*/
+            $point =
+                '{
+                    "type":"Feature",
+                    "geometry":{
+                        "type":"Point",
+                        "coordinates":[' . $row['easting'] . ',' . $row['northing'] . ']
+                    },
+                    "properties":{
+                        "uid":"' . $row['id'] . '",
+                        "parentname":"' . $entity->name . '",
+                        "type":"Centerpoint",
+                        "title":"' . $row['name'] . '",
+                        "description":"' . $row['description'] . '"
+                    }
+                },';
+
+            $points .= $point;
+        }
+        return $points . ']';
     }
 
     public static function deleteByEntity($entity) {

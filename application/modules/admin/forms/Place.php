@@ -12,20 +12,11 @@ class Admin_Form_Place extends Admin_Form_Base {
             'required' => true,
             'label' => $this->getView()->ucstring('name'),
         ]);
-        $this->addElement('hidden', 'gisData');
+        $this->addElement('hidden', 'gisPoints');
+        $this->addElement('hidden', 'gisPolygons');
         $this->addElement('button', 'aliasAdd', ['label' => '+']);
         $this->addElement('hidden', 'aliasId', ['value' => 1]);
         $this->addDates(['begin', 'begin2', 'end', 'end2']);
-        $this->addElement('text', 'easting', [
-            'label' => $this->getView()->ucstring('easting'),
-            'validators' => array(array('Float', true, array('locale' => 'en'))),
-            'placeholder' => '16.371568'
-        ]);
-        $this->addElement('text', 'northing', [
-            'label' => $this->getView()->ucstring('northing'),
-            'validators' => array(array('Float', true, array('locale' => 'en'))),
-            'placeholder' => '48.208121'
-        ]);
         $this->addElement('textarea', 'description', ['label' => $this->getView()->ucstring('description')]);
         $submitLabel = 'save';
         if (Zend_Controller_Front::getInstance()->getRequest()->getActionName() == 'insert') {

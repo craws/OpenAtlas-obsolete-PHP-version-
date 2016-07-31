@@ -54,8 +54,6 @@ class Admin_PlaceController extends Zend_Controller_Action {
     public function updateAction() {
         $object = Model_EntityMapper::getById($this->_getParam('id'));
         $place = Model_LinkMapper::getLinkedEntity($object, 'P53');
-        $polygon = Model_GisMapper::getPolygons($place);
-        $this->view->polygon = $polygon;
         $form = new Admin_Form_Place();
         $hierarchies = $form->addHierarchies('Place', $object);
         $this->view->form = $form;
@@ -68,6 +66,7 @@ class Admin_PlaceController extends Zend_Controller_Action {
         $form->preValidation($this->getRequest()->getPost());
         $formValid = $form->isValid($this->getRequest()->getPost());
         $modified = Model_EntityMapper::checkIfModified($object, $form->modified->getValue());
+
         if ($modified) {
             $log = Model_UserLogMapper::getLogForView('entity', $object->id);
             $this->view->modifier = $log['modifier_name'];
@@ -133,15 +132,18 @@ class Admin_PlaceController extends Zend_Controller_Action {
     }
 
     private function prepareDefaultUpdate(Zend_Form $form, Model_Entity $object, Model_Entity $place) {
+        $points = Model_GisMapper::getPoints($place);
+        $polygons = Model_GisMapper::getPolygons($place);
+        $this->view->points = json_encode($points);
+        $this->view->polygons = $polygons;
+        $this->view->points2 = json_encode(Model_GisMapper::getPoints2($place));
+        $this->view->points2 = Model_GisMapper::getPoints2($place);
         $form->populate([
             'name' => $object->name,
             'description' => $object->description,
-            'modified' => ($object->modified) ? $object->modified->getTimestamp() : 0
+            'modified' => ($object->modified) ? $object->modified->getTimestamp() : 0,
+            'gisPoints' => json_encode($points)
         ]);
-        $gis = Model_GisMapper::getByEntity($place);
-        if ($gis) {
-            $form->populate(['easting' => $gis->easting, 'northing' => $gis->northing]);
-        }
         $form->populateDates($object, ['OA1' => 'begin', 'OA2' => 'end']);
         return;
     }
@@ -171,19 +173,13 @@ class Admin_PlaceController extends Zend_Controller_Action {
                 Model_LinkMapper::insert('P1', $object, $alias);
             }
         }
-        if ($form->getValue('easting') && $form->getValue('northing')) {
-            $gis = new Model_Gis();
-            $gis->setEntity($place);
-            $gis->easting = $form->getValue('easting');
-            $gis->northing = $form->getValue('northing');
-            $gis->insert();
-        }
+        Model_GisMapper::insertPoints($place, json_decode($form->gisPoints->getValue()));
         if ($form->getValue('gisData')) {
             $gisData = $form->getValue('gisData');
             parse_str($gisData, $output);
             $geom = "(SELECT ST_GeomFromText('" . $output['geometrytype'] . "'(" . $output['shapecoords'] . ")', 4326))";
             $geom = "SELECT ST_GeomFromText('polygon(( -112.0781421661377 68.5539591738857, -98.0156421661377 52.738954993199584, -67.0781421661377 68.80957565002588, -112.0781421661377 68.5539591738857))', 4326)";
-           switch($output['geometrytype']) {
+            switch($output['geometrytype']) {
               case 'polygon':
                   var_dump('inside');
                   $sql = "
