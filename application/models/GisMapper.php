@@ -4,18 +4,6 @@
 
 class Model_GisMapper extends Model_AbstractMapper {
 
-    public static function insert(Model_Gis $gis) {
-        $sql = 'INSERT INTO gis.centerpoint (entity_id, easting, northing)
-            VALUES (:entity_id, :easting, :northing) RETURNING id;';
-        $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
-        $statement->bindValue(':entity_id', $gis->getEntity()->id);
-        $statement->bindValue(':easting', $gis->easting);
-        $statement->bindValue(':northing', $gis->northing);
-        $statement->execute();
-        $result = $statement->fetch(PDO::FETCH_ASSOC);
-        Model_UserLogMapper::insert('entity', $result['id'], 'gis insert');
-    }
-
     public static function insertPoints(Model_Entity $place, $points) {
         if (!$points) {
             return;
@@ -90,7 +78,7 @@ class Model_GisMapper extends Model_AbstractMapper {
     // @codeCoverageIgnoreEnd
 
     public static function getByEntity(Model_Entity $entity) {
-        $sql = 'SELECT easting, northing FROM gis.centerpoint WHERE entity_id = :entity_id;';
+        /*$sql = 'SELECT easting, northing FROM gis.centerpoint WHERE entity_id = :entity_id;';
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->bindValue(':entity_id', $entity->id);
         $statement->execute();
@@ -101,7 +89,7 @@ class Model_GisMapper extends Model_AbstractMapper {
             $gis->northing = $result['northing'];
             $gis->setEntity($entity);
             return $gis;
-        }
+        }*/
         return false;
     }
 
@@ -174,14 +162,14 @@ class Model_GisMapper extends Model_AbstractMapper {
                         "description":"' . $row['description'] . '"
                     }
                 },';
-
             $points .= $point;
         }
         return $points . ']';
     }
 
     public static function deleteByEntity($entity) {
-        $sql = 'DELETE FROM gis.centerpoint WHERE entity_id = :entity_id;';
+        $sql = 'DELETE FROM gis.point WHERE entity_id = :entity_id;';
+        $sql .= 'DELETE FROM gis.polygon WHERE entity_id = :entity_id;';
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->bindValue('entity_id', $entity->id);
         $statement->execute();

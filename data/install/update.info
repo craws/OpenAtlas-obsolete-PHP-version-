@@ -10,8 +10,10 @@ BEGIN;
 ALTER TABLE gis.linestring RENAME text TO type;
 ALTER TABLE gis.point RENAME text TO type;
 ALTER TABLE gis.polygon RENAME text TO type;
-ALTER TABLE gis.centerpoint ADD COLUMN name text;
-ALTER TABLE gis.centerpoint ADD COLUMN description text;
+INSERT INTO gis.point (entity_id, type, geom, name) SELECT entity_id, 'centerpoint', geom,
+    (SELECT name FROM model.entity e JOIN model.link l ON e.id = l.domain_id WHERE l.range_id = entity_id AND l.property_id = (SELECT id from model.property WHERE code LIKE 'P53'))
+FROM gis.centerpoint;
+DROP TABLE gis.centerpoint;
 
 COMMIT;
 
