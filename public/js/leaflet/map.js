@@ -113,9 +113,9 @@ function setSitesInfo(e) { //set Popup Information of existing sites
     var marker = e.layer;
     marker.bindPopup(
         '<div id="mypopup"><div id="popuptitle">' + marker.toGeoJSON().properties.title + '</b> <br> </div>' +
-        '<div id="popuptype"><i>' + marker.toGeoJSON().properties.sitetype + '</i> <br> <br></div>' +
+        '<div id="popuptype"><i>' + marker.toGeoJSON().properties.siteType + '</i> <br> <br></div>' +
         '<div style="max-height:100px; max-width:200px; overflow-y: auto">' + marker.toGeoJSON().properties.description + '<br></div></div>' +
-        '<a href="/admin/place/view/id/' + marker.feature.properties.uid + '">Details</a>',
+        '<a href="/admin/place/view/id/' + marker.feature.properties.objectId + '">Details</a>',
         {autoPanPaddingTopLeft: new L.Point(40, 10), autoPanPaddingBottomRight: new L.Point(50, 10)}
     );
 }
@@ -143,10 +143,10 @@ if (myurl.indexOf('update') >= 0) {
 if (myurl.indexOf('insert') >= 0) {
     var coordcaptureon = true;
 }
-if (jsonMarker != "") {
+if (gisPointAll != "") {
     var sitesmarkers = L.mapbox.featureLayer(); // define a layer for sitedata
     sitesmarkers.on('layeradd', setSitesInfo); // trigger popup info creation when layer is added
-    sitesmarkers.setGeoJSON(jsonMarker); //set layer content to geojson
+    sitesmarkers.setGeoJSON(gisPointAll); //set layer content to geojson
     map.addLayer(sitesmarkers);
     if (!(myurl.indexOf('place/') >= 0)) {
         map.fitBounds(sitesmarkers)
@@ -219,23 +219,23 @@ baseMaps.Landscape.addTo(map);
 L.control.layers(baseMaps, overlayMaps).addTo(map);
 L.control.scale().addTo(map);
 
-function setuid(e) {
+function setObjectId(e) {
     preventpopup();
     if (editon === 0) {
         var layer = e.layer;
         var feature = layer.feature;
-        var uid = feature.properties.uid;
+        var objectId = feature.properties.objectId;
         geometrytype = feature.geometry.type;
         if (geometrytype == 'Point') {
             position = (e.latlng);
         }
-        selectedshape = uid;
+        selectedshape = objectId;
         editlayer = e.layer;
         editmarker = e.marker;
-        shapename = feature.properties.title;
+        shapename = feature.properties.name;
         shapetype = feature.properties.type;
-        shapedescription = feature.properties.description;
-        parentname = feature.properties.parentname;
+        description = feature.properties.description;
+        objectName = feature.properties.title;
         helptext = 'Draw the shape of a physical thing if the precise extend is known';
         headingtext = 'Shape';
         if (shapetype == "area") {
@@ -250,18 +250,19 @@ function setuid(e) {
 }
 
 function setpopup(feature, layer) {
+    alert(JSON.stringify(feature.properties));
     layer.bindPopup(
-        '<div id="popup"><b>' + feature.properties.parentname + '</b> <br>' +
         '<div id="popup"><b>' + feature.properties.title + '</b> <br>' +
-        '<i>' + feature.properties.type + '</i> <br> <br>' +
-        '<div style="max-height:140px; overflow-y: auto">' + feature.properties.description + '<br> </div>' +
-        '<button onclick="editshape()"/> Edit </button> <button onclick="deleteshape()"/>Delete</button></div>'
+        '<div id="popup"><b>' + feature.properties.name + '</b> <br>' +
+        '<i>' + feature.properties.siteType + '</i><br><br>' +
+        '<div style="max-height:140px; overflow-y: auto">' + feature.properties.description + '</div>' +
+        '<button onclick="editshape()"/>Edit</button> <button onclick="deleteshape()"/>Delete</button></div>'
         );
 }
 
 function setpopup2(feature, layer) {
     layer.bindPopup(
-        '<div id="popup"><b>' + feature.properties.parentname + '</b> <br>' +
+        '<div id="popup"><b>' + feature.properties.objectName + '</b> <br>' +
         '<div id="popup"><b>' + feature.properties.title + '</b> <br>' +
         '<i>' + feature.properties.type + '</i> <br> <br>' +
         '<div style="max-height:140px; overflow-y: auto">' + feature.properties.description + '<br> </div>'
@@ -270,62 +271,16 @@ function setpopup2(feature, layer) {
 
 // bitte dynamisch generieren aus der Datenbank jeweils die Geometrien zu den Parent Places
 
-var placepoints = gisPoints2;
-//alert(placepoints);
-/*var placepoints =
-[
-    {
-        "type":"Feature",
-        "geometry":{
-            "type":"Point",
-            "coordinates":[16.8984489399008,48.6220618166425]
-        },
-        "properties":{
-            "uid":"id",
-            "parentname":"Location of Avalon",
-            "type":"Centerpoint",
-            "title":"1",
-            "description":"2"
-        }
-    }
-];*/
-
-//var placepoints = [{ "type":"Feature", "geometry":{ "type":"Point", "coordinates":[16.8984489399008,48.6220618166425] }, "properties":{ "uid":"4", "parentname":"Location of Avalon", "type":"Centerpoint", "title":"1", "description":"2" } },{ "type":"Feature", "geometry":{ "type":"Point", "coordinates":[16.9022254901938,48.6233099944829] }, "properties":{ "uid":"6", "parentname":"Location of Avalon", "type":"Centerpoint", "title":"3", "description":"4" } },{ "type":"Feature", "geometry":{ "type":"Point", "coordinates":[16.8987922626547,48.610372835508] }, "properties":{ "uid":"7", "parentname":"Location of Avalon", "type":"Centerpoint", "title":"5", "description":"6" } },{ "type":"Feature", "geometry":{ "type":"Point", "coordinates":[16.8984489399008,48.6220618166425] }, "properties":{ "uid":"8", "parentname":"Location of Avalon", "type":"Centerpoint", "title":"1", "description":"2" } },{ "type":"Feature", "geometry":{ "type":"Point", "coordinates":[16.9022254901938,48.6233099944829] }, "properties":{ "uid":"9", "parentname":"Location of Avalon", "type":"Centerpoint", "title":"3", "description":"4" } },{ "type":"Feature", "geometry":{ "type":"Point", "coordinates":[16.8987922626547,48.610372835508] }, "properties":{ "uid":"10", "parentname":"Location of Avalon", "type":"Centerpoint", "title":"5", "description":"6" } },{ "type":"Feature", "geometry":{ "type":"Point", "coordinates":[16.387756280601,48.7329457963408] }, "properties":{ "uid":"11", "parentname":"Location of Avalon", "type":"Centerpoint", "title":"8", "description":"9" } },] ;
-
-/*
-
-
-var placepoints = [
-    {
-        "type": "Feature",
-        "geometry": {
-            "type": "Point",
-            "coordinates": [16.921476702448, 48.611957576557]
-        },
-        "properties": {
-            "uid": 1,
-            "parentname": "Hohenau",
-            "type": "Centerpoint",
-            "title": "Hohenau 1",
-            "description": "Fundstreuung"
-        }
-    },
-    {"type": "Feature", "geometry": {"type": "Point", "coordinates": [16.923533, 48.611902]},
-        "properties": {"uid": 2, "parentname": "Hohenau", "type": "Centerpoint", "title": "Hohenau 2", "description": "Ungef\u00e4hre Ausdehnung der Fundstreuung2"}},
-    {"type": "Feature", "geometry": {"type": "Point", "coordinates": [16.922333, 48.611202]}, "properties": {"uid": 5, "parentname": "Hohenau", "type": "Centerpoint",
-            "title": "Hohenau 3", "description": "Ausdehnung der Fundstreuung 3"}}, {"uid": 3, "type": "Feature", "geometry": {"type":
-                "Point", "coordinates": [16.9232533, 48.643402]}, "properties": {"uid": 4, "parentname": "Hohenau", "type": "Centerpoint",
-            "title": "Hohenau 4", "description": "Ungef\u00e4hre Ausdehnung der Fundstreuung"}}, ]
-            */
+var placepoints = gisPointSelected;
 var placepolygons = [{"type": "FeatureCollection", "features": [{"type": "Feature", "geometry": {"type": "Polygon", "coordinates":
                         [[[16.921749, 48.61195], [16.922881, 48.611925], [16.923533, 48.601902], [16.923899, 48.612708], [16.922325, 48.612788], [16.921957, 48.612428], [16.921749, 48.61195]]]},
-                "properties": {"uid": 1, "parentname": "Hohenau", "type": "Shape", "title": "Hohenau Sst. x2 Gest\u00fctwiese", "description": "Ungef\u00e4hre Ausdehnung der Fundstreuung"}}]}];
+                "properties": {"objectId": 1, "objectName": "Hohenau", "type": "Shape", "title": "Hohenau Sst. x2 Gest\u00fctwiese", "description": "Ungef\u00e4hre Ausdehnung der Fundstreuung"}}]}];
 
 if (myurl.indexOf('place/') >= 0) {
     var mysites = L.geoJson(placepolygons, {onEachFeature: setpopup2}).addTo(map);
-    mysites.on('click', setuid);
+    mysites.on('click', setObjectId);
     var mypoints = L.geoJson(placepoints, {onEachFeature: setpopup2}).addTo(map);
-    mypoints.on('click', setuid);
+    mypoints.on('click', setObjectId);
     var myextend = L.featureGroup([mysites, mypoints]);
     map.fitBounds(myextend);
     if (myurl.indexOf('insert') >= 0) {
@@ -339,9 +294,9 @@ if (myurl.indexOf('update') >= 0) {
     map.removeLayer(mysites);
     map.removeLayer(mypoints);
     var mysites = L.geoJson(placepolygons, {onEachFeature: setpopup}).addTo(map);
-    mysites.on('click', setuid);
+    mysites.on('click', setObjectId);
     var mypoints = L.geoJson(placepoints, {onEachFeature: setpopup}).addTo(map);
-    mypoints.on('click', setuid);
+    mypoints.on('click', setObjectId);
     var myextend = L.featureGroup([mysites, mypoints]);
     map.fitBounds(myextend);
 }

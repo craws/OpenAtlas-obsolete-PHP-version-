@@ -73,10 +73,10 @@ $(function () { //autocomplete jquery ui with site data
     };
 });
 
-function openSite(uid, x, y) {  //open Popup after site is selected
+function openSite(id, x, y) {  //open Popup after site is selected
     map.setView([y, x], 15);
     sitesmarkers.eachLayer(function (marker) {
-        if (marker.feature.properties.uid === uid) {
+        if (marker.feature.properties.id === id) {
             marker.openPopup();
         }
     });

@@ -4,11 +4,18 @@
 
 class Model_GisMapper extends Model_AbstractMapper {
 
+    /* type, search?, new params */
 
-     public static function getAll($objects = false) {
-         $sql = "
+    public static function getAll($objectId = 0) {
+        $points = self::getPoints3($objectId);
+        return $points;
+    }
+
+    public static function getPoints3($objectId) {
+        $sql = "
             SELECT
-                place.id,
+                object.id AS object_id,
+                point.id AS point_id,
                 point.name AS point_name,
                 point.description AS point_description,
                 point.type,
@@ -21,28 +28,35 @@ class Model_GisMapper extends Model_AbstractMapper {
             JOIN gis.point point ON place.id = point.entity_id
             WHERE
                 place.class_id = (SELECT id FROM model.class WHERE code LIKE 'E53') AND
-                l.property_id = (SELECT id FROM model.property WHERE code LIKE 'P53')
+                l.property_id = (SELECT id FROM model.property WHERE code LIKE 'P53');
         ";
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->execute();
-        $points = '';
+        $gis['gisPointAll'] = '[';
+        $gis['gisPointSelected'] = '[';
         foreach ($statement->fetchAll() as $row) {
-            $points .= '{"type":"Feature","geometry":' . $row['geojson'] . ',
-                    "properties":{
-                        "title":"' . str_replace('"', '\"', $row['object_name']) . '",
-                        "objectDescription":"' . str_replace('"', '\"', $row['object_description']) . '",
-                        "marker-color": "#fc4353",
-                        "siteType":"To do",
-                        "objectId":"' . $row['id'] . '",
-                        "shapeType":"' . $row['type'] . '",
-                        "name": "' . str_replace('"', '\"', $row['point_name']) . '",
-                        "description":"' . str_replace('"', '\"', $row['point_description']) . '"
-                    }
-                },';
+            $point = '{"type":"Feature","geometry":' . $row['geojson'] . ',' .
+                    '"properties":{' .
+                        '"title": "' . str_replace('"', '\"', $row['object_name']) . '",' .
+                        '"objectId": "' . $row['object_id'] . '",' .
+                        '"objectDescription": "' . str_replace('"', '\"', $row['object_description']) . '",' .
+                        '"id": "' . $row['point_id'] . '",' .
+                        '"name": "' . str_replace('"', '\"', $row['point_name']) . '",' .
+                        '"description": "' . str_replace('"', '\"', $row['point_description']) . '",' .
+                        '"marker-color": "#fc4353",' .
+                        '"siteType":" To do",' .
+                        '"shapeType": "' . $row['type'] . '",' .
+                    '}' .
+                '},';
+            if ($row['object_id'] == $objectId) {
+                $gis['gisPointSelected'] .= $point;
+            } else {
+                $gis['gisPointAll'] .= $point;
+            }
         }
-        $json['marker'] = $points;
-        $json['search'] = '';
-        return $json;
+        $gis['gisPointAll'] .= ']';
+        $gis['gisPointSelected'] .= ']';
+        return $gis;
     }
 
     public static function insertPoints(Model_Entity $place, $points) {
@@ -57,13 +71,13 @@ class Model_GisMapper extends Model_AbstractMapper {
                     :name,
                     :description,
                     :type,
-                    st_geomfromtext('POINT('||" . $point->easting . "||' '||" . $point->northing . "||')',4326)
+                    st_geomfromtext('POINT('||" . $point->geometry->coordinates[0] . "||' '||" . $point->geometry->coordinates[1] . "||')',4326)
                 );";
             $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
             $statement->bindValue(':entity_id', $place->id);
-            $statement->bindValue(':name', $point->name);
-            $statement->bindValue(':description', $point->description);
-            $statement->bindValue(':type', $point->shapeType);
+            $statement->bindValue(':name', $point->properties->name);
+            $statement->bindValue(':description', $point->properties->description);
+            $statement->bindValue(':type', $point->properties->shapeType);
             $statement->execute();
         }
         Model_UserLogMapper::insert('place', $place->id, 'insert ' . count($points) . 'point(s)');
@@ -116,6 +130,7 @@ class Model_GisMapper extends Model_AbstractMapper {
         }
         // @codeCoverageIgnoreStart
     }
+
     // @codeCoverageIgnoreEnd
 
     public static function getByEntity(Model_Entity $entity) {
@@ -134,7 +149,6 @@ class Model_GisMapper extends Model_AbstractMapper {
         }
         return false;
     }
-
 
     public static function getPoints(Model_Entity $entity) {
         $sql = 'SELECT
@@ -176,21 +190,20 @@ class Model_GisMapper extends Model_AbstractMapper {
         $statement->execute();
         $points = '[';
         foreach ($statement->fetchAll() as $row) {
-            /*$geometry = new stdClass();
-            $geometry->type = 'Point';
-            $geometry->coordinates = '[' . $row['easting'] . ',' . $row['northing'] . ']';
-            $properties = new stdClass();
-            $properties->uid = $row['id'];
-            $properties->parentname = $entity->name;
-            $properties->type = 'Centerpoint';
-            $properties->title = $row['name'];
-            $properties->description = $row['description'];
-            $point = new stdClass();
-            $point->type = 'Feature';
-            $point->geometry = $geometry;
-            $point->properties = $properties;*/
-            $point =
-                '{
+            /* $geometry = new stdClass();
+              $geometry->type = 'Point';
+              $geometry->coordinates = '[' . $row['easting'] . ',' . $row['northing'] . ']';
+              $properties = new stdClass();
+              $properties->uid = $row['id'];
+              $properties->parentname = $entity->name;
+              $properties->type = 'Centerpoint';
+              $properties->title = $row['name'];
+              $properties->description = $row['description'];
+              $point = new stdClass();
+              $point->type = 'Feature';
+              $point->geometry = $geometry;
+              $point->properties = $properties; */
+            $point = '{
                     "type":"Feature",
                     "geometry":{
                         "type":"Point",

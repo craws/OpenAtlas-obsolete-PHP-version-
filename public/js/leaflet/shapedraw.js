@@ -18,7 +18,7 @@ var markerimg; // temporary marker for coordinate capture
 var capture = false; // var to store whether control is active or not
 var coordcapture = false;
 var headingtext;
-var parentname = 'Fundortparent';
+var objectName = 'Fundortparent';
 var lastclicked;
 var position;
 
@@ -139,7 +139,7 @@ function editshape() {
         if (geometrytype === 'Polygon') {
             mylayer = L.polygon(editlayer.getLatLngs()).addTo(map);
             mylayer.bindPopup(
-                '<div id="popup"><b>' + parentname + '</b> <br>' +
+                '<div id="popup"><b>' + objectName + '</b> <br>' +
                 '<div id="popup"><b>' + shapename + '</b> <br>' +
                 '<i>' + shapetype + '</i> <br> <br>' +
                 '<div style="max-height:140px; overflow-y: auto">' + shapedescription + '<br> </div>'
@@ -150,7 +150,7 @@ function editshape() {
             }
             myoldlayer = L.polygon(editlayer.getLatLngs());
             myoldlayer.bindPopup(
-                '<div id="popup"><b>' + parentname + '</b> <br>' +
+                '<div id="popup"><b>' + objectName + '</b> <br>' +
                 '<div id="popup"><b>' + shapename + '</b> <br>' +
                 '<i>' + shapetype + '</i> <br> <br>' +
                 '<div style="max-height:140px; overflow-y: auto">' + shapedescription + '<br> </div>' +
@@ -162,7 +162,7 @@ function editshape() {
         if (geometrytype === 'Point') {
             mylayer = L.marker((editlayer.getLatLng()), {draggable: true, icon: editIcon}).addTo(map);
             mylayer.bindPopup(
-                '<div id="popup"><b>' + parentname + '</b> <br>' +
+                '<div id="popup"><b>' + objectName + '</b> <br>' +
                 '<div id="popup"><b>' + shapename + '</b> <br>' +
                 '<i>' + shapetype + '</i> <br> <br>' +
                 '<div style="max-height:140px; overflow-y: auto">' + shapedescription + '<br> </div>'
@@ -172,7 +172,7 @@ function editshape() {
             }
             myoldlayer = L.marker(editlayer.getLatLng());
             myoldlayer.bindPopup(
-                '<div id="popup"><b>' + parentname + '</b> <br>' +
+                '<div id="popup"><b>' + objectName + '</b> <br>' +
                 '<div id="popup"><b>' + shapename + '</b> <br>' +
                 '<i>' + shapetype + '</i> <br> <br>' +
                 '<div style="max-height:140px; overflow-y: auto">' + shapedescription + '<br> </div>' +
@@ -309,7 +309,7 @@ function savetodb() {
     var geometrytype = $('#geometrytype').val();
     var dataString = '&shapename=' + shapename + '&shapetype=' + shapetype + '&shapedescription=' + shapedescription + '&shapecoords=' + shapecoords + '&geometrytype=' + geometrytype;
     $('#gisData').val($('#gisData').val() + dataString);
-    layer.bindPopup('<div id="popup"><b>' + parentname + '</b> (created)<br>' +
+    layer.bindPopup('<div id="popup"><b>' + objectName + '</b> (created)<br>' +
         '<div id="popup"><b>' + shapename + '</b> <br>' +
         '<i>' + shapetype + '</i> <br> <br>' +
         '<div style="max-height:140px; overflow-y: auto">' + shapedescription + '<br><br><br> </div>' +
@@ -336,7 +336,7 @@ function editsavetodb() {
         var myeditedlayer = L.marker((mylayer.getLatLng()), {icon: editedIcon}).addTo(map);
     }
     myeditedlayer.bindPopup(
-        '<div id="popup"><b>' + parentname + '</b> (edited)<br>' +
+        '<div id="popup"><b>' + objectName + '</b> (edited)<br>' +
         '<div id="popup"><b>' + shapename + '</b> <br>' +
         '<i>' + shapetype + '</i> <br> <br>' +
         '<div style="max-height:140px; overflow-y: auto">' + shapedescription + '<br><br><br> </div>' +
@@ -591,12 +591,22 @@ function saveMarker() {
     point['geometryType'] = $('#geometrytype').val();
     point['northing'] = $('#northing').val();
     point['easting'] = $('#easting').val();
+    //alert(JSON.parse($('#gisPoints').val()));
     var points = JSON.parse($('#gisPoints').val());
-    points.push(point);
-    $('#gisPoints').val(JSON.stringify(points));
+    //points = [{'a':'c'}, {'b':'d'}];
+    points = [{"type":"Feature","geometry":{"type":"Point","coordinates":[13.8713376224041,48.9051709700261]},"properties":{"title": "1111","objectId": "1046","objectDescription": "","id": "83","name": "my name","description": "my desc","marker-color": "#fc4353","siteType":" To do","shapeType": "centerpoint",}},];
+
+    /*if(!(points instanceof Array)) {
+        alert('not an array');
+        alert(points);
+    } else {
+        alert('array');
+    }
+    points.push(point);*/
+    //$('#gisPoints').val(JSON.stringify(points));
     var newmarker = L.marker(([point['northing'], point['easting']]), {icon: newIcon}).addTo(map);
     newmarker.bindPopup(
-        '<div id="popup"><b>' + parentname + '</b> (created)</br>' +
+        '<div id="popup"><b>' + objectName + '</b> (created)</br>' +
         '<div id="popup"><b>' + point['name'] + '</b></br>' +
         '<i>' + point['shapeType'] + '</i></br></br>' +
         '<div style="max-height:140px; overflow-y: auto">' + point['description'] + '</br></br></br></div>' +

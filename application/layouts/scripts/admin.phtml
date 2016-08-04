@@ -27,10 +27,12 @@
             <script src="<?= $validateMessageFile ?>"></script>
         <? endif ?>
         <script type="text/javascript" src="/js/functions.js"></script>
-        <? if ($this->jsonData): ?>
+        <? if ($this->gisData): ?>
             <script type="text/javascript">
-                var jsonMarker = [<?= $this->jsonData['marker'] ?>];
-                var jsonSearch = [<?= $this->jsonData['search'] ?>];
+                var gisPointAll = <?= $this->gisData['gisPointAll'] ?>;
+                var gisPointSelected = <?= $this->gisData['gisPointSelected'] ?>;
+                var jsonSearch = [];
+                <? /*var jsonSearch = [<?= $this->jsonData['search'] ?>]; */ ?>
             </script>
             <script type="text/javascript" src="/js/leaflet/mapbox.js"></script>
             <script type="text/javascript" src="/js/leaflet/L.Control.Geonames.js"></script>

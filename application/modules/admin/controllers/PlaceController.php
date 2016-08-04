@@ -12,7 +12,7 @@ class Admin_PlaceController extends Zend_Controller_Action {
 
     public function indexAction() {
         $this->view->objects = Model_EntityMapper::getByCodes('PhysicalObject');
-        $this->view->jsonData = Model_GisMapper::getAll();
+        $this->view->gisData = Model_GisMapper::getAll();
     }
 
     public function insertAction() {
@@ -134,15 +134,14 @@ class Admin_PlaceController extends Zend_Controller_Action {
     private function prepareDefaultUpdate(Zend_Form $form, Model_Entity $object, Model_Entity $place) {
         $points = Model_GisMapper::getPoints($place);
         $polygons = Model_GisMapper::getPolygons($place);
-        $this->view->points = json_encode($points);
+        $gisData = Model_GisMapper::getAll($object->id);
+        $this->view->gisData = $gisData;
         $this->view->polygons = $polygons;
-        $this->view->points2 = json_encode(Model_GisMapper::getPoints2($place));
-        $this->view->points2 = Model_GisMapper::getPoints2($place);
         $form->populate([
             'name' => $object->name,
             'description' => $object->description,
             'modified' => ($object->modified) ? $object->modified->getTimestamp() : 0,
-            'gisPoints' => json_encode($points)
+            'gisPoints' => json_encode($gisData['gisPointSelected'])
         ]);
         $form->populateDates($object, ['OA1' => 'begin', 'OA2' => 'end']);
         return;
