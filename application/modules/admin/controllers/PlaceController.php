@@ -12,7 +12,7 @@ class Admin_PlaceController extends Zend_Controller_Action {
 
     public function indexAction() {
         $this->view->objects = Model_EntityMapper::getByCodes('PhysicalObject');
-        $this->view->jsonData = Model_GisMapper::getJsonData($this->view->objects);
+        $this->view->jsonData = Model_GisMapper::getAll();
     }
 
     public function insertAction() {

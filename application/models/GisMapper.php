@@ -4,6 +4,47 @@
 
 class Model_GisMapper extends Model_AbstractMapper {
 
+
+     public static function getAll($objects = false) {
+         $sql = "
+            SELECT
+                place.id,
+                point.name AS point_name,
+                point.description AS point_description,
+                point.type,
+                ST_AsGeoJSON(point.geom) AS geojson,
+                object.name AS object_name,
+                object.description AS object_description
+            FROM model.entity place
+            JOIN model.link l ON place.id = l.range_id
+            JOIN model.entity object ON l.domain_id = object.id
+            JOIN gis.point point ON place.id = point.entity_id
+            WHERE
+                place.class_id = (SELECT id FROM model.class WHERE code LIKE 'E53') AND
+                l.property_id = (SELECT id FROM model.property WHERE code LIKE 'P53')
+        ";
+        $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
+        $statement->execute();
+        $points = '';
+        foreach ($statement->fetchAll() as $row) {
+            $points .= '{"type":"Feature","geometry":' . $row['geojson'] . ',
+                    "properties":{
+                        "title":"' . str_replace('"', '\"', $row['object_name']) . '",
+                        "objectDescription":"' . str_replace('"', '\"', $row['object_description']) . '",
+                        "marker-color": "#fc4353",
+                        "siteType":"To do",
+                        "objectId":"' . $row['id'] . '",
+                        "shapeType":"' . $row['type'] . '",
+                        "name": "' . str_replace('"', '\"', $row['point_name']) . '",
+                        "description":"' . str_replace('"', '\"', $row['point_description']) . '"
+                    }
+                },';
+        }
+        $json['marker'] = $points;
+        $json['search'] = '';
+        return $json;
+    }
+
     public static function insertPoints(Model_Entity $place, $points) {
         if (!$points) {
             return;
@@ -78,7 +119,8 @@ class Model_GisMapper extends Model_AbstractMapper {
     // @codeCoverageIgnoreEnd
 
     public static function getByEntity(Model_Entity $entity) {
-        /*$sql = 'SELECT easting, northing FROM gis.centerpoint WHERE entity_id = :entity_id;';
+        $sql = 'SELECT st_x(st_transform(geom,4326)) as easting, st_y(st_transform(geom,4326)) as northing
+            FROM gis.point WHERE entity_id = :entity_id;';
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->bindValue(':entity_id', $entity->id);
         $statement->execute();
@@ -89,7 +131,7 @@ class Model_GisMapper extends Model_AbstractMapper {
             $gis->northing = $result['northing'];
             $gis->setEntity($entity);
             return $gis;
-        }*/
+        }
         return false;
     }
 
@@ -169,7 +211,7 @@ class Model_GisMapper extends Model_AbstractMapper {
 
     public static function deleteByEntity($entity) {
         $sql = 'DELETE FROM gis.point WHERE entity_id = :entity_id;';
-        $sql .= 'DELETE FROM gis.polygon WHERE entity_id = :entity_id;';
+        //$sql .= 'DELETE FROM gis.polygon WHERE entity_id = :entity_id;';
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->bindValue('entity_id', $entity->id);
         $statement->execute();
