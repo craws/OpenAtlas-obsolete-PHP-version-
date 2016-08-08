@@ -66,7 +66,6 @@ class Admin_PlaceController extends Zend_Controller_Action {
         $form->preValidation($this->getRequest()->getPost());
         $formValid = $form->isValid($this->getRequest()->getPost());
         $modified = Model_EntityMapper::checkIfModified($object, $form->modified->getValue());
-
         if ($modified) {
             $log = Model_UserLogMapper::getLogForView('entity', $object->id);
             $this->view->modifier = $log['modifier_name'];
@@ -140,8 +139,7 @@ class Admin_PlaceController extends Zend_Controller_Action {
         $form->populate([
             'name' => $object->name,
             'description' => $object->description,
-            'modified' => ($object->modified) ? $object->modified->getTimestamp() : 0,
-            'gisPoints' => json_encode($gisData['gisPointSelected'])
+            'modified' => ($object->modified) ? $object->modified->getTimestamp() : 0
         ]);
         $form->populateDates($object, ['OA1' => 'begin', 'OA2' => 'end']);
         return;
@@ -173,7 +171,7 @@ class Admin_PlaceController extends Zend_Controller_Action {
             }
         }
         Model_GisMapper::insertPoints($place, json_decode($form->gisPoints->getValue()));
-        if ($form->getValue('gisData')) {
+        /*if ($form->getValue('gisData')) {
             $gisData = $form->getValue('gisData');
             parse_str($gisData, $output);
             $geom = "(SELECT ST_GeomFromText('" . $output['geometrytype'] . "'(" . $output['shapecoords'] . ")', 4326))";
@@ -195,7 +193,7 @@ class Admin_PlaceController extends Zend_Controller_Action {
                   $result = $statement->fetch(PDO::FETCH_ASSOC);
                   break;
           }
-        }
+        }*/
 
       }
 }

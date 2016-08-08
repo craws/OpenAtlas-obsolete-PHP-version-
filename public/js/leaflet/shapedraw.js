@@ -343,7 +343,16 @@ function editsavetodb() {
         '<i> (for re-editing please save or reload the whole place)</i>'
     );
     map.removeLayer(mylayer);
-    alert('@ alex: please update edited record to db: ' + dataString);
+
+    alert('@ Stefan - read comment in code about how to update');
+    // here we need the id of the shape/point not "selectedshape" which seems to be the id of the place
+    // loop through array of existing
+    var points = JSON.parse($('#gisPoints').val());
+    $.each(points, function(key, value) {
+        // alert(JSON.stringify(value.properties.id));
+        // if value.properties.id == toUpdateId: update or remove/add in array
+    });
+    $('#gisPoints').val(JSON.stringify(points)); // write array back to form field
     editclosemyformsave();
 }
 
@@ -358,7 +367,16 @@ function deleteshape() {
             map.removeLayer(editmarker);
             var dataString = 'uid=' + selectedshape + '&geometrytype=' + geometrytype;
         }
-        alert('@ Alex please delete this point/polygon from database: ' + dataString);
+
+        alert('@ Stefan - read comment in code about how to delete');
+        // here we need the id of the shape/point not "selectedshape" which seems to be the id of the place
+        // loop through array of existing
+        var points = JSON.parse($('#gisPoints').val());
+        $.each(points, function(key, value) {
+            // alert(JSON.stringify(value.properties.id));
+            // if value.properties.id == toDeleteId: remove from array
+        });
+        $('#gisPoints').val(JSON.stringify(points)); // write array back to form field
     }
 }
 
@@ -583,28 +601,12 @@ function drawmarker() {
 function saveMarker() {
     capture = false;
     document.getElementById('savebtn').style.display = 'none';
-    var point = {};
-    point['name'] = $('#shapename').val();
-    point['shapeType'] = 'centerpoint';
-    point['description'] = $('#shapedescription').val();
-    point['coords'] = $('#shapecoords').val();
-    point['geometryType'] = $('#geometrytype').val();
-    point['northing'] = $('#northing').val();
-    point['easting'] = $('#easting').val();
-    //alert(JSON.parse($('#gisPoints').val()));
+    var point = '{"type":"Feature","geometry":{"type":"Point","coordinates":[' + $('#easting').val() + ',' + $('#northing').val() + ']},"properties":';
+    point += '{"name": "' + $('#shapename').val() + '","description": "' + $('#shapedescription').val() + '","marker-color": "#fc4353","siteType":"To do","shapeType": "centerpoint"}}';
     var points = JSON.parse($('#gisPoints').val());
-    //points = [{'a':'c'}, {'b':'d'}];
-    points = [{"type":"Feature","geometry":{"type":"Point","coordinates":[13.8713376224041,48.9051709700261]},"properties":{"title": "1111","objectId": "1046","objectDescription": "","id": "83","name": "my name","description": "my desc","marker-color": "#fc4353","siteType":" To do","shapeType": "centerpoint",}},];
-
-    /*if(!(points instanceof Array)) {
-        alert('not an array');
-        alert(points);
-    } else {
-        alert('array');
-    }
-    points.push(point);*/
-    //$('#gisPoints').val(JSON.stringify(points));
-    var newmarker = L.marker(([point['northing'], point['easting']]), {icon: newIcon}).addTo(map);
+    points.push(JSON.parse(point));
+    $('#gisPoints').val(JSON.stringify(points));
+    var newmarker = L.marker(([$('#northing').val(), $('#easting').val()]), {icon: newIcon}).addTo(map);
     newmarker.bindPopup(
         '<div id="popup"><b>' + objectName + '</b> (created)</br>' +
         '<div id="popup"><b>' + point['name'] + '</b></br>' +
