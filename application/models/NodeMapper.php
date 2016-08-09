@@ -85,7 +85,7 @@ class Model_NodeMapper extends Model_EntityMapper {
         }
     }
 
-    /* This method is not reliable for types which are editable, use only for system types and tests! */
+    /* This method is not reliable for types which are editable, use only for system types and tests */
     public static function getByNodeCategoryName($rootName, $name) {
         foreach (Zend_Registry::get('nodes') as $node) {
             if (mb_strtolower($node->name) == mb_strtolower($rootName)) {

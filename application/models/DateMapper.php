@@ -49,7 +49,11 @@ class Model_DateMapper {
     }
 
     public static function saveDates(Model_Entity $entity, Zend_Form $form) {
+        $starttime = microtime(true);
+        $time = microtime(true);
         Model_EntityMapper::deleteDates($entity);
+        $timelog = sprintf('%04d',round((microtime(true) - $time)*1000)) . ' delete dates<br/>';
+        $time = microtime(true);
         switch ($entity->class->name) {
             case 'Person':
                 if ($form->getValue('birth')) {
@@ -75,6 +79,10 @@ class Model_DateMapper {
                 self::insert($entity, $form, 'end', 'OA2', 'Model_LinkMapper');
                 break;
         }
+        $timelog .= sprintf('%04d',round((microtime(true) - $time)*1000)) . ' insert dates<br/>';
+        $timelog .= '--<br/></strong>' . sprintf('%04d',round((microtime(true) - $starttime)*1000)) . ' total<br/><br/>';
+        echo($timelog);
+        //die;
     }
 
     public static function saveLinkDates(Model_Link $link, Zend_Form $form) {
@@ -96,34 +104,34 @@ class Model_DateMapper {
         if (!strlen($date['year2'])) {
             if (strlen($date['month']) && strlen($date['day'])) {
                 $exactDate = Model_EntityMapper::insert('E61', '', $description, $date);
-                Model_LinkMapper::insert('P2', $exactDate, self::getTypeByName('Exact date value'));
-                $linkMapper::insert($code, $entity, $exactDate);
-            } elseif (strlen($date['month']) && !strlen($date['day'])) {
+                Model_LinkMapper::insert('P2', $exactDate->id, self::getTypeByName('Exact date value')->id);
+                $linkMapper::insert($code, $entity->id, $exactDate->id);
+            } else if (strlen($date['month']) && !strlen($date['day'])) {
                 $date1['year'] = $date['year'];
                 $date1['month'] = $date['month'];
                 $date1['day'] = 1;
                 $fromDate = Model_EntityMapper::insert('E61', '', $description, $date1);
-                Model_LinkMapper::insert('P2', $fromDate, self::getTypeByName('From date value'));
-                $linkMapper::insert($code, $entity, $fromDate);
+                Model_LinkMapper::insert('P2', $fromDate->id, self::getTypeByName('From date value')->id);
+                $linkMapper::insert($code, $entity->id, $fromDate->id);
                 $date2['year'] = $date['year'];
                 $date2['month'] = $date['month'];
                 $date2['day'] = $fromDate->date->get(Zend_Date::MONTH_DAYS);
                 $toDate = Model_EntityMapper::insert('E61', '', $description, $date2);
-                Model_LinkMapper::insert('P2', $toDate, self::getTypeByName('To date value'));
-                $linkMapper::insert($code, $entity, $toDate);
+                Model_LinkMapper::insert('P2', $toDate->id, self::getTypeByName('To date value')->id);
+                $linkMapper::insert($code, $entity->id, $toDate->id);
             } else {
                 $date1['year'] = $date['year'];
                 $date1['month'] = 1;
                 $date1['day'] = 1;
                 $fromDate = Model_EntityMapper::insert('E61', '', $description, $date1);
-                Model_LinkMapper::insert('P2', $fromDate, self::getTypeByName('From date value'));
-                $linkMapper::insert($code, $entity, $fromDate);
+                Model_LinkMapper::insert('P2', $fromDate->id, self::getTypeByName('From date value')->id);
+                $linkMapper::insert($code, $entity->id, $fromDate->id);
                 $date2['year'] = $date['year'];
                 $date2['month'] = 12;
                 $date2['day'] = 31;
                 $toDate = Model_EntityMapper::insert('E61', '', $description, $date2);
-                Model_LinkMapper::insert('P2', $toDate, self::getTypeByName('To date value'));
-                $linkMapper::insert($code, $entity, $toDate);
+                Model_LinkMapper::insert('P2', $toDate->id, self::getTypeByName('To date value')->id);
+                $linkMapper::insert($code, $entity->id, $toDate->id);
             }
         } else {
             $date1['year'] = $date['year'];
@@ -136,8 +144,8 @@ class Model_DateMapper {
                 $date1['day'] = $date['day'];
             }
             $fromDate = Model_EntityMapper::insert('E61', '', $description, $date1);
-            Model_LinkMapper::insert('P2', $fromDate, self::getTypeByName('From date value'));
-            $linkMapper::insert($code, $entity, $fromDate);
+            Model_LinkMapper::insert('P2', $fromDate->id, self::getTypeByName('From date value')->id);
+            $linkMapper::insert($code, $entity->id, $fromDate->id);
             $date2['year'] = $date['year2'];
             $date2['month'] = $date1['month'];
             if (strlen($date['month2'])) {
@@ -148,8 +156,8 @@ class Model_DateMapper {
                 $date2['day'] = $date['day2'];
             }
             $toDate = Model_EntityMapper::insert('E61', '', $description, $date2);
-            Model_LinkMapper::insert('P2', $toDate, self::getTypeByName('To date value'));
-            $linkMapper::insert($code, $entity, $toDate);
+            Model_LinkMapper::insert('P2', $toDate->id, self::getTypeByName('To date value')->id);
+            $linkMapper::insert($code, $entity->id, $toDate->id);
         }
     }
 

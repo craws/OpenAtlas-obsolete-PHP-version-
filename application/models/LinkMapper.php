@@ -166,7 +166,7 @@ class Model_LinkMapper extends Model_AbstractMapper {
         parent::deleteAbstract('model.link', $link->id);
     }
 
-    public static function insertTypeLinks(Model_Entity $entity, Zend_Form $form, array $hierarchies) {
+    public static function insertTypeLinks($entity, Zend_Form $form, array $hierarchies) {
         foreach ($hierarchies as $hierarchy) {
             $idField = $hierarchy->nameClean . 'Id';
             if ($form->getValue($idField)) {
