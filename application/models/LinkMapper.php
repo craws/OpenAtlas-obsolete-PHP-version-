@@ -133,9 +133,7 @@ class Model_LinkMapper extends Model_AbstractMapper {
     /* domain and range parameter can be an id (integer) or a Model_Entity object */
     public static function insert($propertyCode, $domain, $range, $description = null) {
         $property = Model_PropertyMapper::getByCode($propertyCode);
-        if (in_array(APPLICATION_ENV, ['development', 'unittest'])) {
-            self::checkLink($property, $domain, $range);
-        }
+        self::checkLink($property, $domain, $range);
         $domainId = (is_a($domain, 'Model_Entity')) ? $domain->id : $domain;
         $rangeId = (is_a($range, 'Model_Entity')) ? $range->id : $range;
         $sql = 'INSERT INTO model.link (property_id, domain_id, range_id, description)
@@ -184,8 +182,6 @@ class Model_LinkMapper extends Model_AbstractMapper {
         $domain = (is_a($domainParam, 'Model_Entity')) ? $domainParam : Model_EntityMapper::getById($domainParam);
         $range = (is_a($rangeParam, 'Model_Entity')) ? $rangeParam : Model_EntityMapper::getById($rangeParam);
         if (!in_array($domain->class->code, $whitelistDomains)) {
-            // @codeCoverageIgnoreStart
-            // To do: test for invalid links and remove CoverageIgnore
             if (!in_array($domain->class->code, $property->domain->getSubRecursive())) {
                 $error = 'Wrong domain ' . $domain->class->code . ' for ' . $property->code;
                 Model_LogMapper::log('error', 'model', $error);
@@ -197,7 +193,6 @@ class Model_LinkMapper extends Model_AbstractMapper {
                 echo $error;
                 exit;
             }
-            // @codeCoverageIgnoreEnd
         }
     }
 
