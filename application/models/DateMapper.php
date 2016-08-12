@@ -90,6 +90,10 @@ class Model_DateMapper {
         if (!$form->getValue($name . 'Year')) {
             return false;
         }
+        $typeId = [];
+        foreach(Model_NodeMapper::getHierarchyByName('Date value type')->subs as $type) {
+            $typeId[$type->name] = $type->id;
+        }
         $description = trim($form->getValue($name . 'Comment'));
         $date['year'] = $form->getValue($name . 'Year');
         $date['month'] = $form->getValue($name . 'Month');
