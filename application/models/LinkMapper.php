@@ -150,7 +150,6 @@ class Model_LinkMapper extends Model_AbstractMapper {
         $statement->execute();
         $result = $statement->fetch(PDO::FETCH_ASSOC);
         $link = Model_LinkMapper::getById($result['id']);
-        Model_LogMapper::log('info', 'insert', 'insert Link (' . $link->id . ')');
         Model_UserLogMapper::insert('link', $link->id, 'insert');
         return $link;
     }

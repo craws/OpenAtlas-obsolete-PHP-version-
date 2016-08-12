@@ -168,7 +168,6 @@ class Model_EntityMapper extends \Model_AbstractMapper {
         $result = $statement->fetch(PDO::FETCH_ASSOC);
         $entity = self::getById($result['id']);
         Model_UserLogMapper::insert('entity', $entity->id, 'insert');
-        Model_LogMapper::log('info', 'insert', 'insert Entity (' . $entity->id . ')');
         return $entity;
     }
 
