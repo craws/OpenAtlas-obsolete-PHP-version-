@@ -35,14 +35,14 @@ class Admin_Form_Settings extends Craws\Form\Table {
             } else if ($name == 'log_level') {
                 $element = $this->createElement('select', $elementName, ['label' => $this->getLabel($name)]);
                 $element->addMultiOptions([
-                    1 => $view->ucstring('emergency'),
-                    2 => $view->ucstring('alert'),
-                    3 => $view->ucstring('critical'),
-                    4 => $view->ucstring('error'),
-                    5 => $view->ucstring('warn'),
-                    6 => $view->ucstring('notice'),
-                    7 => $view->ucstring('info'),
-                    8 => $view->ucstring('debug'),
+                    0 => $view->ucstring('emergency'),
+                    1 => $view->ucstring('alert'),
+                    2 => $view->ucstring('critical'),
+                    3 => $view->ucstring('error'),
+                    4 => $view->ucstring('warn'),
+                    5 => $view->ucstring('notice'),
+                    6 => $view->ucstring('info'),
+                    7 => $view->ucstring('debug'),
                 ]);
                 $element->setValue($value);
             } else if ($name == 'default_table_rows') {
