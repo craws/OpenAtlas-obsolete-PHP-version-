@@ -27,7 +27,7 @@
                     6 => 'info',
                     7 => 'debug'
                 ];
-                $value = '<span class="log ' . $array[$value] . '">' . $this->ucstring($array[$value]) . '</span>';
+                $value = $this->ucstring($array[$value]);
             }
             echo '<div><div>' . str_replace("_", " ", $this->ucstring($name)) . '</div><div>' . $value . '</div></div>';
         }

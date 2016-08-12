@@ -10,6 +10,7 @@ BEGIN;
 ALTER TABLE gis.polygon RENAME text TO type;
 ALTER TABLE gis.centerpoint ADD COLUMN name text;
 ALTER TABLE gis.centerpoint ADD COLUMN description text;
+UPDATE web.settings SET value = 6 WHERE name = 'log_level';
 
 COMMIT;
 
