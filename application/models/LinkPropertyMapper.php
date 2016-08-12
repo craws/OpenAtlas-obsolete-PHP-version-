@@ -95,7 +95,6 @@ class Model_LinkPropertyMapper extends Model_AbstractMapper {
         $statement->execute();
         $result = $statement->fetch(PDO::FETCH_ASSOC);
         $link = Model_LinkPropertyMapper::getById($result['id']);
-        Model_LogMapper::log('info', 'insert', 'insert LinkProperty (' . $link->id . ')');
         Model_UserLogMapper::insert('LinkProperty', $link->id, 'insert');
         return $link;
     }

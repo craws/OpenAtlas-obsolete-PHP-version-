@@ -19,7 +19,7 @@ INSERT INTO settings ("group", name, value) VALUES
 ('authentication', 'random_password_length', '16'),
 ('authentication', 'reset_confirm_hours', '24'),
 ('general', 'language', '1'),
-('general', 'log_level', '5'),
+('general', 'log_level', '6'),
 ('general', 'maintenance', '0'),
 ('general', 'offline', '1'),
 ('general', 'sitename', 'OpenAtlas'),
