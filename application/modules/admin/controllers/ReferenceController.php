@@ -23,7 +23,8 @@ class Admin_ReferenceController extends Zend_Controller_Action {
             $this->view->rootType = $rootType->name;
             return;
         }
-        $reference = Model_EntityMapper::insert('E31', $form->getValue('name'), $form->getValue('description'));
+        $referenceId = Model_EntityMapper::insert('E31', $form->getValue('name'), $form->getValue('description'));
+        $reference = Model_EntityMapper::getById($referenceId);
         self::save($form, $reference, $hierarchies);
         $this->_helper->message('info_insert');
         $url = '/admin/reference/view/id/' . $reference->id;

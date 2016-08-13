@@ -50,8 +50,8 @@ class Admin_HierarchyController extends Zend_Controller_Action {
             if ($inverse) {
                 $name .= ' (' . $inverse . ')';
             }
-            $type = Model_EntityMapper::insert($super->class->code, $name);
-            Model_LinkMapper::insert($super->propertyToSuper, $type, $super);
+            $typeId = Model_EntityMapper::insert($super->class->code, $name);
+            Model_LinkMapper::insert($super->propertyToSuper, $typeId, $super);
             $this->_helper->message('info_insert');
         }
         $tabId = ($super->rootId) ? $super->rootId : $super->id;
@@ -71,7 +71,8 @@ class Admin_HierarchyController extends Zend_Controller_Action {
                 return;
             }
         }
-        $hierarchy = Model_EntityMapper::insert('E55', $form->getValue('name'), $form->getValue('description'));
+        $hierarchyId = Model_EntityMapper::insert('E55', $form->getValue('name'), $form->getValue('description'));
+        $hierarchy = Model_EntityMapper::getById($hierarchyId);
         Model_NodeMapper::insertHierarchy($form, $hierarchy);
         $this->_helper->message('info_insert');
         return $this->_helper->redirector->gotoUrl('/admin/hierarchy/#tab' . $hierarchy->id);

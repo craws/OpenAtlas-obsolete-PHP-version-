@@ -80,7 +80,8 @@ class Admin_SourceController extends Zend_Controller_Action {
             $this->view->typeTreeData = Model_NodeMapper::getTreeData('source');
             return;
         }
-        $source = Model_EntityMapper::insert('E33', $form->getValue('name'), $form->getValue('description'));
+        $sourceId = Model_EntityMapper::insert('E33', $form->getValue('name'), $form->getValue('description'));
+        $source = Model_EntityMapper::getById($sourceId);
         $type = Model_NodeMapper::getByNodeCategoryName('Linguistic object classification', 'Source Content');
         Model_LinkMapper::insert('P2', $source, $type);
         self::save($form, $source, $hierarchies);
@@ -121,9 +122,9 @@ class Admin_SourceController extends Zend_Controller_Action {
             $this->view->source = $source;
             return;
         }
-        $text = Model_EntityMapper::insert('E33', $form->getValue('name'), $form->getValue('description'));
-        Model_LinkMapper::insert('P2', $text, Model_NodeMapper::getById($form->getValue('type')));
-        Model_LinkMapper::insert('P73', $source, $text);
+        $textId = Model_EntityMapper::insert('E33', $form->getValue('name'), $form->getValue('description'));
+        Model_LinkMapper::insert('P2', $textId, Model_NodeMapper::getById($form->getValue('type')));
+        Model_LinkMapper::insert('P73', $source, $textId);
         $this->_helper->message('info_insert');
         return $this->_helper->redirector->gotoUrl('/admin/source/view/id/' . $source->id . '#tabText');
     }

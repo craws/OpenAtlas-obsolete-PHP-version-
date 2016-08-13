@@ -21,7 +21,8 @@ class Admin_CarrierController extends Zend_Controller_Action {
             $this->view->objects = Model_EntityMapper::getByCodes('PhysicalObject');
             return;
         }
-        $carrier = Model_EntityMapper::insert('E84', $form->getValue('name'), $form->getValue('description'));
+        $carrierId = Model_EntityMapper::insert('E84', $form->getValue('name'), $form->getValue('description'));
+        $carrier = Model_EntityMapper::getById($carrierId);
         self::save($form, $carrier, $hierarchies);
         $this->_helper->message('info_insert');
         $url = '/admin/carrier/view/id/' . $carrier->id;

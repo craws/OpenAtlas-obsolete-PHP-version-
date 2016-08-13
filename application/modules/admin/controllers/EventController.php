@@ -52,7 +52,8 @@ class Admin_EventController extends Zend_Controller_Action {
             $this->view->events = Model_EntityMapper::getByCodes('Event');
             return;
         }
-        $event = Model_EntityMapper::insert($class->id, $form->getValue('name'), $form->getValue('description'));
+        $eventId = Model_EntityMapper::insert($class->id, $form->getValue('name'), $form->getValue('description'));
+        $event = Model_EntityMapper::getById($eventId);
         self::save($event, $form, $hierarchies);
         if ($source) {
             Model_LinkMapper::insert('P67', $source, $event);

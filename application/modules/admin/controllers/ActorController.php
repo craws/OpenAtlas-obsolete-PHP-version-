@@ -52,7 +52,8 @@ class Admin_ActorController extends Zend_Controller_Action {
             $this->view->source = $source;
             return;
         }
-        $actor = Model_EntityMapper::insert($class->id, $form->getValue('name'), $form->getValue('description'));
+        $actorId = Model_EntityMapper::insert($class->id, $form->getValue('name'), $form->getValue('description'));
+        $actor = Model_EntityMapper::getById($actorId);
         if ($source) {
             Model_LinkMapper::insert('P67', $source, $actor);
         }
@@ -236,8 +237,8 @@ class Admin_ActorController extends Zend_Controller_Action {
         $data = $form->getValues();
         foreach (array_unique($data['alias']) as $name) {
             if (trim($name)) {
-                $alias = Model_EntityMapper::insert('E82', trim($name));
-                Model_LinkMapper::insert('P131', $entity, $alias);
+                $aliasId = Model_EntityMapper::insert('E82', trim($name));
+                Model_LinkMapper::insert('P131', $entity, $aliasId);
             }
         }
         $this->timelog .= sprintf('%04d',round((microtime(true) - $this->time)*1000)) . ' save alias<br/>';
