@@ -137,6 +137,7 @@ class Admin_PlaceController extends Zend_Controller_Action {
         $this->view->gisData = $gisData;
         $this->view->polygons = $polygons;
         $form->populate([
+            'gisPoints' => $gisData['gisPointSelected'],
             'name' => $object->name,
             'description' => $object->description,
             'modified' => ($object->modified) ? $object->modified->getTimestamp() : 0

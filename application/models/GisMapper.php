@@ -45,7 +45,7 @@ class Model_GisMapper extends Model_AbstractMapper {
                         '"description": "' . str_replace('"', '\"', $row['point_description']) . '",' .
                         '"marker-color": "#fc4353",' .
                         '"siteType":" To do",' .
-                        '"shapeType": "' . $row['type'] . '",' .
+                        '"shapeType": "' . $row['type'] . '"' .
                     '}' .
                 '},';
             if ($row['object_id'] == $objectId) {
@@ -54,6 +54,8 @@ class Model_GisMapper extends Model_AbstractMapper {
                 $gis['gisPointAll'] .= $point;
             }
         }
+        $gis['gisPointAll'] = rtrim($gis['gisPointAll'], ",");
+        $gis['gisPointSelected'] = rtrim($gis['gisPointSelected'], ",");
         $gis['gisPointAll'] .= ']';
         $gis['gisPointSelected'] .= ']';
         return $gis;

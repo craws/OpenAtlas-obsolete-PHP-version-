@@ -270,8 +270,7 @@ function setpopup2(feature, layer) {
 
 // bitte dynamisch generieren aus der Datenbank jeweils die Geometrien zu den Parent Places
 
-var placepoints = gisPointSelected;
-$('#gisPoints').val(JSON.stringify(placepoints));
+var placepoints = JSON.parse($('#gisPoints').val());
 var placepolygons = [{"type": "FeatureCollection", "features": [{"type": "Feature", "geometry": {"type": "Polygon", "coordinates":
                         [[[16.921749, 48.61195], [16.922881, 48.611925], [16.923533, 48.601902], [16.923899, 48.612708], [16.922325, 48.612788], [16.921957, 48.612428], [16.921749, 48.61195]]]},
                 "properties": {"objectId": 1, "objectName": "Hohenau", "type": "Shape", "title": "Hohenau Sst. x2 Gest\u00fctwiese", "description": "Ungef\u00e4hre Ausdehnung der Fundstreuung"}}]}];
