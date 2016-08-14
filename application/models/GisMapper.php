@@ -3,7 +3,6 @@
 /* Copyright 2016 by Alexander Watzinger and others. Please see the file README.md for licensing information */
 
 class Model_GisMapper extends Model_AbstractMapper {
-
     /* type, search?, new params */
 
     public static function getAll($objectId = 0) {
@@ -32,32 +31,32 @@ class Model_GisMapper extends Model_AbstractMapper {
         ";
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->execute();
-        $gis['gisPointAll'] = '[';
-        $gis['gisPointSelected'] = '[';
+        $all = [];
+        $selected = [];
         foreach ($statement->fetchAll() as $row) {
-            $point = '{"type":"Feature","geometry":' . $row['geojson'] . ',' .
-                    '"properties":{' .
-                        '"title": "' . str_replace('"', '\"', $row['object_name']) . '",' .
-                        '"objectId": "' . $row['object_id'] . '",' .
-                        '"objectDescription": "' . str_replace('"', '\"', $row['object_description']) . '",' .
-                        '"id": "' . $row['point_id'] . '",' .
-                        '"name": "' . str_replace('"', '\"', $row['point_name']) . '",' .
-                        '"description": "' . str_replace('"', '\"', $row['point_description']) . '",' .
-                        '"marker-color": "#fc4353",' .
-                        '"siteType":" To do",' .
-                        '"shapeType": "' . $row['type'] . '"' .
-                    '}' .
-                '},';
+            $point = [
+                'type' => 'Feature',
+                'geometry' => json_decode($row['geojson']),
+                'properties' => [
+                    'title' => str_replace('"', '\"', $row['object_name']),
+                    'objectId' => (int) $row['object_id'],
+                    'objectDescription' => str_replace('"', '\"', $row['object_description']),
+                    'id' => (int) $row['point_id'],
+                    'name' => str_replace('"', '\"', $row['point_name']),
+                    'description' => str_replace('"', '\"', $row['point_description']),
+                    'marker-color' => "#fc4353",
+                    'siteType' => 'To do',
+                    'shapeType' => $row['type'],
+                ]
+            ];
             if ($row['object_id'] == $objectId) {
-                $gis['gisPointSelected'] .= $point;
+                $selected[] = $point;
             } else {
-                $gis['gisPointAll'] .= $point;
+                $all[] = $point;
             }
         }
-        $gis['gisPointAll'] = rtrim($gis['gisPointAll'], ",");
-        $gis['gisPointSelected'] = rtrim($gis['gisPointSelected'], ",");
-        $gis['gisPointAll'] .= ']';
-        $gis['gisPointSelected'] .= ']';
+        $gis['gisPointAll'] = json_encode($all);
+        $gis['gisPointSelected'] = json_encode($selected);
         return $gis;
     }
 
@@ -192,19 +191,6 @@ class Model_GisMapper extends Model_AbstractMapper {
         $statement->execute();
         $points = '[';
         foreach ($statement->fetchAll() as $row) {
-            /* $geometry = new stdClass();
-              $geometry->type = 'Point';
-              $geometry->coordinates = '[' . $row['easting'] . ',' . $row['northing'] . ']';
-              $properties = new stdClass();
-              $properties->uid = $row['id'];
-              $properties->parentname = $entity->name;
-              $properties->type = 'Centerpoint';
-              $properties->title = $row['name'];
-              $properties->description = $row['description'];
-              $point = new stdClass();
-              $point->type = 'Feature';
-              $point->geometry = $geometry;
-              $point->properties = $properties; */
             $point = '{
                     "type":"Feature",
                     "geometry":{
