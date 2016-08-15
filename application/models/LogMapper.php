@@ -102,10 +102,9 @@ class Model_LogMapper extends Model_AbstractMapper {
         $result = $statement->fetch(PDO::FETCH_ASSOC);
         $logId = $result['id'];
         $frontController = Zend_Controller_Front::getInstance();
-        if ($frontController->getRequest() == null || !is_array($frontController->getRequest()->getParams())) {
-            return $logId;
+        if ($frontController->getRequest() && is_array($frontController->getRequest()->getParams())) {
+            self::logDetails($logId);
         }
-        self::logDetails($logId);
         return $logId;
     }
 

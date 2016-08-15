@@ -20,7 +20,7 @@ class Model_EntityMapper extends \Model_AbstractMapper {
         $sql = self::$sql;
         $sql .= ($own) ? " LEFT JOIN web.user_log ul ON e.id = ul.table_id AND ul.table_name LIKE 'entity'" : '';
         $sql .= " WHERE lower(e.name) LIKE :term ";
-        $sql .= ($description) ? " OR lower(e.description) LIKE :term) AND " : " AND ";
+        $sql .= ($description) ? " OR lower(e.description) LIKE :term AND " : " AND ";
         $sql .= ($own) ? " ul.user_id = :user_id AND " : '';
         $sql .= "e.class_id IN (SELECT id from model.class WHERE code IN ('" . implode("', '", $codes) . "'))";
         $sql .= " GROUP BY e.id, c.code ORDER BY e.name";

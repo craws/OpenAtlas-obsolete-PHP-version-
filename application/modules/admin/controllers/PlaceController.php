@@ -99,7 +99,7 @@ class Admin_PlaceController extends Zend_Controller_Action {
             $link->delete();
         }
         self::save($form, $object, $place, $hierarchies);
-        Model_UserLogMapper::insert('entity', $object->id, 'insert');
+        Model_UserLogMapper::insert('entity', $object->id, 'update');
         Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_update');
         return $this->_helper->redirector->gotoUrl('/admin/place/view/id/' . $object->id);

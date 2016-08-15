@@ -176,6 +176,8 @@ class Model_LinkMapper extends Model_AbstractMapper {
         $whitelistDomains = Zend_Registry::get('config')->get('linkcheckIgnoreDomains')->toArray();
         $domain = (is_a($domainParam, 'Model_Entity')) ? $domainParam : Model_EntityMapper::getById($domainParam);
         $range = (is_a($rangeParam, 'Model_Entity')) ? $rangeParam : Model_EntityMapper::getById($rangeParam);
+        // cannot test when using exit
+        // @codeCoverageIgnoreStart
         if (!in_array($domain->class->code, $whitelistDomains)) {
             if (!in_array($domain->class->code, $property->domain->getSubRecursive())) {
                 $error = 'Wrong domain ' . $domain->class->code . ' for ' . $property->code;
@@ -189,6 +191,7 @@ class Model_LinkMapper extends Model_AbstractMapper {
                 exit;
             }
         }
+        // @codeCoverageIgnoreEnd
     }
 
 }
