@@ -5,7 +5,9 @@
 class Admin_ReferenceController extends Zend_Controller_Action {
 
     public function deleteAction() {
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         Model_EntityMapper::getById($this->_getParam('id'))->delete();
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_delete');
         return $this->_helper->redirector->gotoUrl('/admin/reference');
     }
@@ -23,11 +25,12 @@ class Admin_ReferenceController extends Zend_Controller_Action {
             $this->view->rootType = $rootType->name;
             return;
         }
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         $referenceId = Model_EntityMapper::insert('E31', $form->getValue('name'), $form->getValue('description'));
-        $reference = Model_EntityMapper::getById($referenceId);
-        self::save($form, $reference, $hierarchies);
+        self::save($form, $referenceId, $hierarchies);
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_insert');
-        $url = '/admin/reference/view/id/' . $reference->id;
+        $url = '/admin/reference/view/id/' . $referenceId;
         if ($form->getElement('continue')->getValue()) {
             $url = '/admin/reference/insert/type/' . $rootType->name;
         }
@@ -85,11 +88,13 @@ class Admin_ReferenceController extends Zend_Controller_Action {
         }
         $reference->name = $form->getValue('name');
         $reference->description = $form->getValue('description');
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         $reference->update();
         foreach (Model_LinkMapper::getLinks($reference, ['P2']) as $link) {
             $link->delete();
         }
-        self::save($form, $reference, $hierarchies);
+        self::save($form, $reference->id, $hierarchies);
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_update');
         return $this->_helper->redirector->gotoUrl('/admin/reference/view/id/' . $reference->id);
     }
@@ -120,7 +125,7 @@ class Admin_ReferenceController extends Zend_Controller_Action {
         $this->view->placeLinks = $placeLinks;
     }
 
-    private function save(Zend_Form $form, Model_Entity $entity, array $hierarchies) {
-        Model_LinkMapper::insertTypeLinks($entity, $form, $hierarchies);
+    private function save(Zend_Form $form, $referenceId, array $hierarchies) {
+        Model_LinkMapper::insertTypeLinks($referenceId, $form, $hierarchies);
     }
 }

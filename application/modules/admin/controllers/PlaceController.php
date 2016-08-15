@@ -5,7 +5,9 @@
 class Admin_PlaceController extends Zend_Controller_Action {
 
     public function deleteAction() {
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         Model_EntityMapper::getById($this->_getParam('id'))->delete();
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_delete');
         return $this->_helper->redirector->gotoUrl('/admin/place');
     }
@@ -32,6 +34,7 @@ class Admin_PlaceController extends Zend_Controller_Action {
             $this->view->source = $source;
             return;
         }
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         $objectId = Model_EntityMapper::insert('E18', $form->getValue('name'), $form->getValue('description'));
         $object = Model_EntityMapper::getById($objectId);
         $placeId = Model_EntityMapper::insert('E53', 'Location of ' . $form->getValue('name'));
@@ -41,6 +44,7 @@ class Admin_PlaceController extends Zend_Controller_Action {
         if ($source) {
             Model_LinkMapper::insert('P67', $source, $object);
         }
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_insert');
         $url = '/admin/place/view/id/' . $object->id;
         if ($form->getElement('continue')->getValue() && $source) {
@@ -78,6 +82,7 @@ class Admin_PlaceController extends Zend_Controller_Action {
         }
         $object->name = $form->getValue('name');
         $object->description = $form->getValue('description');
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         $object->update();
         foreach (Model_LinkMapper::getLinks($object, 'P2') as $objectLink) {
             $objectLink->delete();
@@ -92,6 +97,7 @@ class Admin_PlaceController extends Zend_Controller_Action {
             $link->delete();
         }
         self::save($form, $object, $place, $hierarchies);
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_update');
         return $this->_helper->redirector->gotoUrl('/admin/place/view/id/' . $object->id);
     }

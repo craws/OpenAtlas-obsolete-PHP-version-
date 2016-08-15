@@ -12,7 +12,9 @@ class Admin_EventController extends Zend_Controller_Action {
     public function deleteAction() {
         $event = Model_EntityMapper::getById($this->_getParam('id'));
         if ($event->id != $this->rootEvent->id) {
+            Zend_Db_Table::getDefaultAdapter()->beginTransaction();
             $event->delete();
+            Zend_Db_Table::getDefaultAdapter()->commit();
             $this->_helper->message('info_delete');
         }
         return $this->_helper->redirector->gotoUrl('/admin/event');
@@ -52,12 +54,14 @@ class Admin_EventController extends Zend_Controller_Action {
             $this->view->events = Model_EntityMapper::getByCodes('Event');
             return;
         }
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         $eventId = Model_EntityMapper::insert($class->id, $form->getValue('name'), $form->getValue('description'));
         $event = Model_EntityMapper::getById($eventId);
         self::save($event, $form, $hierarchies);
         if ($source) {
             Model_LinkMapper::insert('P67', $source, $event);
         }
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_insert');
         $url = '/admin/event/view/id/' . $event->id;
         if ($actor) {
@@ -104,11 +108,13 @@ class Admin_EventController extends Zend_Controller_Action {
         }
         $event->name = $form->getValue('name');
         $event->description = $form->getValue('description');
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         $event->update();
         foreach (Model_LinkMapper::getLinks($event, ['P2', 'P7', 'P117', 'P22', 'P23', 'P24']) as $link) {
             $link->delete();
         }
         self::save($event, $form, $hierarchies);
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_update');
         return $this->_helper->redirector->gotoUrl('/admin/event/view/id/' . $event->id);
     }

@@ -29,9 +29,7 @@ class Model_ContentMapper extends Model_AbstractMapper {
     }
 
     public static function update(Model_content $content) {
-        Zend_Db_Table::getDefaultAdapter()->prepare('BEGIN;')->execute();
         Model_TranslationMapper::update($content->id, $content->texts);
-        Zend_Db_Table::getDefaultAdapter()->prepare('COMMIT;')->execute();
     }
 
 }

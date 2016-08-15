@@ -5,7 +5,9 @@
 class Admin_ActorController extends Zend_Controller_Action {
 
     public function deleteAction() {
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         Model_EntityMapper::getById($this->_getParam('id'))->delete();
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_delete');
         return $this->_helper->redirector->gotoUrl('/admin/actor');
     }
@@ -209,19 +211,13 @@ class Admin_ActorController extends Zend_Controller_Action {
 
     private function save(Model_Entity $entity, Zend_Form $form, array $hierarchies) {
         Model_LinkMapper::insertTypeLinks($entity, $form, $hierarchies);
-        $this->timelog .= sprintf('%04d', round((microtime(true) - $this->time) * 1000)) . ' insert type links<br/>';
-        $this->time = microtime(true);
         Model_DateMapper::saveDates($entity, $form);
-        $this->timelog .= sprintf('%04d', round((microtime(true) - $this->time) * 1000)) . ' save dates<br/>';
-        $this->time = microtime(true);
         foreach (['residenceId' => 'P74', 'appearsFirstId' => 'OA8', 'appearsLastId' => 'OA9'] as $formField => $propertyCode) {
             if ($form->getValue($formField)) {
                 $place = Model_LinkMapper::getLinkedEntity($form->getValue($formField), 'P53');
                 Model_LinkMapper::insert($propertyCode, $entity, $place);
             }
         }
-        $this->timelog .= sprintf('%04d', round((microtime(true) - $this->time) * 1000)) . ' save places<br/>';
-        $this->time = microtime(true);
         $data = $form->getValues();
         foreach (array_unique($data['alias']) as $name) {
             if (trim($name)) {
@@ -229,8 +225,6 @@ class Admin_ActorController extends Zend_Controller_Action {
                 Model_LinkMapper::insert('P131', $entity, $aliasId);
             }
         }
-        $this->timelog .= sprintf('%04d', round((microtime(true) - $this->time) * 1000)) . ' save alias<br/>';
-        $this->time = microtime(true);
     }
 
 }

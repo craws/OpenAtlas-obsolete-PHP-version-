@@ -9,20 +9,22 @@ class Admin_SettingsController extends Zend_Controller_Action {
     }
 
     public function updateAction() {
-        $settings = Model_SettingsMapper::getSettings();
         $form = new Admin_Form_Settings();
-        $this->view->form = $form;
-        if ($this->getRequest()->isPost() && $form->isValid($this->getRequest()->getPost())) {
-            $settings = [];
-            foreach ($this->getRequest()->getPost() as $groupAndName => $value) {
-                $array = explode("__", $groupAndName);
-                $settings[$array[0]][$array[1]] = $value;
-            }
-            Model_SettingsMapper::updateSettings($settings);
-            $this->_helper->log('info', 'admin', 'Updated settings');
-            $this->_helper->message('info_update');
-            return $this->_helper->redirector->gotoUrl('/admin/settings');
+        if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
+            $this->view->form = $form;
+            return;
         }
+        $settings = [];
+        foreach ($this->getRequest()->getPost() as $groupAndName => $value) {
+            $array = explode("__", $groupAndName);
+            $settings[$array[0]][$array[1]] = $value;
+        }
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
+        Model_SettingsMapper::updateSettings($settings);
+        Zend_Db_Table::getDefaultAdapter()->commit();
+        $this->_helper->log('info', 'admin', 'Updated settings');
+        $this->_helper->message('info_update');
+        return $this->_helper->redirector->gotoUrl('/admin/settings');
     }
 
 }

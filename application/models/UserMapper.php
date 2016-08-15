@@ -192,10 +192,10 @@ class Model_UserMapper extends Model_AbstractMapper {
     }
 
     public static function updateSettings(Model_User $user) {
-        $sql = 'SELECT FROM web.user_settings (user_id, "name", "value") VALUES (:user_id, :name, :value);';
-        $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $oldSettings = self::getSettings($user);
         $newSettings = $user->settings;
+        $sql = 'SELECT FROM web.user_settings (user_id, "name", "value") VALUES (:user_id, :name, :value);';
+        $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         foreach ($newSettings as $name => $value) {
             if (isset($oldSettings[$name])) {
                 $sql = 'UPDATE web.user_settings SET "value" = :value WHERE user_id = :user_id AND "name" = :name;';

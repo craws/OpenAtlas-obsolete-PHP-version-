@@ -10,7 +10,7 @@ class Admin_InvolvementController extends Zend_Controller_Action {
     }
 
     public function insertAction() {
-        /* Only multiple actors. Multiple events not viable because of different activity possiblities */
+        /* Multiple actors are possible but not multiple events because of different activity possibilities */
         $form = new Admin_Form_Involvement();
         $hierarchies = $form->addHierarchies('Involvement');
         $event = null;
@@ -45,6 +45,7 @@ class Admin_InvolvementController extends Zend_Controller_Action {
         } else {
             $activity = Model_PropertyMapper::getById($this->_getParam('activity'));
         }
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         if ($actor) {
             $link = Model_LinkMapper::insert($activity->code, $event, $actor, $form->getValue('description'));
             self::save($link, $form, $hierarchies);
@@ -54,6 +55,7 @@ class Admin_InvolvementController extends Zend_Controller_Action {
                 self::save($link, $form, $hierarchies);
             }
         }
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_insert');
         if ($this->_getParam('origin') == 'event') {
             return $this->_helper->redirector->gotoUrl('/admin/event/view/id/' . $event->id . '/#tabActor');
@@ -81,6 +83,7 @@ class Admin_InvolvementController extends Zend_Controller_Action {
             $this->view->origin = 'event';
             return;
         }
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         Model_LinkMapper::delete($link);
         if ($event->class->code == 'E6') {
             $activity = Model_PropertyMapper::getByCode('P11');
@@ -89,6 +92,7 @@ class Admin_InvolvementController extends Zend_Controller_Action {
         }
         $newLink = Model_LinkMapper::insert($activity->code, $event, $actor, $form->getValue('description'));
         self::save($newLink, $form, $hierarchies);
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_update');
         if ($this->_getParam('origin') == 'event') {
             return $this->_helper->redirector->gotoUrl('/admin/event/view/id/' . $event->id . '/#tabActor');
@@ -100,8 +104,8 @@ class Admin_InvolvementController extends Zend_Controller_Action {
         foreach ($hierarchies as $hierarchy) {
             $idField = $hierarchy->nameClean . 'Id';
             if ($form->getValue($idField)) {
-                foreach (explode(",", $form->getValue($idField)) as $id) {
-                    Model_LinkPropertyMapper::insert('P2', $link, Model_NodeMapper::getById($id));
+                foreach (explode(",", $form->getValue($idField)) as $rangeId) {
+                    Model_LinkPropertyMapper::insert('P2', $link, $rangeId);
                 }
             } else if ($hierarchy->system) {
                 Model_LinkPropertyMapper::insert('P2', $link, $hierarchy);

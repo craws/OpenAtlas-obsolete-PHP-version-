@@ -256,16 +256,16 @@ class Model_NodeMapper extends Model_EntityMapper {
         }
     }
 
-    public static function insertHierarchy(Zend_Form $form, Model_Entity $hierarchy) {
+    public static function insertHierarchy(Zend_Form $form, $hierarchyId, $hierarchyName) {
         $sql = "INSERT INTO web.hierarchy (id, name, multiple, extendable) VALUES (:id, :name, :multiple, 1)";
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
-        $statement->bindValue(':id', $hierarchy->id);
-        $statement->bindValue(':name', $hierarchy->name);
+        $statement->bindValue(':id', $hierarchyId);
+        $statement->bindValue(':name', $hierarchyName);
         $statement->bindValue(':multiple', $form->getValue('multiple'));
         $statement->execute();
         if ($form->getValue('forms')) {
             foreach ($form->getValue('forms') as $formId) {
-                $values[] = '(' . $hierarchy->id . ',' . (int) $formId . ')';
+                $values[] = '(' . $hierarchyId . ',' . (int) $formId . ')';
             }
             $sqlForms = "INSERT INTO web.hierarchy_form (hierarchy_id, form_id) VALUES " . implode(',', $values) ;
             $statementForms = Zend_Db_Table::getDefaultAdapter()->prepare($sqlForms . ';');

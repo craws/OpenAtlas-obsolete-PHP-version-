@@ -14,6 +14,7 @@ class Admin_RelationController extends Zend_Controller_Action {
             $this->view->form = $form;
             return;
         }
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         foreach (explode(",", $form->getValue('relatedActorIds')) as $relatedActorId) {
             if ($form->getValue('inverse')) {
                 $link = Model_LinkMapper::insert('OA7', $relatedActorId, $actor, $this->_getParam('description'));
@@ -22,6 +23,7 @@ class Admin_RelationController extends Zend_Controller_Action {
             }
             self::save($link, $form, $hierarchies);
         }
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_insert');
         $url = '/admin/actor/view/id/' . $actor->id . '/#tabRelation';
         if ($form->getElement('continue')->getValue()) {
@@ -51,6 +53,7 @@ class Admin_RelationController extends Zend_Controller_Action {
         }
         $actor = $link->domain;
         $relatedActor = $link->range;
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         $link->delete();
         $form->getValue('inverse');
         if (($originActor->id == $actor->id && !$form->getValue('inverse')) ||
@@ -60,6 +63,7 @@ class Admin_RelationController extends Zend_Controller_Action {
             $link = Model_LinkMapper::insert('OA7', $relatedActor, $actor, $this->_getParam('description'));
         }
         self::save($link, $form, $hierarchies);
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_update');
         return $this->_helper->redirector->gotoUrl('/admin/actor/view/id/' . $originActor->id . '/#tabRelation');
     }

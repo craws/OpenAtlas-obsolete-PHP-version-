@@ -40,6 +40,7 @@ class Model_LinkPropertyMapper extends Model_AbstractMapper {
         $error = 'Found ' . count($links) . ' ' . $code . ' property links for link(' . $link->id . ') instead one.';
         Model_LogMapper::log('error', 'model', $error);
     }
+
     // @codeCoverageIgnoreEnd
 
     public static function getLinks(Model_Link $link, $code) {
@@ -85,18 +86,16 @@ class Model_LinkPropertyMapper extends Model_AbstractMapper {
         return $link;
     }
 
-    public static function insert($code, Model_Link $domain, Model_Entity $range) {
+    public static function insert($code, $domain, $range) {
+        $domainId = (is_a($domain, 'Model_Link')) ? $domain->id : $domain;
+        $rangeId = (is_a($range, 'Model_Entity')) ? $range->id : $range;
         $sql = 'INSERT INTO model.link_property (property_id, domain_id, range_id)
-      VALUES (:property_id, :domain_id, :range_id) RETURNING id;';
+            VALUES (:property_id, :domain_id, :range_id);';
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->bindValue(':property_id', Model_PropertyMapper::getByCode($code)->id);
-        $statement->bindValue(':domain_id', $domain->id);
-        $statement->bindValue(':range_id', $range->id);
+        $statement->bindValue(':domain_id', $domainId);
+        $statement->bindValue(':range_id', $rangeId);
         $statement->execute();
-        $result = $statement->fetch(PDO::FETCH_ASSOC);
-        $link = Model_LinkPropertyMapper::getById($result['id']);
-        Model_UserLogMapper::insert('LinkProperty', $link->id, 'insert');
-        return $link;
     }
 
     public static function insertTypeLinks(Model_Link $link, Zend_Form $form, array $hierarchies) {
