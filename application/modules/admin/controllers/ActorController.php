@@ -7,6 +7,7 @@ class Admin_ActorController extends Zend_Controller_Action {
     public function deleteAction() {
         Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         Model_EntityMapper::getById($this->_getParam('id'))->delete();
+        Model_UserLogMapper::insert('entity', $this->_getParam('id'), 'delete');
         Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_delete');
         return $this->_helper->redirector->gotoUrl('/admin/actor');
@@ -58,6 +59,7 @@ class Admin_ActorController extends Zend_Controller_Action {
             Model_LinkMapper::insert('P67', $source, $actor);
         }
         self::save($actor, $form, $hierarchies);
+        Model_UserLogMapper::insert('entity', $actorId, 'insert');
         Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_insert');
         $url = '/admin/actor/view/id/' . $actor->id;
@@ -109,6 +111,7 @@ class Admin_ActorController extends Zend_Controller_Action {
             $link->delete();
         }
         self::save($actor, $form, $hierarchies);
+        Model_UserLogMapper::insert('entity', $actor->id, 'update');
         Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_update');
         return $this->_helper->redirector->gotoUrl('/admin/actor/view/id/' . $actor->id);

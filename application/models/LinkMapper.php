@@ -127,10 +127,8 @@ class Model_LinkMapper extends Model_AbstractMapper {
         $statement->bindValue(':range_id', $link->range->id);
         $statement->bindValue(':description', $link->description);
         $statement->execute();
-        Model_UserLogMapper::insert('link', $link->id, 'update');
     }
 
-    /* domain and range parameter can be an id (integer) or a Model_Entity object */
     public static function insert($propertyCode, $domain, $range, $description = null) {
         $property = Model_PropertyMapper::getByCode($propertyCode);
         self::checkLink($property, $domain, $range);
@@ -149,9 +147,7 @@ class Model_LinkMapper extends Model_AbstractMapper {
         }
         $statement->execute();
         $result = $statement->fetch(PDO::FETCH_ASSOC);
-        $link = Model_LinkMapper::getById($result['id']);
-        Model_UserLogMapper::insert('link', $link->id, 'insert');
-        return $link;
+        return $result['id'];
     }
 
     public static function delete(Model_Link $link) {

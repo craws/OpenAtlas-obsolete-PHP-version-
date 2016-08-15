@@ -46,8 +46,7 @@ class Model_LogMapper extends Model_AbstractMapper {
             $statement->bindValue(':limit', null);
         }
         $statement->execute();
-        $rows = $statement->fetchAll();
-        foreach ($rows as $row) {
+        foreach ($statement->fetchAll() as $row) {
             $objects[] = self::populate($row);
         }
         return $objects;
@@ -67,13 +66,10 @@ class Model_LogMapper extends Model_AbstractMapper {
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->bindValue(':log_id', $object->id);
         $statement->execute();
-        $rows = $statement->fetchAll();
         $params = [];
-        if ($rows) {
-            foreach ($rows as $row) {
-                if (!in_array($row['key'], ['layoutFullContent', 'layoutContent'])) {
-                    $params[$row['key']] = $row['value'];
-                }
+        foreach ($statement->fetchAll() as $row) {
+            if (!in_array($row['key'], ['layoutFullContent', 'layoutContent'])) {
+                $params[$row['key']] = $row['value'];
             }
         }
         $object->params = $params;

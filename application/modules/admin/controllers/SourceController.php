@@ -50,6 +50,7 @@ class Admin_SourceController extends Zend_Controller_Action {
     public function deleteAction() {
         Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         Model_EntityMapper::getById($this->_getParam('id'))->delete();
+        Model_UserLogMapper::insert('entity', $this->_getParam('id'), 'delete');
         Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_delete');
         return $this->_helper->redirector->gotoUrl('/admin/source');
@@ -101,6 +102,7 @@ class Admin_SourceController extends Zend_Controller_Action {
         if ($object) {
             Model_LinkMapper::insert('P67', $source, $object);
         }
+        Model_UserLogMapper::insert('entity', $source->id, 'insert');
         Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_insert');
         $url = '/admin/source/view/id/' . $source->id;
@@ -134,6 +136,7 @@ class Admin_SourceController extends Zend_Controller_Action {
         $textId = Model_EntityMapper::insert('E33', $form->getValue('name'), $form->getValue('description'));
         Model_LinkMapper::insert('P2', $textId, Model_NodeMapper::getById($form->getValue('type')));
         Model_LinkMapper::insert('P73', $source, $textId);
+        Model_UserLogMapper::insert('entity', $textId, 'insert');
         Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_insert');
         return $this->_helper->redirector->gotoUrl('/admin/source/view/id/' . $source->id . '#tabText');
@@ -141,7 +144,10 @@ class Admin_SourceController extends Zend_Controller_Action {
 
     public function textDeleteAction() {
         $link = Model_LinkMapper::getById($this->_getParam('linkId'));
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         $link->range->delete();
+        Model_UserLogMapper::insert('link', $link->id, 'delete');
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_delete');
         return $this->_helper->redirector->gotoUrl('/admin/source/view/id/' . $link->domain->id . '#tabText');
     }
@@ -169,6 +175,7 @@ class Admin_SourceController extends Zend_Controller_Action {
         $text->update();
         $typeLink->delete();
         Model_LinkMapper::insert('P2', $text, Model_NodeMapper::getById($form->getValue('type')));
+        Model_UserLogMapper::insert('entity', $text->id, 'update');
         Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_update');
         return $this->_helper->redirector->gotoUrl('/admin/source/view/id/' . $source->id . '#tabText');
@@ -212,6 +219,7 @@ class Admin_SourceController extends Zend_Controller_Action {
             }
         }
         self::save($form, $source, $hierarchies);
+        Model_UserLogMapper::insert('entity', $source->id, 'update');
         Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_update');
         return $this->_helper->redirector->gotoUrl('/admin/source/view/id/' . $source->id);

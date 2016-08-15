@@ -55,6 +55,7 @@ class Admin_HierarchyController extends Zend_Controller_Action {
             Zend_Db_Table::getDefaultAdapter()->beginTransaction();
             $typeId = Model_EntityMapper::insert($super->class->code, $name);
             Model_LinkMapper::insert($super->propertyToSuper, $typeId, $super);
+            Model_UserLogMapper::insert('entity', $typeId, 'insert');
             Zend_Db_Table::getDefaultAdapter()->commit();
             $this->_helper->message('info_insert');
         }

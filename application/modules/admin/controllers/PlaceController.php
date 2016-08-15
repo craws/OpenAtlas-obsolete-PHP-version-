@@ -7,6 +7,7 @@ class Admin_PlaceController extends Zend_Controller_Action {
     public function deleteAction() {
         Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         Model_EntityMapper::getById($this->_getParam('id'))->delete();
+        Model_UserLogMapper::insert('entity', $this->_getParam('id'), 'delete');
         Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_delete');
         return $this->_helper->redirector->gotoUrl('/admin/place');
@@ -44,6 +45,7 @@ class Admin_PlaceController extends Zend_Controller_Action {
         if ($source) {
             Model_LinkMapper::insert('P67', $source, $object);
         }
+        Model_UserLogMapper::insert('entity', $objectId, 'insert');
         Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_insert');
         $url = '/admin/place/view/id/' . $object->id;
@@ -97,6 +99,7 @@ class Admin_PlaceController extends Zend_Controller_Action {
             $link->delete();
         }
         self::save($form, $object, $place, $hierarchies);
+        Model_UserLogMapper::insert('entity', $object->id, 'insert');
         Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_update');
         return $this->_helper->redirector->gotoUrl('/admin/place/view/id/' . $object->id);

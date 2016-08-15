@@ -13,9 +13,8 @@ class Model_ContentMapper extends Model_AbstractMapper {
         $sql = 'SELECT id FROM web.content ORDER BY id;';
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->execute();
-        $rows = $statement->fetchAll();
         $contents = [];
-        foreach ($rows as $row) {
+        foreach ($statement->fetchAll() as $row) {
             $contents[] = self::populate($row);
         }
         return $contents;

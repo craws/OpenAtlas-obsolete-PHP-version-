@@ -17,11 +17,12 @@ class Admin_RelationController extends Zend_Controller_Action {
         Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         foreach (explode(",", $form->getValue('relatedActorIds')) as $relatedActorId) {
             if ($form->getValue('inverse')) {
-                $link = Model_LinkMapper::insert('OA7', $relatedActorId, $actor, $this->_getParam('description'));
+                $linkId = Model_LinkMapper::insert('OA7', $relatedActorId, $actor, $this->_getParam('description'));
             } else {
-                $link = Model_LinkMapper::insert('OA7', $actor, $relatedActorId, $this->_getParam('description'));
+                $linkId = Model_LinkMapper::insert('OA7', $actor, $relatedActorId, $this->_getParam('description'));
             }
-            self::save($link, $form, $hierarchies);
+            self::save($linkId, $form, $hierarchies);
+            Model_UserLogMapper::insert('link', $linkId, 'insert');
         }
         Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_insert');
@@ -58,19 +59,20 @@ class Admin_RelationController extends Zend_Controller_Action {
         $form->getValue('inverse');
         if (($originActor->id == $actor->id && !$form->getValue('inverse')) ||
             ($originActor->id != $actor->id && $form->getValue('inverse'))) {
-            $link = Model_LinkMapper::insert('OA7', $actor, $relatedActor, $this->_getParam('description'));
+            $linkId = Model_LinkMapper::insert('OA7', $actor, $relatedActor, $this->_getParam('description'));
         } else {
-            $link = Model_LinkMapper::insert('OA7', $relatedActor, $actor, $this->_getParam('description'));
+            $linkId = Model_LinkMapper::insert('OA7', $relatedActor, $actor, $this->_getParam('description'));
         }
-        self::save($link, $form, $hierarchies);
+        self::save($linkId, $form, $hierarchies);
+        Model_UserLogMapper::insert('link', $linkId, 'update');
         Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_update');
         return $this->_helper->redirector->gotoUrl('/admin/actor/view/id/' . $originActor->id . '/#tabRelation');
     }
 
-    private function save(Model_Link $link, Zend_Form $form, array $hierarchies) {
-        Model_LinkPropertyMapper::insertTypeLinks($link, $form, $hierarchies);
-        Model_DateMapper::saveLinkDates($link, $form);
+    private function save($linkId, Zend_Form $form, array $hierarchies) {
+        Model_LinkPropertyMapper::insertTypeLinks($linkId, $form, $hierarchies);
+        Model_DateMapper::saveLinkDates($linkId, $form);
     }
 
 }

@@ -86,9 +86,7 @@ class Model_LinkPropertyMapper extends Model_AbstractMapper {
         return $link;
     }
 
-    public static function insert($code, $domain, $range) {
-        $domainId = (is_a($domain, 'Model_Link')) ? $domain->id : $domain;
-        $rangeId = (is_a($range, 'Model_Entity')) ? $range->id : $range;
+    public static function insert($code, $domainId, $rangeId) {
         $sql = 'INSERT INTO model.link_property (property_id, domain_id, range_id)
             VALUES (:property_id, :domain_id, :range_id);';
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
@@ -98,15 +96,15 @@ class Model_LinkPropertyMapper extends Model_AbstractMapper {
         $statement->execute();
     }
 
-    public static function insertTypeLinks(Model_Link $link, Zend_Form $form, array $hierarchies) {
+    public static function insertTypeLinks($linkId, Zend_Form $form, array $hierarchies) {
         foreach ($hierarchies as $hierarchy) {
             $idField = $hierarchy->nameClean . 'Id';
             if ($form->getValue($idField)) {
                 foreach (explode(",", $form->getValue($idField)) as $id) {
-                    Model_LinkPropertyMapper::insert('P2', $link, Model_NodeMapper::getById($id));
+                    self::insert('P2', $linkId, $id);
                 }
             } else if ($hierarchy->system) {
-                Model_LinkPropertyMapper::insert('P2', $link, $hierarchy);
+                self::insert('P2', $linkId, $hierarchy->id);
             }
         }
     }

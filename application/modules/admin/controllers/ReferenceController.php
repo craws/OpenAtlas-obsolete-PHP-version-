@@ -7,6 +7,7 @@ class Admin_ReferenceController extends Zend_Controller_Action {
     public function deleteAction() {
         Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         Model_EntityMapper::getById($this->_getParam('id'))->delete();
+        Model_UserLogMapper::insert('entity', $this->_getParam('id'), 'delete');
         Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_delete');
         return $this->_helper->redirector->gotoUrl('/admin/reference');
@@ -28,6 +29,7 @@ class Admin_ReferenceController extends Zend_Controller_Action {
         Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         $referenceId = Model_EntityMapper::insert('E31', $form->getValue('name'), $form->getValue('description'));
         self::save($form, $referenceId, $hierarchies);
+        Model_UserLogMapper::insert('entity', $referenceId, 'delete');
         Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_insert');
         $url = '/admin/reference/view/id/' . $referenceId;

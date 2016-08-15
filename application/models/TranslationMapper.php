@@ -26,9 +26,8 @@ class Model_TranslationMapper {
         $statement->bindValue('fields', '{' . implode(",", $fields) . '}');
         $statement->bindValue('item_id', $itemId);
         $statement->execute();
-        $rows = $statement->fetchAll();
         $texts = [];
-        foreach ($rows as $row) {
+        foreach ($statement->fetchAll() as $row) {
             $texts[$row['shortform']][$row['field']] = $row['text'];
         }
         return $texts;

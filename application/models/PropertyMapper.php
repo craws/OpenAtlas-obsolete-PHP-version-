@@ -29,10 +29,9 @@ class Model_PropertyMapper extends Model_AbstractMapper {
         $statement->bindValue(':language_code', Zend_Registry::get('Zend_Locale'));
         $statement->bindValue(':language_default_code', Zend_Registry::get('Default_Locale'));
         $statement->execute();
-        $rows = $statement->fetchAll();
         $classes = Zend_Registry::get('classes');
         $properties = [];
-        foreach ($rows as $row) {
+        foreach ($statement->fetchAll() as $row) {
             $properties[$row['id']] = self::populate($row);
             $properties[$row['id']]->domain = $classes[$row['domain_class_id']];
             $properties[$row['id']]->range = $classes[$row['range_class_id']];

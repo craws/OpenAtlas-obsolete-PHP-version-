@@ -49,36 +49,36 @@ class Model_DateMapper {
         switch ($entity->class->name) {
             case 'Person':
                 if ($form->getValue('birth')) {
-                    self::insert($entity, $form, 'begin', 'OA3', 'Model_LinkMapper');
+                    self::insert($entity->id, $form, 'begin', 'OA3', 'Model_LinkMapper');
                 } else {
-                    self::insert($entity, $form, 'begin', 'OA1', 'Model_LinkMapper');
+                    self::insert($entity->id, $form, 'begin', 'OA1', 'Model_LinkMapper');
                 }
                 if ($form->getValue('death')) {
-                    self::insert($entity, $form, 'end', 'OA4', 'Model_LinkMapper');
+                    self::insert($entity->id, $form, 'end', 'OA4', 'Model_LinkMapper');
                 } else {
-                    self::insert($entity, $form, 'end', 'OA2', 'Model_LinkMapper');
+                    self::insert($entity->id, $form, 'end', 'OA2', 'Model_LinkMapper');
                 }
                 break;
             case 'Activity':
             case 'Destruction':
             case 'Acquisition':
             case 'Production':
-                self::insert($entity, $form, 'begin', 'OA5', 'Model_LinkMapper');
-                self::insert($entity, $form, 'end', 'OA6', 'Model_LinkMapper');
+                self::insert($entity->id, $form, 'begin', 'OA5', 'Model_LinkMapper');
+                self::insert($entity->id, $form, 'end', 'OA6', 'Model_LinkMapper');
                 break;
             default:
-                self::insert($entity, $form, 'begin', 'OA1', 'Model_LinkMapper');
-                self::insert($entity, $form, 'end', 'OA2', 'Model_LinkMapper');
+                self::insert($entity->id, $form, 'begin', 'OA1', 'Model_LinkMapper');
+                self::insert($entity->id, $form, 'end', 'OA2', 'Model_LinkMapper');
                 break;
         }
     }
 
-    public static function saveLinkDates(Model_Link $link, Zend_Form $form) {
-        self::insert($link, $form, 'begin', 'OA5', 'Model_LinkPropertyMapper');
-        self::insert($link, $form, 'end', 'OA6', 'Model_LinkPropertyMapper');
+    public static function saveLinkDates($linkId, Zend_Form $form) {
+        self::insert($linkId, $form, 'begin', 'OA5', 'Model_LinkPropertyMapper');
+        self::insert($linkId, $form, 'end', 'OA6', 'Model_LinkPropertyMapper');
     }
 
-    private static function insert($entity, Zend_Form $form, $name, $code, $linkMapper) {
+    private static function insert($id, Zend_Form $form, $name, $code, $linkMapper) {
         if (!$form->getValue($name . 'Year')) {
             return false;
         }
@@ -97,7 +97,7 @@ class Model_DateMapper {
             if (strlen($date['month']) && strlen($date['day'])) {
                 $exactDateId = Model_EntityMapper::insert('E61', '', $description, $date);
                 Model_LinkMapper::insert('P2', $exactDateId, $typeId['Exact date value']);
-                $linkMapper::insert($code, $entity->id, $exactDateId);
+                $linkMapper::insert($code, $id, $exactDateId);
             } else if (strlen($date['month']) && !strlen($date['day'])) {
                 $date1['year'] = $date['year'];
                 $date1['month'] = $date['month'];
@@ -105,26 +105,26 @@ class Model_DateMapper {
                 $fromDateId = Model_EntityMapper::insert('E61', '', $description, $date1);
                 $fromDate = Model_EntityMapper::getById($fromDateId);
                 Model_LinkMapper::insert('P2', $fromDateId, $typeId['From date value']);
-                $linkMapper::insert($code, $entity->id, $fromDateId);
+                $linkMapper::insert($code, $id, $fromDateId);
                 $date2['year'] = $date['year'];
                 $date2['month'] = $date['month'];
                 $date2['day'] = $fromDate->date->get(Zend_Date::MONTH_DAYS);
                 $toDateId = Model_EntityMapper::insert('E61', '', $description, $date2);
                 Model_LinkMapper::insert('P2', $toDateId, $typeId['To date value']);
-                $linkMapper::insert($code, $entity->id, $toDateId);
+                $linkMapper::insert($code, $id, $toDateId);
             } else {
                 $date1['year'] = $date['year'];
                 $date1['month'] = 1;
                 $date1['day'] = 1;
                 $fromDateId = Model_EntityMapper::insert('E61', '', $description, $date1);
                 Model_LinkMapper::insert('P2', $fromDateId, $typeId['From date value']);
-                $linkMapper::insert($code, $entity->id, $fromDateId);
+                $linkMapper::insert($code, $id, $fromDateId);
                 $date2['year'] = $date['year'];
                 $date2['month'] = 12;
                 $date2['day'] = 31;
                 $toDateId = Model_EntityMapper::insert('E61', '', $description, $date2);
                 Model_LinkMapper::insert('P2', $toDateId, $typeId['To date value']);
-                $linkMapper::insert($code, $entity->id, $toDateId);
+                $linkMapper::insert($code, $id, $toDateId);
             }
         } else {
             $date1['year'] = $date['year'];
@@ -138,7 +138,7 @@ class Model_DateMapper {
             }
             $fromDateId = Model_EntityMapper::insert('E61', '', $description, $date1);
             Model_LinkMapper::insert('P2', $fromDateId, $typeId['From date value']);
-            $linkMapper::insert($code, $entity->id, $fromDateId);
+            $linkMapper::insert($code, $id, $fromDateId);
             $date2['year'] = $date['year2'];
             $date2['month'] = $date1['month'];
             if (strlen($date['month2'])) {
@@ -150,7 +150,7 @@ class Model_DateMapper {
             }
             $toDateId = Model_EntityMapper::insert('E61', '', $description, $date2);
             Model_LinkMapper::insert('P2', $toDateId, $typeId['To date value']);
-            $linkMapper::insert($code, $entity->id, $toDateId);
+            $linkMapper::insert($code, $id, $toDateId);
         }
     }
 
