@@ -45,11 +45,7 @@ class Model_DateMapper {
     }
 
     public static function saveDates(Model_Entity $entity, Zend_Form $form) {
-        $starttime = microtime(true);
-        $time = microtime(true);
         Model_EntityMapper::deleteDates($entity);
-        $timelog = sprintf('%04d',round((microtime(true) - $time)*1000)) . ' delete dates<br/>';
-        $time = microtime(true);
         switch ($entity->class->name) {
             case 'Person':
                 if ($form->getValue('birth')) {
@@ -75,10 +71,6 @@ class Model_DateMapper {
                 self::insert($entity, $form, 'end', 'OA2', 'Model_LinkMapper');
                 break;
         }
-        $timelog .= sprintf('%04d',round((microtime(true) - $time)*1000)) . ' insert dates<br/>';
-        $timelog .= '--<br/></strong>' . sprintf('%04d',round((microtime(true) - $starttime)*1000)) . ' total<br/><br/>';
-        echo($timelog);
-        //die;
     }
 
     public static function saveLinkDates(Model_Link $link, Zend_Form $form) {
@@ -111,6 +103,7 @@ class Model_DateMapper {
                 $date1['month'] = $date['month'];
                 $date1['day'] = 1;
                 $fromDateId = Model_EntityMapper::insert('E61', '', $description, $date1);
+                $fromDate = Model_EntityMapper::getById($fromDateId);
                 Model_LinkMapper::insert('P2', $fromDateId, $typeId['From date value']);
                 $linkMapper::insert($code, $entity->id, $fromDateId);
                 $date2['year'] = $date['year'];

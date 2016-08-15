@@ -4,9 +4,6 @@
 
 class Admin_ActorController extends Zend_Controller_Action {
 
-    public $time;
-    public $timelog;
-
     public function deleteAction() {
         Model_EntityMapper::getById($this->_getParam('id'))->delete();
         $this->_helper->message('info_delete');
@@ -52,12 +49,14 @@ class Admin_ActorController extends Zend_Controller_Action {
             $this->view->source = $source;
             return;
         }
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         $actorId = Model_EntityMapper::insert($class->id, $form->getValue('name'), $form->getValue('description'));
         $actor = Model_EntityMapper::getById($actorId);
         if ($source) {
             Model_LinkMapper::insert('P67', $source, $actor);
         }
         self::save($actor, $form, $hierarchies);
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_insert');
         $url = '/admin/actor/view/id/' . $actor->id;
         if ($event) {
@@ -73,8 +72,6 @@ class Admin_ActorController extends Zend_Controller_Action {
     }
 
     public function updateAction() {
-        $starttime = microtime(true);
-        $this->time = microtime(true);
         $actor = Model_EntityMapper::getById($this->_getParam('id'));
         $this->view->actor = $actor;
         $form = new Admin_Form_Actor();
@@ -85,8 +82,6 @@ class Admin_ActorController extends Zend_Controller_Action {
             self::prepareDefaultUpdate($form, $actor);
             return;
         }
-        $this->timelog .= sprintf('%04d',round((microtime(true) - $this->time)*1000)) . ' default update<br/>';
-        $this->time = microtime(true);
         $form->preValidation($this->getRequest()->getPost());
         $formValid = $form->isValid($this->getRequest()->getPost());
         $modified = Model_EntityMapper::checkIfModified($actor, $form->modified->getValue());
@@ -96,31 +91,24 @@ class Admin_ActorController extends Zend_Controller_Action {
             $this->view->modifier = $log['modifier_name'];
         }
         // @codeCoverageIgnoreEnd
-        /*if (!$formValid || $modified) {
+        if (!$formValid || $modified) {
             $this->view->objects = Model_EntityMapper::getByCodes('PhysicalObject');
             $this->_helper->message('error_modified');
             return;
-        }*/
+        }
         $actor->name = $form->getValue('name');
         $actor->description = $form->getValue('description');
-        $this->timelog .= sprintf('%04d',round((microtime(true) - $this->time)*1000)) . ' form validation<br/>';
-        $this->time = microtime(true);
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         $actor->update();
-        $this->timelog .= sprintf('%04d',round((microtime(true) - $this->time)*1000)) . ' actor update<br/>';
-        $this->time = microtime(true);
         foreach (Model_LinkMapper::getLinkedEntities($actor, 'P131') as $alias) {
             $alias->delete();
         }
         foreach (Model_LinkMapper::getLinks($actor, ['P2', 'P74', 'OA8', 'OA9']) as $link) {
             $link->delete();
         }
-        $this->timelog .= sprintf('%04d',round((microtime(true) - $this->time)*1000)) . ' delete links<br/>';
-        $this->time = microtime(true);
         self::save($actor, $form, $hierarchies);
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_update');
-        $this->timelog .= '--<br/></strong>' . sprintf('%04d',round((microtime(true) - $starttime)*1000)) . ' total';
-        echo($this->timelog);
-        die;
         return $this->_helper->redirector->gotoUrl('/admin/actor/view/id/' . $actor->id);
     }
 
@@ -221,10 +209,10 @@ class Admin_ActorController extends Zend_Controller_Action {
 
     private function save(Model_Entity $entity, Zend_Form $form, array $hierarchies) {
         Model_LinkMapper::insertTypeLinks($entity, $form, $hierarchies);
-        $this->timelog .= sprintf('%04d',round((microtime(true) - $this->time)*1000)) . ' insert type links<br/>';
+        $this->timelog .= sprintf('%04d', round((microtime(true) - $this->time) * 1000)) . ' insert type links<br/>';
         $this->time = microtime(true);
         Model_DateMapper::saveDates($entity, $form);
-        $this->timelog .= sprintf('%04d',round((microtime(true) - $this->time)*1000)) . ' save dates<br/>';
+        $this->timelog .= sprintf('%04d', round((microtime(true) - $this->time) * 1000)) . ' save dates<br/>';
         $this->time = microtime(true);
         foreach (['residenceId' => 'P74', 'appearsFirstId' => 'OA8', 'appearsLastId' => 'OA9'] as $formField => $propertyCode) {
             if ($form->getValue($formField)) {
@@ -232,7 +220,7 @@ class Admin_ActorController extends Zend_Controller_Action {
                 Model_LinkMapper::insert($propertyCode, $entity, $place);
             }
         }
-        $this->timelog .= sprintf('%04d',round((microtime(true) - $this->time)*1000)) . ' save places<br/>';
+        $this->timelog .= sprintf('%04d', round((microtime(true) - $this->time) * 1000)) . ' save places<br/>';
         $this->time = microtime(true);
         $data = $form->getValues();
         foreach (array_unique($data['alias']) as $name) {
@@ -241,7 +229,7 @@ class Admin_ActorController extends Zend_Controller_Action {
                 Model_LinkMapper::insert('P131', $entity, $aliasId);
             }
         }
-        $this->timelog .= sprintf('%04d',round((microtime(true) - $this->time)*1000)) . ' save alias<br/>';
+        $this->timelog .= sprintf('%04d', round((microtime(true) - $this->time) * 1000)) . ' save alias<br/>';
         $this->time = microtime(true);
     }
 
