@@ -1,18 +1,25 @@
 INFO
 ====
+
 Watch out for database role in SQLs and change "openatlas_master" if needed.
+
 
 2.0.0 to 2.1.0 Upgrade
 ======================
 
+Cleanup for log entries:
+
 BEGIN;
 
-ALTER TABLE gis.polygon RENAME text TO type;
-ALTER TABLE gis.centerpoint ADD COLUMN name text;
-ALTER TABLE gis.centerpoint ADD COLUMN description text;
-UPDATE web.settings SET value = 6 WHERE name = 'log_level';
+DELETE FROM log.log;
+DELETE FROM web.user_log WHERE table_name IN ('link', 'LinkProperty');
+DELETE FROM web.user_log WHERE action LIKE ('gis insert');
+DELETE FROM web.user_log WHERE table_id NOT IN (SELECT id FROM model.entity);
+DELETE FROM web.user_log WHERE table_id IN (SELECT e.id FROM model.entity e JOIN model.class c ON e.class_id = c.id WHERE c.code = 'E61');
 
 COMMIT;
+
+
 
 1.6.0 to 2.0.0 Upgrade
 ======================

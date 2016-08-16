@@ -13,7 +13,7 @@ class Model_GisMapper extends Model_AbstractMapper {
         $statement->bindValue(':northing', $gis->northing);
         $statement->execute();
         $result = $statement->fetch(PDO::FETCH_ASSOC);
-        Model_UserLogMapper::insert('entity', $result['id'], 'gis insert');
+        Model_UserLogMapper::insert('entity', $gis->getEntity()->id, 'gis insert');
     }
 
     public static function getJsonData($objects = false) {
