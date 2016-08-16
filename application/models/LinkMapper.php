@@ -127,15 +127,11 @@ class Model_LinkMapper extends Model_AbstractMapper {
         $statement->bindValue(':range_id', $link->range->id);
         $statement->bindValue(':description', $link->description);
         $statement->execute();
-        Model_UserLogMapper::insert('link', $link->id, 'update');
     }
 
-    /* domain and range parameter can be an id (integer) or a Model_Entity object */
     public static function insert($propertyCode, $domain, $range, $description = null) {
         $property = Model_PropertyMapper::getByCode($propertyCode);
-        if (in_array(APPLICATION_ENV, ['development', 'unittest'])) {
-            self::checkLink($property, $domain, $range);
-        }
+        self::checkLink($property, $domain, $range);
         $domainId = (is_a($domain, 'Model_Entity')) ? $domain->id : $domain;
         $rangeId = (is_a($range, 'Model_Entity')) ? $range->id : $range;
         $sql = 'INSERT INTO model.link (property_id, domain_id, range_id, description)
@@ -151,10 +147,7 @@ class Model_LinkMapper extends Model_AbstractMapper {
         }
         $statement->execute();
         $result = $statement->fetch(PDO::FETCH_ASSOC);
-        $link = Model_LinkMapper::getById($result['id']);
-        Model_LogMapper::log('info', 'insert', 'insert Link (' . $link->id . ')');
-        Model_UserLogMapper::insert('link', $link->id, 'insert');
-        return $link;
+        return $result['id'];
     }
 
     public static function delete(Model_Link $link) {
@@ -166,7 +159,7 @@ class Model_LinkMapper extends Model_AbstractMapper {
         parent::deleteAbstract('model.link', $link->id);
     }
 
-    public static function insertTypeLinks(Model_Entity $entity, Zend_Form $form, array $hierarchies) {
+    public static function insertTypeLinks($entity, Zend_Form $form, array $hierarchies) {
         foreach ($hierarchies as $hierarchy) {
             $idField = $hierarchy->nameClean . 'Id';
             if ($form->getValue($idField)) {
@@ -183,9 +176,9 @@ class Model_LinkMapper extends Model_AbstractMapper {
         $whitelistDomains = Zend_Registry::get('config')->get('linkcheckIgnoreDomains')->toArray();
         $domain = (is_a($domainParam, 'Model_Entity')) ? $domainParam : Model_EntityMapper::getById($domainParam);
         $range = (is_a($rangeParam, 'Model_Entity')) ? $rangeParam : Model_EntityMapper::getById($rangeParam);
+        // cannot test when using exit
+        // @codeCoverageIgnoreStart
         if (!in_array($domain->class->code, $whitelistDomains)) {
-            // @codeCoverageIgnoreStart
-            // To do: test for invalid links and remove CoverageIgnore
             if (!in_array($domain->class->code, $property->domain->getSubRecursive())) {
                 $error = 'Wrong domain ' . $domain->class->code . ' for ' . $property->code;
                 Model_LogMapper::log('error', 'model', $error);
@@ -197,8 +190,8 @@ class Model_LinkMapper extends Model_AbstractMapper {
                 echo $error;
                 exit;
             }
-            // @codeCoverageIgnoreEnd
         }
+        // @codeCoverageIgnoreEnd
     }
 
 }

@@ -34,7 +34,6 @@ class Model_SettingsMapper {
     }
 
     public static function updateSettings($settings) {
-        Zend_Db_Table::getDefaultAdapter()->prepare('BEGIN;')->execute();
         foreach ($settings as $group => $items) {
             foreach ($items as $name => $value) {
                 $sql = 'UPDATE web.settings SET "value" = :value WHERE "name" = :name AND "group" = :group;';
@@ -45,7 +44,6 @@ class Model_SettingsMapper {
                 $statement->execute();
             }
         }
-        Zend_Db_Table::getDefaultAdapter()->prepare('COMMIT;')->execute();
     }
 
 }

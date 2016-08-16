@@ -24,9 +24,8 @@ class Model_ClassMapper extends Model_AbstractMapper {
         $statement->bindValue(':language_code', Zend_Registry::get('Zend_Locale'));
         $statement->bindValue(':language_default_code', Zend_Registry::get('Default_Locale'));
         $statement->execute();
-        $rows = $statement->fetchAll();
         $classes = [];
-        foreach ($rows as $row) {
+        foreach ($statement->fetchAll() as $row) {
             $classes[$row['id']] = self::populate($row);
         }
         $sqlInheritance = 'SELECT super_id, sub_id FROM model.class_inheritance;';

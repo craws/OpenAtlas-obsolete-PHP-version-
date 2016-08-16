@@ -44,13 +44,9 @@ class Craws_View_Helper_Link extends Zend_View_Helper_Abstract {
         return $link;
     }
 
-    private function printObjectLink($object, $action, $label, $tab) {
-        if (!$action) {
-            $action = 'view';
-        }
-        if ($tab) {
-            $tab = '/#tab' . $tab;
-        }
+    private function printObjectLink($object, $actionParam, $label, $tabParam) {
+        $action = ($actionParam) ? $actionParam : 'view';
+        $tab = ($tabParam) ? '/#tab' . $tabParam : '';
         $onclick = '';
         if ($action == 'update') {
             $label = $this->view->ucstring('edit');
@@ -58,6 +54,8 @@ class Craws_View_Helper_Link extends Zend_View_Helper_Abstract {
             $label = $this->view->ucstring('delete');
             $onclick = " onclick=\"return confirm('" .
                 $this->view->ucstring($this->view->translate('confirm_delete', $object->name)) . "')\" ";
+        } else if ($label) {
+            // dont change given label
         } else if (isset($object->nameTranslated) && $object->nameTranslated) {
             $label = $object->nameTranslated;
         } else {

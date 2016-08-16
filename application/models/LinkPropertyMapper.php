@@ -6,11 +6,6 @@ class Model_LinkPropertyMapper extends Model_AbstractMapper {
 
     private static $sqlSelect = 'SELECT l.id, l.property_id, l.domain_id, l.range_id, l.created, l.modified ';
 
-    public static function getById($id) {
-        $row = parent::getRowById(self::$sqlSelect . ' FROM model.link_property l WHERE l.id = :id;', $id);
-        return self::populate($row);
-    }
-
     public static function getLinkedEntity(Model_Link $link, $code) {
         $linkedEntity = self::getLink($link, $code);
         if (!$linkedEntity) {
@@ -40,6 +35,7 @@ class Model_LinkPropertyMapper extends Model_AbstractMapper {
         $error = 'Found ' . count($links) . ' ' . $code . ' property links for link(' . $link->id . ') instead one.';
         Model_LogMapper::log('error', 'model', $error);
     }
+
     // @codeCoverageIgnoreEnd
 
     public static function getLinks(Model_Link $link, $code) {
@@ -85,30 +81,25 @@ class Model_LinkPropertyMapper extends Model_AbstractMapper {
         return $link;
     }
 
-    public static function insert($code, Model_Link $domain, Model_Entity $range) {
+    public static function insert($code, $domainId, $rangeId) {
         $sql = 'INSERT INTO model.link_property (property_id, domain_id, range_id)
-      VALUES (:property_id, :domain_id, :range_id) RETURNING id;';
+            VALUES (:property_id, :domain_id, :range_id);';
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->bindValue(':property_id', Model_PropertyMapper::getByCode($code)->id);
-        $statement->bindValue(':domain_id', $domain->id);
-        $statement->bindValue(':range_id', $range->id);
+        $statement->bindValue(':domain_id', $domainId);
+        $statement->bindValue(':range_id', $rangeId);
         $statement->execute();
-        $result = $statement->fetch(PDO::FETCH_ASSOC);
-        $link = Model_LinkPropertyMapper::getById($result['id']);
-        Model_LogMapper::log('info', 'insert', 'insert LinkProperty (' . $link->id . ')');
-        Model_UserLogMapper::insert('LinkProperty', $link->id, 'insert');
-        return $link;
     }
 
-    public static function insertTypeLinks(Model_Link $link, Zend_Form $form, array $hierarchies) {
+    public static function insertTypeLinks($linkId, Zend_Form $form, array $hierarchies) {
         foreach ($hierarchies as $hierarchy) {
             $idField = $hierarchy->nameClean . 'Id';
             if ($form->getValue($idField)) {
                 foreach (explode(",", $form->getValue($idField)) as $id) {
-                    Model_LinkPropertyMapper::insert('P2', $link, Model_NodeMapper::getById($id));
+                    self::insert('P2', $linkId, $id);
                 }
             } else if ($hierarchy->system) {
-                Model_LinkPropertyMapper::insert('P2', $link, $hierarchy);
+                self::insert('P2', $linkId, $hierarchy->id);
             }
         }
     }

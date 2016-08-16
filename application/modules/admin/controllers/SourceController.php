@@ -16,15 +16,17 @@ class Admin_SourceController extends Zend_Controller_Action {
             $this->view->sources = Model_EntityMapper::getByCodes('Source', 'Source Content');
             return;
         }
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         foreach ($this->getRequest()->getPost() as $sourceId) {
             if (!Model_LinkMapper::linkExists('P67', $sourceId, $origin)) {
                 Model_LinkMapper::insert('P67', $sourceId, $origin);
             }
         }
+        Zend_Db_Table::getDefaultAdapter()->commit();
         return $this->_helper->redirector->gotoUrl('/admin/' . $controller . '/view/id/' . $origin->id . '/#tabSource');
     }
 
-    /* add enitities to a source */
+    /* Add entities to a source */
     public function add2Action() {
         $source = Model_EntityMapper::getById($this->_getParam('id'));
         $type = ucfirst($this->_getParam('type'));
@@ -35,16 +37,21 @@ class Admin_SourceController extends Zend_Controller_Action {
             $this->view->source = $source;
             return;
         }
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         foreach ($this->getRequest()->getPost() as $entityId) {
             if (!Model_LinkMapper::linkExists('P67', $source->id, $entityId)) {
                 Model_LinkMapper::insert('P67', $source->id, $entityId);
             }
         }
+        Zend_Db_Table::getDefaultAdapter()->commit();
         return $this->_helper->redirector->gotoUrl('/admin/source/view/id/' . $source->id . '/#tab' . $type);
     }
 
     public function deleteAction() {
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         Model_EntityMapper::getById($this->_getParam('id'))->delete();
+        Model_UserLogMapper::insert('entity', $this->_getParam('id'), 'delete');
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_delete');
         return $this->_helper->redirector->gotoUrl('/admin/source');
     }
@@ -80,7 +87,9 @@ class Admin_SourceController extends Zend_Controller_Action {
             $this->view->typeTreeData = Model_NodeMapper::getTreeData('source');
             return;
         }
-        $source = Model_EntityMapper::insert('E33', $form->getValue('name'), $form->getValue('description'));
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
+        $sourceId = Model_EntityMapper::insert('E33', $form->getValue('name'), $form->getValue('description'));
+        $source = Model_EntityMapper::getById($sourceId);
         $type = Model_NodeMapper::getByNodeCategoryName('Linguistic object classification', 'Source Content');
         Model_LinkMapper::insert('P2', $source, $type);
         self::save($form, $source, $hierarchies);
@@ -93,6 +102,8 @@ class Admin_SourceController extends Zend_Controller_Action {
         if ($object) {
             Model_LinkMapper::insert('P67', $source, $object);
         }
+        Model_UserLogMapper::insert('entity', $source->id, 'insert');
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_insert');
         $url = '/admin/source/view/id/' . $source->id;
         if ($form->getElement('continue')->getValue() && $event) {
@@ -121,16 +132,22 @@ class Admin_SourceController extends Zend_Controller_Action {
             $this->view->source = $source;
             return;
         }
-        $text = Model_EntityMapper::insert('E33', $form->getValue('name'), $form->getValue('description'));
-        Model_LinkMapper::insert('P2', $text, Model_NodeMapper::getById($form->getValue('type')));
-        Model_LinkMapper::insert('P73', $source, $text);
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
+        $textId = Model_EntityMapper::insert('E33', $form->getValue('name'), $form->getValue('description'));
+        Model_LinkMapper::insert('P2', $textId, Model_NodeMapper::getById($form->getValue('type')));
+        Model_LinkMapper::insert('P73', $source, $textId);
+        Model_UserLogMapper::insert('entity', $textId, 'insert');
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_insert');
         return $this->_helper->redirector->gotoUrl('/admin/source/view/id/' . $source->id . '#tabText');
     }
 
     public function textDeleteAction() {
         $link = Model_LinkMapper::getById($this->_getParam('linkId'));
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         $link->range->delete();
+        Model_UserLogMapper::insert('link', $link->id, 'delete');
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_delete');
         return $this->_helper->redirector->gotoUrl('/admin/source/view/id/' . $link->domain->id . '#tabText');
     }
@@ -154,9 +171,12 @@ class Admin_SourceController extends Zend_Controller_Action {
         }
         $text->name = $form->getValue('name');
         $text->description = $form->getValue('description');
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         $text->update();
         $typeLink->delete();
         Model_LinkMapper::insert('P2', $text, Model_NodeMapper::getById($form->getValue('type')));
+        Model_UserLogMapper::insert('entity', $text->id, 'update');
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_update');
         return $this->_helper->redirector->gotoUrl('/admin/source/view/id/' . $source->id . '#tabText');
     }
@@ -191,6 +211,7 @@ class Admin_SourceController extends Zend_Controller_Action {
         }
         $source->name = $form->getValue('name');
         $source->description = $form->getValue('description');
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         $source->update();
         foreach (Model_LinkMapper::getLinks($source, 'P2') as $link) {
             if ($link->range->name != "Source Content") {
@@ -198,6 +219,8 @@ class Admin_SourceController extends Zend_Controller_Action {
             }
         }
         self::save($form, $source, $hierarchies);
+        Model_UserLogMapper::insert('entity', $source->id, 'update');
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_update');
         return $this->_helper->redirector->gotoUrl('/admin/source/view/id/' . $source->id);
     }

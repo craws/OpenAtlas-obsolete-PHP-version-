@@ -5,7 +5,10 @@
 class Admin_PlaceController extends Zend_Controller_Action {
 
     public function deleteAction() {
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         Model_EntityMapper::getById($this->_getParam('id'))->delete();
+        Model_UserLogMapper::insert('entity', $this->_getParam('id'), 'delete');
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_delete');
         return $this->_helper->redirector->gotoUrl('/admin/place');
     }
@@ -32,13 +35,18 @@ class Admin_PlaceController extends Zend_Controller_Action {
             $this->view->source = $source;
             return;
         }
-        $object = Model_EntityMapper::insert('E18', $form->getValue('name'), $form->getValue('description'));
-        $place = Model_EntityMapper::insert('E53', 'Location of ' . $form->getValue('name'));
-        Model_LinkMapper::insert('P53', $object, $place);
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
+        $objectId = Model_EntityMapper::insert('E18', $form->getValue('name'), $form->getValue('description'));
+        $object = Model_EntityMapper::getById($objectId);
+        $placeId = Model_EntityMapper::insert('E53', 'Location of ' . $form->getValue('name'));
+        $place = Model_EntityMapper::getById($objectId);
+        Model_LinkMapper::insert('P53', $objectId, $placeId);
         self::save($form, $object, $place, $hierarchies);
         if ($source) {
             Model_LinkMapper::insert('P67', $source, $object);
         }
+        Model_UserLogMapper::insert('entity', $objectId, 'insert');
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_insert');
         $url = '/admin/place/view/id/' . $object->id;
         if ($form->getElement('continue')->getValue() && $source) {
@@ -76,6 +84,7 @@ class Admin_PlaceController extends Zend_Controller_Action {
         }
         $object->name = $form->getValue('name');
         $object->description = $form->getValue('description');
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         $object->update();
         foreach (Model_LinkMapper::getLinks($object, 'P2') as $objectLink) {
             $objectLink->delete();
@@ -90,6 +99,8 @@ class Admin_PlaceController extends Zend_Controller_Action {
             $link->delete();
         }
         self::save($form, $object, $place, $hierarchies);
+        Model_UserLogMapper::insert('entity', $object->id, 'update');
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_update');
         return $this->_helper->redirector->gotoUrl('/admin/place/view/id/' . $object->id);
     }
@@ -167,8 +178,8 @@ class Admin_PlaceController extends Zend_Controller_Action {
         $data = $form->getValues();
         foreach (array_unique($data['alias']) as $name) {
             if (trim($name)) {
-                $alias = Model_EntityMapper::insert('E41', trim($name));
-                Model_LinkMapper::insert('P1', $object, $alias);
+                $aliasId = Model_EntityMapper::insert('E41', trim($name));
+                Model_LinkMapper::insert('P1', $object, $aliasId);
             }
         }
         Model_GisMapper::insertPoints($place, json_decode($form->gisPoints->getValue()));

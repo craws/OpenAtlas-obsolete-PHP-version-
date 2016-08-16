@@ -14,10 +14,13 @@ class Admin_MemberController extends Zend_Controller_Action {
             $this->view->form = $form;
             return;
         }
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         foreach (explode(",", $form->getValue('relatedActorIds')) as $relatedActorId) {
-            $link = Model_LinkMapper::insert('P107', $group, $relatedActorId, $this->_getParam('description'));
-            self::save($link, $form, $hierarchies);
+            $linkId = Model_LinkMapper::insert('P107', $group, $relatedActorId, $this->_getParam('description'));
+            self::save($linkId, $form, $hierarchies);
+            Model_UserLogMapper::insert('link', $linkId, 'insert');
         }
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_insert');
         $url = '/admin/actor/view/id/' . $group->id . '/#tabMember';
         if ($form->getElement('continue')->getValue()) {
@@ -38,10 +41,13 @@ class Admin_MemberController extends Zend_Controller_Action {
             $this->view->form = $form;
             return;
         }
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         foreach (explode(",", $form->getValue('relatedActorIds')) as $relatedActorId) {
-            $link = Model_LinkMapper::insert('P107', $relatedActorId, $member, $this->_getParam('description'));
-            self::save($link, $form, $hierarchies);
+            $linkId = Model_LinkMapper::insert('P107', $relatedActorId, $member, $this->_getParam('description'));
+            self::save($linkId, $form, $hierarchies);
+            Model_UserLogMapper::insert('link', $linkId, 'insert');
         }
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_insert');
         $url = '/admin/actor/view/id/' . $member->id . '/#tabMemberOf';
         if ($form->getElement('continue')->getValue()) {
@@ -69,17 +75,20 @@ class Admin_MemberController extends Zend_Controller_Action {
             $this->view->relatedActor = ($relatedActor->id == $originActor->id) ? $actor : $relatedActor;
             return;
         }
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         $link->delete();
-        $newLink = Model_LinkMapper::insert('P107', $actor, $relatedActor, $this->_getParam('description'));
-        self::save($newLink, $form, $hierarchies);
+        $linkId = Model_LinkMapper::insert('P107', $actor, $relatedActor, $this->_getParam('description'));
+        self::save($linkId, $form, $hierarchies);
+        Model_UserLogMapper::insert('link', $linkId, 'update');
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_update');
         $tab = ($originActor->id == $relatedActor->id) ? '#tabMemberOf' : '#tabMember';
         return $this->_helper->redirector->gotoUrl('/admin/actor/view/id/' . $originActor->id . $tab);
     }
 
-    private function save(Model_Link $link, Zend_Form $form, array $hierarchies) {
-        Model_LinkPropertyMapper::insertTypeLinks($link, $form, $hierarchies);
-        Model_DateMapper::saveLinkDates($link, $form);
+    private function save($linkId, Zend_Form $form, array $hierarchies) {
+        Model_LinkPropertyMapper::insertTypeLinks($linkId, $form, $hierarchies);
+        Model_DateMapper::saveLinkDates($linkId, $form);
     }
 
 }
