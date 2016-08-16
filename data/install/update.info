@@ -11,6 +11,7 @@ Cleanup for log entries:
 
 BEGIN;
 
+UPDATE web.settings SET value = 6 WHERE name = 'log_level';
 DELETE FROM log.log;
 DELETE FROM web.user_log WHERE table_name IN ('link', 'LinkProperty');
 DELETE FROM web.user_log WHERE action LIKE ('gis insert');
