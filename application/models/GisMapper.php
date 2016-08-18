@@ -5,14 +5,12 @@
 class Model_GisMapper extends Model_AbstractMapper {
 
     public static function insert(Model_Gis $gis) {
-        $sql = 'INSERT INTO gis.centerpoint (entity_id, easting, northing)
-            VALUES (:entity_id, :easting, :northing) RETURNING id;';
+        $sql = 'INSERT INTO gis.centerpoint (entity_id, easting, northing) VALUES (:entity_id, :easting, :northing);';
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->bindValue(':entity_id', $gis->getEntity()->id);
         $statement->bindValue(':easting', $gis->easting);
         $statement->bindValue(':northing', $gis->northing);
         $statement->execute();
-        $result = $statement->fetch(PDO::FETCH_ASSOC);
         Model_UserLogMapper::insert('entity', $gis->getEntity()->id, 'gis insert');
     }
 
