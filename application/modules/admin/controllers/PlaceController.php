@@ -39,7 +39,7 @@ class Admin_PlaceController extends Zend_Controller_Action {
         $objectId = Model_EntityMapper::insert('E18', $form->getValue('name'), $form->getValue('description'));
         $object = Model_EntityMapper::getById($objectId);
         $placeId = Model_EntityMapper::insert('E53', 'Location of ' . $form->getValue('name'));
-        $place = Model_EntityMapper::getById($objectId);
+        $place = Model_EntityMapper::getById($placeId);
         Model_LinkMapper::insert('P53', $objectId, $placeId);
         self::save($form, $object, $place, $hierarchies);
         if ($source) {
