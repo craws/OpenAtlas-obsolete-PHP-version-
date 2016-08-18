@@ -1,11 +1,9 @@
-<?
-    $property = $this->property;
+<? $property = $this->property;
     $this->breadcrumb = [
-        $this->link('overview'),
-        '<a href="/admin/overview/model">' . $this->ucstring('model') . '</a>',
-        '<a href="/admin/property">' . $this->ucstring('property') . '</a>',
+        '<a href="/model">' . $this->ucstring('model') . '</a>',
+        '<a href="/property">' . $this->ucstring('property') . '</a>',
         $property->getCodeName()
-    ]
+    ];
 ?>
 <div style="float:left;padding-right:2em;">
     <p><strong><?= $this->ucstring('info') ?></strong></p>
@@ -19,6 +17,7 @@
     ];
     $this->table = $table;
     ?>
+    <? $this->addScriptPath(APPLICATION_PATH . '/modules/admin/views/scripts'); ?>
     <?= $this->render('tableDataItem.phtml') ?>
 </div>
 <? foreach (['super' => $property->getSuper(), 'subs' => $property->getSub()] as $title => $array): ?>

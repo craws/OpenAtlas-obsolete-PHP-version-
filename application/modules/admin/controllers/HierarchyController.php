@@ -20,7 +20,9 @@ class Admin_HierarchyController extends Zend_Controller_Action {
             $this->_helper->message('error_links_exists');
             return $this->_helper->redirector->gotoUrl('/admin/hierarchy/view/id/' . $type->id);
         }
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         $type->delete();
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_delete');
         return $this->_helper->redirector->gotoUrl('/admin/hierarchy#tab' . $type->rootId);
     }
@@ -50,8 +52,11 @@ class Admin_HierarchyController extends Zend_Controller_Action {
             if ($inverse) {
                 $name .= ' (' . $inverse . ')';
             }
-            $type = Model_EntityMapper::insert($super->class->code, $name);
-            Model_LinkMapper::insert($super->propertyToSuper, $type, $super);
+            Zend_Db_Table::getDefaultAdapter()->beginTransaction();
+            $typeId = Model_EntityMapper::insert($super->class->code, $name);
+            Model_LinkMapper::insert($super->propertyToSuper, $typeId, $super);
+            Model_UserLogMapper::insert('entity', $typeId, 'insert');
+            Zend_Db_Table::getDefaultAdapter()->commit();
             $this->_helper->message('info_insert');
         }
         $tabId = ($super->rootId) ? $super->rootId : $super->id;
@@ -71,10 +76,12 @@ class Admin_HierarchyController extends Zend_Controller_Action {
                 return;
             }
         }
-        $hierarchy = Model_EntityMapper::insert('E55', $form->getValue('name'), $form->getValue('description'));
-        Model_NodeMapper::insertHierarchy($form, $hierarchy);
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
+        $hierarchyId = Model_EntityMapper::insert('E55', $form->getValue('name'), $form->getValue('description'));
+        Model_NodeMapper::insertHierarchy($form, $hierarchyId, $form->getValue('name'));
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_insert');
-        return $this->_helper->redirector->gotoUrl('/admin/hierarchy/#tab' . $hierarchy->id);
+        return $this->_helper->redirector->gotoUrl('/admin/hierarchy/#tab' . $hierarchyId);
     }
 
     public function updateAction() {
@@ -109,12 +116,13 @@ class Admin_HierarchyController extends Zend_Controller_Action {
             $node->name .= ' (' . $inverse . ')';
         }
         $node->description = $this->_getParam('description');
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         $node->update();
         $superLink = Model_LinkMapper::getLink($node, $node->propertyToSuper);
         $superLink->range = Model_NodeMapper::getById($form->getValue('super'));
         $superLink->update();
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_update');
-
         return $this->_helper->redirector->gotoUrl('/admin/hierarchy/#tab' . $node->rootId);
     }
 
@@ -153,8 +161,10 @@ class Admin_HierarchyController extends Zend_Controller_Action {
         }
         $hierarchy->name = $form->getValue('name');
         $hierarchy->description = $form->getValue('description');
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         $hierarchy->update();
         Model_NodeMapper::updateHierarchy($form, $hierarchy);
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_update');
         return $this->_helper->redirector->gotoUrl('/admin/hierarchy/#tab' . $hierarchy->id);
     }

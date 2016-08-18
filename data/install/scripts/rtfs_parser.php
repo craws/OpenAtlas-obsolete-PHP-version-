@@ -1,7 +1,7 @@
 <?php
 
 /*
- * PHP script to import CIDOC-CRM definitions with easyrdf from a rdfs file to a postgresql database
+ * PHP script to import CIDOC CRM definitions with easyrdf from a rdfs file to a postgresql database
  *
  * Author: alexander.watzinger@craws.net
  * Last update: 16.03.2016

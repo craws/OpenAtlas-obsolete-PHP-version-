@@ -6,7 +6,10 @@ class Admin_CarrierController extends Zend_Controller_Action {
 
 
     public function deleteAction() {
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         Model_EntityMapper::getById($this->_getParam('id'))->delete();
+        Model_UserLogMapper::insert('entity', $this->_getParam('id'), 'delete');
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_delete');
         return $this->_helper->redirector->gotoUrl('/admin/reference');
     }
@@ -21,15 +24,18 @@ class Admin_CarrierController extends Zend_Controller_Action {
             $this->view->objects = Model_EntityMapper::getByCodes('PhysicalObject');
             return;
         }
-        $carrier = Model_EntityMapper::insert('E84', $form->getValue('name'), $form->getValue('description'));
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
+        $carrierId = Model_EntityMapper::insert('E84', $form->getValue('name'), $form->getValue('description'));
+        $carrier = Model_EntityMapper::getById($carrierId);
         self::save($form, $carrier, $hierarchies);
+        Model_UserLogMapper::insert('entity', $carrierId, 'insert');
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_insert');
-        // @codeCoverageIgnoreStart
+        $url = '/admin/carrier/view/id/' . $carrier->id;
         if ($form->getElement('continue')->getValue()) {
-            return $this->_helper->redirector->gotoUrl('/admin/carrier/insert');
+            $url = '/admin/carrier/insert';
         }
-        // @codeCoverageIgnoreEnd
-        return $this->_helper->redirector->gotoUrl('/admin/carrier/view/id/' . $carrier->id);
+        return $this->_helper->redirector->gotoUrl($url);
     }
 
     public function updateAction() {
@@ -75,11 +81,14 @@ class Admin_CarrierController extends Zend_Controller_Action {
         }
         $carrier->name = $form->getValue('name');
         $carrier->description = $form->getValue('description');
+        Model_UserLogMapper::insert('entity', $carrier->id, 'update');
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         $carrier->update();
         foreach (Model_LinkMapper::getLinks($carrier, ['P2', 'OA8']) as $link) {
             $link->delete();
         }
         self::save($form, $carrier, $hierarchies);
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_update');
         return $this->_helper->redirector->gotoUrl('/admin/carrier/view/id/' . $carrier->id);
     }
@@ -98,20 +107,11 @@ class Admin_CarrierController extends Zend_Controller_Action {
     }
 
     private function save(Zend_Form $form, Model_Entity $entity, array $hierarchies) {
-        foreach ($hierarchies as $hierarchy) {
-            $idField = $hierarchy->nameClean . 'Id';
-            if ($form->getValue($idField)) {
-                foreach (explode(",", $form->getValue($idField)) as $id) {
-                    Model_LinkMapper::insert('P2', $entity, Model_NodeMapper::getById($id));
-                }
-            } else if ($hierarchy->system) {
-                Model_LinkMapper::insert('P2', $entity, $hierarchy);
-            }
-        }
+        Model_LinkMapper::insertTypeLinks($entity, $form, $hierarchies);
+        Model_DateMapper::saveDates($entity, $form);
         if ($form->getValue('objectId')) {
             $place = Model_LinkMapper::getLinkedEntity($form->getValue('objectId'), 'P53');
             Model_LinkMapper::insert('OA8', $entity, $place);
         }
-        Model_DateMapper::saveDates($entity, $form);
     }
 }

@@ -5,11 +5,9 @@
 class Admin_IndexController extends Zend_Controller_Action {
 
     public function indexAction() {
-        // @codeCoverageIgnoreStart
         if (Zend_Registry::get('user')->active) {
             return $this->_helper->redirector->gotoUrl('/admin/overview');
         }
-        // @codeCoverageIgnoreEnd
         $form = new Admin_Form_Login();
         $this->view->form = $form;
         if (!$this->_getParam('username') || !$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
@@ -39,10 +37,8 @@ class Admin_IndexController extends Zend_Controller_Action {
             if ($result->isValid()) {
                 $this->login($user, $auth, $authAdapter);
                 return $this->_helper->redirector->gotoUrl('/admin/overview');
-                // @codeCoverageIgnoreStart
             }
         }
-        // @codeCoverageIgnoreEnd
         $user->loginLastFailure = new Zend_Date();
         $user->loginFailedCount = $user->loginFailedCount + 1;
         $user->update();
@@ -56,12 +52,7 @@ class Admin_IndexController extends Zend_Controller_Action {
         $auth->getStorage()->write($identity);
         /* write login info in session because it will change afterwards */
         $defaultNamespace = new Zend_Session_Namespace('Default');
-        $defaultNamespace->lastLogin = '';
-        // @codeCoverageIgnoreStart
-        if ($user->loginLastSuccess) {
-            $defaultNamespace->lastLogin = $user->loginLastSuccess;
-        }
-        // @codeCoverageIgnoreEnd
+        $defaultNamespace->lastLogin = ($user->loginLastSuccess) ? $user->loginLastSuccess : '';
         $defaultNamespace->failedLoginCount = $user->loginFailedCount;
         Zend_Registry::set('user', $user);
         $user->loginLastSuccess = new Zend_Date();
@@ -69,6 +60,7 @@ class Admin_IndexController extends Zend_Controller_Action {
         $user->update();
         $this->_helper->log('info', 'login');
         // @codeCoverageIgnoreStart
+        // Ignore coverage because no mail in testing
         if (!strpos(filter_input(INPUT_SERVER, 'HTTP_HOST'), 'local') &&
             Model_SettingsMapper::getSetting('module', 'mail') &&
             Model_SettingsMapper::getSetting('mail', 'notify_login')
@@ -95,11 +87,9 @@ class Admin_IndexController extends Zend_Controller_Action {
     }
 
     public function logoutAction() {
-        // @codeCoverageIgnoreStart
         if (!Zend_Registry::get('user')->username) {
             return $this->_helper->redirector->gotoUrl('/admin');  // not logged in anymore
         }
-        // @codeCoverageIgnoreEnd
         $this->_helper->log('info', 'logout', Zend_Registry::get('user')->username);
         Zend_Auth::getInstance()->clearIdentity();
         Zend_Registry::set('user', new Model_User());
@@ -107,7 +97,7 @@ class Admin_IndexController extends Zend_Controller_Action {
     }
 
     // @codeCoverageIgnoreStart
-
+    // Ignore coverage because no mail in testing
     public function resetConfirmAction() {
         $user = Model_UserMapper::getByResetCode($this->_getParam('code'));
         if (!$user) {

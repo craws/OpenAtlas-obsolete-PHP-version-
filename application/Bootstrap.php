@@ -40,6 +40,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         $auth = Zend_Auth::getInstance();
         if ($auth->hasIdentity()) {
             // @codeCoverageIgnoreStart
+            // CoverageIgnore because not able to run bootstrap again
             $user = Model_UserMapper::getById($auth->getIdentity()->id);
             $user->bookmarks = Model_UserMapper::getBookmarks($user->id);
             Zend_Registry::set('user', $user);
@@ -68,6 +69,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         $defaultLocale = Model_LanguageMapper::getById(Model_SettingsMapper::getSetting('general', 'language'))->shortform;
         $translate = $this->getPluginResource("translate")->getTranslate();
         // @codeCoverageIgnoreStart
+        // CoverageIgnore because not accessing with a browser
         if (filter_input(INPUT_GET, 'lang')) {
             $locale = filter_input(INPUT_GET, 'lang');
             if ($user->active) {
@@ -103,6 +105,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         Zend_Registry::set('rootEvent', Model_EntityMapper::getRootEvent());
         Model_NodeMapper::registerHierarchies();
         // @codeCoverageIgnoreStart
+        // CoverageIgnore because not testing explicit without nodes
         if (count(Zend_Registry::get('nodes')) < 1) {
             echo ('<p class="error">Warning: nodes are missing (import data_node.sql)</p>');
         }

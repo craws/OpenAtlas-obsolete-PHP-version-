@@ -13,9 +13,8 @@ class Model_ContentMapper extends Model_AbstractMapper {
         $sql = 'SELECT id FROM web.content ORDER BY id;';
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->execute();
-        $rows = $statement->fetchAll();
         $contents = [];
-        foreach ($rows as $row) {
+        foreach ($statement->fetchAll() as $row) {
             $contents[] = self::populate($row);
         }
         return $contents;
@@ -29,9 +28,7 @@ class Model_ContentMapper extends Model_AbstractMapper {
     }
 
     public static function update(Model_content $content) {
-        Zend_Db_Table::getDefaultAdapter()->prepare('BEGIN;')->execute();
         Model_TranslationMapper::update($content->id, $content->texts);
-        Zend_Db_Table::getDefaultAdapter()->prepare('COMMIT;')->execute();
     }
 
 }

@@ -5,7 +5,10 @@
 class Admin_ReferenceController extends Zend_Controller_Action {
 
     public function deleteAction() {
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         Model_EntityMapper::getById($this->_getParam('id'))->delete();
+        Model_UserLogMapper::insert('entity', $this->_getParam('id'), 'delete');
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_delete');
         return $this->_helper->redirector->gotoUrl('/admin/reference');
     }
@@ -20,17 +23,20 @@ class Admin_ReferenceController extends Zend_Controller_Action {
         $hierarchies = $form->addHierarchies($rootType->name);
         if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
             $this->view->form = $form;
+            $this->view->rootType = $rootType->name;
             return;
         }
-        $reference = Model_EntityMapper::insert('E31', $form->getValue('name'), $form->getValue('description'));
-        self::save($form, $reference, $hierarchies);
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
+        $referenceId = Model_EntityMapper::insert('E31', $form->getValue('name'), $form->getValue('description'));
+        self::save($form, $referenceId, $hierarchies);
+        Model_UserLogMapper::insert('entity', $referenceId, 'insert');
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_insert');
-        // @codeCoverageIgnoreStart
+        $url = '/admin/reference/view/id/' . $referenceId;
         if ($form->getElement('continue')->getValue()) {
-            return $this->_helper->redirector->gotoUrl('/admin/reference/insert/type/' . $rootType);
+            $url = '/admin/reference/insert/type/' . $rootType->name;
         }
-        // @codeCoverageIgnoreEnd
-        return $this->_helper->redirector->gotoUrl('/admin/reference/view/id/' . $reference->id);
+        return $this->_helper->redirector->gotoUrl($url);
     }
 
     public function updateAction() {
@@ -40,6 +46,8 @@ class Admin_ReferenceController extends Zend_Controller_Action {
         $referenceRootType = null;
         $referenceType = null;
         $types = Model_LinkMapper::getLinkedEntities($reference, 'P2');
+        // @codeCoverageIgnoreStart
+        // Determine if Bibliography or Edition. Difficult to test with complete coverage, needs refactoring
         foreach ($types as $type) {
             if (!$type->system) {
                 continue;
@@ -53,6 +61,7 @@ class Admin_ReferenceController extends Zend_Controller_Action {
                     break 2;
             }
         }
+        // @codeCoverageIgnoreEnd
         $hierarchies = $form->addHierarchies($rootType->name, $reference);
         $this->view->form = $form;
         if (!$this->getRequest()->isPost()) {
@@ -70,12 +79,10 @@ class Admin_ReferenceController extends Zend_Controller_Action {
         }
         $formValid = $form->isValid($this->getRequest()->getPost());
         $modified = Model_EntityMapper::checkIfModified($reference, $form->modified->getValue());
-        // @codeCoverageIgnoreStart
         if ($modified) {
             $log = Model_UserLogMapper::getLogForView('entity', $reference->id);
             $this->view->modifier = $log['modifier_name'];
         }
-        // @codeCoverageIgnoreEnd
         if (!$formValid || $modified) {
             $this->view->typeTreeData = Model_NodeMapper::getTreeData($referenceRootType->name);
             $this->_helper->message('error_modified');
@@ -83,11 +90,14 @@ class Admin_ReferenceController extends Zend_Controller_Action {
         }
         $reference->name = $form->getValue('name');
         $reference->description = $form->getValue('description');
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         $reference->update();
         foreach (Model_LinkMapper::getLinks($reference, ['P2']) as $link) {
             $link->delete();
         }
-        self::save($form, $reference, $hierarchies);
+        self::save($form, $reference->id, $hierarchies);
+        Model_UserLogMapper::insert('entity', $reference->id, 'update');
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_update');
         return $this->_helper->redirector->gotoUrl('/admin/reference/view/id/' . $reference->id);
     }
@@ -118,16 +128,7 @@ class Admin_ReferenceController extends Zend_Controller_Action {
         $this->view->placeLinks = $placeLinks;
     }
 
-    private function save(Zend_Form $form, Model_Entity $entity, array $hierarchies) {
-        foreach ($hierarchies as $hierarchy) {
-            $idField = $hierarchy->nameClean . 'Id';
-            if ($form->getValue($idField)) {
-                foreach (explode(",", $form->getValue($idField)) as $id) {
-                    Model_LinkMapper::insert('P2', $entity, Model_NodeMapper::getById($id));
-                }
-            } else if ($hierarchy->system) {
-                Model_LinkMapper::insert('P2', $entity, $hierarchy);
-            }
-        }
+    private function save(Zend_Form $form, $referenceId, array $hierarchies) {
+        Model_LinkMapper::insertTypeLinks($referenceId, $form, $hierarchies);
     }
 }

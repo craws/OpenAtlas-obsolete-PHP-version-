@@ -15,7 +15,9 @@ class Admin_PlaceControllerTest extends ControllerTestCase {
         'endMonth' => '',
         'endDay' => '',
         'endComment' => '',
-        'alias' => ['alias0' => 'Newcastle']
+        'alias' => ['alias0' => 'Newcastle'],
+        'easting' => 1,
+        'northing' => 1
     ];
 
     public function setUp() {
@@ -33,39 +35,45 @@ class Admin_PlaceControllerTest extends ControllerTestCase {
         $this->dispatch('admin/place');
     }
 
-    public function testAdd() {
-        $this->dispatch('admin/place/add/id/' . $this->sourceId);
-    }
-
-    public function testCrud() {
+    public function testCrudPlace() {
         $this->dispatch('admin/place/insert');
         $this->resetRequest()->resetResponse();
         $this->request->setMethod('POST')->setPost($this->formValues);
         $this->dispatch('admin/place/insert/sourceId/' . $this->sourceId);
         $this->resetRequest()->resetResponse();
         $this->request->setMethod('POST')->setPost($this->formValues);
-        $this->dispatch('admin/place/insert'); // insert again without gis cause of problems with st_makepoint in phpunit
+        $this->dispatch('admin/place/insert');
         $this->resetRequest()->resetResponse();
-        $places = Model_EntityMapper::getByCodes('PhysicalObject');
-        $placeId = $places[0]->id;
-        $this->dispatch('admin/place/link/placeId/' . $placeId . '/rangeId/' . $this->sourceId);
+        $this->formValues['continue'] = 1;
+        $this->request->setMethod('POST')->setPost($this->formValues);
+        $this->dispatch('admin/place/insert');
         $this->resetRequest()->resetResponse();
-        $this->dispatch('admin/place/link/placeId/' . $placeId . '/rangeId/' . $this->sourceId); // test existing
+        $this->request->setMethod('POST')->setPost($this->formValues);
+        $this->dispatch('admin/place/insert/sourceId/' . $this->sourceId);
         $this->resetRequest()->resetResponse();
-        $this->dispatch('admin/place/link/placeId/' . $placeId . '/rangeId/' . $this->biblioId);
+        $this->dispatch('admin/place/link/placeId/' . $this->objectId . '/rangeId/' . $this->sourceId);
         $this->resetRequest()->resetResponse();
-        $this->dispatch('admin/place/view/id/' . $placeId);
+        $this->dispatch('admin/place/link/placeId/' . $this->objectId . '/rangeId/' . $this->sourceId); // test existing
+        $this->resetRequest()->resetResponse();
+        $this->dispatch('admin/place/link/placeId/' . $this->objectId . '/rangeId/' . $this->biblioId);
+        $this->resetRequest()->resetResponse();
+        $this->dispatch('admin/place/view/id/' . $this->objectId);
         $this->resetRequest()->resetResponse();
         $this->dispatch('admin/place/update/id/' . $this->objectId);
         $this->resetRequest()->resetResponse();
+        $this->formValues['siteId'] = ''; // test empty root type
+        $this->formValues['alias'] = '';
         $this->request->setMethod('POST')->setPost($this->formValues);
-        $this->dispatch('admin/place/update/id/' . $placeId);
+        $this->dispatch('admin/place/update/id/' . $this->objectId);
+        $this->resetRequest()->resetResponse();
+        $this->request->setMethod('POST')->setPost($this->formValues);
+        $this->dispatch('admin/place/update/id/' . $this->objectId);
         $this->resetRequest()->resetResponse();
         $this->formValues['easting'] = '1';
         $this->request->setMethod('POST')->setPost($this->formValues);
-        $this->dispatch('admin/place/update/id/' . $placeId);
+        $this->dispatch('admin/place/update/id/' . $this->objectId);
         $this->resetRequest()->resetResponse();
-        $this->dispatch('admin/place/delete/id/' . $placeId);
+        $this->dispatch('admin/place/delete/id/' . $this->objectId);
     }
 
 }

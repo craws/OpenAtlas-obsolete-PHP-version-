@@ -11,14 +11,12 @@ class Admin_ProfileController extends Zend_Controller_Action {
             'theme' => $user->getSetting('theme'),
             'layout' => $user->getSetting('layout'),
         ]);
-        // @codeCoverageIgnoreStart
         if ($user->getSetting('language')) {
             $form->populate(['language' => $user->getSetting('language')]);
         }
         if ($user->getSetting('table_rows')) {
            $form->populate(['tableRows' => $user->getSetting('table_rows')]);
         }
-        // @codeCoverageIgnoreEnd
         if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
             $this->view->form = $form;
             $this->view->user = $user;
@@ -28,7 +26,9 @@ class Admin_ProfileController extends Zend_Controller_Action {
         $user->settings['layout'] = $form->getValue('layout');
         $user->settings['language'] = $form->getValue('language');
         $user->settings['table_rows'] = $form->getValue('tableRows');
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         Model_UserMapper::updateSettings($user);
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_update');
         return $this->_helper->redirector->gotoUrl('/admin/profile');
     }
@@ -79,7 +79,9 @@ class Admin_ProfileController extends Zend_Controller_Action {
         $user->email = $form->getValue('email');
         $user->realName = $form->getValue('realName');
         $user->update();
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         Model_UserMapper::updateSettings($user);
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->log('info', 'user', 'Updated profile');
         $this->_helper->message('info_update');
         return $this->_helper->redirector->gotoUrl('/admin/profile');

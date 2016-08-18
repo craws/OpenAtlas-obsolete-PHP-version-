@@ -15,7 +15,7 @@ class Admin_BiblioControllerTest extends ControllerTestCase {
         $this->request->setMethod('POST')->setPost([
             'referenceButton' => 'biblio',
             'referenceId' => $this->carrierId,
-            'description' => 'desc'
+            'page' => 'page'
         ]);
         $this->dispatch('admin/biblio/insert/id/' . $this->sourceId);
         $this->resetRequest()->resetResponse();

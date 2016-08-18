@@ -20,7 +20,9 @@ class Admin_ContentController extends Zend_Controller_Action {
                 $texts[$language->shortform] = $form->getValue($language->shortform);
             }
             $content->texts = $texts;
+            Zend_Db_Table::getDefaultAdapter()->beginTransaction();
             $content->update();
+            Zend_Db_Table::getDefaultAdapter()->commit();
             $this->_helper->message('info_update');
             return $this->_helper->redirector->gotoUrl('/admin/content/view/id/' . $content->id);
         }

@@ -15,19 +15,6 @@ class Admin_OverviewControllerTest extends ControllerTestCase {
         $this->dispatch('admin/overview');
         $this->assertController('overview');
         $this->dispatch('admin/overview/feedback');
-        $this->dispatch('admin/overview/changelog');
-        $this->dispatch('admin/overview/credits');
-    }
-
-    public function testModelAction() {
-        $this->dispatch('admin/overview/model');
-        $this->resetRequest()->resetResponse();
-        $this->request->setMethod('POST')->setPost([
-            'domain' => Model_ClassMapper::getByCode('E61')->id,
-            'range' => Model_ClassMapper::getByCode('E61')->id,
-            'property' => Model_PropertyMapper::getByCode('P20')->id
-        ]);
-        $this->dispatch('admin/overview/model');
     }
 
 }

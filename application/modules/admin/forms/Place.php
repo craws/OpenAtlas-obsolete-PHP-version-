@@ -41,4 +41,22 @@ class Admin_Form_Place extends Admin_Form_Base {
         $this->setElementFilters(['StringTrim']);
     }
 
+    public function prepareUpdate(Model_Entity $object) {
+        $aliasIndex = 0;
+        $aliasElements = Model_LinkMapper::getLinkedEntities($object, 'P1');
+        if ($aliasElements) {
+            foreach ($aliasElements as $alias) {
+                $element = $this->createElement('text', 'alias' . $aliasIndex, ['belongsTo' => 'alias']);
+                $element->setValue($alias->name);
+                $this->addElement($element);
+                $aliasIndex++;
+            }
+        } else {
+            $element = $this->createElement('text', 'alias0', ['belongsTo' => 'alias']);
+            $this->addElement($element);
+            $aliasIndex++;
+        }
+        $this->populate(['aliasId' => $aliasIndex]);
+    }
+
 }

@@ -9,7 +9,7 @@ class Admin_InvolvementControllerTest extends ControllerTestCase {
         $this->login();
     }
 
-    public function testInsert() {
+    public function testCrudInvolvement() {
         $formValues = [
             'activity' => Model_PropertyMapper::getByCode('P11')->id,
             'involvementId' => Model_NodeMapper::getByNodeCategoryName('Involvement', 'Creator')->id,
@@ -28,6 +28,9 @@ class Admin_InvolvementControllerTest extends ControllerTestCase {
         $this->resetRequest()->resetResponse();
         $actor = Model_EntityMapper::getById($this->actorId);
         $involvements = Model_LinkMapper::getLinks($actor, ['P11', 'P14', 'P22', 'P23'], true);
+        $this->dispatch('admin/involvement/update/origin/event/id/' . $involvements[0]->id);
+        $this->resetRequest()->resetResponse();
+        $this->request->setMethod('POST')->setPost($formValues);
         $this->dispatch('admin/involvement/update/origin/event/id/' . $involvements[0]->id);
         $this->resetRequest()->resetResponse();
         $this->request->setMethod('POST')->setPost($formValues);
