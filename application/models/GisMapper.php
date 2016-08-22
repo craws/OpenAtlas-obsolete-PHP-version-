@@ -9,7 +9,7 @@ class Model_GisMapper extends Model_AbstractMapper {
         return $points;
     }
 
-    public static function getPoints3($objectId) {
+    public static function getPoints3($objectId = null) {
         $sql = "
             SELECT
                 object.id AS object_id,
@@ -43,7 +43,6 @@ class Model_GisMapper extends Model_AbstractMapper {
                     'id' => (int) $row['point_id'],
                     'name' => str_replace('"', '\"', $row['point_name']),
                     'description' => str_replace('"', '\"', $row['point_description']),
-                    'marker-color' => "#fc4353",
                     'siteType' => 'To do',
                     'shapeType' => $row['type'],
                 ]
