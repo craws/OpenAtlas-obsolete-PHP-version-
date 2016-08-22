@@ -5,11 +5,12 @@
 class Model_GisMapper extends Model_AbstractMapper {
 
     public static function getAll($objectId = 0) {
-        $points = self::getPoints3($objectId);
+        $points = self::getPoints($objectId);
         return $points;
     }
 
-    public static function getPoints3($objectId = null) {
+    public static function getPoints($objectIdsParam = []) {
+        $objectIds = (is_array($objectIdsParam)) ? $objectIdsParam : [$objectIdsParam];
         $sql = "
             SELECT
                 object.id AS object_id,
@@ -47,7 +48,7 @@ class Model_GisMapper extends Model_AbstractMapper {
                     'shapeType' => $row['type'],
                 ]
             ];
-            if ($row['object_id'] == $objectId) {
+            if (in_array($row['object_id'], $objectIds)) {
                 $selected[] = $point;
             } else {
                 $all[] = $point;
@@ -97,37 +98,6 @@ class Model_GisMapper extends Model_AbstractMapper {
         }
         return false;
     }
-
-    public static function getJsonData($objects = false) {
-        if (!$objects) {
-            $objects = Model_EntityMapper::getByCodes('PhysicalObject');
-        }
-        $json['marker'] = '';
-        $json['search'] = '';
-        foreach ($objects as $object) {
-            $place = Model_LinkMapper::getLinkedEntity($object, 'P53');
-            $gis = Model_GisMapper::getByEntity($place);
-            if ($gis) {
-                $name = str_replace('"', '\"', $object->name);
-                $type = Model_NodeMapper::getNodeByEntity('Site', $object);
-                $typeName = str_replace('"', '\"', '');
-                $description = str_replace('"', '\"', $object->description);
-                $json['marker'] .= '{"type": "Feature","geometry":{"type": "Point","coordinates": [' . $gis->easting .
-                    ',' . $gis->northing . ']},';
-                $json['marker'] .= '"properties": {"title": "' . $name . '","description":"' .
-                    $description . '",';
-                $json['marker'] .= '"marker-color": "#fc4353","sitetype": "' . $typeName . '","uid": "' .
-                    $object->id . '"}},';
-                $json['search'] .= '{"label": "' . $name . '", "type": "' . $typeName . '", "uid": "' .
-                    $object->id . '",';
-                $json['search'] .= '"lat": "' . $gis->easting . '", "lon": "' . $gis->northing . '"},';
-            }
-        }
-        if ($json['marker']) {
-            return $json;
-        }
-    }
-
 
     public static function getByEntity(Model_Entity $entity) {
         $sql = 'SELECT st_x(st_transform(geom,4326)) as easting, st_y(st_transform(geom,4326)) as northing
