@@ -33,6 +33,7 @@ class Admin_PlaceController extends Zend_Controller_Action {
         if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
             $this->view->form = $form;
             $this->view->source = $source;
+            $this->view->gisData = Model_GisMapper::getAll();
             return;
         }
         Zend_Db_Table::getDefaultAdapter()->beginTransaction();
@@ -108,10 +109,7 @@ class Admin_PlaceController extends Zend_Controller_Action {
     public function viewAction() {
         $object = Model_EntityMapper::getById($this->_getParam('id'));
         $place = Model_LinkMapper::getLinkedEntity($object, 'P53');
-        $this->view->gis = Model_GisMapper::getByEntity($place);
-        if ($this->view->gis) {
-            $this->view->jsonData = Model_GisMapper::getJsonData();
-        }
+        $this->view->gisData = Model_GisMapper::getAll($object->id);
         $this->view->object = $object;
         $this->view->aliases = Model_LinkMapper::getLinkedEntities($object, 'P1');
         $this->view->dates = Model_DateMapper::getDates($object);
@@ -142,7 +140,6 @@ class Admin_PlaceController extends Zend_Controller_Action {
     }
 
     private function prepareDefaultUpdate(Zend_Form $form, Model_Entity $object, Model_Entity $place) {
-        $points = Model_GisMapper::getPoints($place);
         $polygons = Model_GisMapper::getPolygons($place);
         $gisData = Model_GisMapper::getAll($object->id);
         $this->view->gisData = $gisData;

@@ -43,7 +43,7 @@ class Model_GisMapper extends Model_AbstractMapper {
                     'id' => (int) $row['point_id'],
                     'name' => str_replace('"', '\"', $row['point_name']),
                     'description' => str_replace('"', '\"', $row['point_description']),
-                    'siteType' => 'To do',
+                    'siteType' => 'Type to do (Alex)',
                     'shapeType' => $row['type'],
                 ]
             ];
@@ -79,32 +79,6 @@ class Model_GisMapper extends Model_AbstractMapper {
             $statement->bindValue(':type', $point->properties->shapeType);
             $statement->execute();
         }
-    }
-
-    public static function getPoints(Model_Entity $entity) {
-        $sql = 'SELECT
-            geom,
-            name,
-            description,
-            type,
-            st_x(st_transform(geom,4326)) as easting,
-            st_y(st_transform(geom,4326)) as northing
-            FROM gis.point WHERE entity_id = :entity_id;';
-        $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
-        $statement->bindValue(':entity_id', $entity->id);
-        $statement->execute();
-        $points = [];
-        foreach ($statement->fetchAll() as $row) {
-            $point = [];
-            $point['name'] = $row['name'];
-            $point['shapeType'] = $row['type'];
-            $point['description'] = $row['description'];
-            $point['geometryType'] = 'centerpoint';
-            $point['easting'] = $row['easting'];
-            $point['northing'] = $row['northing'];
-            $points[] = $point;
-        }
-        return $points;
     }
 
     public static function getPolygons(Model_Entity $object) {
