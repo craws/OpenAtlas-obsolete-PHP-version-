@@ -68,6 +68,8 @@ class Admin_PlaceController extends Zend_Controller_Action {
         $this->view->form = $form;
         $this->view->object = $object;
         $form->prepareUpdate($object);
+
+
         if (!$this->getRequest()->isPost()) {
             self::prepareDefaultUpdate($form, $object, $place);
             return;
