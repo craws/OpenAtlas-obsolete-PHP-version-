@@ -151,7 +151,7 @@ if (gisPointAll != "") {
     sitesmarkers.on('layeradd', setSitesInfo); // trigger popup info creation when layer is added
     sitesmarkers.on('layeradd', function (e) {
         var marker = e.layer;
-        marker.setIcon(L.icon({iconUrl: "/js/leaflet/images/marker-icon.png", iconAnchor: [12, 41], popupAnchor: [0, -34]}));
+        marker.setIcon(L.icon({iconUrl: "/js/leaflet/images/marker-icon_all.png", iconAnchor: [12, 41], popupAnchor: [0, -34]}));
     });
     sitesmarkers.setGeoJSON(gisPointAll); //set layer content to geojson
     map.addLayer(sitesmarkers);
@@ -278,17 +278,15 @@ function setpopup2(feature, layer) {
 // bitte dynamisch generieren aus der Datenbank jeweils die Geometrien zu den Parent Places
 
 
-//$('#gisPoints').val(JSON.stringify(gisPointSelected));
-alert('hallowelt0');
+
+
 if (myurl.indexOf('place/') >= 0) {
 //    var mysites = L.geoJson(placepolygons, {onEachFeature: setpopup2}).addTo(map);
 //    mysites.on('click', setObjectId);
-alert('hallowelt1');
     var mypoints = L.geoJson(gisPointSelected, {onEachFeature: setpopup2}).addTo(map);
     mypoints.on('click', setObjectId);
     var myextend = L.featureGroup([mypoints]);
     map.fitBounds(myextend);
-    alert('hallowelt');
     if (myurl.indexOf('insert') >= 0) {
         map.fitBounds(sitesmarkers)
 //        map.removeLayer(mysites);
@@ -297,6 +295,7 @@ alert('hallowelt1');
 }
 
 if (myurl.indexOf('update') >= 0) {
+    $('#gisPoints').val(JSON.stringify(gisPointSelected));
 //    map.removeLayer(mysites);
     map.removeLayer(mypoints);
 //    var mysites = L.geoJson(placepolygons, {onEachFeature: setpopup}).addTo(map);
