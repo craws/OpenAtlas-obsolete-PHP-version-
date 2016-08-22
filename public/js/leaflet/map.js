@@ -114,7 +114,8 @@ function setSitesInfo(e) { //set Popup Information of existing sites
     marker.bindPopup(
         '<div id="mypopup"><div id="popuptitle">' + marker.toGeoJSON().properties.title + '</b> <br> </div>' +
         '<div id="popuptype"><i>' + marker.toGeoJSON().properties.siteType + '</i> <br> <br></div>' +
-        '<div style="max-height:100px; max-width:200px; overflow-y: auto">' + marker.toGeoJSON().properties.description + '<br></div></div>' +
+        '<div style="max-height:100px; max-width:200px; overflow-y: auto">' + marker.toGeoJSON().properties.objectDescription + '<br></div></div><br>' +
+        '<div style="max-height:100px; max-width:200px; overflow-y: auto">' + marker.toGeoJSON().properties.shapeType + '<br></div></div>' +
         '<a href="/admin/place/view/id/' + marker.feature.properties.objectId + '">Details</a>',
         {autoPanPaddingTopLeft: new L.Point(40, 10), autoPanPaddingBottomRight: new L.Point(50, 10)}
     );
@@ -146,6 +147,13 @@ if (myurl.indexOf('insert') >= 0) {
 if (gisPointAll != "") {
     var sitesmarkers = L.mapbox.featureLayer(); // define a layer for sitedata
     sitesmarkers.on('layeradd', setSitesInfo); // trigger popup info creation when layer is added
+    
+    sitesmarkers.on('layeradd', function(e) {
+            var marker = e.layer,
+            feature = marker.feature;
+            marker.setIcon(L.icon({iconUrl: "/js/leaflet/images/marker-icon.png", iconAnchor: [12, 41], popupAnchor: [0, -34]}));
+});
+    
     sitesmarkers.setGeoJSON(gisPointAll); //set layer content to geojson
     map.addLayer(sitesmarkers);
     if (!(myurl.indexOf('place/') >= 0)) {
