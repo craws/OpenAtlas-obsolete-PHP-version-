@@ -60,24 +60,21 @@ class Model_GisMapper extends Model_AbstractMapper {
     }
 
     public static function insertPoints(Model_Entity $place, $points) {
-        if (!$points) {
-            return;
-        }
         foreach ($points as $point) {
-            // TODO parameterize query
             $sql = "INSERT INTO gis.point (entity_id, name, description, type, geom)
                 VALUES (
                     :entity_id,
                     :name,
                     :description,
                     :type,
-                    st_geomfromtext('POINT('||" . $point->geometry->coordinates[0] . "||' '||" . $point->geometry->coordinates[1] . "||')',4326)
+                    ST_SetSRID(ST_GeomFromGeoJSON(:geojson),4326)
                 );";
             $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
             $statement->bindValue(':entity_id', $place->id);
             $statement->bindValue(':name', $point->properties->name);
             $statement->bindValue(':description', $point->properties->description);
             $statement->bindValue(':type', $point->properties->shapeType);
+            $statement->bindValue(':geojson', json_encode($point->geometry));
             $statement->execute();
         }
     }
@@ -118,10 +115,13 @@ class Model_GisMapper extends Model_AbstractMapper {
 
     public static function deleteByEntity($entity) {
         $sql = 'DELETE FROM gis.point WHERE entity_id = :entity_id;';
-        //$sql .= 'DELETE FROM gis.polygon WHERE entity_id = :entity_id;';
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->bindValue('entity_id', $entity->id);
         $statement->execute();
+        $sqlPolygon = 'DELETE FROM gis.polygon WHERE entity_id = :entity_id;';
+        $statementPolygon = Zend_Db_Table::getDefaultAdapter()->prepare($sqlPolygon);
+        $statementPolygon->bindValue('entity_id', $entity->id);
+        $statementPolygon->execute();
     }
 
 }
