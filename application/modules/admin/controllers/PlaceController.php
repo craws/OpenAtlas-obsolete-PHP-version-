@@ -109,10 +109,7 @@ class Admin_PlaceController extends Zend_Controller_Action {
     public function viewAction() {
         $object = Model_EntityMapper::getById($this->_getParam('id'));
         $place = Model_LinkMapper::getLinkedEntity($object, 'P53');
-        $this->view->gis = Model_GisMapper::getByEntity($place);
-        if ($this->view->gis) {
-            $this->view->jsonData = Model_GisMapper::getJsonData();
-        }
+        $this->view->gisData = Model_GisMapper::getAll($object->id);
         $this->view->object = $object;
         $this->view->aliases = Model_LinkMapper::getLinkedEntities($object, 'P1');
         $this->view->dates = Model_DateMapper::getDates($object);
