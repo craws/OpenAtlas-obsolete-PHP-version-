@@ -46,8 +46,7 @@ class Model_LogMapper extends Model_AbstractMapper {
             $statement->bindValue(':limit', null);
         }
         $statement->execute();
-        $rows = $statement->fetchAll();
-        foreach ($rows as $row) {
+        foreach ($statement->fetchAll() as $row) {
             $objects[] = self::populate($row);
         }
         return $objects;
@@ -67,13 +66,10 @@ class Model_LogMapper extends Model_AbstractMapper {
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->bindValue(':log_id', $object->id);
         $statement->execute();
-        $rows = $statement->fetchAll();
         $params = [];
-        if ($rows) {
-            foreach ($rows as $row) {
-                if (!in_array($row['key'], ['layoutFullContent', 'layoutContent'])) {
-                    $params[$row['key']] = $row['value'];
-                }
+        foreach ($statement->fetchAll() as $row) {
+            if (!in_array($row['key'], ['layoutFullContent', 'layoutContent'])) {
+                $params[$row['key']] = $row['value'];
             }
         }
         $object->params = $params;
@@ -88,7 +84,7 @@ class Model_LogMapper extends Model_AbstractMapper {
 
     public static function log($priorityName, $type, $message = '') {
         $priority = array_search($priorityName, self::$logLevels);
-        if (!$priority || $priority > Model_SettingsMapper::getSetting('general', 'log_level')) {
+        if ($priority === false || $priority > Model_SettingsMapper::getSetting('general', 'log_level')) {
             return;
         }
         $ip = (filter_input(INPUT_SERVER, 'REMOTE_ADDR')) ? filter_input(INPUT_SERVER, 'REMOTE_ADDR') : '';
@@ -106,10 +102,9 @@ class Model_LogMapper extends Model_AbstractMapper {
         $result = $statement->fetch(PDO::FETCH_ASSOC);
         $logId = $result['id'];
         $frontController = Zend_Controller_Front::getInstance();
-        if ($frontController->getRequest() == null || !is_array($frontController->getRequest()->getParams())) {
-            return $logId;
+        if ($frontController->getRequest() && is_array($frontController->getRequest()->getParams())) {
+            self::logDetails($logId);
         }
-        self::logDetails($logId);
         return $logId;
     }
 

@@ -12,13 +12,13 @@ var togglebtn = 0;
 var shapename;
 var shapetype;
 var shapedescription;
-var geometryType;
+var geometrytype;
 var marker;
 var markerimg; // temporary marker for coordinate capture
 var capture = false; // var to store whether control is active or not
 var coordcapture = false;
 var headingtext;
-var parentname = 'Fundortparent';
+var objectName = 'Fundortparent';
 var lastclicked;
 var position;
 
@@ -89,7 +89,7 @@ datainput.onAdd = function (map) {
                     <label> Coordinates: </label>\
                     <span><textarea rows='4' cols='50' id='shapecoords'/></textarea></span>\
                     <label> Geometrytype: </label>\
-                    <span><input type='text' id='geometryType'/></span>\n\
+                    <span><input type='text' id='geometrytype'/></span>\n\
                 </div>\
             </form>\
             <input type='button' title='Reset values and shape' id='resetbtn' disabled value='Clear' onclick='resetmyform()'/>\
@@ -136,10 +136,10 @@ function editshape() {
         });
         map.closePopup();
         editon = 1;
-        if (geometryType === 'Polygon') {
+        if (geometrytype === 'Polygon') {
             mylayer = L.polygon(editlayer.getLatLngs()).addTo(map);
             mylayer.bindPopup(
-                '<div id="popup"><b>' + parentname + '</b> <br>' +
+                '<div id="popup"><b>' + objectName + '</b> <br>' +
                 '<div id="popup"><b>' + shapename + '</b> <br>' +
                 '<i>' + shapetype + '</i> <br> <br>' +
                 '<div style="max-height:140px; overflow-y: auto">' + shapedescription + '<br> </div>'
@@ -150,7 +150,7 @@ function editshape() {
             }
             myoldlayer = L.polygon(editlayer.getLatLngs());
             myoldlayer.bindPopup(
-                '<div id="popup"><b>' + parentname + '</b> <br>' +
+                '<div id="popup"><b>' + objectName + '</b> <br>' +
                 '<div id="popup"><b>' + shapename + '</b> <br>' +
                 '<i>' + shapetype + '</i> <br> <br>' +
                 '<div style="max-height:140px; overflow-y: auto">' + shapedescription + '<br> </div>' +
@@ -159,10 +159,10 @@ function editshape() {
             map.removeLayer(editlayer);
         }
 
-        if (geometryType === 'Point') {
+        if (geometrytype === 'Point') {
             mylayer = L.marker((editlayer.getLatLng()), {draggable: true, icon: editIcon}).addTo(map);
             mylayer.bindPopup(
-                '<div id="popup"><b>' + parentname + '</b> <br>' +
+                '<div id="popup"><b>' + objectName + '</b> <br>' +
                 '<div id="popup"><b>' + shapename + '</b> <br>' +
                 '<i>' + shapetype + '</i> <br> <br>' +
                 '<div style="max-height:140px; overflow-y: auto">' + shapedescription + '<br> </div>'
@@ -172,7 +172,7 @@ function editshape() {
             }
             myoldlayer = L.marker(editlayer.getLatLng());
             myoldlayer.bindPopup(
-                '<div id="popup"><b>' + parentname + '</b> <br>' +
+                '<div id="popup"><b>' + objectName + '</b> <br>' +
                 '<div id="popup"><b>' + shapename + '</b> <br>' +
                 '<i>' + shapetype + '</i> <br> <br>' +
                 '<div style="max-height:140px; overflow-y: auto">' + shapedescription + '<br> </div>' +
@@ -204,12 +204,12 @@ function editshape() {
         }
         mylayer.options.editing || (mylayer.options.editing = {});
         mylayer.editing.enable();
-        document.getElementById('geometryType').value = geometryType;
+        document.getElementById('geometrytype').value = geometrytype;
         mylayer.on('edit', function () {
             var latLngs = mylayer.getLatLngs();
             var latLngs; //to store coordinates of vertices
             var newvector = []; // array to store coordinates as numbers
-            var type = geometryType.toLowerCase();
+            var type = geometrytype.toLowerCase();
             document.getElementById('editsavebtn').disabled = false;
             if (type != 'marker') {  //if other type than point then store array of coordinates as variable
                 latLngs = mylayer.getLatLngs();
@@ -274,14 +274,14 @@ map.on('draw:created', function (e) {
 
 function drawpolygon() {
     drawlayer = new L.Draw.Polygon(map);
-    geometryType = "polygon";
+    geometrytype = "polygon";
     capture = false;
     startdrawing();
 }
 
 function drawpolyline() {
     drawlayer = new L.Draw.Polyline(map);
-    geometryType = "linestring";
+    geometrytype = "linestring";
     startdrawing();
 }
 
@@ -306,10 +306,10 @@ function savetodb() {
     var shapetype = $('#shapetype').val();
     var shapedescription = $('#shapedescription').val();
     var shapecoords = $('#shapecoords').val();
-    var geometryType = $('#geometryType').val();
-    var dataString = '&shapename=' + shapename + '&shapetype=' + shapetype + '&shapedescription=' + shapedescription + '&shapecoords=' + shapecoords + '&geometryType=' + geometryType;
+    var geometrytype = $('#geometrytype').val();
+    var dataString = '&shapename=' + shapename + '&shapetype=' + shapetype + '&shapedescription=' + shapedescription + '&shapecoords=' + shapecoords + '&geometrytype=' + geometrytype;
     $('#gisData').val($('#gisData').val() + dataString);
-    layer.bindPopup('<div id="popup"><b>' + parentname + '</b> (created)<br>' +
+    layer.bindPopup('<div id="popup"><b>' + objectName + '</b> (created)<br>' +
         '<div id="popup"><b>' + shapename + '</b> <br>' +
         '<i>' + shapetype + '</i> <br> <br>' +
         '<div style="max-height:140px; overflow-y: auto">' + shapedescription + '<br><br><br> </div>' +
@@ -325,47 +325,65 @@ function editsavetodb() {
     var shapetype = $('#shapetype').val();
     var shapedescription = $('#shapedescription').val();
     var shapecoords = $('#shapecoords').val();
-    var geometryType = $('#geometryType').val();
-    var dataString = 'shapename=' + shapename + '&shapetype=' + shapetype + '&shapedescription=' + shapedescription + '&shapecoords=' + shapecoords + '&geometryType=' + geometryType + '&uid=' + uid;
-    if (geometryType == 'Polygon') {
+    var geometrytype = $('#geometrytype').val();
+    var dataString = 'shapename=' + shapename + '&shapetype=' + shapetype + '&shapedescription=' + shapedescription + '&shapecoords=' + shapecoords + '&geometrytype=' + geometrytype + '&uid=' + uid;
+    if (geometrytype == 'Polygon') {
         var myeditedlayer = L.polygon(mylayer.getLatLngs()).addTo(map);
         myeditedlayer.setStyle({fillColor: '#686868'});
         myeditedlayer.setStyle({color: '#686868'});
     }
-    if (geometryType == 'Point') {
+    if (geometrytype == 'Point') {
         var myeditedlayer = L.marker((mylayer.getLatLng()), {icon: editedIcon}).addTo(map);
     }
     myeditedlayer.bindPopup(
-        '<div id="popup"><b>' + parentname + '</b> (edited)<br>' +
+        '<div id="popup"><b>' + objectName + '</b> (edited)<br>' +
         '<div id="popup"><b>' + shapename + '</b> <br>' +
         '<i>' + shapetype + '</i> <br> <br>' +
         '<div style="max-height:140px; overflow-y: auto">' + shapedescription + '<br><br><br> </div>' +
         '<i> (for re-editing please save or reload the whole place)</i>'
     );
     map.removeLayer(mylayer);
-    alert('@ alex: please update edited record to db: ' + dataString);
+
+    alert('@ Stefan - read comment in code about how to update');
+    // here we need the id of the shape/point not "selectedshape" which seems to be the id of the place
+    // loop through array of existing
+    var points = JSON.parse($('#gisPoints').val());
+    $.each(points, function(key, value) {
+        // alert(JSON.stringify(value.properties.id));
+        // if value.properties.id == toUpdateId: update or remove/add in array
+    });
+    $('#gisPoints').val(JSON.stringify(points)); // write array back to form field
     editclosemyformsave();
 }
 
 
 function deleteshape() {
     if (editon === 0) {
-        var dataString = 'uid=' + selectedshape + '&geometryType=' + geometryType;
+        var dataString = 'uid=' + selectedshape + '&geometrytype=' + geometrytype;
         if (typeof (editlayer) == 'object') {
             map.removeLayer(editlayer);
         }
         if (typeof (editmarker) == 'object') {
             map.removeLayer(editmarker);
-            var dataString = 'uid=' + selectedshape + '&geometryType=' + geometryType;
+            var dataString = 'uid=' + selectedshape + '&geometrytype=' + geometrytype;
         }
-        alert('@ Alex please delete this point/polygon from database: ' + dataString);
+
+        alert('@ Stefan - read comment in code about how to delete');
+        // here we need the id of the shape/point not "selectedshape" which seems to be the id of the place
+        // loop through array of existing
+        var points = JSON.parse($('#gisPoints').val());
+        $.each(points, function(key, value) {
+            // alert(JSON.stringify(value.properties.id));
+            // if value.properties.id == toDeleteId: remove from array
+        });
+        $('#gisPoints').val(JSON.stringify(points)); // write array back to form field
     }
 }
 
 function reloadgeojson() {
 //    $.ajax({
 //        dataType: "json",
-//        url: "php/" + geometryType + "_reload.php",
+//        url: "php/" + geometrytype + "_reload.php",
 //        success: function (data) {
 //            $(data.features).each(function (key, data) {
 //                postGisGeoJSON.addData(data);
@@ -462,7 +480,7 @@ function resetmyform() {
     document.getElementById('savebtn').style.display = 'block';
     map.closePopup();
     document.getElementById("shapeform").reset();
-    document.getElementById("geometryType").value = geometryType;
+    document.getElementById("geometrytype").value = geometrytype;
     if (capture = false) {
         drawlayer.enable();
     }
@@ -534,7 +552,7 @@ function editclosemyformsave() {
 map.on('click', function (e) {
     if (capture) {
         document.getElementById('markersavebtn').disabled = false;
-        document.getElementById('geometryType').value = 'point';
+        document.getElementById('geometrytype').value = 'point';
         if (typeof (marker) !== 'object') {
             marker = new L.marker(e.latlng, {draggable: true, icon: newIcon});
             marker.addTo(map);
@@ -583,20 +601,14 @@ function drawmarker() {
 function saveMarker() {
     capture = false;
     document.getElementById('savebtn').style.display = 'none';
-    var point = {};
-    point['name'] = $('#shapename').val();
-    point['shapeType'] = 'centerpoint';
-    point['description'] = $('#shapedescription').val();
-    point['coords'] = $('#shapecoords').val();
-    point['geometryType'] = $('#geometryType').val();
-    point['northing'] = $('#northing').val();
-    point['easting'] = $('#easting').val();
+    var point = '{"type":"Feature","geometry":{"type":"Point","coordinates":[' + $('#easting').val() + ',' + $('#northing').val() + ']},"properties":';
+    point += '{"name": "' + $('#shapename').val() + '","description": "' + $('#shapedescription').val() + '","marker-color": "#fc4353","siteType":"To do","shapeType": "centerpoint"}}';
     var points = JSON.parse($('#gisPoints').val());
-    points.push(point);
+    points.push(JSON.parse(point));
     $('#gisPoints').val(JSON.stringify(points));
-    var newmarker = L.marker(([point['northing'], point['easting']]), {icon: newIcon}).addTo(map);
+    var newmarker = L.marker(([$('#northing').val(), $('#easting').val()]), {icon: newIcon}).addTo(map);
     newmarker.bindPopup(
-        '<div id="popup"><b>' + parentname + '</b> (created)</br>' +
+        '<div id="popup"><b>' + objectName + '</b> (created)</br>' +
         '<div id="popup"><b>' + point['name'] + '</b></br>' +
         '<i>' + point['shapeType'] + '</i></br></br>' +
         '<div style="max-height:140px; overflow-y: auto">' + point['description'] + '</br></br></br></div>' +

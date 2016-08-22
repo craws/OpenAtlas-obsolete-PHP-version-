@@ -5,7 +5,10 @@
 class Admin_ActorController extends Zend_Controller_Action {
 
     public function deleteAction() {
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         Model_EntityMapper::getById($this->_getParam('id'))->delete();
+        Model_UserLogMapper::insert('entity', $this->_getParam('id'), 'delete');
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_delete');
         return $this->_helper->redirector->gotoUrl('/admin/actor');
     }
@@ -49,11 +52,15 @@ class Admin_ActorController extends Zend_Controller_Action {
             $this->view->source = $source;
             return;
         }
-        $actor = Model_EntityMapper::insert($class->id, $form->getValue('name'), $form->getValue('description'));
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
+        $actorId = Model_EntityMapper::insert($class->id, $form->getValue('name'), $form->getValue('description'));
+        $actor = Model_EntityMapper::getById($actorId);
         if ($source) {
             Model_LinkMapper::insert('P67', $source, $actor);
         }
         self::save($actor, $form, $hierarchies);
+        Model_UserLogMapper::insert('entity', $actorId, 'insert');
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_insert');
         $url = '/admin/actor/view/id/' . $actor->id;
         if ($event) {
@@ -95,6 +102,7 @@ class Admin_ActorController extends Zend_Controller_Action {
         }
         $actor->name = $form->getValue('name');
         $actor->description = $form->getValue('description');
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         $actor->update();
         foreach (Model_LinkMapper::getLinkedEntities($actor, 'P131') as $alias) {
             $alias->delete();
@@ -103,6 +111,8 @@ class Admin_ActorController extends Zend_Controller_Action {
             $link->delete();
         }
         self::save($actor, $form, $hierarchies);
+        Model_UserLogMapper::insert('entity', $actor->id, 'update');
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_update');
         return $this->_helper->redirector->gotoUrl('/admin/actor/view/id/' . $actor->id);
     }
@@ -214,8 +224,8 @@ class Admin_ActorController extends Zend_Controller_Action {
         $data = $form->getValues();
         foreach (array_unique($data['alias']) as $name) {
             if (trim($name)) {
-                $alias = Model_EntityMapper::insert('E82', trim($name));
-                Model_LinkMapper::insert('P131', $entity, $alias);
+                $aliasId = Model_EntityMapper::insert('E82', trim($name));
+                Model_LinkMapper::insert('P131', $entity, $aliasId);
             }
         }
     }

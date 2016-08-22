@@ -1,8 +1,9 @@
 INFO
 ====
+
 Watch out for database role in SQLs and change "openatlas_master" if needed.
 
-2.0.0 to 2.1.0 Upgrade
+2.1.0 to 2.2.0 Upgrade
 ======================
 
 BEGIN;
@@ -10,10 +11,30 @@ BEGIN;
 ALTER TABLE gis.linestring RENAME text TO type;
 ALTER TABLE gis.point RENAME text TO type;
 ALTER TABLE gis.polygon RENAME text TO type;
-ALTER TABLE gis.centerpoint ADD COLUMN name text;
-ALTER TABLE gis.centerpoint ADD COLUMN description text;
+INSERT INTO gis.point (entity_id, type, geom, name) SELECT entity_id, 'centerpoint', geom,
+    (SELECT name FROM model.entity e JOIN model.link l ON e.id = l.domain_id WHERE l.range_id = entity_id AND l.property_id = (SELECT id from model.property WHERE code LIKE 'P53'))
+FROM gis.centerpoint;
+DROP TABLE gis.centerpoint;
 
 COMMIT;
+
+
+
+2.0.0 to 2.1.0 Upgrade
+======================
+
+BEGIN;
+
+UPDATE web.settings SET value = 6 WHERE name = 'log_level';
+TRUNCATE log.detail, log.log;
+DELETE FROM web.user_log WHERE table_name IN ('link', 'LinkProperty');
+DELETE FROM web.user_log WHERE action LIKE ('gis insert');
+DELETE FROM web.user_log WHERE table_id NOT IN (SELECT id FROM model.entity);
+DELETE FROM web.user_log WHERE table_id IN (SELECT e.id FROM model.entity e JOIN model.class c ON e.class_id = c.id WHERE c.code = 'E61');
+
+COMMIT;
+
+
 
 1.6.0 to 2.0.0 Upgrade
 ======================

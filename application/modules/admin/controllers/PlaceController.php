@@ -5,14 +5,17 @@
 class Admin_PlaceController extends Zend_Controller_Action {
 
     public function deleteAction() {
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         Model_EntityMapper::getById($this->_getParam('id'))->delete();
+        Model_UserLogMapper::insert('entity', $this->_getParam('id'), 'delete');
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_delete');
         return $this->_helper->redirector->gotoUrl('/admin/place');
     }
 
     public function indexAction() {
         $this->view->objects = Model_EntityMapper::getByCodes('PhysicalObject');
-        $this->view->jsonData = Model_GisMapper::getJsonData($this->view->objects);
+        $this->view->gisData = Model_GisMapper::getAll();
     }
 
     public function insertAction() {
@@ -32,13 +35,18 @@ class Admin_PlaceController extends Zend_Controller_Action {
             $this->view->source = $source;
             return;
         }
-        $object = Model_EntityMapper::insert('E18', $form->getValue('name'), $form->getValue('description'));
-        $place = Model_EntityMapper::insert('E53', 'Location of ' . $form->getValue('name'));
-        Model_LinkMapper::insert('P53', $object, $place);
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
+        $objectId = Model_EntityMapper::insert('E18', $form->getValue('name'), $form->getValue('description'));
+        $object = Model_EntityMapper::getById($objectId);
+        $placeId = Model_EntityMapper::insert('E53', 'Location of ' . $form->getValue('name'));
+        $place = Model_EntityMapper::getById($placeId);
+        Model_LinkMapper::insert('P53', $objectId, $placeId);
         self::save($form, $object, $place, $hierarchies);
         if ($source) {
             Model_LinkMapper::insert('P67', $source, $object);
         }
+        Model_UserLogMapper::insert('entity', $objectId, 'insert');
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_insert');
         $url = '/admin/place/view/id/' . $object->id;
         if ($form->getElement('continue')->getValue() && $source) {
@@ -66,7 +74,6 @@ class Admin_PlaceController extends Zend_Controller_Action {
         $form->preValidation($this->getRequest()->getPost());
         $formValid = $form->isValid($this->getRequest()->getPost());
         $modified = Model_EntityMapper::checkIfModified($object, $form->modified->getValue());
-
         if ($modified) {
             $log = Model_UserLogMapper::getLogForView('entity', $object->id);
             $this->view->modifier = $log['modifier_name'];
@@ -77,6 +84,7 @@ class Admin_PlaceController extends Zend_Controller_Action {
         }
         $object->name = $form->getValue('name');
         $object->description = $form->getValue('description');
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         $object->update();
         foreach (Model_LinkMapper::getLinks($object, 'P2') as $objectLink) {
             $objectLink->delete();
@@ -91,6 +99,8 @@ class Admin_PlaceController extends Zend_Controller_Action {
             $link->delete();
         }
         self::save($form, $object, $place, $hierarchies);
+        Model_UserLogMapper::insert('entity', $object->id, 'update');
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_update');
         return $this->_helper->redirector->gotoUrl('/admin/place/view/id/' . $object->id);
     }
@@ -134,15 +144,13 @@ class Admin_PlaceController extends Zend_Controller_Action {
     private function prepareDefaultUpdate(Zend_Form $form, Model_Entity $object, Model_Entity $place) {
         $points = Model_GisMapper::getPoints($place);
         $polygons = Model_GisMapper::getPolygons($place);
-        $this->view->points = json_encode($points);
+        $gisData = Model_GisMapper::getAll($object->id);
+        $this->view->gisData = $gisData;
         $this->view->polygons = $polygons;
-        $this->view->points2 = json_encode(Model_GisMapper::getPoints2($place));
-        $this->view->points2 = Model_GisMapper::getPoints2($place);
         $form->populate([
             'name' => $object->name,
             'description' => $object->description,
-            'modified' => ($object->modified) ? $object->modified->getTimestamp() : 0,
-            'gisPoints' => json_encode($points)
+            'modified' => ($object->modified) ? $object->modified->getTimestamp() : 0
         ]);
         $form->populateDates($object, ['OA1' => 'begin', 'OA2' => 'end']);
         return;
@@ -169,12 +177,12 @@ class Admin_PlaceController extends Zend_Controller_Action {
         $data = $form->getValues();
         foreach (array_unique($data['alias']) as $name) {
             if (trim($name)) {
-                $alias = Model_EntityMapper::insert('E41', trim($name));
-                Model_LinkMapper::insert('P1', $object, $alias);
+                $aliasId = Model_EntityMapper::insert('E41', trim($name));
+                Model_LinkMapper::insert('P1', $object, $aliasId);
             }
         }
         Model_GisMapper::insertPoints($place, json_decode($form->gisPoints->getValue()));
-        if ($form->getValue('gisData')) {
+        /*if ($form->getValue('gisData')) {
             $gisData = $form->getValue('gisData');
             parse_str($gisData, $output);
             $geom = "(SELECT ST_GeomFromText('" . $output['geometrytype'] . "'(" . $output['shapecoords'] . ")', 4326))";
@@ -196,7 +204,7 @@ class Admin_PlaceController extends Zend_Controller_Action {
                   $result = $statement->fetch(PDO::FETCH_ASSOC);
                   break;
           }
-        }
+        }*/
 
       }
 }

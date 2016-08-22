@@ -7,8 +7,7 @@ class Model_LanguageMapper extends Model_AbstractMapper {
     public static function getAll() {
         $languages = [];
         $sql = 'SELECT id, name, shortform, active FROM web.language ORDER BY name ASC;';
-        $rows = parent::getAllRows($sql);
-        foreach ($rows as $row) {
+        foreach (parent::getAllRows($sql) as $row) {
             $languages[] = self::populate($row);
         }
         return $languages;
