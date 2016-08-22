@@ -2,6 +2,7 @@
 var coordcapture;
 var coordcaptureimg;
 var gispoints;
+var editon = 0;
 
 function interoff() {
     capture = false;
@@ -164,6 +165,7 @@ if (gisPointAll != "") {
     //map.panBy(new L.Point(0, -20));
 }
 
+
 var namecontrol = L.control.geonames({// add geosearch
     username: 'openatlas', // Geonames account username.  Must be provided
     zoomLevel: 12, // Max zoom level to zoom to for location.  If null, will use the map's max zoom level.
@@ -226,6 +228,12 @@ baseMaps.Landscape.addTo(map);
 L.control.layers(baseMaps, overlayMaps).addTo(map);
 L.control.scale().addTo(map);
 
+function preventpopup(event) {
+    if (editon === 1) {
+        map.closePopup();
+    }
+}
+
 function setObjectId(e) {
     preventpopup();
     if (editon === 0) {
@@ -258,39 +266,47 @@ function setObjectId(e) {
 
 function setpopup(feature, layer) {
     layer.bindPopup(
-        '<div id="popup"><b>' + feature.properties.title + '</b> <br>' +
-        '<div id="popup"><b>' + feature.properties.name + '</b> <br>' +
-        '<i>' + feature.properties.siteType + '</i><br><br>' +
-        '<div style="max-height:140px; overflow-y: auto">' + feature.properties.description + '</div>' +
+        '<div id="popup"><strong>' + feature.properties.title + '</strong><br/>' +
+        '<div id="popup"><i>' + feature.properties.siteType + '</i><br/>' +
+        '<div id="popup"><strong>' + feature.properties.name + '</strong><br/>' +
+        '<div style="max-height:140px; overflow-y: auto;">' + feature.properties.description + '<br/></div>' +
+        '<i>' + feature.properties.shapeType + '</i><br/><br/>' +
         '<button onclick="editshape()"/>Edit</button> <button onclick="deleteshape()"/>Delete</button></div>'
         );
 }
 
 function setpopup2(feature, layer) {
     layer.bindPopup(
-        '<div id="popup"><b>' + feature.properties.objectName + '</b> <br>' +
-        '<div id="popup"><b>' + feature.properties.title + '</b> <br>' +
-        '<i>' + feature.properties.type + '</i> <br> <br>' +
-        '<div style="max-height:140px; overflow-y: auto">' + feature.properties.description + '<br> </div>'
+        '<div id="popup"><strong>' + feature.properties.title + '</strong><br/>' +
+        '<div id="popup"><i>' + feature.properties.siteType + '</i><br/>' +
+        '<div id="popup"><strong>' + feature.properties.name + '</strong><br/>' +
+        '<div style="max-height:140px; overflow-y: auto;">' + feature.properties.description + '<br/></div>' +
+        '<i>' + feature.properties.shapeType + '</i><br/><br/>'
         );
 }
 
-// bitte dynamisch generieren aus der Datenbank jeweils die Geometrien zu den Parent Places
 
 
 
 
 if (myurl.indexOf('place/') >= 0) {
-//    var mysites = L.geoJson(placepolygons, {onEachFeature: setpopup2}).addTo(map);
-//    mysites.on('click', setObjectId);
-    var mypoints = L.geoJson(gisPointSelected, {onEachFeature: setpopup2}).addTo(map);
-    mypoints.on('click', setObjectId);
-    var myextend = L.featureGroup([mypoints]);
-    map.fitBounds(myextend);
+    if (gisPolygonSelected != "") {
+    var mysites = L.geoJson(gisPolygonSelected, {onEachFeature: setpopup2}).addTo(map);
+    mysites.on('click', setObjectId);
+}
+    if (gisPointSelected != "") {
+        var mypoints = L.geoJson(gisPointSelected, {onEachFeature: setpopup2}).addTo(map);
+        mypoints.on('click', setObjectId);
+//    var myextend = L.featureGroup([mypoints, mysites]);
+        map.fitBounds(mypoints);
+    }
     if (myurl.indexOf('insert') >= 0) {
         map.fitBounds(sitesmarkers)
-//        map.removeLayer(mysites);
-        map.removeLayer(mypoints);
+        $('#gisPoints').val('[]');
+        //map.removeLayer(mysites);
+        if (mypoints) {
+        map.removeLayer(mypoints);        
+    }
     }
 }
 

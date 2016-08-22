@@ -103,11 +103,7 @@ datainput.onAdd = function (map) {
 
 setgeojson();
 
-function preventpopup(event) {
-    if (editon === 1) {
-        map.closePopup();
-    }
-}
+
 
 var mylayer;
 var myoldlayer;
