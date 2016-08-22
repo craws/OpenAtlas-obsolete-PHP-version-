@@ -14,8 +14,8 @@ ALTER TABLE gis.polygon RENAME text TO type;
 INSERT INTO gis.point (entity_id, type, geom, name) SELECT entity_id, 'centerpoint', geom,
     (SELECT name FROM model.entity e JOIN model.link l ON e.id = l.domain_id WHERE l.range_id = entity_id AND l.property_id = (SELECT id from model.property WHERE code LIKE 'P53'))
 FROM gis.centerpoint;
-DROP TABLE gis.centerpoint;
-
+DROP TABLE IF EXISTS gis.centerpoint;
+DROP FUNCTION IF EXISTS gis.geometry_creation();
 COMMIT;
 
 
