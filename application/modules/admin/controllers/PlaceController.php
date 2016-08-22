@@ -33,6 +33,7 @@ class Admin_PlaceController extends Zend_Controller_Action {
         if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
             $this->view->form = $form;
             $this->view->source = $source;
+            $this->view->gisData = Model_GisMapper::getAll();
             return;
         }
         Zend_Db_Table::getDefaultAdapter()->beginTransaction();
@@ -142,7 +143,6 @@ class Admin_PlaceController extends Zend_Controller_Action {
     }
 
     private function prepareDefaultUpdate(Zend_Form $form, Model_Entity $object, Model_Entity $place) {
-        $points = Model_GisMapper::getPoints($place);
         $polygons = Model_GisMapper::getPolygons($place);
         $gisData = Model_GisMapper::getAll($object->id);
         $this->view->gisData = $gisData;
