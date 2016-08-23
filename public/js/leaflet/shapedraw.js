@@ -44,7 +44,7 @@ var areabutton = L.easyButton(
         drawpolygon();
     },
     'Draw the area in which the physical thing is located. E.g. if its precise shape is not known but known to be within a certain area'
-);
+    );
 
 var pointbutton = L.easyButton(
     'topright',
@@ -60,7 +60,7 @@ var pointbutton = L.easyButton(
         drawmarker();
     },
     'Set a marker/point at the position where the physical thing is located'
-);
+    );
 
 var datainput = L.control();
 datainput.onAdd = function (map) {
@@ -139,7 +139,7 @@ function editshape() {
                 '<div id="popup"><b>' + shapename + '</b> <br>' +
                 '<i>' + shapetype + '</i> <br> <br>' +
                 '<div style="max-height:140px; overflow-y: auto">' + shapedescription + '<br> </div>'
-            );
+                );
             map.removeLayer(editlayer);
             if (typeof (myoldlayer) == 'object') {
                 map.removeLayer(myoldlayer);
@@ -151,7 +151,7 @@ function editshape() {
                 '<i>' + shapetype + '</i> <br> <br>' +
                 '<div style="max-height:140px; overflow-y: auto">' + shapedescription + '<br> </div>' +
                 '<button onclick="editshape()"/> Edit </button> <button onclick="deleteshape()"/>Delete</button></div>'
-            );
+                );
             map.removeLayer(editlayer);
         }
 
@@ -162,7 +162,7 @@ function editshape() {
                 '<div id="popup"><b>' + shapename + '</b> <br>' +
                 '<i>' + shapetype + '</i> <br> <br>' +
                 '<div style="max-height:140px; overflow-y: auto">' + shapedescription + '<br> </div>'
-            );
+                );
             if (typeof (myoldlayer) == 'object') {
                 map.removeLayer(myoldlayer);
             }
@@ -173,7 +173,7 @@ function editshape() {
                 '<i>' + shapetype + '</i> <br> <br>' +
                 '<div style="max-height:140px; overflow-y: auto">' + shapedescription + '<br> </div>' +
                 '<button onclick="editshape()"/> Edit </button> <button onclick="deleteshape()"/>Delete</button></div>'
-            );
+                );
             map.removeLayer(editlayer);
             document.getElementById('savebtn').style.display = 'none';
             document.getElementById('resetbtn').style.display = 'none';
@@ -337,18 +337,27 @@ function editsavetodb() {
         '<i>' + shapetype + '</i> <br> <br>' +
         '<div style="max-height:140px; overflow-y: auto">' + shapedescription + '<br><br><br> </div>' +
         '<i> (for re-editing please save or reload the whole place)</i>'
-    );
+        );
     map.removeLayer(mylayer);
 
-    alert('@ Stefan - read comment in code about how to update');
     // here we need the id of the shape/point not "selectedshape" which seems to be the id of the place
+    // Now selectedshape is the ID of the shape of the object and no longer of the object
     // loop through array of existing
     var points = JSON.parse($('#gisPoints').val());
-    $.each(points, function(key, value) {
-        // alert(JSON.stringify(value.properties.id));
-        // if value.properties.id == toUpdateId: update or remove/add in array
+    $.each(points, function (key, value) {
+        var id = (JSON.stringify(value.properties.id));
+        var index = ((JSON.stringify(key)));
+        if (id == selectedshape) {
+            points.splice(index, 1);
+            return false;
+        }
     });
     $('#gisPoints').val(JSON.stringify(points)); // write array back to form field
+    var point = '{"type":"Feature","geometry":{"type":"Point","coordinates":[' + $('#easting').val() + ',' + $('#northing').val() + ']},"properties":';
+    point += '{"name": "' + $('#shapename').val() + '","description": "' + $('#shapedescription').val() + '","marker-color": "#fc4353","siteType":"To do","shapeType": "centerpoint"}}';
+    var points = JSON.parse($('#gisPoints').val());
+    points.push(JSON.parse(point));
+    $('#gisPoints').val(JSON.stringify(points));
     editclosemyformsave();
 }
 
@@ -364,14 +373,24 @@ function deleteshape() {
             var dataString = 'uid=' + selectedshape + '&geometrytype=' + geometrytype;
         }
 
-        alert('@ Stefan - read comment in code about how to delete');
-        // here we need the id of the shape/point not "selectedshape" which seems to be the id of the place
-        // loop through array of existing
+
         var points = JSON.parse($('#gisPoints').val());
-        $.each(points, function(key, value) {
-            // alert(JSON.stringify(value.properties.id));
-            // if value.properties.id == toDeleteId: remove from array
+        $.each(points, function (key, value) {
+            var id = (JSON.stringify(value.properties.id));
+            alert('id: ' + JSON.stringify(value.properties.id));
+            alert('selected id: ' + selectedshape);
+            var index = ((JSON.stringify(key)));
+            alert(index);
+            if (id == selectedshape) {
+                alert('delete');
+                points.splice(index, 1);
+                return false;
+            }
+
         });
+
+
+
         $('#gisPoints').val(JSON.stringify(points)); // write array back to form field
     }
 }
@@ -609,6 +628,6 @@ function saveMarker() {
         '<i>' + point['shapeType'] + '</i></br></br>' +
         '<div style="max-height:140px; overflow-y: auto">' + point['description'] + '</br></br></br></div>' +
         '<i>(for re-editing please save or reload the whole place)</i>'
-    );
+        );
     closemymarkerform();
 }

@@ -244,7 +244,7 @@ function setObjectId(e) {
         if (geometrytype == 'Point') {
             position = (e.latlng);
         }
-        selectedshape = objectId;
+        selectedshape = feature.properties.id;
         editlayer = e.layer;
         editmarker = e.marker;
         shapename = feature.properties.name;
