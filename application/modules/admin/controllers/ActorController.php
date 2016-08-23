@@ -144,37 +144,40 @@ class Admin_ActorController extends Zend_Controller_Action {
         if ($actor->class->code != 'E21') {
             $this->view->memberLinks = Model_LinkMapper::getLinks($actor, 'P107');
         }
-        $objects = [];
+        $objectIds = [];
         $residence = Model_LinkMapper::getLinkedEntity($actor, 'P74');
         if ($residence) {
             $object = Model_LinkMapper::getLinkedEntity($residence, 'P53', true);
-            $objects[] = $object;
+            $objectIds[] = $object->id;
             $this->view->residence = $object;
         }
         $firstPlace = Model_LinkMapper::getLinkedEntity($actor, 'OA8');
         if ($firstPlace) {
             $object = Model_LinkMapper::getLinkedEntity($firstPlace, 'P53', true);
-            $objects[] = $object;
+            $objectIds[] = $object->id;
             $this->view->first = $object;
         }
         $lastPlace = Model_LinkMapper::getLinkedEntity($actor, 'OA9');
         if ($lastPlace) {
             $object = Model_LinkMapper::getLinkedEntity($lastPlace, 'P53', true);
-            $objects[] = $object;
+            $objectIds[] = $object->id;
             $this->view->last = $object;
         }
         foreach ($eventLinks as $link) {
             $event = $link->domain;
             $place = Model_LinkMapper::getLinkedEntity($event, 'P7');
             if ($place) {
-                $objects[] = Model_LinkMapper::getLinkedEntity($place, 'P53', true);
+                $object = Model_LinkMapper::getLinkedEntity($place, 'P53', true);
+                $objectIds[] = $object->id;
             }
             $acquisition = Model_LinkMapper::getLinkedEntity($event, 'P24');
             if ($acquisition) {
-                $objects[] = $acquisition;
+                $objectIds[] = $acquisition->id;
             }
         }
-        $this->view->objects = $objects;
+        if ($objectIds) {
+            $this->view->gisData = Model_GisMapper::getAll($objectIds);
+        }
     }
 
     private function getFormName($code) {

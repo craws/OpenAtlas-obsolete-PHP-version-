@@ -5,11 +5,12 @@
 class Model_GisMapper extends Model_AbstractMapper {
 
     public static function getAll($objectId = 0) {
-        $points = self::getPoints3($objectId);
+        $points = self::getPoints($objectId);
         return $points;
     }
 
-    public static function getPoints3($objectId = null) {
+    public static function getPoints($objectIdsParam = []) {
+        $objectIds = (is_array($objectIdsParam)) ? $objectIdsParam : [$objectIdsParam];
         $sql = "
             SELECT
                 object.id AS object_id,
@@ -47,7 +48,7 @@ class Model_GisMapper extends Model_AbstractMapper {
                     'shapeType' => $row['type'],
                 ]
             ];
-            if ($row['object_id'] == $objectId) {
+            if (in_array($row['object_id'], $objectIds)) {
                 $selected[] = $point;
             } else {
                 $all[] = $point;
@@ -59,24 +60,21 @@ class Model_GisMapper extends Model_AbstractMapper {
     }
 
     public static function insertPoints(Model_Entity $place, $points) {
-        if (!$points) {
-            return;
-        }
         foreach ($points as $point) {
-            // TODO parameterize query
             $sql = "INSERT INTO gis.point (entity_id, name, description, type, geom)
                 VALUES (
                     :entity_id,
                     :name,
                     :description,
                     :type,
-                    st_geomfromtext('POINT('||" . $point->geometry->coordinates[0] . "||' '||" . $point->geometry->coordinates[1] . "||')',4326)
+                    ST_SetSRID(ST_GeomFromGeoJSON(:geojson),4326)
                 );";
             $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
             $statement->bindValue(':entity_id', $place->id);
             $statement->bindValue(':name', $point->properties->name);
             $statement->bindValue(':description', $point->properties->description);
             $statement->bindValue(':type', $point->properties->shapeType);
+            $statement->bindValue(':geojson', json_encode($point->geometry));
             $statement->execute();
         }
     }
@@ -98,37 +96,6 @@ class Model_GisMapper extends Model_AbstractMapper {
         return false;
     }
 
-    public static function getJsonData($objects = false) {
-        if (!$objects) {
-            $objects = Model_EntityMapper::getByCodes('PhysicalObject');
-        }
-        $json['marker'] = '';
-        $json['search'] = '';
-        foreach ($objects as $object) {
-            $place = Model_LinkMapper::getLinkedEntity($object, 'P53');
-            $gis = Model_GisMapper::getByEntity($place);
-            if ($gis) {
-                $name = str_replace('"', '\"', $object->name);
-                $type = Model_NodeMapper::getNodeByEntity('Site', $object);
-                $typeName = str_replace('"', '\"', '');
-                $description = str_replace('"', '\"', $object->description);
-                $json['marker'] .= '{"type": "Feature","geometry":{"type": "Point","coordinates": [' . $gis->easting .
-                    ',' . $gis->northing . ']},';
-                $json['marker'] .= '"properties": {"title": "' . $name . '","description":"' .
-                    $description . '",';
-                $json['marker'] .= '"marker-color": "#fc4353","sitetype": "' . $typeName . '","uid": "' .
-                    $object->id . '"}},';
-                $json['search'] .= '{"label": "' . $name . '", "type": "' . $typeName . '", "uid": "' .
-                    $object->id . '",';
-                $json['search'] .= '"lat": "' . $gis->easting . '", "lon": "' . $gis->northing . '"},';
-            }
-        }
-        if ($json['marker']) {
-            return $json;
-        }
-    }
-
-
     public static function getByEntity(Model_Entity $entity) {
         $sql = 'SELECT st_x(st_transform(geom,4326)) as easting, st_y(st_transform(geom,4326)) as northing
             FROM gis.point WHERE entity_id = :entity_id;';
@@ -148,10 +115,13 @@ class Model_GisMapper extends Model_AbstractMapper {
 
     public static function deleteByEntity($entity) {
         $sql = 'DELETE FROM gis.point WHERE entity_id = :entity_id;';
-        //$sql .= 'DELETE FROM gis.polygon WHERE entity_id = :entity_id;';
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->bindValue('entity_id', $entity->id);
         $statement->execute();
+        $sqlPolygon = 'DELETE FROM gis.polygon WHERE entity_id = :entity_id;';
+        $statementPolygon = Zend_Db_Table::getDefaultAdapter()->prepare($sqlPolygon);
+        $statementPolygon->bindValue('entity_id', $entity->id);
+        $statementPolygon->execute();
     }
 
 }
