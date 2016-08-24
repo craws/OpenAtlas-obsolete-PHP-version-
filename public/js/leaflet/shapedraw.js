@@ -377,12 +377,8 @@ function deleteshape() {
         var points = JSON.parse($('#gisPoints').val());
         $.each(points, function (key, value) {
             var id = (JSON.stringify(value.properties.id));
-            alert('id: ' + JSON.stringify(value.properties.id));
-            alert('selected id: ' + selectedshape);
             var index = ((JSON.stringify(key)));
-            alert(index);
             if (id == selectedshape) {
-                alert('delete');
                 points.splice(index, 1);
                 return false;
             }

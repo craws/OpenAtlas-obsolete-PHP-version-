@@ -156,15 +156,45 @@ if (gisPointAll != "") {
     });
     sitesmarkers.setGeoJSON(gisPointAll); //set layer content to geojson
     map.addLayer(sitesmarkers);
-    if (!(myurl.indexOf('place/') >= 0)) {
-        map.fitBounds(sitesmarkers)
-    }
-    if (myurl.indexOf('insert') >= 0) {
-        map.fitBounds(sitesmarkers)
-    }
-    //map.panBy(new L.Point(0, -20));
+    ;
 }
 
+
+if (gisPointSelected != "") {
+    var mypoints = L.geoJson(gisPointSelected, {onEachFeature: setpopup2}).addTo(map);
+    mypoints.on('click', setObjectId);
+//    var myextend = L.featureGroup([mypoints, mysites]);
+    setTimeout(function () {
+    map.fitBounds(mypoints, {maxZoom: 18});
+}, 1);
+    } else {
+    if (gisPointAll != "") {
+    setTimeout(function () {
+   map.fitBounds(sitesmarkers, {maxZoom: 18});
+}, 1);    
+    }
+}
+
+
+
+
+if (myurl.indexOf('insert') >= 0) {
+    $('#gisPoints').val('[]');
+    if (mypoints) {
+        map.removeLayer(mypoints);
+    }
+}
+
+
+if (myurl.indexOf('update') >= 0) {
+    $('#gisPoints').val(JSON.stringify(gisPointSelected));
+//    map.removeLayer(mysites);
+    map.removeLayer(mypoints);
+//    var mysites = L.geoJson(placepolygons, {onEachFeature: setpopup}).addTo(map);
+//    mysites.on('click', setObjectId);
+    var mypoints = L.geoJson(gisPointSelected, {onEachFeature: setpopup}).addTo(map);
+    mypoints.on('click', setObjectId);
+}
 
 var namecontrol = L.control.geonames({// add geosearch
     username: 'openatlas', // Geonames account username.  Must be provided
@@ -174,8 +204,8 @@ var namecontrol = L.control.geonames({// add geosearch
     workingClass: 'fa-spin', // class for search underway
 });
 
-var searchsites = L.control.Sitesearch(); //add sitesearch element
-map.addControl(searchsites);
+//var searchsites = L.control.Sitesearch(); //add sitesearch element
+//map.addControl(searchsites);
 map.addControl(namecontrol);
 
 sitesmarkers.eachLayer(function (marker) {
@@ -286,38 +316,3 @@ function setpopup2(feature, layer) {
 }
 
 
-
-
-
-if (myurl.indexOf('place/') >= 0) {
-    if (gisPolygonSelected != "") {
-    var mysites = L.geoJson(gisPolygonSelected, {onEachFeature: setpopup2}).addTo(map);
-    mysites.on('click', setObjectId);
-}
-    if (gisPointSelected != "") {
-        var mypoints = L.geoJson(gisPointSelected, {onEachFeature: setpopup2}).addTo(map);
-        mypoints.on('click', setObjectId);
-//    var myextend = L.featureGroup([mypoints, mysites]);
-        map.fitBounds(mypoints);
-    }
-    if (myurl.indexOf('insert') >= 0) {
-        map.fitBounds(sitesmarkers)
-        $('#gisPoints').val('[]');
-        //map.removeLayer(mysites);
-        if (mypoints) {
-        map.removeLayer(mypoints);        
-    }
-    }
-}
-
-if (myurl.indexOf('update') >= 0) {
-    $('#gisPoints').val(JSON.stringify(gisPointSelected));
-//    map.removeLayer(mysites);
-    map.removeLayer(mypoints);
-//    var mysites = L.geoJson(placepolygons, {onEachFeature: setpopup}).addTo(map);
-//    mysites.on('click', setObjectId);
-    var mypoints = L.geoJson(gisPointSelected, {onEachFeature: setpopup}).addTo(map);
-    mypoints.on('click', setObjectId);
-    var myextend = L.featureGroup([mypoints]);
-    map.fitBounds(myextend);
-}
