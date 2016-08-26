@@ -115,7 +115,7 @@ function interonoff(element) { //disable map dragging when cursor is e.g. in sea
 function setSitesInfo(e) { //set Popup Information of existing sites
     var marker = e.layer;
     marker.bindPopup(
-        '<div id="mypopup"><div id="popuptitle">' + marker.toGeoJSON().properties.title + '</b> <br> </div>' +
+        '<div id="mypopup"><div id="popuptitle">' + marker.toGeoJSON().properties.title + '</strong> <br> </div>' +
         '<div id="popuptype"><i>' + marker.toGeoJSON().properties.siteType + '</i> <br> <br></div>' +
         '<div style="max-height:100px; max-width:200px; overflow-y: auto">' + marker.toGeoJSON().properties.objectDescription + '<br></div></div><br>' +
         '<div style="max-height:100px; max-width:200px; overflow-y: auto">' + marker.toGeoJSON().properties.shapeType + '<br></div></div>' +
