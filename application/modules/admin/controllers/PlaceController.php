@@ -68,8 +68,6 @@ class Admin_PlaceController extends Zend_Controller_Action {
         $this->view->form = $form;
         $this->view->object = $object;
         $form->prepareUpdate($object);
-
-
         if (!$this->getRequest()->isPost()) {
             self::prepareDefaultUpdate($form, $object, $place);
             return;
@@ -181,6 +179,7 @@ class Admin_PlaceController extends Zend_Controller_Action {
             }
         }
         Model_GisMapper::insertPoints($place, json_decode($form->gisPoints->getValue()));
+        Model_GisMapper::insertPolygons($place, json_decode($form->gisPolygone->getValue()));
         /*if ($form->getValue('gisData')) {
             $gisData = $form->getValue('gisData');
             parse_str($gisData, $output);
