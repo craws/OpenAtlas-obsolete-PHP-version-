@@ -1,0 +1,42 @@
+<script type="text/javascript">
+    var gisPointAll = <?= $this->gisData['gisPointAll'] ?>;
+    var gisPointSelected = <?= $this->gisData['gisPointSelected'] ?>;
+    var gisPolygonAll = [];
+    var gisPolygonSelected = [];
+    var jsonSearch = [];
+    <? /* var jsonSearch = [<?= $this->jsonData['search'] ?>]; */ ?>
+    <?
+    /* Translations for maps
+     *
+     * var translate is an array with available translations, e.g. to translate the word "save" use:
+     * translate['save'] = '<?= $this->translate('save') ?>';
+     *
+     * or with capitalization of first character:
+     * translate['save'] = '<?= $this->ucstring('save') ?>';
+     *
+     * In your map scripts you can use it e.g. like:
+     * div.innerHTML = "<input type='button' value='" + translate['save'] + "'/>"
+     *
+     * The translations are from gettext, if it is missing you have to update the po files in data/language
+     * after you inserted e.g. $this->translate('not_yet_translated_string')
+     *
+     */
+    ?>
+    var translate = [];
+    translate['save'] = '<?= $this->translate('save') ?>';
+
+</script>
+<script type="text/javascript" src="/js/leaflet/mapbox.js"></script>
+<script type="text/javascript" src="/js/leaflet/L.Control.Geonames.js"></script>
+<!--<script type="text/javascript" src="/js/leaflet/L.Control.sitesearch.js"></script>-->
+<script type="text/javascript" src="/js/leaflet/leaflet.usermarker.js"></script>
+<script type="text/javascript" src="/js/leaflet/leaflet.fullscreen-master/Control.FullScreen.js"></script>
+<script type="text/javascript" src="/js/leaflet/easy-button.js"></script>
+<link rel="stylesheet" href="/js/leaflet/leaflet.fullscreen-master/Control.FullScreen.css" />
+<link rel="stylesheet" href="/js/leaflet/leaflet.css" />
+<link rel="stylesheet" href="/js/leaflet/font-awesome/css/font-awesome.min.css" />
+<link rel="stylesheet" href="/js/leaflet/L.Control.Geonames.css" />
+<!--<link rel="stylesheet" href="/js/leaflet/L.Control.sitesearch.css" />-->
+<link rel="stylesheet" href="/js/leaflet/leaflet.usermarker.css" />
+<link href="/js/leaflet/draw/leaflet.draw.css" rel="stylesheet" type="text/css"/>
+<link href="/js/leaflet/shapeedit.css" rel="stylesheet" type="text/css"/>
