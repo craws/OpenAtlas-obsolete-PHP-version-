@@ -9,6 +9,7 @@ class Model_GisMapper extends Model_AbstractMapper {
         return $points;
     }
 
+
     public static function getPoints($objectIdsParam = []) {
         $objectIds = (is_array($objectIdsParam)) ? $objectIdsParam : [$objectIdsParam];
         $sql = "
@@ -56,6 +57,51 @@ class Model_GisMapper extends Model_AbstractMapper {
         }
         $gis['gisPointAll'] = json_encode($all);
         $gis['gisPointSelected'] = json_encode($selected);
+        $sqlPolygons = "
+            SELECT
+                object.id AS object_id,
+                polygon.id AS polygon_id,
+                polygon.name AS polygon_name,
+                polygon.description AS polygon_description,
+                polygon.type,
+                ST_AsGeoJSON(polygon.geom) AS geojson,
+                object.name AS object_name,
+                object.description AS object_description
+            FROM model.entity place
+            JOIN model.link l ON place.id = l.range_id
+            JOIN model.entity object ON l.domain_id = object.id
+            JOIN gis.polygon polygon ON place.id = polygon.entity_id
+            WHERE
+                place.class_id = (SELECT id FROM model.class WHERE code LIKE 'E53') AND
+                l.property_id = (SELECT id FROM model.property WHERE code LIKE 'P53');
+        ";
+        $statementPolygons = Zend_Db_Table::getDefaultAdapter()->prepare($sqlPolygons);
+        $statementPolygons->execute();
+        $allPolygons = [];
+        $selectedPolygons = [];
+        foreach ($statementPolygons->fetchAll() as $row) {
+            $allPolygons = [
+                'type' => 'Feature',
+                'geometry' => json_decode($row['geojson']),
+                'properties' => [
+                    'title' => str_replace('"', '\"', $row['object_name']),
+                    'objectId' => (int) $row['object_id'],
+                    'objectDescription' => str_replace('"', '\"', $row['object_description']),
+                    'id' => (int) $row['polygon_id'],
+                    'name' => str_replace('"', '\"', $row['polygon_name']),
+                    'description' => str_replace('"', '\"', $row['polygon_description']),
+                    'siteType' => 'Type to do (Alex)',
+                    'shapeType' => $row['type'],
+                ]
+            ];
+            if (in_array($row['object_id'], $objectIds)) {
+                $selected[] = $point;
+            } else {
+                $all[] = $point;
+            }
+        }
+        $gis['gisPolygonAll'] = json_encode($allPolygons);
+        $gis['gisPolygonSelected'] = json_encode($selectedPolygons);
         return $gis;
     }
 
