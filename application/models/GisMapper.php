@@ -105,6 +105,26 @@ class Model_GisMapper extends Model_AbstractMapper {
         return $gis;
     }
 
+    public static function insertPolygons(Model_Entity $place, $polygons) {
+        foreach ($polygons as $polygon) {
+            $sql = "INSERT INTO gis.polygon (entity_id, name, description, type, geom)
+                VALUES (
+                    :entity_id,
+                    :name,
+                    :description,
+                    :type,
+                    ST_SetSRID(ST_GeomFromGeoJSON(:geojson),4326)
+                );";
+            $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
+            $statement->bindValue(':entity_id', $place->id);
+            $statement->bindValue(':name', $polygon->properties->name);
+            $statement->bindValue(':description', $polygon->properties->description);
+            $statement->bindValue(':type', $polygon->properties->shapeType);
+            $statement->bindValue(':geojson', json_encode($polygon->geometry));
+            $statement->execute();
+        }
+    }
+
     public static function insertPoints(Model_Entity $place, $points) {
         foreach ($points as $point) {
             $sql = "INSERT INTO gis.point (entity_id, name, description, type, geom)
