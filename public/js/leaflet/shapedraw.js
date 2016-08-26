@@ -94,9 +94,9 @@ datainput.onAdd = function (map) {
                 </div>\
             </form>\
             <input type='button' title='Reset values and shape' id='resetbtn' disabled value='Clear' onclick='resetmyform()'/>\
-            <input type='button' title='Save shape' id='savebtn' disabled value='Save' onclick='savetodb()'/>\
-            <input type='button' title='Save edits' id='editsavebtn' disabled value='Save' onclick='editsavetodb()'/>\
-            <input type='button' title='Save marker' id='markersavebtn' disabled value='Save' onclick='saveMarker()'/>\
+            <input type='button' title='Save shape' id='savebtn' disabled value='" + translate['save'] + "' onclick='savetodb()'/>\
+            <input type='button' title='Save edits' id='editsavebtn' disabled value='" + translate['save'] + "' onclick='editsavetodb()'/>\
+            <input type='button' title='Save marker' id='markersavebtn' disabled value='" + translate['save'] + "' onclick='saveMarker()'/>\
          </div>";
     return div;
     document.getElementById("headingtext").innerHTML = headingtext;
@@ -324,7 +324,7 @@ function editsavetodb() {
         '<div id="popup"><strong>' + shapename + '</strong> <br>' +
         '<i>' + shapetype + '</i> <br> <br>' +
         '<div style="max-height:140px; overflow-y: auto">' + shapedescription + '<br><br><br> </div>' +
-        '<i> (for re-editing please save or reload the whole place)</i>'
+        '<i> ('+translate['map_infotext_reedit'] + ')</i>'
         );
     map.removeLayer(mylayer);
 
@@ -626,7 +626,7 @@ function savetodb() {
     var dataString = '&shapename=' + shapename + '&shapetype=' + shapetype + '&shapedescription=' + shapedescription + '&shapecoords=' + shapecoords + '&geometrytype=' + geometrytype;
     $('#gisData').val($('#gisData').val() + dataString);
     var polygon = '{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[' + geoJsonArray.join(',') + ']]},"properties":';
-    polygon += '{"name": "' + $('#shapename').val() + '","description": "' + $('#shapedescription').val() + '", "shapeType": "polygoncenter"}}';
+    polygon += '{"name": "' + $('#shapename').val() + '","description": "' + $('#shapedescription').val() + '", "shapeType": "' + shapetype+ '"}}';
     var polygons = JSON.parse($('#gisPolygons').val());
     console.log(polygon);
     polygons.push(JSON.parse(polygon));

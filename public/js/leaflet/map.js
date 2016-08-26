@@ -159,19 +159,24 @@ if (gisPointAll != "") {
     ;
 }
 
+if (gisPolygonAll != "") {
+    var sitesPolygons = L.mapbox.featureLayer(); // define a layer for sitedata
+    sitesPolygons.on('layeradd', setSitesInfo); // trigger popup info creation when layer is added
+    sitesPolygons.setGeoJSON(gisPolygonAll); //set layer content to geojson
+}
 
 if (gisPointSelected != "") {
     var mypoints = L.geoJson(gisPointSelected, {onEachFeature: setpopup2}).addTo(map);
     mypoints.on('click', setObjectId);
 //    var myextend = L.featureGroup([mypoints, mysites]);
     setTimeout(function () {
-    map.fitBounds(mypoints, {maxZoom: 18});
-}, 1);
-    } else {
+        map.fitBounds(mypoints, {maxZoom: 18});
+    }, 1);
+} else {
     if (gisPointAll != "") {
-    setTimeout(function () {
-   map.fitBounds(sitesmarkers, {maxZoom: 18});
-}, 1);    
+        setTimeout(function () {
+            map.fitBounds(sitesmarkers, {maxZoom: 18});
+        }, 1);
     }
 }
 
@@ -226,7 +231,7 @@ polyglayer.setGeoJSON(gisPolygonAll);
 //features to choose in control menu
 var overlayMaps = {
     Sites: sitesmarkers,
-    Polygons: polyglayer,
+    Polygons: sitesPolygons,
 }
 baseMaps.Landscape.addTo(map);
 L.control.layers(baseMaps, overlayMaps).addTo(map);
