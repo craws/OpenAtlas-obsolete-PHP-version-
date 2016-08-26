@@ -80,7 +80,7 @@ class Model_GisMapper extends Model_AbstractMapper {
         $allPolygons = [];
         $selectedPolygons = [];
         foreach ($statementPolygons->fetchAll() as $row) {
-            $allPolygons = [
+            $polygons = [
                 'type' => 'Feature',
                 'geometry' => json_decode($row['geojson']),
                 'properties' => [
@@ -95,9 +95,9 @@ class Model_GisMapper extends Model_AbstractMapper {
                 ]
             ];
             if (in_array($row['object_id'], $objectIds)) {
-                $selected[] = $point;
+                $selectedPolygons[] = $polygons;
             } else {
-                $all[] = $point;
+                $allPolygons[] = $polygons;
             }
         }
         $gis['gisPolygonAll'] = json_encode($allPolygons);

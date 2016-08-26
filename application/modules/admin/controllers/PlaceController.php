@@ -143,7 +143,6 @@ class Admin_PlaceController extends Zend_Controller_Action {
         $polygons = Model_GisMapper::getPolygons($place);
         $gisData = Model_GisMapper::getAll($object->id);
         $this->view->gisData = $gisData;
-        $this->view->polygons = $polygons;
         $form->populate([
             'name' => $object->name,
             'description' => $object->description,
@@ -179,30 +178,7 @@ class Admin_PlaceController extends Zend_Controller_Action {
             }
         }
         Model_GisMapper::insertPoints($place, json_decode($form->gisPoints->getValue()));
-        Model_GisMapper::insertPolygons($place, json_decode($form->gisPolygone->getValue()));
-        /*if ($form->getValue('gisData')) {
-            $gisData = $form->getValue('gisData');
-            parse_str($gisData, $output);
-            $geom = "(SELECT ST_GeomFromText('" . $output['geometrytype'] . "'(" . $output['shapecoords'] . ")', 4326))";
-            $geom = "SELECT ST_GeomFromText('polygon(( -112.0781421661377 68.5539591738857, -98.0156421661377 52.738954993199584, -67.0781421661377 68.80957565002588, -112.0781421661377 68.5539591738857))', 4326)";
-            switch($output['geometrytype']) {
-              case 'polygon':
-                  var_dump('inside');
-                  $sql = "
-                    INSERT INTO gis.polygon (entity_id, name, description, type, geom)
-                    VALUES (:entity_id, :name, :description, :type, ST_GeomFromText('polygon(".
-                    $output['shapecoords'] ."
-                    )', 4326));";
-                  $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
-                  $statement->bindValue(':entity_id', $place->id);
-                  $statement->bindValue(':name', $output['shapename']);
-                  $statement->bindValue(':description', $output['shapedescription']);
-                  $statement->bindValue(':type', $output['shapetype']);
-                  $statement->execute();
-                  $result = $statement->fetch(PDO::FETCH_ASSOC);
-                  break;
-          }
-        }*/
+        Model_GisMapper::insertPolygons($place, json_decode($form->gisPolygons->getValue()));
+    }
 
-      }
 }
