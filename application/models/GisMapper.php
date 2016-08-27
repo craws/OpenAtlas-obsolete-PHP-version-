@@ -4,12 +4,7 @@
 
 class Model_GisMapper extends Model_AbstractMapper {
 
-    public static function getAll($objectId = 0) {
-        $points = self::getPoints($objectId);
-        return $points;
-    }
-
-    public static function getPoints($objectIdsParam = []) {
+    public static function getAll($objectIdsParam = []) {
         $objectIds = (is_array($objectIdsParam)) ? $objectIdsParam : [$objectIdsParam];
         foreach (['point', 'polygon'] as $shape) {
             $sql = "
@@ -23,7 +18,13 @@ class Model_GisMapper extends Model_AbstractMapper {
                     object.name AS object_name,
                     object.description AS object_description,
                     (SELECT COUNT(*) FROM gis.point point2 WHERE " . $shape . ".entity_id = point2.entity_id) AS point_count,
-                    (SELECT COUNT(*) FROM gis.polygon polygon2 WHERE " . $shape . ".entity_id = polygon2.entity_id) AS polygon_count
+                    (SELECT COUNT(*) FROM gis.polygon polygon2 WHERE " . $shape . ".entity_id = polygon2.entity_id) AS polygon_count,
+                    array_to_json(ARRAY(
+                        SELECT l.range_id
+                        FROM model.link l
+                        JOIN model.property p ON l.property_id = p.id
+                        WHERE l.domain_id = object.id AND p.code = 'P2'
+                    )) AS node_ids
                 FROM model.entity place
                 JOIN model.link l ON place.id = l.range_id
                 JOIN model.entity object ON l.domain_id = object.id
@@ -37,6 +38,13 @@ class Model_GisMapper extends Model_AbstractMapper {
             $all = [];
             $selected = [];
             foreach ($statement->fetchAll() as $row) {
+                $type = '';
+                foreach (json_decode($row['node_ids']) as $nodeId) {
+                    $node = Model_NodeMapper::getById($nodeId);
+                    if ($node->rootId && Model_NodeMapper::getById($node->rootId)->name == 'Site') {
+                        $type = $node->name;
+                    }
+                }
                 $item = [
                     'type' => 'Feature',
                     'geometry' => json_decode($row['geojson']),
@@ -47,7 +55,7 @@ class Model_GisMapper extends Model_AbstractMapper {
                         'id' => (int) $row['id'],
                         'name' => str_replace('"', '\"', $row['name']),
                         'description' => str_replace('"', '\"', $row['description']),
-                        'siteType' => 'Type to do (Alex)',
+                        'siteType' => $type,
                         'shapeType' => $row['type'],
                         'count' => $row['point_count'] + $row['polygon_count']
                     ]
