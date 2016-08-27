@@ -214,13 +214,13 @@ function editshape() {
                     newvector.push(' ' + latLngs[i].lng + ' ' + latLngs[i].lat);
                 }
 
-                
+
                 if (type === 'polygon') {
                     newvector.push(' ' + latLngs[0].lng + ' ' + latLngs[0].lat); //if polygon add first xy again as last xy to close polygon
                     shapesyntax = '(' + newvector + ')';
                     returndata();
                 }
-                
+
                 if (type === 'linestring') {
                     shapesyntax = newvector;
                     returndata();
@@ -601,7 +601,7 @@ function saveMarker() {
     capture = false;
     document.getElementById('savebtn').style.display = 'none';
     var point = '{"type":"Feature","geometry":{"type":"Point","coordinates":[' + $('#easting').val() + ',' + $('#northing').val() + ']},"properties":';
-    point += '{"name": "' + $('#shapename').val() + '","description": "' + $('#shapedescription').val() + '"shapeType": "centerpoint"}}';
+    point += '{"name": "' + $('#shapename').val() + '","description": "' + $('#shapedescription').val() + '", "shapeType": "centerpoint"}}';
     var points = JSON.parse($('#gisPoints').val());
     points.push(JSON.parse(point));
     $('#gisPoints').val(JSON.stringify(points));
