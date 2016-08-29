@@ -140,7 +140,6 @@ class Admin_PlaceController extends Zend_Controller_Action {
     }
 
     private function prepareDefaultUpdate(Zend_Form $form, Model_Entity $object, Model_Entity $place) {
-        $polygons = Model_GisMapper::getPolygons($place);
         $gisData = Model_GisMapper::getAll($object->id);
         $this->view->gisData = $gisData;
         $form->populate([
@@ -177,8 +176,7 @@ class Admin_PlaceController extends Zend_Controller_Action {
                 Model_LinkMapper::insert('P1', $object, $aliasId);
             }
         }
-        Model_GisMapper::insertPoints($place, json_decode($form->gisPoints->getValue()));
-        Model_GisMapper::insertPolygons($place, json_decode($form->gisPolygons->getValue()));
+        Model_GisMapper::insert($place, $form);
     }
 
 }

@@ -72,78 +72,27 @@ class Model_GisMapper extends Model_AbstractMapper {
         return $gis;
     }
 
-    public static function insertPolygons(Model_Entity $place, $polygons) {
-        foreach ($polygons as $polygon) {
-            $sql = "INSERT INTO gis.polygon (entity_id, name, description, type, geom)
-                VALUES (
-                    :entity_id,
-                    :name,
-                    :description,
-                    :type,
-                    ST_SetSRID(ST_GeomFromGeoJSON(:geojson),4326)
-                );";
-            $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
-            $statement->bindValue(':entity_id', $place->id);
-            $statement->bindValue(':name', $polygon->properties->name);
-            $statement->bindValue(':description', $polygon->properties->description);
-            $statement->bindValue(':type', $polygon->properties->shapeType);
-            $statement->bindValue(':geojson', json_encode($polygon->geometry));
-            $statement->execute();
+    public static function insert(Model_Entity $place, Zend_Form $form) {
+        foreach (['point', 'polygon'] as $shape) {
+            $fieldName = 'gis' . ucfirst($shape) . 's';
+            foreach (json_decode($form->$fieldName->getValue()) as $item) {
+                $sql = "INSERT INTO gis." . $shape . " (entity_id, name, description, type, geom)
+                    VALUES (
+                        :entity_id,
+                        :name,
+                        :description,
+                        :type,
+                        ST_SetSRID(ST_GeomFromGeoJSON(:geojson),4326)
+                    );";
+                $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
+                $statement->bindValue(':entity_id', $place->id);
+                $statement->bindValue(':name', $item->properties->name);
+                $statement->bindValue(':description', $item->properties->description);
+                $statement->bindValue(':type', $item->properties->shapeType);
+                $statement->bindValue(':geojson', json_encode($item->geometry));
+                $statement->execute();
+            }
         }
-    }
-
-    public static function insertPoints(Model_Entity $place, $points) {
-        foreach ($points as $point) {
-            $sql = "INSERT INTO gis.point (entity_id, name, description, type, geom)
-                VALUES (
-                    :entity_id,
-                    :name,
-                    :description,
-                    :type,
-                    ST_SetSRID(ST_GeomFromGeoJSON(:geojson),4326)
-                );";
-            $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
-            $statement->bindValue(':entity_id', $place->id);
-            $statement->bindValue(':name', $point->properties->name);
-            $statement->bindValue(':description', $point->properties->description);
-            $statement->bindValue(':type', $point->properties->shapeType);
-            $statement->bindValue(':geojson', json_encode($point->geometry));
-            $statement->execute();
-        }
-    }
-
-    public static function getPolygons(Model_Entity $object) {
-        $sql = 'SELECT id, name, description, type, geom FROM gis.polygon WHERE entity_id = :entity_id;';
-        $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
-        $statement->bindValue(':entity_id', $object->id);
-        $statement->execute();
-        $result = $statement->fetch();
-        if ($result) {
-            $polygon['id'] = $result['id'];
-            $polygon['name'] = $result['name'];
-            $polygon['description'] = $result['description'];
-            $polygon['type'] = $result['type'];
-            $polygon['geom'] = $result['geom'];
-            return $polygon;
-        }
-        return false;
-    }
-
-    public static function getByEntity(Model_Entity $entity) {
-        $sql = 'SELECT st_x(st_transform(geom,4326)) as easting, st_y(st_transform(geom,4326)) as northing
-            FROM gis.point WHERE entity_id = :entity_id;';
-        $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
-        $statement->bindValue(':entity_id', $entity->id);
-        $statement->execute();
-        $result = $statement->fetch();
-        if ($result) {
-            $gis = new Model_Gis();
-            $gis->easting = $result['easting'];
-            $gis->northing = $result['northing'];
-            $gis->setEntity($entity);
-            return $gis;
-        }
-        return false;
     }
 
     public static function deleteByEntity($entity) {

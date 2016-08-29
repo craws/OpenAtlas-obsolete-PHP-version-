@@ -56,4 +56,4 @@ INSERT INTO link (property_id, domain_id, range_id) VALUES
 ((SELECT id FROM property WHERE code='OA8' ), (SELECT id FROM entity WHERE name='tCarrier' ), (SELECT id FROM entity WHERE name='tPlace')),
 ((SELECT id FROM property WHERE code='P1'  ), (SELECT id FROM entity WHERE name='tObject'  ), (SELECT id FROM entity WHERE name='tAlias'));
 
-INSERT INTO gis.centerpoint (entity_id, easting, northing) VALUES (1003, 1, 1);
+INSERT INTO gis.point (entity_id, name, type, geom) VALUES (1003, 'testPoint', 'centerpoint', '0101000020E6100000F5E0FE877672294095A93A0EC9F54740');
