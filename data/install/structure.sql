@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.3
--- Dumped by pg_dump version 9.5.3
+-- Dumped from database version 9.5.4
+-- Dumped by pg_dump version 9.5.4
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -21,11 +21,11 @@ ALTER TABLE IF EXISTS ONLY web.user_settings DROP CONSTRAINT IF EXISTS user_sett
 ALTER TABLE IF EXISTS ONLY web."user" DROP CONSTRAINT IF EXISTS user_group_id_fkey;
 ALTER TABLE IF EXISTS ONLY web.user_bookmarks DROP CONSTRAINT IF EXISTS user_bookmarks_user_id_fkey;
 ALTER TABLE IF EXISTS ONLY web.user_bookmarks DROP CONSTRAINT IF EXISTS user_bookmarks_entity_id_fkey;
-ALTER TABLE IF EXISTS ONLY web.hierarchy_form DROP CONSTRAINT IF EXISTS type_form_type_id_fkey;
-ALTER TABLE IF EXISTS ONLY web.hierarchy_form DROP CONSTRAINT IF EXISTS type_form_form_id_fkey;
 ALTER TABLE IF EXISTS ONLY web.i18n DROP CONSTRAINT IF EXISTS i18n_language_id_fkey;
 ALTER TABLE IF EXISTS ONLY web.i18n DROP CONSTRAINT IF EXISTS i18n_item_id_fkey;
 ALTER TABLE IF EXISTS ONLY web.hierarchy DROP CONSTRAINT IF EXISTS hierarchy_id_fkey;
+ALTER TABLE IF EXISTS ONLY web.hierarchy_form DROP CONSTRAINT IF EXISTS hierarchy_form_hierarchy_id_fkey;
+ALTER TABLE IF EXISTS ONLY web.hierarchy_form DROP CONSTRAINT IF EXISTS hierarchy_form_form_id_fkey;
 SET search_path = model, pg_catalog;
 
 ALTER TABLE IF EXISTS ONLY model.property DROP CONSTRAINT IF EXISTS property_range_class_id_fkey;
@@ -49,12 +49,11 @@ SET search_path = gis, pg_catalog;
 ALTER TABLE IF EXISTS ONLY gis.polygon DROP CONSTRAINT IF EXISTS polygon_entity_id_fkey;
 ALTER TABLE IF EXISTS ONLY gis.point DROP CONSTRAINT IF EXISTS point_entity_id_fkey;
 ALTER TABLE IF EXISTS ONLY gis.linestring DROP CONSTRAINT IF EXISTS linestring_entity_id_fkey;
-ALTER TABLE IF EXISTS ONLY gis.centerpoint DROP CONSTRAINT IF EXISTS centerpoint_entity_id_fkey;
 SET search_path = web, pg_catalog;
 
+DROP TRIGGER IF EXISTS update_modified ON web.hierarchy_form;
 DROP TRIGGER IF EXISTS update_modified ON web.form;
 DROP TRIGGER IF EXISTS update_modified ON web.hierarchy;
-DROP TRIGGER IF EXISTS update_modified ON web.hierarchy_form;
 DROP TRIGGER IF EXISTS update_modified ON web.user_bookmarks;
 DROP TRIGGER IF EXISTS update_modified ON web.user_settings;
 DROP TRIGGER IF EXISTS update_modified ON web.content;
@@ -77,8 +76,6 @@ SET search_path = gis, pg_catalog;
 DROP TRIGGER IF EXISTS update_modified ON gis.polygon;
 DROP TRIGGER IF EXISTS update_modified ON gis.linestring;
 DROP TRIGGER IF EXISTS update_modified ON gis.point;
-DROP TRIGGER IF EXISTS update_modified ON gis.centerpoint;
-DROP TRIGGER IF EXISTS geometry_creation ON gis.centerpoint;
 SET search_path = web, pg_catalog;
 
 ALTER TABLE IF EXISTS ONLY web."user" DROP CONSTRAINT IF EXISTS user_username_key;
@@ -89,9 +86,6 @@ ALTER TABLE IF EXISTS ONLY web.user_log DROP CONSTRAINT IF EXISTS user_log_pkey;
 ALTER TABLE IF EXISTS ONLY web."user" DROP CONSTRAINT IF EXISTS user_email_key;
 ALTER TABLE IF EXISTS ONLY web.user_bookmarks DROP CONSTRAINT IF EXISTS user_bookmarks_user_id_entity_id_key;
 ALTER TABLE IF EXISTS ONLY web.user_bookmarks DROP CONSTRAINT IF EXISTS user_bookmarks_pkey;
-ALTER TABLE IF EXISTS ONLY web.hierarchy DROP CONSTRAINT IF EXISTS type_pkey;
-ALTER TABLE IF EXISTS ONLY web.hierarchy DROP CONSTRAINT IF EXISTS type_name_key;
-ALTER TABLE IF EXISTS ONLY web.hierarchy_form DROP CONSTRAINT IF EXISTS type_form_pkey;
 ALTER TABLE IF EXISTS ONLY web.settings DROP CONSTRAINT IF EXISTS settings_pkey;
 ALTER TABLE IF EXISTS ONLY web.settings DROP CONSTRAINT IF EXISTS settings_name_group_key;
 ALTER TABLE IF EXISTS ONLY web.language DROP CONSTRAINT IF EXISTS language_shortform_key;
@@ -99,7 +93,8 @@ ALTER TABLE IF EXISTS ONLY web.language DROP CONSTRAINT IF EXISTS language_pkey;
 ALTER TABLE IF EXISTS ONLY web.language DROP CONSTRAINT IF EXISTS language_name_key;
 ALTER TABLE IF EXISTS ONLY web.i18n DROP CONSTRAINT IF EXISTS i18n_pkey;
 ALTER TABLE IF EXISTS ONLY web.i18n DROP CONSTRAINT IF EXISTS i18n_field_foreign_id_language_id_key;
-ALTER TABLE IF EXISTS ONLY web.hierarchy_form DROP CONSTRAINT IF EXISTS hierarchy_form_hierarchy_id_form_id_key;
+ALTER TABLE IF EXISTS ONLY web.hierarchy DROP CONSTRAINT IF EXISTS hierarchy_pkey;
+ALTER TABLE IF EXISTS ONLY web.hierarchy_form DROP CONSTRAINT IF EXISTS hierarchy_form_pkey;
 ALTER TABLE IF EXISTS ONLY web."group" DROP CONSTRAINT IF EXISTS group_pkey;
 ALTER TABLE IF EXISTS ONLY web.form DROP CONSTRAINT IF EXISTS form_pkey;
 ALTER TABLE IF EXISTS ONLY web.form DROP CONSTRAINT IF EXISTS form_name_key;
@@ -128,8 +123,6 @@ SET search_path = gis, pg_catalog;
 ALTER TABLE IF EXISTS ONLY gis.polygon DROP CONSTRAINT IF EXISTS polygon_pkey;
 ALTER TABLE IF EXISTS ONLY gis.point DROP CONSTRAINT IF EXISTS point_pkey;
 ALTER TABLE IF EXISTS ONLY gis.linestring DROP CONSTRAINT IF EXISTS linestring_pkey;
-ALTER TABLE IF EXISTS ONLY gis.centerpoint DROP CONSTRAINT IF EXISTS centerpoint_pkey;
-ALTER TABLE IF EXISTS ONLY gis.centerpoint DROP CONSTRAINT IF EXISTS centerpoint_entity_id_key;
 SET search_path = web, pg_catalog;
 
 ALTER TABLE IF EXISTS web.user_settings ALTER COLUMN id DROP DEFAULT;
@@ -163,7 +156,6 @@ SET search_path = gis, pg_catalog;
 ALTER TABLE IF EXISTS gis.polygon ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE IF EXISTS gis.point ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE IF EXISTS gis.linestring ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE IF EXISTS gis.centerpoint ALTER COLUMN id DROP DEFAULT;
 SET search_path = web, pg_catalog;
 
 DROP SEQUENCE IF EXISTS web.user_settings_id_seq;
@@ -174,8 +166,6 @@ DROP SEQUENCE IF EXISTS web.user_id_seq;
 DROP SEQUENCE IF EXISTS web.user_bookmarks_id_seq;
 DROP TABLE IF EXISTS web.user_bookmarks;
 DROP TABLE IF EXISTS web."user";
-DROP SEQUENCE IF EXISTS web.type_id_seq;
-DROP SEQUENCE IF EXISTS web.type_form_id_seq;
 DROP SEQUENCE IF EXISTS web.settings_id_seq;
 DROP TABLE IF EXISTS web.settings;
 DROP SEQUENCE IF EXISTS web.language_id_seq;
@@ -183,6 +173,8 @@ DROP TABLE IF EXISTS web.language;
 DROP SEQUENCE IF EXISTS web.item_id_seq;
 DROP SEQUENCE IF EXISTS web.i18n_id_seq;
 DROP TABLE IF EXISTS web.i18n;
+DROP SEQUENCE IF EXISTS web.hierarchy_id_seq;
+DROP SEQUENCE IF EXISTS web.hierarchy_form_id_seq;
 DROP TABLE IF EXISTS web.hierarchy_form;
 DROP TABLE IF EXISTS web.hierarchy;
 DROP SEQUENCE IF EXISTS web.group_id_seq;
@@ -222,8 +214,6 @@ DROP SEQUENCE IF EXISTS gis.point_id_seq;
 DROP TABLE IF EXISTS gis.point;
 DROP SEQUENCE IF EXISTS gis.linestring_id_seq;
 DROP TABLE IF EXISTS gis.linestring;
-DROP SEQUENCE IF EXISTS gis.centerpoint_id_seq;
-DROP TABLE IF EXISTS gis.centerpoint;
 SET search_path = model, pg_catalog;
 
 DROP FUNCTION IF EXISTS model.update_modified();
@@ -333,58 +323,6 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: centerpoint; Type: TABLE; Schema: gis; Owner: openatlas_master
---
-
-CREATE TABLE centerpoint (
-    id integer NOT NULL,
-    entity_id integer NOT NULL,
-    easting double precision NOT NULL,
-    northing double precision NOT NULL,
-    created timestamp without time zone DEFAULT now() NOT NULL,
-    modified timestamp without time zone,
-    geom public.geometry(Point,4326)
-);
-
-
-ALTER TABLE centerpoint OWNER TO openatlas_master;
-
---
--- Name: COLUMN centerpoint.easting; Type: COMMENT; Schema: gis; Owner: openatlas_master
---
-
-COMMENT ON COLUMN centerpoint.easting IS 'x coordinate, longitude';
-
-
---
--- Name: COLUMN centerpoint.northing; Type: COMMENT; Schema: gis; Owner: openatlas_master
---
-
-COMMENT ON COLUMN centerpoint.northing IS 'y coordinate, latitude';
-
-
---
--- Name: centerpoint_id_seq; Type: SEQUENCE; Schema: gis; Owner: openatlas_master
---
-
-CREATE SEQUENCE centerpoint_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE centerpoint_id_seq OWNER TO openatlas_master;
-
---
--- Name: centerpoint_id_seq; Type: SEQUENCE OWNED BY; Schema: gis; Owner: openatlas_master
---
-
-ALTER SEQUENCE centerpoint_id_seq OWNED BY centerpoint.id;
-
-
---
 -- Name: linestring; Type: TABLE; Schema: gis; Owner: openatlas_master
 --
 
@@ -393,7 +331,7 @@ CREATE TABLE linestring (
     entity_id integer NOT NULL,
     name text,
     description text,
-    text text,
+    type text,
     created timestamp without time zone DEFAULT now() NOT NULL,
     modified timestamp without time zone,
     geom public.geometry(LineString,4326)
@@ -432,7 +370,7 @@ CREATE TABLE point (
     entity_id integer NOT NULL,
     name text,
     description text,
-    text text,
+    type text,
     created timestamp without time zone DEFAULT now() NOT NULL,
     modified timestamp without time zone,
     geom public.geometry(Point,4326)
@@ -471,7 +409,7 @@ CREATE TABLE polygon (
     entity_id integer NOT NULL,
     name text,
     description text,
-    text text,
+    type text,
     created timestamp without time zone DEFAULT now() NOT NULL,
     modified timestamp without time zone,
     geom public.geometry(Polygon,4326)
@@ -920,9 +858,9 @@ ALTER TABLE content OWNER TO openatlas_master;
 CREATE TABLE form (
     id integer NOT NULL,
     name text NOT NULL,
+    extendable integer DEFAULT 0 NOT NULL,
     created timestamp without time zone DEFAULT now() NOT NULL,
-    modified timestamp without time zone,
-    extendable integer DEFAULT 0 NOT NULL
+    modified timestamp without time zone
 );
 
 
@@ -992,11 +930,11 @@ CREATE TABLE hierarchy (
     id integer NOT NULL,
     name text NOT NULL,
     multiple integer DEFAULT 0 NOT NULL,
-    created timestamp without time zone DEFAULT now() NOT NULL,
-    modified timestamp without time zone,
     system integer DEFAULT 0 NOT NULL,
     extendable integer DEFAULT 0 NOT NULL,
-    directional integer DEFAULT 0 NOT NULL
+    directional integer DEFAULT 0 NOT NULL,
+    created timestamp without time zone DEFAULT now() NOT NULL,
+    modified timestamp without time zone
 );
 
 
@@ -1032,6 +970,48 @@ CREATE TABLE hierarchy_form (
 ALTER TABLE hierarchy_form OWNER TO openatlas_master;
 
 --
+-- Name: hierarchy_form_id_seq; Type: SEQUENCE; Schema: web; Owner: openatlas_master
+--
+
+CREATE SEQUENCE hierarchy_form_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE hierarchy_form_id_seq OWNER TO openatlas_master;
+
+--
+-- Name: hierarchy_form_id_seq; Type: SEQUENCE OWNED BY; Schema: web; Owner: openatlas_master
+--
+
+ALTER SEQUENCE hierarchy_form_id_seq OWNED BY hierarchy_form.id;
+
+
+--
+-- Name: hierarchy_id_seq; Type: SEQUENCE; Schema: web; Owner: openatlas_master
+--
+
+CREATE SEQUENCE hierarchy_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE hierarchy_id_seq OWNER TO openatlas_master;
+
+--
+-- Name: hierarchy_id_seq; Type: SEQUENCE OWNED BY; Schema: web; Owner: openatlas_master
+--
+
+ALTER SEQUENCE hierarchy_id_seq OWNED BY hierarchy.id;
+
+
+--
 -- Name: i18n; Type: TABLE; Schema: web; Owner: openatlas_master
 --
 
@@ -1042,7 +1022,7 @@ CREATE TABLE i18n (
     item_id integer NOT NULL,
     language_id integer NOT NULL,
     created timestamp without time zone DEFAULT now() NOT NULL,
-    modified timestamp without time zone
+    modified timestamp with time zone
 );
 
 
@@ -1167,48 +1147,6 @@ ALTER TABLE settings_id_seq OWNER TO openatlas_master;
 --
 
 ALTER SEQUENCE settings_id_seq OWNED BY settings.id;
-
-
---
--- Name: type_form_id_seq; Type: SEQUENCE; Schema: web; Owner: openatlas_master
---
-
-CREATE SEQUENCE type_form_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE type_form_id_seq OWNER TO openatlas_master;
-
---
--- Name: type_form_id_seq; Type: SEQUENCE OWNED BY; Schema: web; Owner: openatlas_master
---
-
-ALTER SEQUENCE type_form_id_seq OWNED BY hierarchy_form.id;
-
-
---
--- Name: type_id_seq; Type: SEQUENCE; Schema: web; Owner: openatlas_master
---
-
-CREATE SEQUENCE type_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE type_id_seq OWNER TO openatlas_master;
-
---
--- Name: type_id_seq; Type: SEQUENCE OWNED BY; Schema: web; Owner: openatlas_master
---
-
-ALTER SEQUENCE type_id_seq OWNED BY hierarchy.id;
 
 
 --
@@ -1373,13 +1311,6 @@ SET search_path = gis, pg_catalog;
 -- Name: id; Type: DEFAULT; Schema: gis; Owner: openatlas_master
 --
 
-ALTER TABLE ONLY centerpoint ALTER COLUMN id SET DEFAULT nextval('centerpoint_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: gis; Owner: openatlas_master
---
-
 ALTER TABLE ONLY linestring ALTER COLUMN id SET DEFAULT nextval('linestring_id_seq'::regclass);
 
 
@@ -1498,14 +1429,14 @@ ALTER TABLE ONLY "group" ALTER COLUMN id SET DEFAULT nextval('group_id_seq'::reg
 -- Name: id; Type: DEFAULT; Schema: web; Owner: openatlas_master
 --
 
-ALTER TABLE ONLY hierarchy ALTER COLUMN id SET DEFAULT nextval('type_id_seq'::regclass);
+ALTER TABLE ONLY hierarchy ALTER COLUMN id SET DEFAULT nextval('hierarchy_id_seq'::regclass);
 
 
 --
 -- Name: id; Type: DEFAULT; Schema: web; Owner: openatlas_master
 --
 
-ALTER TABLE ONLY hierarchy_form ALTER COLUMN id SET DEFAULT nextval('type_form_id_seq'::regclass);
+ALTER TABLE ONLY hierarchy_form ALTER COLUMN id SET DEFAULT nextval('hierarchy_form_id_seq'::regclass);
 
 
 --
@@ -1558,22 +1489,6 @@ ALTER TABLE ONLY user_settings ALTER COLUMN id SET DEFAULT nextval('user_setting
 
 
 SET search_path = gis, pg_catalog;
-
---
--- Name: centerpoint_entity_id_key; Type: CONSTRAINT; Schema: gis; Owner: openatlas_master
---
-
-ALTER TABLE ONLY centerpoint
-    ADD CONSTRAINT centerpoint_entity_id_key UNIQUE (entity_id);
-
-
---
--- Name: centerpoint_pkey; Type: CONSTRAINT; Schema: gis; Owner: openatlas_master
---
-
-ALTER TABLE ONLY centerpoint
-    ADD CONSTRAINT centerpoint_pkey PRIMARY KEY (id);
-
 
 --
 -- Name: linestring_pkey; Type: CONSTRAINT; Schema: gis; Owner: openatlas_master
@@ -1758,11 +1673,19 @@ ALTER TABLE ONLY "group"
 
 
 --
--- Name: hierarchy_form_hierarchy_id_form_id_key; Type: CONSTRAINT; Schema: web; Owner: openatlas_master
+-- Name: hierarchy_form_pkey; Type: CONSTRAINT; Schema: web; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY hierarchy_form
-    ADD CONSTRAINT hierarchy_form_hierarchy_id_form_id_key UNIQUE (hierarchy_id, form_id);
+    ADD CONSTRAINT hierarchy_form_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: hierarchy_pkey; Type: CONSTRAINT; Schema: web; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY hierarchy
+    ADD CONSTRAINT hierarchy_pkey PRIMARY KEY (id);
 
 
 --
@@ -1819,30 +1742,6 @@ ALTER TABLE ONLY settings
 
 ALTER TABLE ONLY settings
     ADD CONSTRAINT settings_pkey PRIMARY KEY (id);
-
-
---
--- Name: type_form_pkey; Type: CONSTRAINT; Schema: web; Owner: openatlas_master
---
-
-ALTER TABLE ONLY hierarchy_form
-    ADD CONSTRAINT type_form_pkey PRIMARY KEY (id);
-
-
---
--- Name: type_name_key; Type: CONSTRAINT; Schema: web; Owner: openatlas_master
---
-
-ALTER TABLE ONLY hierarchy
-    ADD CONSTRAINT type_name_key UNIQUE (name);
-
-
---
--- Name: type_pkey; Type: CONSTRAINT; Schema: web; Owner: openatlas_master
---
-
-ALTER TABLE ONLY hierarchy
-    ADD CONSTRAINT type_pkey PRIMARY KEY (id);
 
 
 --
@@ -1910,20 +1809,6 @@ ALTER TABLE ONLY "user"
 
 
 SET search_path = gis, pg_catalog;
-
---
--- Name: geometry_creation; Type: TRIGGER; Schema: gis; Owner: openatlas_master
---
-
-CREATE TRIGGER geometry_creation BEFORE INSERT ON centerpoint FOR EACH ROW EXECUTE PROCEDURE geometry_creation();
-
-
---
--- Name: update_modified; Type: TRIGGER; Schema: gis; Owner: openatlas_master
---
-
-CREATE TRIGGER update_modified BEFORE UPDATE ON centerpoint FOR EACH ROW EXECUTE PROCEDURE model.update_modified();
-
 
 --
 -- Name: update_modified; Type: TRIGGER; Schema: gis; Owner: openatlas_master
@@ -2059,13 +1944,6 @@ CREATE TRIGGER update_modified BEFORE UPDATE ON user_bookmarks FOR EACH ROW EXEC
 -- Name: update_modified; Type: TRIGGER; Schema: web; Owner: openatlas_master
 --
 
-CREATE TRIGGER update_modified BEFORE UPDATE ON hierarchy_form FOR EACH ROW EXECUTE PROCEDURE model.update_modified();
-
-
---
--- Name: update_modified; Type: TRIGGER; Schema: web; Owner: openatlas_master
---
-
 CREATE TRIGGER update_modified BEFORE UPDATE ON hierarchy FOR EACH ROW EXECUTE PROCEDURE model.update_modified();
 
 
@@ -2076,15 +1954,14 @@ CREATE TRIGGER update_modified BEFORE UPDATE ON hierarchy FOR EACH ROW EXECUTE P
 CREATE TRIGGER update_modified BEFORE UPDATE ON form FOR EACH ROW EXECUTE PROCEDURE model.update_modified();
 
 
+--
+-- Name: update_modified; Type: TRIGGER; Schema: web; Owner: openatlas_master
+--
+
+CREATE TRIGGER update_modified BEFORE UPDATE ON hierarchy_form FOR EACH ROW EXECUTE PROCEDURE model.update_modified();
+
+
 SET search_path = gis, pg_catalog;
-
---
--- Name: centerpoint_entity_id_fkey; Type: FK CONSTRAINT; Schema: gis; Owner: openatlas_master
---
-
-ALTER TABLE ONLY centerpoint
-    ADD CONSTRAINT centerpoint_entity_id_fkey FOREIGN KEY (entity_id) REFERENCES model.entity(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
 
 --
 -- Name: linestring_entity_id_fkey; Type: FK CONSTRAINT; Schema: gis; Owner: openatlas_master
@@ -2229,6 +2106,22 @@ ALTER TABLE ONLY property
 SET search_path = web, pg_catalog;
 
 --
+-- Name: hierarchy_form_form_id_fkey; Type: FK CONSTRAINT; Schema: web; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY hierarchy_form
+    ADD CONSTRAINT hierarchy_form_form_id_fkey FOREIGN KEY (form_id) REFERENCES form(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: hierarchy_form_hierarchy_id_fkey; Type: FK CONSTRAINT; Schema: web; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY hierarchy_form
+    ADD CONSTRAINT hierarchy_form_hierarchy_id_fkey FOREIGN KEY (hierarchy_id) REFERENCES hierarchy(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
 -- Name: hierarchy_id_fkey; Type: FK CONSTRAINT; Schema: web; Owner: openatlas_master
 --
 
@@ -2250,22 +2143,6 @@ ALTER TABLE ONLY i18n
 
 ALTER TABLE ONLY i18n
     ADD CONSTRAINT i18n_language_id_fkey FOREIGN KEY (language_id) REFERENCES language(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: type_form_form_id_fkey; Type: FK CONSTRAINT; Schema: web; Owner: openatlas_master
---
-
-ALTER TABLE ONLY hierarchy_form
-    ADD CONSTRAINT type_form_form_id_fkey FOREIGN KEY (form_id) REFERENCES form(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: type_form_type_id_fkey; Type: FK CONSTRAINT; Schema: web; Owner: openatlas_master
---
-
-ALTER TABLE ONLY hierarchy_form
-    ADD CONSTRAINT type_form_type_id_fkey FOREIGN KEY (hierarchy_id) REFERENCES hierarchy(id) ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
