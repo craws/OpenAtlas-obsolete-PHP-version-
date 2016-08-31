@@ -3,6 +3,7 @@
     var gisPointSelected = <?= $this->gisData['gisPointSelected'] ?>;
     var gisPolygonAll = <?= $this->gisData['gisPolygonAll'] ?>;
     var gisPolygonSelected = <?= $this->gisData['gisPolygonSelected'] ?>;
+    var gisPolygonPointSelected = <?= $this->gisData['gisPolygonPointSelected'] ?>;
     var jsonSearch = [];
     <?
     /* Translations for maps
@@ -23,8 +24,8 @@
     ?>
     var translate = [];
     translate['save'] = '<?= $this->ucstring('save') ?>';
-translate['map_infotext_reedit'] = '<?= $this->ucstring('map_infotext_reedit') ?>' 
-// en: for re-editing please save or reload the whole place
+    translate['map_infotext_reedit'] = '<?= $this->ucstring('map_infotext_reedit') ?>'
+    // en: for re-editing please save or reload the whole place
 
 </script>
 <script type="text/javascript" src="/js/leaflet/mapbox.js"></script>

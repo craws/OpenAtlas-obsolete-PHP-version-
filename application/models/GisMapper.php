@@ -5,8 +5,14 @@
 class Model_GisMapper extends Model_AbstractMapper {
 
     public static function getAll($objectIdsParam = []) {
+        $all['point'] = [];
+        $all['polygon'] = [];
+        $selected['point'] = [];
+        $selected['polygon'] = [];
+        $selected['polygonPoint'] = [];
         $objectIds = (is_array($objectIdsParam)) ? $objectIdsParam : [$objectIdsParam];
         foreach (['point', 'polygon'] as $shape) {
+            $polygonPointSql = ($shape == 'polygon') ? " (SELECT ST_AsGeoJSON(ST_PointOnSurface(p.geom)) FROM gis.polygon p WHERE id = polygon.id) AS polygon_point, " : '';
             $sql = "
                 SELECT
                     object.id AS object_id,
@@ -14,7 +20,7 @@ class Model_GisMapper extends Model_AbstractMapper {
                     " . $shape . ".name,
                     " . $shape . ".description,
                     " . $shape . ".type,
-                    ST_AsGeoJSON(" . $shape . ".geom) AS geojson,
+                    ST_AsGeoJSON(" . $shape . ".geom) AS geojson, " . $polygonPointSql . "
                     object.name AS object_name,
                     object.description AS object_description,
                     (SELECT COUNT(*) FROM gis.point point2 WHERE " . $shape . ".entity_id = point2.entity_id) AS point_count,
@@ -35,8 +41,6 @@ class Model_GisMapper extends Model_AbstractMapper {
                 ";
             $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
             $statement->execute();
-            $all = [];
-            $selected = [];
             foreach ($statement->fetchAll() as $row) {
                 $type = '';
                 foreach (json_decode($row['node_ids']) as $nodeId) {
@@ -61,14 +65,25 @@ class Model_GisMapper extends Model_AbstractMapper {
                     ]
                 ];
                 if (in_array($row['object_id'], $objectIds)) {
-                    $selected[] = $item;
+                    $selected[$shape][] = $item;
                 } else {
-                    $all[] = $item;
+                    $all[$shape][] = $item;
+                }
+                if (isset($row['polygon_point'])) {
+                    $item['geometry'] = json_decode($row['polygon_point']);
+                    if (in_array($row['object_id'], $objectIds)) {
+                        $selected['polygonPoint'][] = $item;
+                    } else {
+                        $all['point'][] = $item;
+                    }
                 }
             }
-            $gis['gis' . ucfirst($shape) . 'All'] = json_encode($all);
-            $gis['gis' . ucfirst($shape) . 'Selected'] = json_encode($selected);
         }
+        $gis['gisPointAll'] = json_encode($all['point']);
+        $gis['gisPointSelected'] = json_encode($selected['point']);
+        $gis['gisPolygonAll'] = json_encode($all['polygon']);
+        $gis['gisPolygonSelected'] = json_encode($selected['polygon']);
+        $gis['gisPolygonPointSelected'] = json_encode($selected['polygonPoint']);
         return $gis;
     }
 
