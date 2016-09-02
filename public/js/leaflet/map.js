@@ -180,24 +180,21 @@ if (gisPointSelected != "") {
     }
 }
 
-
-
-
 if (myurl.indexOf('insert') >= 0) {
     $('#gisPoints').val('[]');
+    $('#gisPolygons').val('[]');
     if (mypoints) {
         map.removeLayer(mypoints);
     }
 }
-
 
 if (myurl.indexOf('update') >= 0) {
     $('#gisPoints').val(JSON.stringify(gisPointSelected));
     $('#gisPolygons').val(JSON.stringify(gisPolygonSelected));
 //    map.removeLayer(mysites);
     map.removeLayer(mypoints);
-//    var mysites = L.geoJson(placepolygons, {onEachFeature: setpopup}).addTo(map);
-//    mysites.on('click', setObjectId);
+    var mysites = L.geoJson(gisPolygonSelected, {onEachFeature: setpopup}).addTo(map);
+    mysites.on('click', setObjectId);
     var mypoints = L.geoJson(gisPointSelected, {onEachFeature: setpopup}).addTo(map);
     mypoints.on('click', setObjectId);
 }
