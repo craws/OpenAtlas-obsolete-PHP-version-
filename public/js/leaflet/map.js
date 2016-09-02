@@ -166,18 +166,41 @@ if (gisPolygonAll != "") {
 }
 
 if (gisPointSelected != "") {
-    var mypoints = L.geoJson(gisPointSelected, {onEachFeature: setpopup2}).addTo(map);
-    mypoints.on('click', setObjectId);
+    if (gisPolygonSelected == "") {
+        var mypoints = L.geoJson(gisPointSelected, {onEachFeature: setpopup2}).addTo(map);
+        mypoints.on('click', setObjectId);
 //    var myextend = L.featureGroup([mypoints, mysites]);
-    setTimeout(function () {
-        map.fitBounds(mypoints, {maxZoom: 18});
-    }, 1);
+        setTimeout(function () {
+            map.fitBounds(mypoints, {maxZoom: 18});
+        }, 1);
+    } else
+    {
+        var mypoints = L.geoJson(gisPointSelected, {onEachFeature: setpopup2}).addTo(map);
+        mypoints.on('click', setObjectId);
+        var mysites = L.geoJson(gisPolygonSelected, {onEachFeature: setpopup2}).addTo(map);
+        mysites.on('click', setObjectId);
+    }
+
 } else {
     if (gisPointAll != "") {
         setTimeout(function () {
             map.fitBounds(sitesmarkers, {maxZoom: 18});
         }, 1);
     }
+}
+
+if (gisPointSelected == "") {
+    console.log(gisPolygonSelected);
+    if (gisPolygonSelected = !"") {
+        var mysites = L.geoJson(gisPolygonSelected, {onEachFeature: setpopup2}).addTo(map);
+        mysites.on('click', setObjectId);
+    } else {
+    if (gisPointAll != "") {
+        setTimeout(function () {
+            map.fitBounds(sitesmarkers, {maxZoom: 18});
+        }, 1);
+    }
+} 
 }
 
 if (myurl.indexOf('insert') >= 0) {
@@ -192,7 +215,7 @@ if (myurl.indexOf('update') >= 0) {
     $('#gisPoints').val(JSON.stringify(gisPointSelected));
     $('#gisPolygons').val(JSON.stringify(gisPolygonSelected));
 //    map.removeLayer(mysites);
-    map.removeLayer(mypoints);
+    //map.removeLayer(mypoints);
     var mysites = L.geoJson(gisPolygonSelected, {onEachFeature: setpopup}).addTo(map);
     mysites.on('click', setObjectId);
     var mypoints = L.geoJson(gisPointSelected, {onEachFeature: setpopup}).addTo(map);
@@ -211,14 +234,19 @@ var namecontrol = L.control.geonames({// add geosearch
 //map.addControl(searchsites);
 map.addControl(namecontrol);
 
-sitesmarkers.eachLayer(function (marker) {
-    if (marker.feature.properties.uid === result) {
-        coords = marker.getLatLng();
-        map.setView(coords, 14);
-        map.panBy(new L.Point(0, -150));
-        marker.openPopup();
-    }
-});
+
+if (gisPointAll != "") {
+    sitesmarkers.eachLayer(function (marker) {
+        if (marker.feature.properties.uid === result) {
+            coords = marker.getLatLng();
+            map.setView(coords, 14);
+            map.panBy(new L.Point(0, -150));
+            marker.openPopup();
+        }
+    });
+}
+
+
 
 
 
@@ -226,10 +254,25 @@ var polyglayer = L.mapbox.featureLayer();
 polyglayer.setGeoJSON(gisPolygonAll);
 
 //features to choose in control menu
-var overlayMaps = {
-    Sites: sitesmarkers,
-    Polygons: sitesPolygons,
+
+
+
+
+if (gisPointAll != "") {
+
+    var overlayMaps = {
+        Sites: sitesmarkers,
+    }
+    if (gisPolygonAll != "")
+    {
+        var overlayMaps = {
+            Sites: sitesmarkers,
+            Polygons: sitesPolygons
+        }
+    }
 }
+
+
 baseMaps.Landscape.addTo(map);
 L.control.layers(baseMaps, overlayMaps).addTo(map);
 L.control.scale().addTo(map);

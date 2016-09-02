@@ -510,7 +510,10 @@ function closemyformx() {
 
 function closemymarkerformx() {
     datainput.removeFrom(map);
-    map.removeLayer(mylayer);
+    if (marker) {
+        map.removeLayer(marker);
+    }
+    
     togglebtns();
     coordcapture = false;
     capture = false;
