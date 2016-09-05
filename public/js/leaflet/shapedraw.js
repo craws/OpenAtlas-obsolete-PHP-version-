@@ -21,7 +21,7 @@ var headingtext;
 var objectName = '';
 var lastclicked;
 var position;
-var geoJsonArray =[];
+var geoJsonArray = [];
 
 var polygonbtn = L.easyButton(
     'topright',
@@ -216,7 +216,10 @@ function editshape() {
 
 
                 if (type === 'polygon') {
-                    newvector.push(' ' + latLngs[0].lng + ' ' + latLngs[0].lat); //if polygon add first xy again as last xy to close polygon
+                    geoJsonArray = [];
+                    // if polygon add first xy again as last xy to close polygon
+                    newvector.push(' ' + latLngs[0].lng + ' ' + latLngs[0].lat);
+                    geoJsonArray.push('[' + latLngs[0].lng + ',' + latLngs[0].lat + ']');
                     shapesyntax = '(' + newvector + ')';
                     returndata();
                 }
@@ -246,17 +249,17 @@ map.on('draw:created', function (e) {
     layer = e.layer;
     var latLngs; //to store coordinates of vertices
     var newvector = []; // array to store coordinates as numbers
-    geoJsonArray =[];
+    geoJsonArray = [];
     if (type != 'marker') {  //if other type than point then store array of coordinates as variable
         latLngs = layer.getLatLngs();
         for (i = 0; i < (latLngs.length); i++) {
             newvector.push(' ' + latLngs[i].lng + ' ' + latLngs[i].lat);
-            geoJsonArray.push('[' + latLngs[i].lng + ',' + latLngs[i].lat +']');
+            geoJsonArray.push('[' + latLngs[i].lng + ',' + latLngs[i].lat + ']');
         }
         if (type === 'polygon') {
             // if polygon add first xy again as last xy to close polygon
             newvector.push(' ' + latLngs[0].lng + ' ' + latLngs[0].lat);
-            geoJsonArray.push('[' + latLngs[0].lng + ',' + latLngs[0].lat +']');
+            geoJsonArray.push('[' + latLngs[0].lng + ',' + latLngs[0].lat + ']');
             shapesyntax = '(' + newvector + ')';
             returndata();
         }
@@ -324,13 +327,14 @@ function editsavetodb() {
         '<div id="popup"><strong>' + shapename + '</strong> <br>' +
         '<i>' + shapetype + '</i> <br> <br>' +
         '<div style="max-height:140px; overflow-y: auto">' + shapedescription + '<br><br><br> </div>' +
-        '<i> ('+translate['map_infotext_reedit'] + ')</i>'
+        '<i> (' + translate['map_infotext_reedit'] + ')</i>'
         );
     map.removeLayer(mylayer);
 
     // here we need the id of the shape/point not "selectedshape" which seems to be the id of the place
     // Now selectedshape is the ID of the shape of the object and no longer of the object
     // loop through array of existing
+    if (geometrytype == 'Point') {
     var points = JSON.parse($('#gisPoints').val());
     $.each(points, function (key, value) {
         var id = (JSON.stringify(value.properties.id));
@@ -340,12 +344,47 @@ function editsavetodb() {
             return false;
         }
     });
+    
+    
     $('#gisPoints').val(JSON.stringify(points)); // write array back to form field
     var point = '{"type":"Feature","geometry":{"type":"Point","coordinates":[' + $('#easting').val() + ',' + $('#northing').val() + ']},"properties":';
     point += '{"name": "' + $('#shapename').val() + '","description": "' + $('#shapedescription').val() + '","marker-color": "#fc4353","siteType":"To do","shapeType": "centerpoint"}}';
     var points = JSON.parse($('#gisPoints').val());
-    points.push(JSON.parse(point));
-    $('#gisPoints').val(JSON.stringify(points));
+
+    
+        console.log(JSON.stringify(point) + ' ' + geometrytype);
+        points.push(JSON.parse(point));
+        $('#gisPoints').val(JSON.stringify(points));
+    }
+    
+
+
+
+// here we need the id of the shape/point not "selectedshape" which seems to be the id of the place
+    // Now selectedshape is the ID of the shape of the object and no longer of the object
+    // loop through array of existing
+    if (geometrytype == 'Polygon') {
+    var polygons = JSON.parse($('#gisPolygons').val());
+    $.each(polygons, function (key, value) {
+        var id = (JSON.stringify(value.properties.id));
+        var index = ((JSON.stringify(key)));
+        if (id == selectedshape) {
+            polygons.splice(index, 1);
+            return false;
+        }
+    });
+    
+    
+    var polygon = '{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[' + geoJsonArray.join(',') + ']]},"properties":';
+    polygon += '{"name": "' + $('#shapename').val() + '","description": "' + $('#shapedescription').val() + '", "shapeType": "' + shapetype + '"}}';
+    var polygons = JSON.parse($('#gisPolygons').val());
+    
+  console.log(polygon + ' ' + geometrytype);
+    polygons.push(JSON.parse(polygon));
+    $('#gisPolygons').val(JSON.stringify(polygons));
+    }
+    
+
     editclosemyformsave();
 }
 
@@ -513,7 +552,7 @@ function closemymarkerformx() {
     if (marker) {
         map.removeLayer(marker);
     }
-    
+
     togglebtns();
     coordcapture = false;
     capture = false;
@@ -629,7 +668,7 @@ function savetodb() {
     var dataString = '&shapename=' + shapename + '&shapetype=' + shapetype + '&shapedescription=' + shapedescription + '&shapecoords=' + shapecoords + '&geometrytype=' + geometrytype;
     $('#gisData').val($('#gisData').val() + dataString);
     var polygon = '{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[' + geoJsonArray.join(',') + ']]},"properties":';
-    polygon += '{"name": "' + $('#shapename').val() + '","description": "' + $('#shapedescription').val() + '", "shapeType": "' + shapetype+ '"}}';
+    polygon += '{"name": "' + $('#shapename').val() + '","description": "' + $('#shapedescription').val() + '", "shapeType": "' + shapetype + '"}}';
     var polygons = JSON.parse($('#gisPolygons').val());
     console.log(polygon);
     polygons.push(JSON.parse(polygon));

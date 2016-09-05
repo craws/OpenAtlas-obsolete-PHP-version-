@@ -169,7 +169,6 @@ if (gisPointSelected != "") {
     if (gisPolygonSelected == "") {
         var mypoints = L.geoJson(gisPointSelected, {onEachFeature: setpopup2}).addTo(map);
         mypoints.on('click', setObjectId);
-//    var myextend = L.featureGroup([mypoints, mysites]);
         setTimeout(function () {
             map.fitBounds(mypoints, {maxZoom: 18});
         }, 1);
@@ -179,6 +178,10 @@ if (gisPointSelected != "") {
         mypoints.on('click', setObjectId);
         var mysites = L.geoJson(gisPolygonSelected, {onEachFeature: setpopup2}).addTo(map);
         mysites.on('click', setObjectId);
+        var myextend = L.featureGroup([mypoints, mysites]);
+        setTimeout(function () {
+            map.fitBounds(myextend, {maxZoom: 18});
+        }, 1);
     }
 
 } else {
@@ -191,16 +194,14 @@ if (gisPointSelected != "") {
 
 if (gisPointSelected == "") {
     console.log(gisPolygonSelected);
-    if (gisPolygonSelected = !"") {
+    if (gisPolygonSelected != "") {
         var mysites = L.geoJson(gisPolygonSelected, {onEachFeature: setpopup2}).addTo(map);
         mysites.on('click', setObjectId);
     } else {
-    if (gisPointAll != "") {
-        setTimeout(function () {
+        if (gisPointAll != "") {
             map.fitBounds(sitesmarkers, {maxZoom: 18});
-        }, 1);
+        }
     }
-} 
 }
 
 if (myurl.indexOf('insert') >= 0) {
@@ -214,8 +215,14 @@ if (myurl.indexOf('insert') >= 0) {
 if (myurl.indexOf('update') >= 0) {
     $('#gisPoints').val(JSON.stringify(gisPointSelected));
     $('#gisPolygons').val(JSON.stringify(gisPolygonSelected));
-//    map.removeLayer(mysites);
-    //map.removeLayer(mypoints);
+    if (mysites)
+    {
+    map.removeLayer(mysites);
+    }
+    if (mypoints)
+    {
+    map.removeLayer(mypoints);
+    }
     var mysites = L.geoJson(gisPolygonSelected, {onEachFeature: setpopup}).addTo(map);
     mysites.on('click', setObjectId);
     var mypoints = L.geoJson(gisPointSelected, {onEachFeature: setpopup}).addTo(map);
