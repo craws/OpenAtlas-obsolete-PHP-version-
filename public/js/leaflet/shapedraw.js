@@ -56,8 +56,6 @@ var pointbutton = L.easyButton(
         shapetype = "centerpoint";
         capture = true;
         coordcapture = true;
-        //map.removeLayer(postGisGeoJSON);
-        setgeojsonwopopup();
         drawmarker();
     },
     'Set a marker/point at the position where the physical thing is located'
@@ -100,8 +98,6 @@ datainput.onAdd = function (map) {
     return div;
     document.getElementById("headingtext").innerHTML = headingtext;
 };
-
-setgeojson();
 
 var mylayer;
 var myoldlayer;
@@ -340,7 +336,6 @@ function editsavetodb() {
         var point = '{"type":"Feature","geometry":{"type":"Point","coordinates":[' + $('#easting').val() + ',' + $('#northing').val() + ']},"properties":';
         point += '{"name": "' + $('#shapename').val() + '","description": "' + $('#shapedescription').val() + '","marker-color": "#fc4353","siteType":"To do","shapeType": "centerpoint"}}';
         var points = JSON.parse($('#gisPoints').val());
-        console.log(JSON.stringify(point) + ' ' + geometrytype);
         points.push(JSON.parse(point));
         $('#gisPoints').val(JSON.stringify(points));
     }
@@ -405,98 +400,6 @@ function deleteshape() {
     }
 }
 
-function reloadgeojson() {
-//    $.ajax({
-//        dataType: "json",
-//        url: "php/" + geometrytype + "_reload.php",
-//        success: function (data) {
-//            $(data.features).each(function (key, data) {
-//                postGisGeoJSON.addData(data);
-//                resetDrawLayer();
-//            });
-//        }
-//    }).error(function () {
-//    });
-}
-
-function updategeojson() {
-//    map.removeLayer(postGisGeoJSON);
-//    setgeojson();
-}
-
-function setgeojson()
-{
-//    postGisGeoJSON = L.geoJson(undefined, {style: function (feature) {
-//            switch (feature.geometry.type) {
-//                case 'LineString':
-//                    return {color: "#000000", weight: 5}
-//                case 'Polygon':
-//                    return {fillColor: "#424242", color: "#000000", weight: 3}
-//            }
-//        },
-//        onEachFeature: setpopup}).addTo(map);
-//
-//    postGisGeoJSON.on('click', setuid);
-//
-//    $.ajax({
-//        dataType: "json",
-//        url: "php/linestring_update.php",
-//        success: function (data) {
-//            $(data.features).each(function (key, data) {
-//                postGisGeoJSON.addData(data);
-//            });
-//        }
-//    }).error(function () {
-//    });
-//    $.ajax({
-//        dataType: "json",
-//        url: "php/polygon_update.php",
-//        success: function (data) {
-//            $(data.features).each(function (key, data) {
-//                postGisGeoJSON.addData(data);
-//            });
-//        }
-//    }).error(function () {
-//    });
-}
-
-
-function setgeojsonwopopup()
-{
-//    postGisGeoJSON = L.geoJson(undefined, {style: function (feature) {
-//            switch (feature.geometry.type) {
-//                case 'LineString':
-//                    return {color: "#000000", weight: 5}
-//                case 'Polygon':
-//                    return {fillColor: "#424242", color: "#000000", weight: 3, clickable: false}
-//            }
-//        },
-//        }).addTo(map);
-//
-//
-
-//    $.ajax({
-//        dataType: "json",
-//        url: "php/linestring_update.php",
-//        success: function (data) {
-//            $(data.features).each(function (key, data) {
-//                postGisGeoJSON.addData(data);
-//            });
-//        }
-//    }).error(function () {
-//    });
-//    $.ajax({
-//        dataType: "json",
-//        url: "php/polygon_update.php",
-//        success: function (data) {
-//            $(data.features).each(function (key, data) {
-//                postGisGeoJSON.addData(data);
-//            });
-//        }
-//    }).error(function () {
-//    });
-}
-
 function resetDrawLayer() {
     drawnstuff.removeLayer(layer);
 }
@@ -559,7 +462,6 @@ function editclosemyform() {
     map.removeLayer(mylayer);
     myoldlayer.addTo(map);
     togglebtns();
-    //updategeojson();
     var coordcapture = false;
     interon();
 }
@@ -568,9 +470,7 @@ function editclosemyformsave() {
     editon = 0;
     datainput.removeFrom(map);
     map.removeLayer(mylayer);
-    //myoldlayer.addTo(map);
     togglebtns();
-    //updategeojson();
     var coordcapture = false;
     interon();
 }
@@ -655,7 +555,6 @@ function savetodb() {
     var polygon = '{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[' + geoJsonArray.join(',') + ']]},"properties":';
     polygon += '{"name": "' + $('#shapename').val() + '","description": "' + $('#shapedescription').val() + '", "shapeType": "' + shapetype + '"}}';
     var polygons = JSON.parse($('#gisPolygons').val());
-    console.log(polygon);
     polygons.push(JSON.parse(polygon));
     $('#gisPolygons').val(JSON.stringify(polygons));
     layer.bindPopup('<div id="popup"><strong>' + objectName + '</strong><br/>' +

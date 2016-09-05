@@ -2,6 +2,7 @@ var coordcapture;
 var coordcaptureimg;
 var gispoints;
 var editon = 0;
+var count = 0;
 
 function interoff() {
     capture = false;
@@ -93,7 +94,6 @@ function togglebtns() {
         coordcapture = false;
         coordcaptureimg = false;
         marker = '';
-        updategeojson();
         interon();
     }
 }
@@ -119,7 +119,7 @@ function setSitesInfo(e) { // set Popup Information of existing sites
 }
 
 L.mapbox.accessToken = 'pk.eyJ1Ijoib3BlbmF0bGFzbWFwYm94IiwiYSI6ImNpbHRlYzc3ZDAwMmR3MW02Z3FsYWxwNXcifQ.rwXGRavf1bh9ZW6zQn9cMg';
-var map = L.map('map', {fullscreenControl: true}, null).setView([48.61, 16.93], 5);
+var map = L.map('map', {fullscreenControl: true}, null).setView([48.61, 16.93], 2);
 var baseMaps = {
     Landscape: L.tileLayer('http://{s}.tile.thunderforest.com/landscape/{z}/{x}/{y}.png', {attribution: '&copy; <a href="http://www.thunderforest.com">Thunderforest Landscape '}),
     Openstreetmap: L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap </a> '}),
@@ -164,6 +164,7 @@ if (gisPointSelected != "") {
         var mypoints = L.geoJson(gisPointSelected, {onEachFeature: setpopup2}).addTo(map);
         mypoints.on('click', setObjectId);
         setTimeout(function () {
+            console.log('fit1=nurpunkte');
             map.fitBounds(mypoints, {maxZoom: 18});
         }, 1);
     } else {
@@ -173,29 +174,33 @@ if (gisPointSelected != "") {
         mysites.on('click', setObjectId);
         var myextend = L.featureGroup([mypoints, mysites]);
         setTimeout(function () {
-            map.fitBounds(myextend, {maxZoom: 18});
+            console.log('fit2=punkte und poylgone');
+            map.fitBounds(myextend.getBounds(), {maxZoom: 18});
         }, 1);
     }
 
-} else {
-    if (gisPointAll != "") {
-        setTimeout(function () {
-            map.fitBounds(sitesmarkers, {maxZoom: 18});
-        }, 1);
-    }
 }
 
+
+
 if (gisPointSelected == "") {
-    console.log(gisPolygonSelected);
     if (gisPolygonSelected != "") {
         var mysites = L.geoJson(gisPolygonSelected, {onEachFeature: setpopup2}).addTo(map);
         mysites.on('click', setObjectId);
+        console.log('fit3 = nurpolygone');
+        setTimeout(function () {
+            map.fitBounds(mysites.getBounds(), {maxZoom: 18});
+        }, 1);
     } else {
         if (gisPointAll != "") {
-            map.fitBounds(sitesmarkers, {maxZoom: 18});
+            console.log('fit4=nurpointsall');
+            setTimeout(function () {
+                map.fitBounds(sitesmarkers, {maxZoom: 18});
+            }, 1);
         }
     }
 }
+
 
 if (myurl.indexOf('insert') >= 0) {
     $('#gisPoints').val('[]');
@@ -281,7 +286,8 @@ function setObjectId(e) {
         editlayer = e.layer;
         editmarker = e.marker;
         shapename = feature.properties.name;
-        shapetype = feature.properties.type;
+        count = feature.properties.count;
+        shapetype = feature.properties.shapeType;
         shapedescription = feature.properties.description;
         objectName = feature.properties.title;
         helptext = 'Draw the shape of a physical thing if the precise extend is known';
@@ -304,7 +310,9 @@ function setpopup(feature, layer) {
         '<div id="popup"><strong>' + feature.properties.name + '</strong><br/>' +
         '<div style="max-height:140px; overflow-y: auto;">' + feature.properties.description + '<br/></div>' +
         '<i>' + feature.properties.shapeType + '</i><br/><br/>' +
-        '<button onclick="editshape()"/>Edit</button> <button onclick="deleteshape()"/>Delete</button></div>'
+        '<div id="btnBar">'+
+        '<button id="editBtn" onclick="editshape()"/>Edit</button> <button id="delBtn" onclick="deleteshape()"/>Delete</button></div>'+
+        '</div>'
         );
 }
 
