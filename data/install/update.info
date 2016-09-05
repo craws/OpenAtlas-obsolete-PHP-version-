@@ -18,6 +18,10 @@ DROP TABLE IF EXISTS gis.centerpoint;
 DROP FUNCTION IF EXISTS gis.geometry_creation();
 COMMIT;
 
+Favicons, if you want to change the default OpenAtlas ones:
+
+- use http://realfavicongenerator.net/ to generate files and copy files to public
+- change line endings in browserconfig.xml from windows to unix
 
 
 2.0.0 to 2.1.0 Upgrade
