@@ -82,7 +82,6 @@ datainput.onAdd = function (map) {
                 <div id='namefield' style='display: block'>\
                 <span><input type='text' id='shapename' placeholder='enter name if desired'/></span> </div>\
                 <span><textarea rows='3' cols='70' id='shapedescription' placeholder='here you can enter a description'/></textarea></span>\
-                <span><input type='text' id='shapename' value='NULL'/></span>\
                 <span><input type='text' id='shapetype' value='NULL'/></span>\
                 <span><label id='eastinglabel' style='display: none'> Easting: </label>\<input type='text' id='easting' placeholder='decimal degrees' /></span>\
                 <span><label id='northinglabel' style='display: none'> Northing:</label>\<input type='text' id='northing' placeholder='decimal degrees' /></span>\
@@ -210,9 +209,9 @@ function editshape() {
                 latLngs = mylayer.getLatLngs();
                 for (i = 0; i < (latLngs.length); i++) {
                     newvector.push(' ' + latLngs[i].lng + ' ' + latLngs[i].lat);
+                    geoJsonArray.push('[' + latLngs[i].lng + ',' + latLngs[i].lat + ']');
                 }
                 if (type === 'polygon') {
-                    geoJsonArray = [];
                     // if polygon add first xy again as last xy to close polygon
                     newvector.push(' ' + latLngs[0].lng + ' ' + latLngs[0].lat);
                     geoJsonArray.push('[' + latLngs[0].lng + ',' + latLngs[0].lat + ']');
@@ -359,10 +358,10 @@ function editsavetodb() {
                 return false;
             }
         });
+        $('#gisPolygons').val(JSON.stringify(polygons));
         var polygon = '{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[' + geoJsonArray.join(',') + ']]},"properties":';
         polygon += '{"name": "' + $('#shapename').val() + '","description": "' + $('#shapedescription').val() + '", "shapeType": "' + shapetype + '"}}';
         var polygons = JSON.parse($('#gisPolygons').val());
-        console.log(polygon + ' ' + geometrytype);
         polygons.push(JSON.parse(polygon));
         $('#gisPolygons').val(JSON.stringify(polygons));
     }
@@ -379,16 +378,30 @@ function deleteshape() {
             map.removeLayer(editmarker);
             var dataString = 'uid=' + selectedshape + '&geometrytype=' + geometrytype;
         }
-        var points = JSON.parse($('#gisPoints').val());
-        $.each(points, function (key, value) {
-            var id = (JSON.stringify(value.properties.id));
-            var index = ((JSON.stringify(key)));
-            if (id == selectedshape) {
-                points.splice(index, 1);
-                return false;
-            }
-        });
-        $('#gisPoints').val(JSON.stringify(points)); // write array back to form field
+        if (geometrytype == 'Point') {
+            var points = JSON.parse($('#gisPoints').val());
+            $.each(points, function (key, value) {
+                var id = (JSON.stringify(value.properties.id));
+                var index = ((JSON.stringify(key)));
+                if (id == selectedshape) {
+                    points.splice(index, 1);
+                    return false;
+                }
+            });
+            $('#gisPoints').val(JSON.stringify(points)); // write array back to form field
+        }
+        if (geometrytype == 'Polygon') {
+            var polygons = JSON.parse($('#gisPolygons').val());
+            $.each(polygons, function (key, value) {
+                var id = (JSON.stringify(value.properties.id));
+                var index = ((JSON.stringify(key)));
+                if (id == selectedshape) {
+                    polygons.splice(index, 1);
+                    return false;
+                }
+            });
+            $('#gisPolygons').val(JSON.stringify(polygons)); // write array back to form field
+        }
     }
 }
 
