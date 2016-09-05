@@ -1,4 +1,3 @@
-
 var coordcapture;
 var coordcaptureimg;
 var gispoints;
@@ -37,8 +36,6 @@ function interon() {
     }
 }
 var togglebtn;
-
-
 
 function togglebtns() {
     if (togglebtn === 0) {
@@ -101,8 +98,7 @@ function togglebtns() {
     }
 }
 
-
-function interonoff(element) { //disable map dragging when cursor is e.g. in search input field.
+function interonoff(element) { // disable map dragging when cursor is e.g. in search input field.
     $(element).hover(function () {
         interoff();
     }, function () {
@@ -110,9 +106,7 @@ function interonoff(element) { //disable map dragging when cursor is e.g. in sea
     });
 }
 
-
-
-function setSitesInfo(e) { //set Popup Information of existing sites
+function setSitesInfo(e) { // set Popup Information of existing sites
     var marker = e.layer;
     marker.bindPopup(
         '<div id="mypopup"><div id="popuptitle">' + marker.toGeoJSON().properties.title + '</strong> <br> </div>' +
@@ -172,8 +166,7 @@ if (gisPointSelected != "") {
         setTimeout(function () {
             map.fitBounds(mypoints, {maxZoom: 18});
         }, 1);
-    } else
-    {
+    } else {
         var mypoints = L.geoJson(gisPointSelected, {onEachFeature: setpopup2}).addTo(map);
         mypoints.on('click', setObjectId);
         var mysites = L.geoJson(gisPolygonSelected, {onEachFeature: setpopup2}).addTo(map);
@@ -215,13 +208,11 @@ if (myurl.indexOf('insert') >= 0) {
 if (myurl.indexOf('update') >= 0) {
     $('#gisPoints').val(JSON.stringify(gisPointSelected));
     $('#gisPolygons').val(JSON.stringify(gisPolygonSelected));
-    if (mysites)
-    {
-    map.removeLayer(mysites);
+    if (mysites) {
+        map.removeLayer(mysites);
     }
-    if (mypoints)
-    {
-    map.removeLayer(mypoints);
+    if (mypoints) {
+        map.removeLayer(mypoints);
     }
     var mysites = L.geoJson(gisPolygonSelected, {onEachFeature: setpopup}).addTo(map);
     mysites.on('click', setObjectId);
@@ -240,8 +231,6 @@ var namecontrol = L.control.geonames({// add geosearch
 //var searchsites = L.control.Sitesearch(); //add sitesearch element
 //map.addControl(searchsites);
 map.addControl(namecontrol);
-
-
 if (gisPointAll != "") {
     sitesmarkers.eachLayer(function (marker) {
         if (marker.feature.properties.uid === result) {
@@ -252,33 +241,21 @@ if (gisPointAll != "") {
         }
     });
 }
-
-
-
-
-
 var polyglayer = L.mapbox.featureLayer();
 polyglayer.setGeoJSON(gisPolygonAll);
 
-//features to choose in control menu
-
-
-
-
+// features to choose in control menu
 if (gisPointAll != "") {
-
     var overlayMaps = {
         Sites: sitesmarkers,
     }
-    if (gisPolygonAll != "")
-    {
+    if (gisPolygonAll != "") {
         var overlayMaps = {
             Sites: sitesmarkers,
             Polygons: sitesPolygons
         }
     }
 }
-
 
 baseMaps.Landscape.addTo(map);
 L.control.layers(baseMaps, overlayMaps).addTo(map);
@@ -305,7 +282,7 @@ function setObjectId(e) {
         editmarker = e.marker;
         shapename = feature.properties.name;
         shapetype = feature.properties.type;
-        description = feature.properties.description;
+        shapedescription = feature.properties.description;
         objectName = feature.properties.title;
         helptext = 'Draw the shape of a physical thing if the precise extend is known';
         headingtext = 'Shape';
@@ -340,5 +317,3 @@ function setpopup2(feature, layer) {
         '<i>' + feature.properties.shapeType + '</i><br/><br/>'
         );
 }
-
-
