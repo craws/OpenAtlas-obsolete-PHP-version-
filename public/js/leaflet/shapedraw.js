@@ -28,11 +28,11 @@ var polygonbtn = L.easyButton(
     'fa-pencil-square-o',
     function () {
         shapetype = "shape";
-        helptext = 'Draw the shape of a physical thing if the precise extend is known';
+        helptext = translate['map_info_shape'];
         headingtext = 'Shape';
         drawpolygon();
     },
-    'Draw the shape of a physical thing if the precise extend is known'
+    translate['map_info_shape']
     );
 
 var areabutton = L.easyButton(
@@ -40,25 +40,25 @@ var areabutton = L.easyButton(
     'fa-circle-o-notch',
     function () {
         shapetype = "area";
-        helptext = 'Draw the area in which the physical thing is located. E.g. if its precise shape is not known but known to be within a certain area';
+        helptext = translate['map_info_area'];
         headingtext = 'Area';
         drawpolygon();
     },
-    'Draw the area in which the physical thing is located. E.g. if its precise shape is not known but known to be within a certain area'
+    translate['map_info_area']
     );
 
 var pointbutton = L.easyButton(
     'topright',
     'fa-map-marker',
     function () {
-        helptext = 'Set a marker/point at the position where the physical thing is located';
+        helptext = translate['map_info_point'];
         headingtext = 'Point';
         shapetype = "centerpoint";
         capture = true;
         coordcapture = true;
         drawmarker();
     },
-    'Set a marker/point at the position where the physical thing is located'
+    translate['map_info_point']
     );
 
 var datainput = L.control();
@@ -68,21 +68,21 @@ datainput.onAdd = function (map) {
         <div id='insertform' style='display:block'>\
             <form id='shapeform' onmouseover='interoff()' onmouseout='interon()'>\
                 <i id='headingtext'>  </i>\
-                <i id='closebtn' title='close without saving1' onclick='closemyformx()' class='fa'>X</i>\
-                <i id='editclosebtn' title='close without saving2' onclick='editclosemyform()' class='fa'>X</i>\
-                <i id='markerclosebtn' title='close without saving3' onclick='closemymarkerformx()' class='fa'>X</i>\
+                <i id='closebtn' title='" + translate['map_info_close'] + "' onclick='closemyformx()' class='fa'>X</i>\
+                <i id='editclosebtn' title='" + translate['map_info_close'] + "' onclick='editclosemyform()' class='fa'>X</i>\
+                <i id='markerclosebtn' title='" + translate['map_info_close'] + "' onclick='closemymarkerformx()' class='fa'>X</i>\
                 <br/>\
                 <p id='p1'>Hello World!</p>\
                 <div style='display: none'>\
-                    <label> Parent:</label>\
+                    <label>Parent:</label>\
                     <span><input type='text' id='shapeparent' value='NULL'/></span>\n\
                 </div>\
                 <div id='namefield' style='display: block'>\
                 <span><input type='text' id='shapename' placeholder='enter name if desired'/></span> </div>\
-                <span><textarea rows='3' cols='70' id='shapedescription' placeholder='here you can enter a description'/></textarea></span>\
+                <span><textarea rows='3' cols='70' id='shapedescription' placeholder='" + translate['map_info_description'] + "'/></textarea></span>\
                 <span><input type='text' id='shapetype' value='NULL'/></span>\
-                <span><label id='eastinglabel' style='display: none'> Easting: </label>\<input type='text' id='easting' placeholder='decimal degrees' /></span>\
-                <span><label id='northinglabel' style='display: none'> Northing:</label>\<input type='text' id='northing' placeholder='decimal degrees' /></span>\
+                <span><label id='eastinglabel' style='display: none'> Easting: </label><input type='text' id='easting' placeholder='decimal degrees' /></span>\
+                <span><label id='northinglabel' style='display: none'> Northing:</label><input type='text' id='northing' placeholder='decimal degrees' /></span>\
                 <div style='display: none'>\
                     <label> Coordinates: </label>\
                     <span><textarea rows='4' cols='50' id='shapecoords'/></textarea></span>\
@@ -90,7 +90,7 @@ datainput.onAdd = function (map) {
                     <span><input type='text' id='geometrytype'/></span>\n\
                 </div>\
             </form>\
-            <input type='button' title='Reset values and shape' id='resetbtn' disabled value='Clear' onclick='resetmyform()'/>\
+            <input type='button' title='Reset values and shape' id='resetbtn' disabled value='" + translate['map_clear'] + "' onclick='resetmyform()'/>\
             <input type='button' title='Save shape' id='savebtn' disabled value='" + translate['save'] + "' onclick='savetodb()'/>\
             <input type='button' title='Save edits' id='editsavebtn' disabled value='" + translate['save'] + "' onclick='editsavetodb()'/>\
             <input type='button' title='Save marker' id='markersavebtn' disabled value='" + translate['save'] + "' onclick='saveMarker()'/>\
@@ -140,11 +140,11 @@ function editshape() {
             }
             myoldlayer = L.polygon(editlayer.getLatLngs());
             myoldlayer.bindPopup(
-                '<div id="popup"><strong>' + objectName + '</strong> <br/>' +
-                '<div id="popup"><strong>' + shapename + '</strong> <br/>' +
-                '<i>' + shapetype + '</i> <br/> <br/>' +
+                '<div id="popup"><strong>' + objectName + '</strong><br/>' +
+                '<div id="popup"><strong>' + shapename + '</strong><br/>' +
+                '<i>' + shapetype + '</i><br/><br/>' +
                 '<div style="max-height:140px; overflow-y: auto">' + shapedescription + '</div>' +
-                '<button onclick="editshape()"/> Edit </button> <button onclick="deleteshape()"/>Delete</button></div>'
+                '<button onclick="editshape()"/>' + translate['edit'] + '</button> <button onclick="deleteshape()"/>' + translate['delete'] + '</button></div>'
                 );
             map.removeLayer(editlayer);
         }
@@ -166,7 +166,7 @@ function editshape() {
                 '<div id="popup"><strong>' + shapename + '</strong><br/>' +
                 '<i>' + shapetype + '</i> <br/> <br/>' +
                 '<div style="max-height:140px; overflow-y: auto">' + shapedescription + '<br/></div>' +
-                '<button onclick="editshape()"/> Edit </button> <button onclick="deleteshape()"/>Delete</button></div>'
+                '<button onclick="editshape()"/>' + translate['edit'] + '</button> <button onclick="deleteshape()"/>' + translate['delete'] + '</button></div>'
                 );
             map.removeLayer(editlayer);
             document.getElementById('savebtn').style.display = 'none';
@@ -197,11 +197,11 @@ function editshape() {
         document.getElementById('geometrytype').value = geometrytype;
         mylayer.on('edit', function () {
             var latLngs = mylayer.getLatLngs();
-            var latLngs; //to store coordinates of vertices
+            var latLngs; // to store coordinates of vertices
             var newvector = []; // array to store coordinates as numbers
             var type = geometrytype.toLowerCase();
             document.getElementById('editsavebtn').disabled = false;
-            if (type != 'marker') {  //if other type than point then store array of coordinates as variable
+            if (type != 'marker') {  // if other type than point then store array of coordinates as variable
                 latLngs = mylayer.getLatLngs();
                 for (i = 0; i < (latLngs.length); i++) {
                     newvector.push(' ' + latLngs[i].lng + ' ' + latLngs[i].lat);
@@ -315,7 +315,7 @@ function editsavetodb() {
         '<div id="popup"><strong>' + shapename + '</strong> <br/>' +
         '<i>' + shapetype + '</i> <br/> <br/>' +
         '<div style="max-height:140px; overflow-y: auto">' + shapedescription + '<br/><br/><br/> </div>' +
-        '<i> (' + translate['map_infotext_reedit'] + ')</i>'
+        '<i> (' + translate['map_info_reedit'] + ')</i>'
         );
     map.removeLayer(mylayer);
     // here we need the id of the shape/point not "selectedshape" which seems to be the id of the place
@@ -538,7 +538,7 @@ function saveMarker() {
         '<div id="popup"><strong>' + $('#shapename').val() + '</strong></br>' +
         '<i> centerpoint </i></br></br>' +
         '<div style="max-height:140px; overflow-y: auto">' + $('#shapedescription').val() + '</br></br></br></div>' +
-        '<i>(for re-editing please save or reload the whole place)</i>'
+        '<i>' + translate['map_info_reedit'] + '</i>'
         );
     closemymarkerform();
 }
@@ -561,7 +561,7 @@ function savetodb() {
         '<div id="popup"><strong>' + shapename + '</strong> <br/>' +
         '<i>' + shapetype + '</i> <br/> <br/>' +
         '<div style="max-height:140px; overflow-y: auto">' + shapedescription + '<br/><br/><br/> </div>' +
-        '<i> (for re-editing please save or reload the whole place)</i>');
+        '<i>' + translate['map_info_reedit'] + '</i>');
     layer.addTo(map);
     closemyform();
 }

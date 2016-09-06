@@ -109,11 +109,11 @@ function interonoff(element) { // disable map dragging when cursor is e.g. in se
 function setSitesInfo(e) { // set Popup Information of existing sites
     var marker = e.layer;
     marker.bindPopup(
-        '<div id="mypopup"><div id="popuptitle">' + marker.toGeoJSON().properties.title + '</strong> <br> </div>' +
-        '<div id="popuptype"><i>' + marker.toGeoJSON().properties.siteType + '</i> <br> <br></div>' +
-        '<div style="max-height:100px; max-width:200px; overflow-y: auto">' + marker.toGeoJSON().properties.objectDescription + '<br></div></div><br>' +
-        '<div style="max-height:100px; max-width:200px; overflow-y: auto">' + marker.toGeoJSON().properties.shapeType + '<br></div></div>' +
-        '<a href="/admin/place/view/id/' + marker.feature.properties.objectId + '">Details</a>',
+        '<div id="mypopup"><div id="popuptitle">' + marker.toGeoJSON().properties.title + '</strong><br/></div>' +
+        '<div id="popuptype"><i>' + marker.toGeoJSON().properties.siteType + '</i><br/><br/></div>' +
+        '<div style="max-height:100px; max-width:200px; overflow-y: auto">' + marker.toGeoJSON().properties.objectDescription + '<br/></div></div><br/>' +
+        '<div style="max-height:100px; max-width:200px; overflow-y: auto">' + marker.toGeoJSON().properties.shapeType + '<br/></div></div>' +
+        '<a href="/admin/place/view/id/' + marker.feature.properties.objectId + '">' + translate['details'] + '</a>',
         {autoPanPaddingTopLeft: new L.Point(40, 10), autoPanPaddingBottomRight: new L.Point(50, 10)}
     );
 }
@@ -178,10 +178,7 @@ if (gisPointSelected != "") {
             map.fitBounds(myextend.getBounds(), {maxZoom: 18});
         }, 1);
     }
-
 }
-
-
 
 if (gisPointSelected == "") {
     if (gisPolygonSelected != "") {
@@ -200,7 +197,6 @@ if (gisPointSelected == "") {
         }
     }
 }
-
 
 if (myurl.indexOf('insert') >= 0) {
     $('#gisPoints').val('[]');
@@ -290,14 +286,14 @@ function setObjectId(e) {
         shapetype = feature.properties.shapeType;
         shapedescription = feature.properties.description;
         objectName = feature.properties.title;
-        helptext = 'Draw the shape of a physical thing if the precise extend is known';
+        helptext = translate['map_info_shape'];
         headingtext = 'Shape';
         if (shapetype == "area") {
-            helptext = "Draw the area in which the physical thing is located. E.g. if its precise shape is not known but known to be within a certain area"
+            helptext = translate['map_info_area'];
             headingtext = 'Area';
         }
         if (geometrytype == "Point") {
-            helptext = "Drag the marker to the new location"
+            helptext = translate['map_info_point'];
             headingtext = 'Point';
         }
     }
@@ -310,8 +306,8 @@ function setpopup(feature, layer) {
         '<div id="popup"><strong>' + feature.properties.name + '</strong><br/>' +
         '<div style="max-height:140px; overflow-y: auto;">' + feature.properties.description + '<br/></div>' +
         '<i>' + feature.properties.shapeType + '</i><br/><br/>' +
-        '<div id="btnBar">'+
-        '<button id="editBtn" onclick="editshape()"/>Edit</button> <button id="delBtn" onclick="deleteshape()"/>Delete</button></div>'+
+        '<div id="btnBar">' +
+        '<button id="editBtn" onclick="editshape()"/>' + translate['edit'] + '</button> <button id="delBtn" onclick="deleteshape()"/>' + translate['delete'] + '</button></div>' +
         '</div>'
         );
 }
