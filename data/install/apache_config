@@ -7,7 +7,7 @@
                 RewriteEngine On
                 RewriteCond %{REQUEST_FILENAME} !-f
                 RewriteCond %{REQUEST_FILENAME} !-d
-                RewriteRule !\.(js|ico|gif|jpg|png|css)$ /index.php
+                RewriteRule !\.(js|ico|gif|jpg|png|css|svg)$ /index.php
         </Directory>
         ErrorLog        /var/log/apache2/CHANGEME/error.log
         CustomLog       /var/log/apache2/CHANGEME/access.log combined
