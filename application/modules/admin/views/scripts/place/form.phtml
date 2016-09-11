@@ -10,21 +10,8 @@
         <?= $this->displayAliasForm($form) ?>
         <?= $this->displayTreeSelect($this->hierarchies, $form) ?>
         <?= $this->render('dateForm.phtml'); ?>
-        <div class="tableRow">
-            <div><label><?= $this->ucstring('label_location_switch') ?></label></div>
-            <div class="tableCell"><span id="placeSwitcher" class="button"><?= $this->ucstring('show') ?></span></div>
-        </div>
-        <div class="tableRow placeSwitch display-none">
-            <?= $form->easting->renderLabel() ?>
-            <div class="tableCell"><?= $form->easting->renderViewHelper() ?></div>
-        </div>
-        <div class="tableRow placeSwitch display-none">
-            <?= $form->northing->renderLabel() ?>
-            <div class="tableCell"><?= $form->northing->renderViewHelper() ?></div>
-        </div>
-        <div class="tableRow placeSwitch display-none">
-            &nbsp;<div class="tableCell subformTitle"><?= $this->ucstring('situated_within') ?></div>
-        </div>
+        <?= $form->gisPoints->renderViewHelper() ?>
+        <?= $form->gisPolygons->renderViewHelper() ?>
         <div style="margin-top:1em;">
             <?= $form->description->renderLabel() ?>
             <div><?= $form->description->renderViewHelper() ?></div>
@@ -44,11 +31,10 @@
     <?= $this->displayTreeOverlay($hierarchy->nameClean, $this->$dataVariable); ?>
 <? endforeach ?>
 <div id="map" class="map"></div>
-<? $this->jsonData = Model_GisMapper::getJsonData(); ?>
-<? if (!$this->jsonData): ?>
-    <? $this->jsonData = ['marker' => '', 'search' => '']; // to show empty map ?>
-<? endif ?>
 <script type="text/javascript" src="/js/leaflet/map.js"></script>
+<script src="/js/leaflet/draw/leaflet.draw.js" type="text/javascript"></script>
+<script src="/js/leaflet/shapedraw.js" type="text/javascript"></script>
+<script src="/js/leaflet/draw/edithandler.js" type="text/javascript"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         $("#aliasAdd").click(function () {

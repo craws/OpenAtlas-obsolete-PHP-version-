@@ -18,7 +18,7 @@ $this->table = $table;
 <div style="float:left;">
     <?= $this->render('tableSorter.phtml') ?>
 </div>
-<? if ($this->jsonData): ?>
+<? if ($this->gisData): ?>
     <div id="map" class="map"></div>
     <script type="text/javascript" src="/js/leaflet/map.js"></script>
 <? endif ?>

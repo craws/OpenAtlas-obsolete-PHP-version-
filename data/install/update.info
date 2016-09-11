@@ -3,11 +3,29 @@ INFO
 
 Watch out for database role in SQLs and change "openatlas_medcon" if needed.
 
+2.1.0 to 2.2.0 Upgrade
+======================
+
+BEGIN;
+
+ALTER TABLE gis.linestring RENAME text TO type;
+ALTER TABLE gis.point RENAME text TO type;
+ALTER TABLE gis.polygon RENAME text TO type;
+INSERT INTO gis.point (entity_id, type, geom, name) SELECT entity_id, 'centerpoint', geom,
+    (SELECT name FROM model.entity e JOIN model.link l ON e.id = l.domain_id WHERE l.range_id = entity_id AND l.property_id = (SELECT id from model.property WHERE code LIKE 'P53'))
+FROM gis.centerpoint;
+DROP TABLE IF EXISTS gis.centerpoint;
+DROP FUNCTION IF EXISTS gis.geometry_creation();
+COMMIT;
+
+Favicons, if you want to change the default OpenAtlas ones:
+
+- use http://realfavicongenerator.net/ to generate files and copy files to public
+- change line endings in browserconfig.xml from windows to unix
+
 
 2.0.0 to 2.1.0 Upgrade
 ======================
-
-Cleanup for log entries:
 
 BEGIN;
 

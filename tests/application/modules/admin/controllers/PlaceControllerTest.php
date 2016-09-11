@@ -16,8 +16,8 @@ class Admin_PlaceControllerTest extends ControllerTestCase {
         'endDay' => '',
         'endComment' => '',
         'alias' => ['alias0' => 'Newcastle'],
-        'easting' => 1,
-        'northing' => 1
+        'gisPoints' => '[{"type":"Feature","geometry":{"type":"Point","coordinates":[12.72356057154,47.92019822945]},
+            "properties":{"name":"test", "description":"test","shapeType":"centerpoint"}}]'
     ];
 
     public function setUp() {
@@ -51,12 +51,6 @@ class Admin_PlaceControllerTest extends ControllerTestCase {
         $this->request->setMethod('POST')->setPost($this->formValues);
         $this->dispatch('admin/place/insert/sourceId/' . $this->sourceId);
         $this->resetRequest()->resetResponse();
-        $this->dispatch('admin/place/link/placeId/' . $this->objectId . '/rangeId/' . $this->sourceId);
-        $this->resetRequest()->resetResponse();
-        $this->dispatch('admin/place/link/placeId/' . $this->objectId . '/rangeId/' . $this->sourceId); // test existing
-        $this->resetRequest()->resetResponse();
-        $this->dispatch('admin/place/link/placeId/' . $this->objectId . '/rangeId/' . $this->biblioId);
-        $this->resetRequest()->resetResponse();
         $this->dispatch('admin/place/view/id/' . $this->objectId);
         $this->resetRequest()->resetResponse();
         $this->dispatch('admin/place/update/id/' . $this->objectId);
@@ -66,10 +60,6 @@ class Admin_PlaceControllerTest extends ControllerTestCase {
         $this->request->setMethod('POST')->setPost($this->formValues);
         $this->dispatch('admin/place/update/id/' . $this->objectId);
         $this->resetRequest()->resetResponse();
-        $this->request->setMethod('POST')->setPost($this->formValues);
-        $this->dispatch('admin/place/update/id/' . $this->objectId);
-        $this->resetRequest()->resetResponse();
-        $this->formValues['easting'] = '1';
         $this->request->setMethod('POST')->setPost($this->formValues);
         $this->dispatch('admin/place/update/id/' . $this->objectId);
         $this->resetRequest()->resetResponse();

@@ -1,6 +1,6 @@
 # About
 
-OpenAtlas is an open-source application for archeological, historical and geospatial data.
+OpenAtlas is an open source application for archeological, historical and geospatial data.
 
 Website: http://openatlas.eu/website
 

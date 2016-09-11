@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.3
--- Dumped by pg_dump version 9.5.3
+-- Dumped from database version 9.5.4
+-- Dumped by pg_dump version 9.5.4
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -21,11 +21,11 @@ ALTER TABLE IF EXISTS ONLY web.user_settings DROP CONSTRAINT IF EXISTS user_sett
 ALTER TABLE IF EXISTS ONLY web."user" DROP CONSTRAINT IF EXISTS user_group_id_fkey;
 ALTER TABLE IF EXISTS ONLY web.user_bookmarks DROP CONSTRAINT IF EXISTS user_bookmarks_user_id_fkey;
 ALTER TABLE IF EXISTS ONLY web.user_bookmarks DROP CONSTRAINT IF EXISTS user_bookmarks_entity_id_fkey;
-ALTER TABLE IF EXISTS ONLY web.hierarchy_form DROP CONSTRAINT IF EXISTS type_form_type_id_fkey;
-ALTER TABLE IF EXISTS ONLY web.hierarchy_form DROP CONSTRAINT IF EXISTS type_form_form_id_fkey;
 ALTER TABLE IF EXISTS ONLY web.i18n DROP CONSTRAINT IF EXISTS i18n_language_id_fkey;
 ALTER TABLE IF EXISTS ONLY web.i18n DROP CONSTRAINT IF EXISTS i18n_item_id_fkey;
 ALTER TABLE IF EXISTS ONLY web.hierarchy DROP CONSTRAINT IF EXISTS hierarchy_id_fkey;
+ALTER TABLE IF EXISTS ONLY web.hierarchy_form DROP CONSTRAINT IF EXISTS hierarchy_form_hierarchy_id_fkey;
+ALTER TABLE IF EXISTS ONLY web.hierarchy_form DROP CONSTRAINT IF EXISTS hierarchy_form_form_id_fkey;
 SET search_path = model, pg_catalog;
 
 ALTER TABLE IF EXISTS ONLY model.property DROP CONSTRAINT IF EXISTS property_range_class_id_fkey;
@@ -49,12 +49,11 @@ SET search_path = gis, pg_catalog;
 ALTER TABLE IF EXISTS ONLY gis.polygon DROP CONSTRAINT IF EXISTS polygon_entity_id_fkey;
 ALTER TABLE IF EXISTS ONLY gis.point DROP CONSTRAINT IF EXISTS point_entity_id_fkey;
 ALTER TABLE IF EXISTS ONLY gis.linestring DROP CONSTRAINT IF EXISTS linestring_entity_id_fkey;
-ALTER TABLE IF EXISTS ONLY gis.centerpoint DROP CONSTRAINT IF EXISTS centerpoint_entity_id_fkey;
 SET search_path = web, pg_catalog;
 
+DROP TRIGGER IF EXISTS update_modified ON web.hierarchy_form;
 DROP TRIGGER IF EXISTS update_modified ON web.form;
 DROP TRIGGER IF EXISTS update_modified ON web.hierarchy;
-DROP TRIGGER IF EXISTS update_modified ON web.hierarchy_form;
 DROP TRIGGER IF EXISTS update_modified ON web.user_bookmarks;
 DROP TRIGGER IF EXISTS update_modified ON web.user_settings;
 DROP TRIGGER IF EXISTS update_modified ON web.content;
@@ -77,8 +76,6 @@ SET search_path = gis, pg_catalog;
 DROP TRIGGER IF EXISTS update_modified ON gis.polygon;
 DROP TRIGGER IF EXISTS update_modified ON gis.linestring;
 DROP TRIGGER IF EXISTS update_modified ON gis.point;
-DROP TRIGGER IF EXISTS update_modified ON gis.centerpoint;
-DROP TRIGGER IF EXISTS geometry_creation ON gis.centerpoint;
 SET search_path = web, pg_catalog;
 
 ALTER TABLE IF EXISTS ONLY web."user" DROP CONSTRAINT IF EXISTS user_username_key;
@@ -89,9 +86,6 @@ ALTER TABLE IF EXISTS ONLY web.user_log DROP CONSTRAINT IF EXISTS user_log_pkey;
 ALTER TABLE IF EXISTS ONLY web."user" DROP CONSTRAINT IF EXISTS user_email_key;
 ALTER TABLE IF EXISTS ONLY web.user_bookmarks DROP CONSTRAINT IF EXISTS user_bookmarks_user_id_entity_id_key;
 ALTER TABLE IF EXISTS ONLY web.user_bookmarks DROP CONSTRAINT IF EXISTS user_bookmarks_pkey;
-ALTER TABLE IF EXISTS ONLY web.hierarchy DROP CONSTRAINT IF EXISTS type_pkey;
-ALTER TABLE IF EXISTS ONLY web.hierarchy DROP CONSTRAINT IF EXISTS type_name_key;
-ALTER TABLE IF EXISTS ONLY web.hierarchy_form DROP CONSTRAINT IF EXISTS type_form_pkey;
 ALTER TABLE IF EXISTS ONLY web.settings DROP CONSTRAINT IF EXISTS settings_pkey;
 ALTER TABLE IF EXISTS ONLY web.settings DROP CONSTRAINT IF EXISTS settings_name_group_key;
 ALTER TABLE IF EXISTS ONLY web.language DROP CONSTRAINT IF EXISTS language_shortform_key;
@@ -99,7 +93,8 @@ ALTER TABLE IF EXISTS ONLY web.language DROP CONSTRAINT IF EXISTS language_pkey;
 ALTER TABLE IF EXISTS ONLY web.language DROP CONSTRAINT IF EXISTS language_name_key;
 ALTER TABLE IF EXISTS ONLY web.i18n DROP CONSTRAINT IF EXISTS i18n_pkey;
 ALTER TABLE IF EXISTS ONLY web.i18n DROP CONSTRAINT IF EXISTS i18n_field_foreign_id_language_id_key;
-ALTER TABLE IF EXISTS ONLY web.hierarchy_form DROP CONSTRAINT IF EXISTS hierarchy_form_hierarchy_id_form_id_key;
+ALTER TABLE IF EXISTS ONLY web.hierarchy DROP CONSTRAINT IF EXISTS hierarchy_pkey;
+ALTER TABLE IF EXISTS ONLY web.hierarchy_form DROP CONSTRAINT IF EXISTS hierarchy_form_pkey;
 ALTER TABLE IF EXISTS ONLY web."group" DROP CONSTRAINT IF EXISTS group_pkey;
 ALTER TABLE IF EXISTS ONLY web.form DROP CONSTRAINT IF EXISTS form_pkey;
 ALTER TABLE IF EXISTS ONLY web.form DROP CONSTRAINT IF EXISTS form_name_key;
@@ -128,8 +123,6 @@ SET search_path = gis, pg_catalog;
 ALTER TABLE IF EXISTS ONLY gis.polygon DROP CONSTRAINT IF EXISTS polygon_pkey;
 ALTER TABLE IF EXISTS ONLY gis.point DROP CONSTRAINT IF EXISTS point_pkey;
 ALTER TABLE IF EXISTS ONLY gis.linestring DROP CONSTRAINT IF EXISTS linestring_pkey;
-ALTER TABLE IF EXISTS ONLY gis.centerpoint DROP CONSTRAINT IF EXISTS centerpoint_pkey;
-ALTER TABLE IF EXISTS ONLY gis.centerpoint DROP CONSTRAINT IF EXISTS centerpoint_entity_id_key;
 SET search_path = web, pg_catalog;
 
 ALTER TABLE IF EXISTS web.user_settings ALTER COLUMN id DROP DEFAULT;
@@ -163,7 +156,6 @@ SET search_path = gis, pg_catalog;
 ALTER TABLE IF EXISTS gis.polygon ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE IF EXISTS gis.point ALTER COLUMN id DROP DEFAULT;
 ALTER TABLE IF EXISTS gis.linestring ALTER COLUMN id DROP DEFAULT;
-ALTER TABLE IF EXISTS gis.centerpoint ALTER COLUMN id DROP DEFAULT;
 SET search_path = web, pg_catalog;
 
 DROP SEQUENCE IF EXISTS web.user_settings_id_seq;
@@ -174,8 +166,6 @@ DROP SEQUENCE IF EXISTS web.user_id_seq;
 DROP SEQUENCE IF EXISTS web.user_bookmarks_id_seq;
 DROP TABLE IF EXISTS web.user_bookmarks;
 DROP TABLE IF EXISTS web."user";
-DROP SEQUENCE IF EXISTS web.type_id_seq;
-DROP SEQUENCE IF EXISTS web.type_form_id_seq;
 DROP SEQUENCE IF EXISTS web.settings_id_seq;
 DROP TABLE IF EXISTS web.settings;
 DROP SEQUENCE IF EXISTS web.language_id_seq;
@@ -183,6 +173,8 @@ DROP TABLE IF EXISTS web.language;
 DROP SEQUENCE IF EXISTS web.item_id_seq;
 DROP SEQUENCE IF EXISTS web.i18n_id_seq;
 DROP TABLE IF EXISTS web.i18n;
+DROP SEQUENCE IF EXISTS web.hierarchy_id_seq;
+DROP SEQUENCE IF EXISTS web.hierarchy_form_id_seq;
 DROP TABLE IF EXISTS web.hierarchy_form;
 DROP TABLE IF EXISTS web.hierarchy;
 DROP SEQUENCE IF EXISTS web.group_id_seq;
@@ -222,8 +214,6 @@ DROP SEQUENCE IF EXISTS gis.point_id_seq;
 DROP TABLE IF EXISTS gis.point;
 DROP SEQUENCE IF EXISTS gis.linestring_id_seq;
 DROP TABLE IF EXISTS gis.linestring;
-DROP SEQUENCE IF EXISTS gis.centerpoint_id_seq;
-DROP TABLE IF EXISTS gis.centerpoint;
 SET search_path = model, pg_catalog;
 
 DROP FUNCTION IF EXISTS model.update_modified();
@@ -235,45 +225,45 @@ DROP SCHEMA IF EXISTS model;
 DROP SCHEMA IF EXISTS log;
 DROP SCHEMA IF EXISTS gis;
 --
--- Name: gis; Type: SCHEMA; Schema: -; Owner: openatlas_medcon
+-- Name: gis; Type: SCHEMA; Schema: -; Owner: openatlas_master
 --
 
 CREATE SCHEMA gis;
 
 
-ALTER SCHEMA gis OWNER TO openatlas_medcon;
+ALTER SCHEMA gis OWNER TO openatlas_master;
 
 --
--- Name: log; Type: SCHEMA; Schema: -; Owner: openatlas_medcon
+-- Name: log; Type: SCHEMA; Schema: -; Owner: openatlas_master
 --
 
 CREATE SCHEMA log;
 
 
-ALTER SCHEMA log OWNER TO openatlas_medcon;
+ALTER SCHEMA log OWNER TO openatlas_master;
 
 --
--- Name: model; Type: SCHEMA; Schema: -; Owner: openatlas_medcon
+-- Name: model; Type: SCHEMA; Schema: -; Owner: openatlas_master
 --
 
 CREATE SCHEMA model;
 
 
-ALTER SCHEMA model OWNER TO openatlas_medcon;
+ALTER SCHEMA model OWNER TO openatlas_master;
 
 --
--- Name: web; Type: SCHEMA; Schema: -; Owner: openatlas_medcon
+-- Name: web; Type: SCHEMA; Schema: -; Owner: openatlas_master
 --
 
 CREATE SCHEMA web;
 
 
-ALTER SCHEMA web OWNER TO openatlas_medcon;
+ALTER SCHEMA web OWNER TO openatlas_master;
 
 SET search_path = gis, pg_catalog;
 
 --
--- Name: geometry_creation(); Type: FUNCTION; Schema: gis; Owner: openatlas_medcon
+-- Name: geometry_creation(); Type: FUNCTION; Schema: gis; Owner: openatlas_master
 --
 
 CREATE FUNCTION geometry_creation() RETURNS trigger
@@ -302,12 +292,12 @@ CREATE FUNCTION geometry_creation() RETURNS trigger
 $$;
 
 
-ALTER FUNCTION gis.geometry_creation() OWNER TO openatlas_medcon;
+ALTER FUNCTION gis.geometry_creation() OWNER TO openatlas_master;
 
 SET search_path = model, pg_catalog;
 
 --
--- Name: update_modified(); Type: FUNCTION; Schema: model; Owner: openatlas_medcon
+-- Name: update_modified(); Type: FUNCTION; Schema: model; Owner: openatlas_master
 --
 
 CREATE FUNCTION update_modified() RETURNS trigger
@@ -324,7 +314,7 @@ END;
 $$;
 
 
-ALTER FUNCTION model.update_modified() OWNER TO openatlas_medcon;
+ALTER FUNCTION model.update_modified() OWNER TO openatlas_master;
 
 SET search_path = gis, pg_catalog;
 
@@ -333,59 +323,7 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
--- Name: centerpoint; Type: TABLE; Schema: gis; Owner: openatlas_medcon
---
-
-CREATE TABLE centerpoint (
-    id integer NOT NULL,
-    entity_id integer NOT NULL,
-    easting double precision NOT NULL,
-    northing double precision NOT NULL,
-    created timestamp without time zone DEFAULT now() NOT NULL,
-    modified timestamp without time zone,
-    geom public.geometry(Point,4326)
-);
-
-
-ALTER TABLE centerpoint OWNER TO openatlas_medcon;
-
---
--- Name: COLUMN centerpoint.easting; Type: COMMENT; Schema: gis; Owner: openatlas_medcon
---
-
-COMMENT ON COLUMN centerpoint.easting IS 'x coordinate, longitude';
-
-
---
--- Name: COLUMN centerpoint.northing; Type: COMMENT; Schema: gis; Owner: openatlas_medcon
---
-
-COMMENT ON COLUMN centerpoint.northing IS 'y coordinate, latitude';
-
-
---
--- Name: centerpoint_id_seq; Type: SEQUENCE; Schema: gis; Owner: openatlas_medcon
---
-
-CREATE SEQUENCE centerpoint_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE centerpoint_id_seq OWNER TO openatlas_medcon;
-
---
--- Name: centerpoint_id_seq; Type: SEQUENCE OWNED BY; Schema: gis; Owner: openatlas_medcon
---
-
-ALTER SEQUENCE centerpoint_id_seq OWNED BY centerpoint.id;
-
-
---
--- Name: linestring; Type: TABLE; Schema: gis; Owner: openatlas_medcon
+-- Name: linestring; Type: TABLE; Schema: gis; Owner: openatlas_master
 --
 
 CREATE TABLE linestring (
@@ -393,17 +331,17 @@ CREATE TABLE linestring (
     entity_id integer NOT NULL,
     name text,
     description text,
-    text text,
+    type text,
     created timestamp without time zone DEFAULT now() NOT NULL,
     modified timestamp without time zone,
     geom public.geometry(LineString,4326)
 );
 
 
-ALTER TABLE linestring OWNER TO openatlas_medcon;
+ALTER TABLE linestring OWNER TO openatlas_master;
 
 --
--- Name: linestring_id_seq; Type: SEQUENCE; Schema: gis; Owner: openatlas_medcon
+-- Name: linestring_id_seq; Type: SEQUENCE; Schema: gis; Owner: openatlas_master
 --
 
 CREATE SEQUENCE linestring_id_seq
@@ -414,17 +352,17 @@ CREATE SEQUENCE linestring_id_seq
     CACHE 1;
 
 
-ALTER TABLE linestring_id_seq OWNER TO openatlas_medcon;
+ALTER TABLE linestring_id_seq OWNER TO openatlas_master;
 
 --
--- Name: linestring_id_seq; Type: SEQUENCE OWNED BY; Schema: gis; Owner: openatlas_medcon
+-- Name: linestring_id_seq; Type: SEQUENCE OWNED BY; Schema: gis; Owner: openatlas_master
 --
 
 ALTER SEQUENCE linestring_id_seq OWNED BY linestring.id;
 
 
 --
--- Name: point; Type: TABLE; Schema: gis; Owner: openatlas_medcon
+-- Name: point; Type: TABLE; Schema: gis; Owner: openatlas_master
 --
 
 CREATE TABLE point (
@@ -432,17 +370,17 @@ CREATE TABLE point (
     entity_id integer NOT NULL,
     name text,
     description text,
-    text text,
+    type text,
     created timestamp without time zone DEFAULT now() NOT NULL,
     modified timestamp without time zone,
     geom public.geometry(Point,4326)
 );
 
 
-ALTER TABLE point OWNER TO openatlas_medcon;
+ALTER TABLE point OWNER TO openatlas_master;
 
 --
--- Name: point_id_seq; Type: SEQUENCE; Schema: gis; Owner: openatlas_medcon
+-- Name: point_id_seq; Type: SEQUENCE; Schema: gis; Owner: openatlas_master
 --
 
 CREATE SEQUENCE point_id_seq
@@ -453,17 +391,17 @@ CREATE SEQUENCE point_id_seq
     CACHE 1;
 
 
-ALTER TABLE point_id_seq OWNER TO openatlas_medcon;
+ALTER TABLE point_id_seq OWNER TO openatlas_master;
 
 --
--- Name: point_id_seq; Type: SEQUENCE OWNED BY; Schema: gis; Owner: openatlas_medcon
+-- Name: point_id_seq; Type: SEQUENCE OWNED BY; Schema: gis; Owner: openatlas_master
 --
 
 ALTER SEQUENCE point_id_seq OWNED BY point.id;
 
 
 --
--- Name: polygon; Type: TABLE; Schema: gis; Owner: openatlas_medcon
+-- Name: polygon; Type: TABLE; Schema: gis; Owner: openatlas_master
 --
 
 CREATE TABLE polygon (
@@ -471,17 +409,17 @@ CREATE TABLE polygon (
     entity_id integer NOT NULL,
     name text,
     description text,
-    text text,
+    type text,
     created timestamp without time zone DEFAULT now() NOT NULL,
     modified timestamp without time zone,
     geom public.geometry(Polygon,4326)
 );
 
 
-ALTER TABLE polygon OWNER TO openatlas_medcon;
+ALTER TABLE polygon OWNER TO openatlas_master;
 
 --
--- Name: polygon_id_seq; Type: SEQUENCE; Schema: gis; Owner: openatlas_medcon
+-- Name: polygon_id_seq; Type: SEQUENCE; Schema: gis; Owner: openatlas_master
 --
 
 CREATE SEQUENCE polygon_id_seq
@@ -492,10 +430,10 @@ CREATE SEQUENCE polygon_id_seq
     CACHE 1;
 
 
-ALTER TABLE polygon_id_seq OWNER TO openatlas_medcon;
+ALTER TABLE polygon_id_seq OWNER TO openatlas_master;
 
 --
--- Name: polygon_id_seq; Type: SEQUENCE OWNED BY; Schema: gis; Owner: openatlas_medcon
+-- Name: polygon_id_seq; Type: SEQUENCE OWNED BY; Schema: gis; Owner: openatlas_master
 --
 
 ALTER SEQUENCE polygon_id_seq OWNED BY polygon.id;
@@ -504,7 +442,7 @@ ALTER SEQUENCE polygon_id_seq OWNED BY polygon.id;
 SET search_path = log, pg_catalog;
 
 --
--- Name: detail; Type: TABLE; Schema: log; Owner: openatlas_medcon
+-- Name: detail; Type: TABLE; Schema: log; Owner: openatlas_master
 --
 
 CREATE TABLE detail (
@@ -515,10 +453,10 @@ CREATE TABLE detail (
 );
 
 
-ALTER TABLE detail OWNER TO openatlas_medcon;
+ALTER TABLE detail OWNER TO openatlas_master;
 
 --
--- Name: detail_id_seq; Type: SEQUENCE; Schema: log; Owner: openatlas_medcon
+-- Name: detail_id_seq; Type: SEQUENCE; Schema: log; Owner: openatlas_master
 --
 
 CREATE SEQUENCE detail_id_seq
@@ -529,17 +467,17 @@ CREATE SEQUENCE detail_id_seq
     CACHE 1;
 
 
-ALTER TABLE detail_id_seq OWNER TO openatlas_medcon;
+ALTER TABLE detail_id_seq OWNER TO openatlas_master;
 
 --
--- Name: detail_id_seq; Type: SEQUENCE OWNED BY; Schema: log; Owner: openatlas_medcon
+-- Name: detail_id_seq; Type: SEQUENCE OWNED BY; Schema: log; Owner: openatlas_master
 --
 
 ALTER SEQUENCE detail_id_seq OWNED BY detail.id;
 
 
 --
--- Name: log; Type: TABLE; Schema: log; Owner: openatlas_medcon
+-- Name: log; Type: TABLE; Schema: log; Owner: openatlas_master
 --
 
 CREATE TABLE log (
@@ -554,10 +492,10 @@ CREATE TABLE log (
 );
 
 
-ALTER TABLE log OWNER TO openatlas_medcon;
+ALTER TABLE log OWNER TO openatlas_master;
 
 --
--- Name: log_id_seq; Type: SEQUENCE; Schema: log; Owner: openatlas_medcon
+-- Name: log_id_seq; Type: SEQUENCE; Schema: log; Owner: openatlas_master
 --
 
 CREATE SEQUENCE log_id_seq
@@ -568,10 +506,10 @@ CREATE SEQUENCE log_id_seq
     CACHE 1;
 
 
-ALTER TABLE log_id_seq OWNER TO openatlas_medcon;
+ALTER TABLE log_id_seq OWNER TO openatlas_master;
 
 --
--- Name: log_id_seq; Type: SEQUENCE OWNED BY; Schema: log; Owner: openatlas_medcon
+-- Name: log_id_seq; Type: SEQUENCE OWNED BY; Schema: log; Owner: openatlas_master
 --
 
 ALTER SEQUENCE log_id_seq OWNED BY log.id;
@@ -580,7 +518,7 @@ ALTER SEQUENCE log_id_seq OWNED BY log.id;
 SET search_path = model, pg_catalog;
 
 --
--- Name: class; Type: TABLE; Schema: model; Owner: openatlas_medcon
+-- Name: class; Type: TABLE; Schema: model; Owner: openatlas_master
 --
 
 CREATE TABLE class (
@@ -592,24 +530,24 @@ CREATE TABLE class (
 );
 
 
-ALTER TABLE class OWNER TO openatlas_medcon;
+ALTER TABLE class OWNER TO openatlas_master;
 
 --
--- Name: COLUMN class.code; Type: COMMENT; Schema: model; Owner: openatlas_medcon
+-- Name: COLUMN class.code; Type: COMMENT; Schema: model; Owner: openatlas_master
 --
 
 COMMENT ON COLUMN class.code IS 'e.g. E21';
 
 
 --
--- Name: COLUMN class.name; Type: COMMENT; Schema: model; Owner: openatlas_medcon
+-- Name: COLUMN class.name; Type: COMMENT; Schema: model; Owner: openatlas_master
 --
 
 COMMENT ON COLUMN class.name IS 'e.g. Person';
 
 
 --
--- Name: class_id_seq; Type: SEQUENCE; Schema: model; Owner: openatlas_medcon
+-- Name: class_id_seq; Type: SEQUENCE; Schema: model; Owner: openatlas_master
 --
 
 CREATE SEQUENCE class_id_seq
@@ -620,17 +558,17 @@ CREATE SEQUENCE class_id_seq
     CACHE 1;
 
 
-ALTER TABLE class_id_seq OWNER TO openatlas_medcon;
+ALTER TABLE class_id_seq OWNER TO openatlas_master;
 
 --
--- Name: class_id_seq; Type: SEQUENCE OWNED BY; Schema: model; Owner: openatlas_medcon
+-- Name: class_id_seq; Type: SEQUENCE OWNED BY; Schema: model; Owner: openatlas_master
 --
 
 ALTER SEQUENCE class_id_seq OWNED BY class.id;
 
 
 --
--- Name: class_inheritance; Type: TABLE; Schema: model; Owner: openatlas_medcon
+-- Name: class_inheritance; Type: TABLE; Schema: model; Owner: openatlas_master
 --
 
 CREATE TABLE class_inheritance (
@@ -642,10 +580,10 @@ CREATE TABLE class_inheritance (
 );
 
 
-ALTER TABLE class_inheritance OWNER TO openatlas_medcon;
+ALTER TABLE class_inheritance OWNER TO openatlas_master;
 
 --
--- Name: class_inheritance_id_seq; Type: SEQUENCE; Schema: model; Owner: openatlas_medcon
+-- Name: class_inheritance_id_seq; Type: SEQUENCE; Schema: model; Owner: openatlas_master
 --
 
 CREATE SEQUENCE class_inheritance_id_seq
@@ -656,17 +594,17 @@ CREATE SEQUENCE class_inheritance_id_seq
     CACHE 1;
 
 
-ALTER TABLE class_inheritance_id_seq OWNER TO openatlas_medcon;
+ALTER TABLE class_inheritance_id_seq OWNER TO openatlas_master;
 
 --
--- Name: class_inheritance_id_seq; Type: SEQUENCE OWNED BY; Schema: model; Owner: openatlas_medcon
+-- Name: class_inheritance_id_seq; Type: SEQUENCE OWNED BY; Schema: model; Owner: openatlas_master
 --
 
 ALTER SEQUENCE class_inheritance_id_seq OWNED BY class_inheritance.id;
 
 
 --
--- Name: entity; Type: TABLE; Schema: model; Owner: openatlas_medcon
+-- Name: entity; Type: TABLE; Schema: model; Owner: openatlas_master
 --
 
 CREATE TABLE entity (
@@ -681,10 +619,10 @@ CREATE TABLE entity (
 );
 
 
-ALTER TABLE entity OWNER TO openatlas_medcon;
+ALTER TABLE entity OWNER TO openatlas_master;
 
 --
--- Name: entity_id_seq; Type: SEQUENCE; Schema: model; Owner: openatlas_medcon
+-- Name: entity_id_seq; Type: SEQUENCE; Schema: model; Owner: openatlas_master
 --
 
 CREATE SEQUENCE entity_id_seq
@@ -695,17 +633,17 @@ CREATE SEQUENCE entity_id_seq
     CACHE 1;
 
 
-ALTER TABLE entity_id_seq OWNER TO openatlas_medcon;
+ALTER TABLE entity_id_seq OWNER TO openatlas_master;
 
 --
--- Name: entity_id_seq; Type: SEQUENCE OWNED BY; Schema: model; Owner: openatlas_medcon
+-- Name: entity_id_seq; Type: SEQUENCE OWNED BY; Schema: model; Owner: openatlas_master
 --
 
 ALTER SEQUENCE entity_id_seq OWNED BY entity.id;
 
 
 --
--- Name: i18n; Type: TABLE; Schema: model; Owner: openatlas_medcon
+-- Name: i18n; Type: TABLE; Schema: model; Owner: openatlas_master
 --
 
 CREATE TABLE i18n (
@@ -720,10 +658,10 @@ CREATE TABLE i18n (
 );
 
 
-ALTER TABLE i18n OWNER TO openatlas_medcon;
+ALTER TABLE i18n OWNER TO openatlas_master;
 
 --
--- Name: i18n_id_seq; Type: SEQUENCE; Schema: model; Owner: openatlas_medcon
+-- Name: i18n_id_seq; Type: SEQUENCE; Schema: model; Owner: openatlas_master
 --
 
 CREATE SEQUENCE i18n_id_seq
@@ -734,17 +672,17 @@ CREATE SEQUENCE i18n_id_seq
     CACHE 1;
 
 
-ALTER TABLE i18n_id_seq OWNER TO openatlas_medcon;
+ALTER TABLE i18n_id_seq OWNER TO openatlas_master;
 
 --
--- Name: i18n_id_seq; Type: SEQUENCE OWNED BY; Schema: model; Owner: openatlas_medcon
+-- Name: i18n_id_seq; Type: SEQUENCE OWNED BY; Schema: model; Owner: openatlas_master
 --
 
 ALTER SEQUENCE i18n_id_seq OWNED BY i18n.id;
 
 
 --
--- Name: link; Type: TABLE; Schema: model; Owner: openatlas_medcon
+-- Name: link; Type: TABLE; Schema: model; Owner: openatlas_master
 --
 
 CREATE TABLE link (
@@ -758,10 +696,10 @@ CREATE TABLE link (
 );
 
 
-ALTER TABLE link OWNER TO openatlas_medcon;
+ALTER TABLE link OWNER TO openatlas_master;
 
 --
--- Name: link_id_seq; Type: SEQUENCE; Schema: model; Owner: openatlas_medcon
+-- Name: link_id_seq; Type: SEQUENCE; Schema: model; Owner: openatlas_master
 --
 
 CREATE SEQUENCE link_id_seq
@@ -772,17 +710,17 @@ CREATE SEQUENCE link_id_seq
     CACHE 1;
 
 
-ALTER TABLE link_id_seq OWNER TO openatlas_medcon;
+ALTER TABLE link_id_seq OWNER TO openatlas_master;
 
 --
--- Name: link_id_seq; Type: SEQUENCE OWNED BY; Schema: model; Owner: openatlas_medcon
+-- Name: link_id_seq; Type: SEQUENCE OWNED BY; Schema: model; Owner: openatlas_master
 --
 
 ALTER SEQUENCE link_id_seq OWNED BY link.id;
 
 
 --
--- Name: link_property; Type: TABLE; Schema: model; Owner: openatlas_medcon
+-- Name: link_property; Type: TABLE; Schema: model; Owner: openatlas_master
 --
 
 CREATE TABLE link_property (
@@ -796,10 +734,10 @@ CREATE TABLE link_property (
 );
 
 
-ALTER TABLE link_property OWNER TO openatlas_medcon;
+ALTER TABLE link_property OWNER TO openatlas_master;
 
 --
--- Name: link_property_id_seq; Type: SEQUENCE; Schema: model; Owner: openatlas_medcon
+-- Name: link_property_id_seq; Type: SEQUENCE; Schema: model; Owner: openatlas_master
 --
 
 CREATE SEQUENCE link_property_id_seq
@@ -810,17 +748,17 @@ CREATE SEQUENCE link_property_id_seq
     CACHE 1;
 
 
-ALTER TABLE link_property_id_seq OWNER TO openatlas_medcon;
+ALTER TABLE link_property_id_seq OWNER TO openatlas_master;
 
 --
--- Name: link_property_id_seq; Type: SEQUENCE OWNED BY; Schema: model; Owner: openatlas_medcon
+-- Name: link_property_id_seq; Type: SEQUENCE OWNED BY; Schema: model; Owner: openatlas_master
 --
 
 ALTER SEQUENCE link_property_id_seq OWNED BY link_property.id;
 
 
 --
--- Name: property; Type: TABLE; Schema: model; Owner: openatlas_medcon
+-- Name: property; Type: TABLE; Schema: model; Owner: openatlas_master
 --
 
 CREATE TABLE property (
@@ -835,10 +773,10 @@ CREATE TABLE property (
 );
 
 
-ALTER TABLE property OWNER TO openatlas_medcon;
+ALTER TABLE property OWNER TO openatlas_master;
 
 --
--- Name: property_id_seq; Type: SEQUENCE; Schema: model; Owner: openatlas_medcon
+-- Name: property_id_seq; Type: SEQUENCE; Schema: model; Owner: openatlas_master
 --
 
 CREATE SEQUENCE property_id_seq
@@ -849,10 +787,10 @@ CREATE SEQUENCE property_id_seq
     CACHE 1;
 
 
-ALTER TABLE property_id_seq OWNER TO openatlas_medcon;
+ALTER TABLE property_id_seq OWNER TO openatlas_master;
 
 --
--- Name: property_id_seq; Type: SEQUENCE OWNED BY; Schema: model; Owner: openatlas_medcon
+-- Name: property_id_seq; Type: SEQUENCE OWNED BY; Schema: model; Owner: openatlas_master
 --
 
 ALTER SEQUENCE property_id_seq OWNED BY property.id;
@@ -861,7 +799,7 @@ ALTER SEQUENCE property_id_seq OWNED BY property.id;
 SET default_with_oids = true;
 
 --
--- Name: property_inheritance; Type: TABLE; Schema: model; Owner: openatlas_medcon
+-- Name: property_inheritance; Type: TABLE; Schema: model; Owner: openatlas_master
 --
 
 CREATE TABLE property_inheritance (
@@ -873,10 +811,10 @@ CREATE TABLE property_inheritance (
 );
 
 
-ALTER TABLE property_inheritance OWNER TO openatlas_medcon;
+ALTER TABLE property_inheritance OWNER TO openatlas_master;
 
 --
--- Name: property_inheritance_id_seq; Type: SEQUENCE; Schema: model; Owner: openatlas_medcon
+-- Name: property_inheritance_id_seq; Type: SEQUENCE; Schema: model; Owner: openatlas_master
 --
 
 CREATE SEQUENCE property_inheritance_id_seq
@@ -887,10 +825,10 @@ CREATE SEQUENCE property_inheritance_id_seq
     CACHE 1;
 
 
-ALTER TABLE property_inheritance_id_seq OWNER TO openatlas_medcon;
+ALTER TABLE property_inheritance_id_seq OWNER TO openatlas_master;
 
 --
--- Name: property_inheritance_id_seq; Type: SEQUENCE OWNED BY; Schema: model; Owner: openatlas_medcon
+-- Name: property_inheritance_id_seq; Type: SEQUENCE OWNED BY; Schema: model; Owner: openatlas_master
 --
 
 ALTER SEQUENCE property_inheritance_id_seq OWNED BY property_inheritance.id;
@@ -901,7 +839,7 @@ SET search_path = web, pg_catalog;
 SET default_with_oids = false;
 
 --
--- Name: content; Type: TABLE; Schema: web; Owner: openatlas_medcon
+-- Name: content; Type: TABLE; Schema: web; Owner: openatlas_master
 --
 
 CREATE TABLE content (
@@ -911,25 +849,25 @@ CREATE TABLE content (
 );
 
 
-ALTER TABLE content OWNER TO openatlas_medcon;
+ALTER TABLE content OWNER TO openatlas_master;
 
 --
--- Name: form; Type: TABLE; Schema: web; Owner: openatlas_medcon
+-- Name: form; Type: TABLE; Schema: web; Owner: openatlas_master
 --
 
 CREATE TABLE form (
     id integer NOT NULL,
     name text NOT NULL,
+    extendable integer DEFAULT 0 NOT NULL,
     created timestamp without time zone DEFAULT now() NOT NULL,
-    modified timestamp without time zone,
-    extendable integer DEFAULT 0 NOT NULL
+    modified timestamp without time zone
 );
 
 
-ALTER TABLE form OWNER TO openatlas_medcon;
+ALTER TABLE form OWNER TO openatlas_master;
 
 --
--- Name: form_id_seq; Type: SEQUENCE; Schema: web; Owner: openatlas_medcon
+-- Name: form_id_seq; Type: SEQUENCE; Schema: web; Owner: openatlas_master
 --
 
 CREATE SEQUENCE form_id_seq
@@ -940,17 +878,17 @@ CREATE SEQUENCE form_id_seq
     CACHE 1;
 
 
-ALTER TABLE form_id_seq OWNER TO openatlas_medcon;
+ALTER TABLE form_id_seq OWNER TO openatlas_master;
 
 --
--- Name: form_id_seq; Type: SEQUENCE OWNED BY; Schema: web; Owner: openatlas_medcon
+-- Name: form_id_seq; Type: SEQUENCE OWNED BY; Schema: web; Owner: openatlas_master
 --
 
 ALTER SEQUENCE form_id_seq OWNED BY form.id;
 
 
 --
--- Name: group; Type: TABLE; Schema: web; Owner: openatlas_medcon
+-- Name: group; Type: TABLE; Schema: web; Owner: openatlas_master
 --
 
 CREATE TABLE "group" (
@@ -961,10 +899,10 @@ CREATE TABLE "group" (
 );
 
 
-ALTER TABLE "group" OWNER TO openatlas_medcon;
+ALTER TABLE "group" OWNER TO openatlas_master;
 
 --
--- Name: group_id_seq; Type: SEQUENCE; Schema: web; Owner: openatlas_medcon
+-- Name: group_id_seq; Type: SEQUENCE; Schema: web; Owner: openatlas_master
 --
 
 CREATE SEQUENCE group_id_seq
@@ -975,49 +913,49 @@ CREATE SEQUENCE group_id_seq
     CACHE 1;
 
 
-ALTER TABLE group_id_seq OWNER TO openatlas_medcon;
+ALTER TABLE group_id_seq OWNER TO openatlas_master;
 
 --
--- Name: group_id_seq; Type: SEQUENCE OWNED BY; Schema: web; Owner: openatlas_medcon
+-- Name: group_id_seq; Type: SEQUENCE OWNED BY; Schema: web; Owner: openatlas_master
 --
 
 ALTER SEQUENCE group_id_seq OWNED BY "group".id;
 
 
 --
--- Name: hierarchy; Type: TABLE; Schema: web; Owner: openatlas_medcon
+-- Name: hierarchy; Type: TABLE; Schema: web; Owner: openatlas_master
 --
 
 CREATE TABLE hierarchy (
     id integer NOT NULL,
     name text NOT NULL,
     multiple integer DEFAULT 0 NOT NULL,
-    created timestamp without time zone DEFAULT now() NOT NULL,
-    modified timestamp without time zone,
     system integer DEFAULT 0 NOT NULL,
     extendable integer DEFAULT 0 NOT NULL,
-    directional integer DEFAULT 0 NOT NULL
+    directional integer DEFAULT 0 NOT NULL,
+    created timestamp without time zone DEFAULT now() NOT NULL,
+    modified timestamp without time zone
 );
 
 
-ALTER TABLE hierarchy OWNER TO openatlas_medcon;
+ALTER TABLE hierarchy OWNER TO openatlas_master;
 
 --
--- Name: COLUMN hierarchy.id; Type: COMMENT; Schema: web; Owner: openatlas_medcon
+-- Name: COLUMN hierarchy.id; Type: COMMENT; Schema: web; Owner: openatlas_master
 --
 
 COMMENT ON COLUMN hierarchy.id IS 'same as model.entity.id';
 
 
 --
--- Name: COLUMN hierarchy.name; Type: COMMENT; Schema: web; Owner: openatlas_medcon
+-- Name: COLUMN hierarchy.name; Type: COMMENT; Schema: web; Owner: openatlas_master
 --
 
 COMMENT ON COLUMN hierarchy.name IS 'same as model.entity.name, to ensure unique root type names';
 
 
 --
--- Name: hierarchy_form; Type: TABLE; Schema: web; Owner: openatlas_medcon
+-- Name: hierarchy_form; Type: TABLE; Schema: web; Owner: openatlas_master
 --
 
 CREATE TABLE hierarchy_form (
@@ -1029,10 +967,52 @@ CREATE TABLE hierarchy_form (
 );
 
 
-ALTER TABLE hierarchy_form OWNER TO openatlas_medcon;
+ALTER TABLE hierarchy_form OWNER TO openatlas_master;
 
 --
--- Name: i18n; Type: TABLE; Schema: web; Owner: openatlas_medcon
+-- Name: hierarchy_form_id_seq; Type: SEQUENCE; Schema: web; Owner: openatlas_master
+--
+
+CREATE SEQUENCE hierarchy_form_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE hierarchy_form_id_seq OWNER TO openatlas_master;
+
+--
+-- Name: hierarchy_form_id_seq; Type: SEQUENCE OWNED BY; Schema: web; Owner: openatlas_master
+--
+
+ALTER SEQUENCE hierarchy_form_id_seq OWNED BY hierarchy_form.id;
+
+
+--
+-- Name: hierarchy_id_seq; Type: SEQUENCE; Schema: web; Owner: openatlas_master
+--
+
+CREATE SEQUENCE hierarchy_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE hierarchy_id_seq OWNER TO openatlas_master;
+
+--
+-- Name: hierarchy_id_seq; Type: SEQUENCE OWNED BY; Schema: web; Owner: openatlas_master
+--
+
+ALTER SEQUENCE hierarchy_id_seq OWNED BY hierarchy.id;
+
+
+--
+-- Name: i18n; Type: TABLE; Schema: web; Owner: openatlas_master
 --
 
 CREATE TABLE i18n (
@@ -1042,21 +1022,21 @@ CREATE TABLE i18n (
     item_id integer NOT NULL,
     language_id integer NOT NULL,
     created timestamp without time zone DEFAULT now() NOT NULL,
-    modified timestamp without time zone
+    modified timestamp with time zone
 );
 
 
-ALTER TABLE i18n OWNER TO openatlas_medcon;
+ALTER TABLE i18n OWNER TO openatlas_master;
 
 --
--- Name: COLUMN i18n.field; Type: COMMENT; Schema: web; Owner: openatlas_medcon
+-- Name: COLUMN i18n.field; Type: COMMENT; Schema: web; Owner: openatlas_master
 --
 
 COMMENT ON COLUMN i18n.field IS 'field names (for eg. news) are hardcoded in source code';
 
 
 --
--- Name: i18n_id_seq; Type: SEQUENCE; Schema: web; Owner: openatlas_medcon
+-- Name: i18n_id_seq; Type: SEQUENCE; Schema: web; Owner: openatlas_master
 --
 
 CREATE SEQUENCE i18n_id_seq
@@ -1067,17 +1047,17 @@ CREATE SEQUENCE i18n_id_seq
     CACHE 1;
 
 
-ALTER TABLE i18n_id_seq OWNER TO openatlas_medcon;
+ALTER TABLE i18n_id_seq OWNER TO openatlas_master;
 
 --
--- Name: i18n_id_seq; Type: SEQUENCE OWNED BY; Schema: web; Owner: openatlas_medcon
+-- Name: i18n_id_seq; Type: SEQUENCE OWNED BY; Schema: web; Owner: openatlas_master
 --
 
 ALTER SEQUENCE i18n_id_seq OWNED BY i18n.id;
 
 
 --
--- Name: item_id_seq; Type: SEQUENCE; Schema: web; Owner: openatlas_medcon
+-- Name: item_id_seq; Type: SEQUENCE; Schema: web; Owner: openatlas_master
 --
 
 CREATE SEQUENCE item_id_seq
@@ -1088,17 +1068,17 @@ CREATE SEQUENCE item_id_seq
     CACHE 1;
 
 
-ALTER TABLE item_id_seq OWNER TO openatlas_medcon;
+ALTER TABLE item_id_seq OWNER TO openatlas_master;
 
 --
--- Name: item_id_seq; Type: SEQUENCE OWNED BY; Schema: web; Owner: openatlas_medcon
+-- Name: item_id_seq; Type: SEQUENCE OWNED BY; Schema: web; Owner: openatlas_master
 --
 
 ALTER SEQUENCE item_id_seq OWNED BY content.id;
 
 
 --
--- Name: language; Type: TABLE; Schema: web; Owner: openatlas_medcon
+-- Name: language; Type: TABLE; Schema: web; Owner: openatlas_master
 --
 
 CREATE TABLE language (
@@ -1111,10 +1091,10 @@ CREATE TABLE language (
 );
 
 
-ALTER TABLE language OWNER TO openatlas_medcon;
+ALTER TABLE language OWNER TO openatlas_master;
 
 --
--- Name: language_id_seq; Type: SEQUENCE; Schema: web; Owner: openatlas_medcon
+-- Name: language_id_seq; Type: SEQUENCE; Schema: web; Owner: openatlas_master
 --
 
 CREATE SEQUENCE language_id_seq
@@ -1125,17 +1105,17 @@ CREATE SEQUENCE language_id_seq
     CACHE 1;
 
 
-ALTER TABLE language_id_seq OWNER TO openatlas_medcon;
+ALTER TABLE language_id_seq OWNER TO openatlas_master;
 
 --
--- Name: language_id_seq; Type: SEQUENCE OWNED BY; Schema: web; Owner: openatlas_medcon
+-- Name: language_id_seq; Type: SEQUENCE OWNED BY; Schema: web; Owner: openatlas_master
 --
 
 ALTER SEQUENCE language_id_seq OWNED BY language.id;
 
 
 --
--- Name: settings; Type: TABLE; Schema: web; Owner: openatlas_medcon
+-- Name: settings; Type: TABLE; Schema: web; Owner: openatlas_master
 --
 
 CREATE TABLE settings (
@@ -1146,10 +1126,10 @@ CREATE TABLE settings (
 );
 
 
-ALTER TABLE settings OWNER TO openatlas_medcon;
+ALTER TABLE settings OWNER TO openatlas_master;
 
 --
--- Name: settings_id_seq; Type: SEQUENCE; Schema: web; Owner: openatlas_medcon
+-- Name: settings_id_seq; Type: SEQUENCE; Schema: web; Owner: openatlas_master
 --
 
 CREATE SEQUENCE settings_id_seq
@@ -1160,59 +1140,17 @@ CREATE SEQUENCE settings_id_seq
     CACHE 1;
 
 
-ALTER TABLE settings_id_seq OWNER TO openatlas_medcon;
+ALTER TABLE settings_id_seq OWNER TO openatlas_master;
 
 --
--- Name: settings_id_seq; Type: SEQUENCE OWNED BY; Schema: web; Owner: openatlas_medcon
+-- Name: settings_id_seq; Type: SEQUENCE OWNED BY; Schema: web; Owner: openatlas_master
 --
 
 ALTER SEQUENCE settings_id_seq OWNED BY settings.id;
 
 
 --
--- Name: type_form_id_seq; Type: SEQUENCE; Schema: web; Owner: openatlas_medcon
---
-
-CREATE SEQUENCE type_form_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE type_form_id_seq OWNER TO openatlas_medcon;
-
---
--- Name: type_form_id_seq; Type: SEQUENCE OWNED BY; Schema: web; Owner: openatlas_medcon
---
-
-ALTER SEQUENCE type_form_id_seq OWNED BY hierarchy_form.id;
-
-
---
--- Name: type_id_seq; Type: SEQUENCE; Schema: web; Owner: openatlas_medcon
---
-
-CREATE SEQUENCE type_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-ALTER TABLE type_id_seq OWNER TO openatlas_medcon;
-
---
--- Name: type_id_seq; Type: SEQUENCE OWNED BY; Schema: web; Owner: openatlas_medcon
---
-
-ALTER SEQUENCE type_id_seq OWNED BY hierarchy.id;
-
-
---
--- Name: user; Type: TABLE; Schema: web; Owner: openatlas_medcon
+-- Name: user; Type: TABLE; Schema: web; Owner: openatlas_master
 --
 
 CREATE TABLE "user" (
@@ -1234,10 +1172,10 @@ CREATE TABLE "user" (
 );
 
 
-ALTER TABLE "user" OWNER TO openatlas_medcon;
+ALTER TABLE "user" OWNER TO openatlas_master;
 
 --
--- Name: user_bookmarks; Type: TABLE; Schema: web; Owner: openatlas_medcon
+-- Name: user_bookmarks; Type: TABLE; Schema: web; Owner: openatlas_master
 --
 
 CREATE TABLE user_bookmarks (
@@ -1249,10 +1187,10 @@ CREATE TABLE user_bookmarks (
 );
 
 
-ALTER TABLE user_bookmarks OWNER TO openatlas_medcon;
+ALTER TABLE user_bookmarks OWNER TO openatlas_master;
 
 --
--- Name: user_bookmarks_id_seq; Type: SEQUENCE; Schema: web; Owner: openatlas_medcon
+-- Name: user_bookmarks_id_seq; Type: SEQUENCE; Schema: web; Owner: openatlas_master
 --
 
 CREATE SEQUENCE user_bookmarks_id_seq
@@ -1263,17 +1201,17 @@ CREATE SEQUENCE user_bookmarks_id_seq
     CACHE 1;
 
 
-ALTER TABLE user_bookmarks_id_seq OWNER TO openatlas_medcon;
+ALTER TABLE user_bookmarks_id_seq OWNER TO openatlas_master;
 
 --
--- Name: user_bookmarks_id_seq; Type: SEQUENCE OWNED BY; Schema: web; Owner: openatlas_medcon
+-- Name: user_bookmarks_id_seq; Type: SEQUENCE OWNED BY; Schema: web; Owner: openatlas_master
 --
 
 ALTER SEQUENCE user_bookmarks_id_seq OWNED BY user_bookmarks.id;
 
 
 --
--- Name: user_id_seq; Type: SEQUENCE; Schema: web; Owner: openatlas_medcon
+-- Name: user_id_seq; Type: SEQUENCE; Schema: web; Owner: openatlas_master
 --
 
 CREATE SEQUENCE user_id_seq
@@ -1284,17 +1222,17 @@ CREATE SEQUENCE user_id_seq
     CACHE 1;
 
 
-ALTER TABLE user_id_seq OWNER TO openatlas_medcon;
+ALTER TABLE user_id_seq OWNER TO openatlas_master;
 
 --
--- Name: user_id_seq; Type: SEQUENCE OWNED BY; Schema: web; Owner: openatlas_medcon
+-- Name: user_id_seq; Type: SEQUENCE OWNED BY; Schema: web; Owner: openatlas_master
 --
 
 ALTER SEQUENCE user_id_seq OWNED BY "user".id;
 
 
 --
--- Name: user_log; Type: TABLE; Schema: web; Owner: openatlas_medcon
+-- Name: user_log; Type: TABLE; Schema: web; Owner: openatlas_master
 --
 
 CREATE TABLE user_log (
@@ -1307,10 +1245,10 @@ CREATE TABLE user_log (
 );
 
 
-ALTER TABLE user_log OWNER TO openatlas_medcon;
+ALTER TABLE user_log OWNER TO openatlas_master;
 
 --
--- Name: user_log_id_seq; Type: SEQUENCE; Schema: web; Owner: openatlas_medcon
+-- Name: user_log_id_seq; Type: SEQUENCE; Schema: web; Owner: openatlas_master
 --
 
 CREATE SEQUENCE user_log_id_seq
@@ -1321,17 +1259,17 @@ CREATE SEQUENCE user_log_id_seq
     CACHE 1;
 
 
-ALTER TABLE user_log_id_seq OWNER TO openatlas_medcon;
+ALTER TABLE user_log_id_seq OWNER TO openatlas_master;
 
 --
--- Name: user_log_id_seq; Type: SEQUENCE OWNED BY; Schema: web; Owner: openatlas_medcon
+-- Name: user_log_id_seq; Type: SEQUENCE OWNED BY; Schema: web; Owner: openatlas_master
 --
 
 ALTER SEQUENCE user_log_id_seq OWNED BY user_log.id;
 
 
 --
--- Name: user_settings; Type: TABLE; Schema: web; Owner: openatlas_medcon
+-- Name: user_settings; Type: TABLE; Schema: web; Owner: openatlas_master
 --
 
 CREATE TABLE user_settings (
@@ -1344,10 +1282,10 @@ CREATE TABLE user_settings (
 );
 
 
-ALTER TABLE user_settings OWNER TO openatlas_medcon;
+ALTER TABLE user_settings OWNER TO openatlas_master;
 
 --
--- Name: user_settings_id_seq; Type: SEQUENCE; Schema: web; Owner: openatlas_medcon
+-- Name: user_settings_id_seq; Type: SEQUENCE; Schema: web; Owner: openatlas_master
 --
 
 CREATE SEQUENCE user_settings_id_seq
@@ -1358,10 +1296,10 @@ CREATE SEQUENCE user_settings_id_seq
     CACHE 1;
 
 
-ALTER TABLE user_settings_id_seq OWNER TO openatlas_medcon;
+ALTER TABLE user_settings_id_seq OWNER TO openatlas_master;
 
 --
--- Name: user_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: web; Owner: openatlas_medcon
+-- Name: user_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: web; Owner: openatlas_master
 --
 
 ALTER SEQUENCE user_settings_id_seq OWNED BY user_settings.id;
@@ -1370,28 +1308,21 @@ ALTER SEQUENCE user_settings_id_seq OWNED BY user_settings.id;
 SET search_path = gis, pg_catalog;
 
 --
--- Name: id; Type: DEFAULT; Schema: gis; Owner: openatlas_medcon
---
-
-ALTER TABLE ONLY centerpoint ALTER COLUMN id SET DEFAULT nextval('centerpoint_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: gis; Owner: openatlas_medcon
+-- Name: id; Type: DEFAULT; Schema: gis; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY linestring ALTER COLUMN id SET DEFAULT nextval('linestring_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: gis; Owner: openatlas_medcon
+-- Name: id; Type: DEFAULT; Schema: gis; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY point ALTER COLUMN id SET DEFAULT nextval('point_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: gis; Owner: openatlas_medcon
+-- Name: id; Type: DEFAULT; Schema: gis; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY polygon ALTER COLUMN id SET DEFAULT nextval('polygon_id_seq'::regclass);
@@ -1400,14 +1331,14 @@ ALTER TABLE ONLY polygon ALTER COLUMN id SET DEFAULT nextval('polygon_id_seq'::r
 SET search_path = log, pg_catalog;
 
 --
--- Name: id; Type: DEFAULT; Schema: log; Owner: openatlas_medcon
+-- Name: id; Type: DEFAULT; Schema: log; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY detail ALTER COLUMN id SET DEFAULT nextval('detail_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: log; Owner: openatlas_medcon
+-- Name: id; Type: DEFAULT; Schema: log; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY log ALTER COLUMN id SET DEFAULT nextval('log_id_seq'::regclass);
@@ -1416,56 +1347,56 @@ ALTER TABLE ONLY log ALTER COLUMN id SET DEFAULT nextval('log_id_seq'::regclass)
 SET search_path = model, pg_catalog;
 
 --
--- Name: id; Type: DEFAULT; Schema: model; Owner: openatlas_medcon
+-- Name: id; Type: DEFAULT; Schema: model; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY class ALTER COLUMN id SET DEFAULT nextval('class_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: model; Owner: openatlas_medcon
+-- Name: id; Type: DEFAULT; Schema: model; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY class_inheritance ALTER COLUMN id SET DEFAULT nextval('class_inheritance_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: model; Owner: openatlas_medcon
+-- Name: id; Type: DEFAULT; Schema: model; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY entity ALTER COLUMN id SET DEFAULT nextval('entity_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: model; Owner: openatlas_medcon
+-- Name: id; Type: DEFAULT; Schema: model; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY i18n ALTER COLUMN id SET DEFAULT nextval('i18n_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: model; Owner: openatlas_medcon
+-- Name: id; Type: DEFAULT; Schema: model; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY link ALTER COLUMN id SET DEFAULT nextval('link_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: model; Owner: openatlas_medcon
+-- Name: id; Type: DEFAULT; Schema: model; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY link_property ALTER COLUMN id SET DEFAULT nextval('link_property_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: model; Owner: openatlas_medcon
+-- Name: id; Type: DEFAULT; Schema: model; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY property ALTER COLUMN id SET DEFAULT nextval('property_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: model; Owner: openatlas_medcon
+-- Name: id; Type: DEFAULT; Schema: model; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY property_inheritance ALTER COLUMN id SET DEFAULT nextval('property_inheritance_id_seq'::regclass);
@@ -1474,84 +1405,84 @@ ALTER TABLE ONLY property_inheritance ALTER COLUMN id SET DEFAULT nextval('prope
 SET search_path = web, pg_catalog;
 
 --
--- Name: id; Type: DEFAULT; Schema: web; Owner: openatlas_medcon
+-- Name: id; Type: DEFAULT; Schema: web; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY content ALTER COLUMN id SET DEFAULT nextval('item_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: web; Owner: openatlas_medcon
+-- Name: id; Type: DEFAULT; Schema: web; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY form ALTER COLUMN id SET DEFAULT nextval('form_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: web; Owner: openatlas_medcon
+-- Name: id; Type: DEFAULT; Schema: web; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY "group" ALTER COLUMN id SET DEFAULT nextval('group_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: web; Owner: openatlas_medcon
+-- Name: id; Type: DEFAULT; Schema: web; Owner: openatlas_master
 --
 
-ALTER TABLE ONLY hierarchy ALTER COLUMN id SET DEFAULT nextval('type_id_seq'::regclass);
-
-
---
--- Name: id; Type: DEFAULT; Schema: web; Owner: openatlas_medcon
---
-
-ALTER TABLE ONLY hierarchy_form ALTER COLUMN id SET DEFAULT nextval('type_form_id_seq'::regclass);
+ALTER TABLE ONLY hierarchy ALTER COLUMN id SET DEFAULT nextval('hierarchy_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: web; Owner: openatlas_medcon
+-- Name: id; Type: DEFAULT; Schema: web; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY hierarchy_form ALTER COLUMN id SET DEFAULT nextval('hierarchy_form_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: web; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY i18n ALTER COLUMN id SET DEFAULT nextval('i18n_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: web; Owner: openatlas_medcon
+-- Name: id; Type: DEFAULT; Schema: web; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY language ALTER COLUMN id SET DEFAULT nextval('language_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: web; Owner: openatlas_medcon
+-- Name: id; Type: DEFAULT; Schema: web; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY settings ALTER COLUMN id SET DEFAULT nextval('settings_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: web; Owner: openatlas_medcon
+-- Name: id; Type: DEFAULT; Schema: web; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY "user" ALTER COLUMN id SET DEFAULT nextval('user_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: web; Owner: openatlas_medcon
+-- Name: id; Type: DEFAULT; Schema: web; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY user_bookmarks ALTER COLUMN id SET DEFAULT nextval('user_bookmarks_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: web; Owner: openatlas_medcon
+-- Name: id; Type: DEFAULT; Schema: web; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY user_log ALTER COLUMN id SET DEFAULT nextval('user_log_id_seq'::regclass);
 
 
 --
--- Name: id; Type: DEFAULT; Schema: web; Owner: openatlas_medcon
+-- Name: id; Type: DEFAULT; Schema: web; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY user_settings ALTER COLUMN id SET DEFAULT nextval('user_settings_id_seq'::regclass);
@@ -1560,23 +1491,7 @@ ALTER TABLE ONLY user_settings ALTER COLUMN id SET DEFAULT nextval('user_setting
 SET search_path = gis, pg_catalog;
 
 --
--- Name: centerpoint_entity_id_key; Type: CONSTRAINT; Schema: gis; Owner: openatlas_medcon
---
-
-ALTER TABLE ONLY centerpoint
-    ADD CONSTRAINT centerpoint_entity_id_key UNIQUE (entity_id);
-
-
---
--- Name: centerpoint_pkey; Type: CONSTRAINT; Schema: gis; Owner: openatlas_medcon
---
-
-ALTER TABLE ONLY centerpoint
-    ADD CONSTRAINT centerpoint_pkey PRIMARY KEY (id);
-
-
---
--- Name: linestring_pkey; Type: CONSTRAINT; Schema: gis; Owner: openatlas_medcon
+-- Name: linestring_pkey; Type: CONSTRAINT; Schema: gis; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY linestring
@@ -1584,7 +1499,7 @@ ALTER TABLE ONLY linestring
 
 
 --
--- Name: point_pkey; Type: CONSTRAINT; Schema: gis; Owner: openatlas_medcon
+-- Name: point_pkey; Type: CONSTRAINT; Schema: gis; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY point
@@ -1592,7 +1507,7 @@ ALTER TABLE ONLY point
 
 
 --
--- Name: polygon_pkey; Type: CONSTRAINT; Schema: gis; Owner: openatlas_medcon
+-- Name: polygon_pkey; Type: CONSTRAINT; Schema: gis; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY polygon
@@ -1602,7 +1517,7 @@ ALTER TABLE ONLY polygon
 SET search_path = log, pg_catalog;
 
 --
--- Name: log_detail_pkey; Type: CONSTRAINT; Schema: log; Owner: openatlas_medcon
+-- Name: log_detail_pkey; Type: CONSTRAINT; Schema: log; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY detail
@@ -1610,7 +1525,7 @@ ALTER TABLE ONLY detail
 
 
 --
--- Name: log_pkey; Type: CONSTRAINT; Schema: log; Owner: openatlas_medcon
+-- Name: log_pkey; Type: CONSTRAINT; Schema: log; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY log
@@ -1620,7 +1535,7 @@ ALTER TABLE ONLY log
 SET search_path = model, pg_catalog;
 
 --
--- Name: class_code_key; Type: CONSTRAINT; Schema: model; Owner: openatlas_medcon
+-- Name: class_code_key; Type: CONSTRAINT; Schema: model; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY class
@@ -1628,7 +1543,7 @@ ALTER TABLE ONLY class
 
 
 --
--- Name: class_inheritance_pkey; Type: CONSTRAINT; Schema: model; Owner: openatlas_medcon
+-- Name: class_inheritance_pkey; Type: CONSTRAINT; Schema: model; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY class_inheritance
@@ -1636,7 +1551,7 @@ ALTER TABLE ONLY class_inheritance
 
 
 --
--- Name: class_inheritance_super_id_sub_id_key; Type: CONSTRAINT; Schema: model; Owner: openatlas_medcon
+-- Name: class_inheritance_super_id_sub_id_key; Type: CONSTRAINT; Schema: model; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY class_inheritance
@@ -1644,7 +1559,7 @@ ALTER TABLE ONLY class_inheritance
 
 
 --
--- Name: class_name_key; Type: CONSTRAINT; Schema: model; Owner: openatlas_medcon
+-- Name: class_name_key; Type: CONSTRAINT; Schema: model; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY class
@@ -1652,7 +1567,7 @@ ALTER TABLE ONLY class
 
 
 --
--- Name: class_pkey; Type: CONSTRAINT; Schema: model; Owner: openatlas_medcon
+-- Name: class_pkey; Type: CONSTRAINT; Schema: model; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY class
@@ -1660,7 +1575,7 @@ ALTER TABLE ONLY class
 
 
 --
--- Name: entity_pkey; Type: CONSTRAINT; Schema: model; Owner: openatlas_medcon
+-- Name: entity_pkey; Type: CONSTRAINT; Schema: model; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY entity
@@ -1668,7 +1583,7 @@ ALTER TABLE ONLY entity
 
 
 --
--- Name: i18n_pkey; Type: CONSTRAINT; Schema: model; Owner: openatlas_medcon
+-- Name: i18n_pkey; Type: CONSTRAINT; Schema: model; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY i18n
@@ -1676,7 +1591,7 @@ ALTER TABLE ONLY i18n
 
 
 --
--- Name: i18n_table_name_table_field_table_id_language_code_key; Type: CONSTRAINT; Schema: model; Owner: openatlas_medcon
+-- Name: i18n_table_name_table_field_table_id_language_code_key; Type: CONSTRAINT; Schema: model; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY i18n
@@ -1684,7 +1599,7 @@ ALTER TABLE ONLY i18n
 
 
 --
--- Name: link_pkey; Type: CONSTRAINT; Schema: model; Owner: openatlas_medcon
+-- Name: link_pkey; Type: CONSTRAINT; Schema: model; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY link
@@ -1692,7 +1607,7 @@ ALTER TABLE ONLY link
 
 
 --
--- Name: link_property_pkey; Type: CONSTRAINT; Schema: model; Owner: openatlas_medcon
+-- Name: link_property_pkey; Type: CONSTRAINT; Schema: model; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY link_property
@@ -1700,7 +1615,7 @@ ALTER TABLE ONLY link_property
 
 
 --
--- Name: property_code_key; Type: CONSTRAINT; Schema: model; Owner: openatlas_medcon
+-- Name: property_code_key; Type: CONSTRAINT; Schema: model; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY property
@@ -1708,7 +1623,7 @@ ALTER TABLE ONLY property
 
 
 --
--- Name: property_inheritance_pkey; Type: CONSTRAINT; Schema: model; Owner: openatlas_medcon
+-- Name: property_inheritance_pkey; Type: CONSTRAINT; Schema: model; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY property_inheritance
@@ -1716,7 +1631,7 @@ ALTER TABLE ONLY property_inheritance
 
 
 --
--- Name: property_pkey; Type: CONSTRAINT; Schema: model; Owner: openatlas_medcon
+-- Name: property_pkey; Type: CONSTRAINT; Schema: model; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY property
@@ -1726,7 +1641,7 @@ ALTER TABLE ONLY property
 SET search_path = web, pg_catalog;
 
 --
--- Name: content_pkey; Type: CONSTRAINT; Schema: web; Owner: openatlas_medcon
+-- Name: content_pkey; Type: CONSTRAINT; Schema: web; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY content
@@ -1734,7 +1649,7 @@ ALTER TABLE ONLY content
 
 
 --
--- Name: form_name_key; Type: CONSTRAINT; Schema: web; Owner: openatlas_medcon
+-- Name: form_name_key; Type: CONSTRAINT; Schema: web; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY form
@@ -1742,7 +1657,7 @@ ALTER TABLE ONLY form
 
 
 --
--- Name: form_pkey; Type: CONSTRAINT; Schema: web; Owner: openatlas_medcon
+-- Name: form_pkey; Type: CONSTRAINT; Schema: web; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY form
@@ -1750,7 +1665,7 @@ ALTER TABLE ONLY form
 
 
 --
--- Name: group_pkey; Type: CONSTRAINT; Schema: web; Owner: openatlas_medcon
+-- Name: group_pkey; Type: CONSTRAINT; Schema: web; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY "group"
@@ -1758,15 +1673,23 @@ ALTER TABLE ONLY "group"
 
 
 --
--- Name: hierarchy_form_hierarchy_id_form_id_key; Type: CONSTRAINT; Schema: web; Owner: openatlas_medcon
+-- Name: hierarchy_form_pkey; Type: CONSTRAINT; Schema: web; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY hierarchy_form
-    ADD CONSTRAINT hierarchy_form_hierarchy_id_form_id_key UNIQUE (hierarchy_id, form_id);
+    ADD CONSTRAINT hierarchy_form_pkey PRIMARY KEY (id);
 
 
 --
--- Name: i18n_field_foreign_id_language_id_key; Type: CONSTRAINT; Schema: web; Owner: openatlas_medcon
+-- Name: hierarchy_pkey; Type: CONSTRAINT; Schema: web; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY hierarchy
+    ADD CONSTRAINT hierarchy_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: i18n_field_foreign_id_language_id_key; Type: CONSTRAINT; Schema: web; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY i18n
@@ -1774,7 +1697,7 @@ ALTER TABLE ONLY i18n
 
 
 --
--- Name: i18n_pkey; Type: CONSTRAINT; Schema: web; Owner: openatlas_medcon
+-- Name: i18n_pkey; Type: CONSTRAINT; Schema: web; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY i18n
@@ -1782,7 +1705,7 @@ ALTER TABLE ONLY i18n
 
 
 --
--- Name: language_name_key; Type: CONSTRAINT; Schema: web; Owner: openatlas_medcon
+-- Name: language_name_key; Type: CONSTRAINT; Schema: web; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY language
@@ -1790,7 +1713,7 @@ ALTER TABLE ONLY language
 
 
 --
--- Name: language_pkey; Type: CONSTRAINT; Schema: web; Owner: openatlas_medcon
+-- Name: language_pkey; Type: CONSTRAINT; Schema: web; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY language
@@ -1798,7 +1721,7 @@ ALTER TABLE ONLY language
 
 
 --
--- Name: language_shortform_key; Type: CONSTRAINT; Schema: web; Owner: openatlas_medcon
+-- Name: language_shortform_key; Type: CONSTRAINT; Schema: web; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY language
@@ -1806,7 +1729,7 @@ ALTER TABLE ONLY language
 
 
 --
--- Name: settings_name_group_key; Type: CONSTRAINT; Schema: web; Owner: openatlas_medcon
+-- Name: settings_name_group_key; Type: CONSTRAINT; Schema: web; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY settings
@@ -1814,7 +1737,7 @@ ALTER TABLE ONLY settings
 
 
 --
--- Name: settings_pkey; Type: CONSTRAINT; Schema: web; Owner: openatlas_medcon
+-- Name: settings_pkey; Type: CONSTRAINT; Schema: web; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY settings
@@ -1822,31 +1745,7 @@ ALTER TABLE ONLY settings
 
 
 --
--- Name: type_form_pkey; Type: CONSTRAINT; Schema: web; Owner: openatlas_medcon
---
-
-ALTER TABLE ONLY hierarchy_form
-    ADD CONSTRAINT type_form_pkey PRIMARY KEY (id);
-
-
---
--- Name: type_name_key; Type: CONSTRAINT; Schema: web; Owner: openatlas_medcon
---
-
-ALTER TABLE ONLY hierarchy
-    ADD CONSTRAINT type_name_key UNIQUE (name);
-
-
---
--- Name: type_pkey; Type: CONSTRAINT; Schema: web; Owner: openatlas_medcon
---
-
-ALTER TABLE ONLY hierarchy
-    ADD CONSTRAINT type_pkey PRIMARY KEY (id);
-
-
---
--- Name: user_bookmarks_pkey; Type: CONSTRAINT; Schema: web; Owner: openatlas_medcon
+-- Name: user_bookmarks_pkey; Type: CONSTRAINT; Schema: web; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY user_bookmarks
@@ -1854,7 +1753,7 @@ ALTER TABLE ONLY user_bookmarks
 
 
 --
--- Name: user_bookmarks_user_id_entity_id_key; Type: CONSTRAINT; Schema: web; Owner: openatlas_medcon
+-- Name: user_bookmarks_user_id_entity_id_key; Type: CONSTRAINT; Schema: web; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY user_bookmarks
@@ -1862,7 +1761,7 @@ ALTER TABLE ONLY user_bookmarks
 
 
 --
--- Name: user_email_key; Type: CONSTRAINT; Schema: web; Owner: openatlas_medcon
+-- Name: user_email_key; Type: CONSTRAINT; Schema: web; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY "user"
@@ -1870,7 +1769,7 @@ ALTER TABLE ONLY "user"
 
 
 --
--- Name: user_log_pkey; Type: CONSTRAINT; Schema: web; Owner: openatlas_medcon
+-- Name: user_log_pkey; Type: CONSTRAINT; Schema: web; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY user_log
@@ -1878,7 +1777,7 @@ ALTER TABLE ONLY user_log
 
 
 --
--- Name: user_pkey; Type: CONSTRAINT; Schema: web; Owner: openatlas_medcon
+-- Name: user_pkey; Type: CONSTRAINT; Schema: web; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY "user"
@@ -1886,7 +1785,7 @@ ALTER TABLE ONLY "user"
 
 
 --
--- Name: user_settings_pkey; Type: CONSTRAINT; Schema: web; Owner: openatlas_medcon
+-- Name: user_settings_pkey; Type: CONSTRAINT; Schema: web; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY user_settings
@@ -1894,7 +1793,7 @@ ALTER TABLE ONLY user_settings
 
 
 --
--- Name: user_settings_user_id_name_value_key; Type: CONSTRAINT; Schema: web; Owner: openatlas_medcon
+-- Name: user_settings_user_id_name_value_key; Type: CONSTRAINT; Schema: web; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY user_settings
@@ -1902,7 +1801,7 @@ ALTER TABLE ONLY user_settings
 
 
 --
--- Name: user_username_key; Type: CONSTRAINT; Schema: web; Owner: openatlas_medcon
+-- Name: user_username_key; Type: CONSTRAINT; Schema: web; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY "user"
@@ -1912,35 +1811,21 @@ ALTER TABLE ONLY "user"
 SET search_path = gis, pg_catalog;
 
 --
--- Name: geometry_creation; Type: TRIGGER; Schema: gis; Owner: openatlas_medcon
---
-
-CREATE TRIGGER geometry_creation BEFORE INSERT ON centerpoint FOR EACH ROW EXECUTE PROCEDURE geometry_creation();
-
-
---
--- Name: update_modified; Type: TRIGGER; Schema: gis; Owner: openatlas_medcon
---
-
-CREATE TRIGGER update_modified BEFORE UPDATE ON centerpoint FOR EACH ROW EXECUTE PROCEDURE model.update_modified();
-
-
---
--- Name: update_modified; Type: TRIGGER; Schema: gis; Owner: openatlas_medcon
+-- Name: update_modified; Type: TRIGGER; Schema: gis; Owner: openatlas_master
 --
 
 CREATE TRIGGER update_modified BEFORE UPDATE ON point FOR EACH ROW EXECUTE PROCEDURE model.update_modified();
 
 
 --
--- Name: update_modified; Type: TRIGGER; Schema: gis; Owner: openatlas_medcon
+-- Name: update_modified; Type: TRIGGER; Schema: gis; Owner: openatlas_master
 --
 
 CREATE TRIGGER update_modified BEFORE UPDATE ON linestring FOR EACH ROW EXECUTE PROCEDURE model.update_modified();
 
 
 --
--- Name: update_modified; Type: TRIGGER; Schema: gis; Owner: openatlas_medcon
+-- Name: update_modified; Type: TRIGGER; Schema: gis; Owner: openatlas_master
 --
 
 CREATE TRIGGER update_modified BEFORE UPDATE ON polygon FOR EACH ROW EXECUTE PROCEDURE model.update_modified();
@@ -1949,56 +1834,56 @@ CREATE TRIGGER update_modified BEFORE UPDATE ON polygon FOR EACH ROW EXECUTE PRO
 SET search_path = model, pg_catalog;
 
 --
--- Name: update_modified; Type: TRIGGER; Schema: model; Owner: openatlas_medcon
+-- Name: update_modified; Type: TRIGGER; Schema: model; Owner: openatlas_master
 --
 
 CREATE TRIGGER update_modified BEFORE UPDATE ON class FOR EACH ROW EXECUTE PROCEDURE update_modified();
 
 
 --
--- Name: update_modified; Type: TRIGGER; Schema: model; Owner: openatlas_medcon
+-- Name: update_modified; Type: TRIGGER; Schema: model; Owner: openatlas_master
 --
 
 CREATE TRIGGER update_modified BEFORE UPDATE ON class_inheritance FOR EACH ROW EXECUTE PROCEDURE update_modified();
 
 
 --
--- Name: update_modified; Type: TRIGGER; Schema: model; Owner: openatlas_medcon
+-- Name: update_modified; Type: TRIGGER; Schema: model; Owner: openatlas_master
 --
 
 CREATE TRIGGER update_modified BEFORE UPDATE ON i18n FOR EACH ROW EXECUTE PROCEDURE update_modified();
 
 
 --
--- Name: update_modified; Type: TRIGGER; Schema: model; Owner: openatlas_medcon
+-- Name: update_modified; Type: TRIGGER; Schema: model; Owner: openatlas_master
 --
 
 CREATE TRIGGER update_modified BEFORE UPDATE ON property FOR EACH ROW EXECUTE PROCEDURE update_modified();
 
 
 --
--- Name: update_modified; Type: TRIGGER; Schema: model; Owner: openatlas_medcon
+-- Name: update_modified; Type: TRIGGER; Schema: model; Owner: openatlas_master
 --
 
 CREATE TRIGGER update_modified BEFORE UPDATE ON entity FOR EACH ROW EXECUTE PROCEDURE update_modified();
 
 
 --
--- Name: update_modified; Type: TRIGGER; Schema: model; Owner: openatlas_medcon
+-- Name: update_modified; Type: TRIGGER; Schema: model; Owner: openatlas_master
 --
 
 CREATE TRIGGER update_modified BEFORE UPDATE ON link FOR EACH ROW EXECUTE PROCEDURE update_modified();
 
 
 --
--- Name: update_modified; Type: TRIGGER; Schema: model; Owner: openatlas_medcon
+-- Name: update_modified; Type: TRIGGER; Schema: model; Owner: openatlas_master
 --
 
 CREATE TRIGGER update_modified BEFORE UPDATE ON property_inheritance FOR EACH ROW EXECUTE PROCEDURE update_modified();
 
 
 --
--- Name: update_modified; Type: TRIGGER; Schema: model; Owner: openatlas_medcon
+-- Name: update_modified; Type: TRIGGER; Schema: model; Owner: openatlas_master
 --
 
 CREATE TRIGGER update_modified BEFORE UPDATE ON link_property FOR EACH ROW EXECUTE PROCEDURE update_modified();
@@ -2007,87 +1892,79 @@ CREATE TRIGGER update_modified BEFORE UPDATE ON link_property FOR EACH ROW EXECU
 SET search_path = web, pg_catalog;
 
 --
--- Name: update_modified; Type: TRIGGER; Schema: web; Owner: openatlas_medcon
+-- Name: update_modified; Type: TRIGGER; Schema: web; Owner: openatlas_master
 --
 
 CREATE TRIGGER update_modified BEFORE UPDATE ON "user" FOR EACH ROW EXECUTE PROCEDURE model.update_modified();
 
 
 --
--- Name: update_modified; Type: TRIGGER; Schema: web; Owner: openatlas_medcon
+-- Name: update_modified; Type: TRIGGER; Schema: web; Owner: openatlas_master
 --
 
 CREATE TRIGGER update_modified BEFORE UPDATE ON "group" FOR EACH ROW EXECUTE PROCEDURE model.update_modified();
 
 
 --
--- Name: update_modified; Type: TRIGGER; Schema: web; Owner: openatlas_medcon
+-- Name: update_modified; Type: TRIGGER; Schema: web; Owner: openatlas_master
 --
 
 CREATE TRIGGER update_modified BEFORE UPDATE ON i18n FOR EACH ROW EXECUTE PROCEDURE model.update_modified();
 
 
 --
--- Name: update_modified; Type: TRIGGER; Schema: web; Owner: openatlas_medcon
+-- Name: update_modified; Type: TRIGGER; Schema: web; Owner: openatlas_master
 --
 
 CREATE TRIGGER update_modified BEFORE UPDATE ON language FOR EACH ROW EXECUTE PROCEDURE model.update_modified();
 
 
 --
--- Name: update_modified; Type: TRIGGER; Schema: web; Owner: openatlas_medcon
+-- Name: update_modified; Type: TRIGGER; Schema: web; Owner: openatlas_master
 --
 
 CREATE TRIGGER update_modified BEFORE UPDATE ON content FOR EACH ROW EXECUTE PROCEDURE model.update_modified();
 
 
 --
--- Name: update_modified; Type: TRIGGER; Schema: web; Owner: openatlas_medcon
+-- Name: update_modified; Type: TRIGGER; Schema: web; Owner: openatlas_master
 --
 
 CREATE TRIGGER update_modified BEFORE UPDATE ON user_settings FOR EACH ROW EXECUTE PROCEDURE model.update_modified();
 
 
 --
--- Name: update_modified; Type: TRIGGER; Schema: web; Owner: openatlas_medcon
+-- Name: update_modified; Type: TRIGGER; Schema: web; Owner: openatlas_master
 --
 
 CREATE TRIGGER update_modified BEFORE UPDATE ON user_bookmarks FOR EACH ROW EXECUTE PROCEDURE model.update_modified();
 
 
 --
--- Name: update_modified; Type: TRIGGER; Schema: web; Owner: openatlas_medcon
---
-
-CREATE TRIGGER update_modified BEFORE UPDATE ON hierarchy_form FOR EACH ROW EXECUTE PROCEDURE model.update_modified();
-
-
---
--- Name: update_modified; Type: TRIGGER; Schema: web; Owner: openatlas_medcon
+-- Name: update_modified; Type: TRIGGER; Schema: web; Owner: openatlas_master
 --
 
 CREATE TRIGGER update_modified BEFORE UPDATE ON hierarchy FOR EACH ROW EXECUTE PROCEDURE model.update_modified();
 
 
 --
--- Name: update_modified; Type: TRIGGER; Schema: web; Owner: openatlas_medcon
+-- Name: update_modified; Type: TRIGGER; Schema: web; Owner: openatlas_master
 --
 
 CREATE TRIGGER update_modified BEFORE UPDATE ON form FOR EACH ROW EXECUTE PROCEDURE model.update_modified();
 
 
+--
+-- Name: update_modified; Type: TRIGGER; Schema: web; Owner: openatlas_master
+--
+
+CREATE TRIGGER update_modified BEFORE UPDATE ON hierarchy_form FOR EACH ROW EXECUTE PROCEDURE model.update_modified();
+
+
 SET search_path = gis, pg_catalog;
 
 --
--- Name: centerpoint_entity_id_fkey; Type: FK CONSTRAINT; Schema: gis; Owner: openatlas_medcon
---
-
-ALTER TABLE ONLY centerpoint
-    ADD CONSTRAINT centerpoint_entity_id_fkey FOREIGN KEY (entity_id) REFERENCES model.entity(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: linestring_entity_id_fkey; Type: FK CONSTRAINT; Schema: gis; Owner: openatlas_medcon
+-- Name: linestring_entity_id_fkey; Type: FK CONSTRAINT; Schema: gis; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY linestring
@@ -2095,7 +1972,7 @@ ALTER TABLE ONLY linestring
 
 
 --
--- Name: point_entity_id_fkey; Type: FK CONSTRAINT; Schema: gis; Owner: openatlas_medcon
+-- Name: point_entity_id_fkey; Type: FK CONSTRAINT; Schema: gis; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY point
@@ -2103,7 +1980,7 @@ ALTER TABLE ONLY point
 
 
 --
--- Name: polygon_entity_id_fkey; Type: FK CONSTRAINT; Schema: gis; Owner: openatlas_medcon
+-- Name: polygon_entity_id_fkey; Type: FK CONSTRAINT; Schema: gis; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY polygon
@@ -2113,7 +1990,7 @@ ALTER TABLE ONLY polygon
 SET search_path = log, pg_catalog;
 
 --
--- Name: detail_log_id_fkey; Type: FK CONSTRAINT; Schema: log; Owner: openatlas_medcon
+-- Name: detail_log_id_fkey; Type: FK CONSTRAINT; Schema: log; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY detail
@@ -2123,7 +2000,7 @@ ALTER TABLE ONLY detail
 SET search_path = model, pg_catalog;
 
 --
--- Name: class_inheritance_sub_id_fkey; Type: FK CONSTRAINT; Schema: model; Owner: openatlas_medcon
+-- Name: class_inheritance_sub_id_fkey; Type: FK CONSTRAINT; Schema: model; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY class_inheritance
@@ -2131,7 +2008,7 @@ ALTER TABLE ONLY class_inheritance
 
 
 --
--- Name: class_inheritance_super_id_fkey; Type: FK CONSTRAINT; Schema: model; Owner: openatlas_medcon
+-- Name: class_inheritance_super_id_fkey; Type: FK CONSTRAINT; Schema: model; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY class_inheritance
@@ -2139,7 +2016,7 @@ ALTER TABLE ONLY class_inheritance
 
 
 --
--- Name: entity_class_id_fkey; Type: FK CONSTRAINT; Schema: model; Owner: openatlas_medcon
+-- Name: entity_class_id_fkey; Type: FK CONSTRAINT; Schema: model; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY entity
@@ -2147,7 +2024,7 @@ ALTER TABLE ONLY entity
 
 
 --
--- Name: link_domain_id_fkey; Type: FK CONSTRAINT; Schema: model; Owner: openatlas_medcon
+-- Name: link_domain_id_fkey; Type: FK CONSTRAINT; Schema: model; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY link
@@ -2155,7 +2032,7 @@ ALTER TABLE ONLY link
 
 
 --
--- Name: link_property_domain_id_fkey; Type: FK CONSTRAINT; Schema: model; Owner: openatlas_medcon
+-- Name: link_property_domain_id_fkey; Type: FK CONSTRAINT; Schema: model; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY link_property
@@ -2163,7 +2040,7 @@ ALTER TABLE ONLY link_property
 
 
 --
--- Name: link_property_id_fkey; Type: FK CONSTRAINT; Schema: model; Owner: openatlas_medcon
+-- Name: link_property_id_fkey; Type: FK CONSTRAINT; Schema: model; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY link
@@ -2171,7 +2048,7 @@ ALTER TABLE ONLY link
 
 
 --
--- Name: link_property_property_id_fkey; Type: FK CONSTRAINT; Schema: model; Owner: openatlas_medcon
+-- Name: link_property_property_id_fkey; Type: FK CONSTRAINT; Schema: model; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY link_property
@@ -2179,7 +2056,7 @@ ALTER TABLE ONLY link_property
 
 
 --
--- Name: link_property_range_id_fkey; Type: FK CONSTRAINT; Schema: model; Owner: openatlas_medcon
+-- Name: link_property_range_id_fkey; Type: FK CONSTRAINT; Schema: model; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY link_property
@@ -2187,7 +2064,7 @@ ALTER TABLE ONLY link_property
 
 
 --
--- Name: link_range_id_fkey; Type: FK CONSTRAINT; Schema: model; Owner: openatlas_medcon
+-- Name: link_range_id_fkey; Type: FK CONSTRAINT; Schema: model; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY link
@@ -2195,7 +2072,7 @@ ALTER TABLE ONLY link
 
 
 --
--- Name: property_domain_class_id_fkey; Type: FK CONSTRAINT; Schema: model; Owner: openatlas_medcon
+-- Name: property_domain_class_id_fkey; Type: FK CONSTRAINT; Schema: model; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY property
@@ -2203,7 +2080,7 @@ ALTER TABLE ONLY property
 
 
 --
--- Name: property_inheritance_sub_id_fkey; Type: FK CONSTRAINT; Schema: model; Owner: openatlas_medcon
+-- Name: property_inheritance_sub_id_fkey; Type: FK CONSTRAINT; Schema: model; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY property_inheritance
@@ -2211,7 +2088,7 @@ ALTER TABLE ONLY property_inheritance
 
 
 --
--- Name: property_inheritance_super_id_fkey; Type: FK CONSTRAINT; Schema: model; Owner: openatlas_medcon
+-- Name: property_inheritance_super_id_fkey; Type: FK CONSTRAINT; Schema: model; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY property_inheritance
@@ -2219,7 +2096,7 @@ ALTER TABLE ONLY property_inheritance
 
 
 --
--- Name: property_range_class_id_fkey; Type: FK CONSTRAINT; Schema: model; Owner: openatlas_medcon
+-- Name: property_range_class_id_fkey; Type: FK CONSTRAINT; Schema: model; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY property
@@ -2229,7 +2106,23 @@ ALTER TABLE ONLY property
 SET search_path = web, pg_catalog;
 
 --
--- Name: hierarchy_id_fkey; Type: FK CONSTRAINT; Schema: web; Owner: openatlas_medcon
+-- Name: hierarchy_form_form_id_fkey; Type: FK CONSTRAINT; Schema: web; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY hierarchy_form
+    ADD CONSTRAINT hierarchy_form_form_id_fkey FOREIGN KEY (form_id) REFERENCES form(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: hierarchy_form_hierarchy_id_fkey; Type: FK CONSTRAINT; Schema: web; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY hierarchy_form
+    ADD CONSTRAINT hierarchy_form_hierarchy_id_fkey FOREIGN KEY (hierarchy_id) REFERENCES hierarchy(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: hierarchy_id_fkey; Type: FK CONSTRAINT; Schema: web; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY hierarchy
@@ -2237,7 +2130,7 @@ ALTER TABLE ONLY hierarchy
 
 
 --
--- Name: i18n_item_id_fkey; Type: FK CONSTRAINT; Schema: web; Owner: openatlas_medcon
+-- Name: i18n_item_id_fkey; Type: FK CONSTRAINT; Schema: web; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY i18n
@@ -2245,7 +2138,7 @@ ALTER TABLE ONLY i18n
 
 
 --
--- Name: i18n_language_id_fkey; Type: FK CONSTRAINT; Schema: web; Owner: openatlas_medcon
+-- Name: i18n_language_id_fkey; Type: FK CONSTRAINT; Schema: web; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY i18n
@@ -2253,23 +2146,7 @@ ALTER TABLE ONLY i18n
 
 
 --
--- Name: type_form_form_id_fkey; Type: FK CONSTRAINT; Schema: web; Owner: openatlas_medcon
---
-
-ALTER TABLE ONLY hierarchy_form
-    ADD CONSTRAINT type_form_form_id_fkey FOREIGN KEY (form_id) REFERENCES form(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: type_form_type_id_fkey; Type: FK CONSTRAINT; Schema: web; Owner: openatlas_medcon
---
-
-ALTER TABLE ONLY hierarchy_form
-    ADD CONSTRAINT type_form_type_id_fkey FOREIGN KEY (hierarchy_id) REFERENCES hierarchy(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: user_bookmarks_entity_id_fkey; Type: FK CONSTRAINT; Schema: web; Owner: openatlas_medcon
+-- Name: user_bookmarks_entity_id_fkey; Type: FK CONSTRAINT; Schema: web; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY user_bookmarks
@@ -2277,7 +2154,7 @@ ALTER TABLE ONLY user_bookmarks
 
 
 --
--- Name: user_bookmarks_user_id_fkey; Type: FK CONSTRAINT; Schema: web; Owner: openatlas_medcon
+-- Name: user_bookmarks_user_id_fkey; Type: FK CONSTRAINT; Schema: web; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY user_bookmarks
@@ -2285,7 +2162,7 @@ ALTER TABLE ONLY user_bookmarks
 
 
 --
--- Name: user_group_id_fkey; Type: FK CONSTRAINT; Schema: web; Owner: openatlas_medcon
+-- Name: user_group_id_fkey; Type: FK CONSTRAINT; Schema: web; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY "user"
@@ -2293,7 +2170,7 @@ ALTER TABLE ONLY "user"
 
 
 --
--- Name: user_settings_user_id_fkey; Type: FK CONSTRAINT; Schema: web; Owner: openatlas_medcon
+-- Name: user_settings_user_id_fkey; Type: FK CONSTRAINT; Schema: web; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY user_settings

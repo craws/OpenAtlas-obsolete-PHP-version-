@@ -35,11 +35,8 @@ class Admin_FunctionControllerTest extends ControllerTestCase {
         Model_PropertyMapper::getByCode('non existing code');
         \Craws\FilterInput::filter('whatever', 'non existing filter');
         Model_LogMapper::log('non existing priority', 'whatever', 'whatever');
-        Model_GisMapper::getByEntity(Model_EntityMapper::getById(1));
-        // test mail functions manually because mail is deactivated for testing
         $this->assertFalse(Model_UserMapper::getByEmail($this->testString));
         $this->assertTrue(is_a(Model_UserMapper::getByEmail($this->defaultEmail), 'Model_User'));
-        // test date functions
         $date = new Zend_Date();
         Model_AbstractMapper::toZendDate($date);
         $date->setYear('-5000');
