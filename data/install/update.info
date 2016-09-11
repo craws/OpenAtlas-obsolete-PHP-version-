@@ -18,7 +18,11 @@ DROP TABLE IF EXISTS gis.centerpoint;
 DROP FUNCTION IF EXISTS gis.geometry_creation();
 COMMIT;
 
-Favicons, if you want to change the default OpenAtlas ones:
+Favicons: add SVG to apache.conf RewriteRule like:
+
+RewriteRule !\.(js|ico|gif|jpg|png|css|svg)$ /index.php
+
+and if you want to change the default OpenAtlas ones:
 
 - use http://realfavicongenerator.net/ to generate files and copy files to public
 - change line endings in browserconfig.xml from windows to unix
