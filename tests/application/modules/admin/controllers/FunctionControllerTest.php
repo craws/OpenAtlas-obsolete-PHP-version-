@@ -28,4 +28,20 @@ class Admin_FunctionControllerTest extends ControllerTestCase {
         $this->request->setMethod('POST')->setPost(['entityId' => $this->sourceId]);
         $this->dispatch('admin/function/bookmark');
     }
+
+    public function testMiscellaneous() {
+        // some tests for coverage - not elegant but preferred over cluttering code with IgnoreCoverage statements
+        Model_ClassMapper::getByCode('non existing code');
+        Model_PropertyMapper::getByCode('non existing code');
+        \Craws\FilterInput::filter('whatever', 'non existing filter');
+        Model_LogMapper::log('non existing priority', 'whatever', 'whatever');
+        $this->assertFalse(Model_UserMapper::getByEmail($this->testString));
+        $this->assertTrue(is_a(Model_UserMapper::getByEmail($this->defaultEmail), 'Model_User'));
+        $date = new Zend_Date();
+        Model_AbstractMapper::toZendDate($date);
+        $date->setYear('-5000');
+        Model_AbstractMapper::toDbDate($date);
+    }
+
+
 }

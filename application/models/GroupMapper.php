@@ -22,8 +22,7 @@ class Model_GroupMapper extends Model_AbstractMapper {
     public static function getAll() {
         $objects = [];
         $sql = 'SELECT id, name FROM web.group ORDER BY name;';
-        $rows = parent::getAllRows($sql);
-        foreach ($rows as $row) {
+        foreach (parent::getAllRows($sql) as $row) {
             $objects[] = self::populate($row);
         }
         return $objects;

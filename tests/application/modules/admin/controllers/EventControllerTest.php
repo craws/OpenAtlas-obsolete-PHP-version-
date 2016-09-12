@@ -36,26 +36,26 @@ class Admin_EventControllerTest extends ControllerTestCase {
         $this->dispatch('admin/event/view/id/' . $this->eventId);
     }
 
-    public function testAdd() {
-        $this->dispatch('admin/event/add/id/' . $this->sourceId);
-    }
-
-    public function testLink() {
-        $this->dispatch('admin/event/link/eventId/' . $this->eventId . '/rangeId/' . $this->sourceId); // test existing
-        $this->resetRequest()->resetResponse();
-        $this->dispatch('admin/event/link/eventId/' . $this->eventId . '/rangeId/' . $this->source2Id);
-    }
-
-
-    public function testCrud() {
+    public function testCrudEvent() {
         $this->dispatch('admin/event/insert'); // test errror if code is missing
         $this->resetRequest()->resetResponse();
         $this->dispatch('admin/event/insert/code/E8');
         $this->request->setMethod('POST')->setPost($this->formValues);
         $this->dispatch('admin/event/insert/code/E8/sourceId/' . $this->sourceId);
+        $this->assertRedirectRegex('/source\/view/');
         $this->resetRequest()->resetResponse();
         $this->request->setMethod('POST')->setPost($this->formValues);
         $this->dispatch('admin/event/insert/code/E8/actorId/' . $this->actorId);
+        $this->assertRedirectRegex('/involvement\/insert/');
+        $this->resetRequest()->resetResponse();
+        $this->formValues['continue'] = 1;
+        $this->request->setMethod('POST')->setPost($this->formValues);
+        $this->dispatch('admin/event/insert/code/E8');
+        $this->assertRedirectRegex('/event\/insert/');
+        $this->resetRequest()->resetResponse();
+        $this->request->setMethod('POST')->setPost($this->formValues);
+        $this->dispatch('admin/event/insert/code/E8/sourceId/' . $this->sourceId);
+        $this->assertRedirectRegex('/admin\/event\/insert\/code\/E8\/sourceId/');
         $this->resetRequest()->resetResponse();
         $this->dispatch('admin/event/update/id/' . $this->eventId);
         $this->resetRequest()->resetResponse();

@@ -4,18 +4,11 @@
 
 class Admin_ActorController extends Zend_Controller_Action {
 
-    public function addAction() {
-        $origin = Model_EntityMapper::getById($this->_getParam('id'));
-        $array = Zend_Registry::get('config')->get('codeView')->toArray();
-        $controller = $array[$origin->class->code];
-        $this->view->actors = Model_EntityMapper::getByCodes('Actor');
-        $this->view->controller = $controller;
-        $this->view->menuHighlight = $controller;
-        $this->view->origin = $origin;
-    }
-
     public function deleteAction() {
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         Model_EntityMapper::getById($this->_getParam('id'))->delete();
+        Model_UserLogMapper::insert('entity', $this->_getParam('id'), 'delete');
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_delete');
         return $this->_helper->redirector->gotoUrl('/admin/actor');
     }
@@ -25,6 +18,11 @@ class Admin_ActorController extends Zend_Controller_Action {
     }
 
     public function insertAction() {
+        if (!in_array($this->_getParam('code'), Zend_Registry::get('config')->get('codeActor')->toArray())) {
+            $this->getHelper('viewRenderer')->setNoRender(true);
+            $this->_helper->message('error_missing_class');
+            return;
+        }
         $class = Model_ClassMapper::getByCode($this->_getParam('code'));
         $source = null;
         $event = null;
@@ -54,42 +52,27 @@ class Admin_ActorController extends Zend_Controller_Action {
             $this->view->source = $source;
             return;
         }
-        $actor = Model_EntityMapper::insert($class->id, $form->getValue('name'), $form->getValue('description'));
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
+        $actorId = Model_EntityMapper::insert($class->id, $form->getValue('name'), $form->getValue('description'));
+        $actor = Model_EntityMapper::getById($actorId);
         if ($source) {
             Model_LinkMapper::insert('P67', $source, $actor);
         }
         self::save($actor, $form, $hierarchies);
+        Model_UserLogMapper::insert('entity', $actorId, 'insert');
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_insert');
         $url = '/admin/actor/view/id/' . $actor->id;
-        // @codeCoverageIgnoreStart
         if ($event) {
             $url = '/admin/involvement/insert/origin/event/eventId/' . $event->id . '/actorId/' . $actor->id;
-        }
-        if ($form->getElement('continue')->getValue() && $source) {
+        } else if ($form->getElement('continue')->getValue() && $source) {
             $url = '/admin/actor/insert/sourceId/' . $source->id . '/code/' . $class->code;
-        }
-        if ($form->getElement('continue')->getValue()) {
+        } else if ($form->getElement('continue')->getValue()) {
             $url = '/admin/actor/insert/code/' . $class->code;
-        }
-        if ($source) {
+        } else if ($source) {
             $url = '/admin/source/view/id/' . $source->id . '/#tabActor';
         }
-        // @codeCoverageIgnoreEnd
         return $this->_helper->redirector->gotoUrl($url);
-    }
-
-    public function linkAction() {
-        $actor = Model_EntityMapper::getById($this->_getParam('actorId'));
-        $entity = Model_EntityMapper::getById($this->_getParam('rangeId'));
-        if (Model_LinkMapper::linkExists('P67', $entity, $actor)) {
-            $this->_helper->message('error_link_exists');
-        } else {
-            Model_LinkMapper::insert('P67', $entity, $actor);
-            $this->_helper->message('info_insert');
-        }
-        $array = Zend_Registry::get('config')->get('codeView')->toArray();
-        $controller = $array[$entity->class->code];
-        return $this->_helper->redirector->gotoUrl('/admin/' . $controller . '/view/id/' . $entity->id . '/#tabActor');
     }
 
     public function updateAction() {
@@ -119,6 +102,7 @@ class Admin_ActorController extends Zend_Controller_Action {
         }
         $actor->name = $form->getValue('name');
         $actor->description = $form->getValue('description');
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         $actor->update();
         foreach (Model_LinkMapper::getLinkedEntities($actor, 'P131') as $alias) {
             $alias->delete();
@@ -127,6 +111,8 @@ class Admin_ActorController extends Zend_Controller_Action {
             $link->delete();
         }
         self::save($actor, $form, $hierarchies);
+        Model_UserLogMapper::insert('entity', $actor->id, 'update');
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_update');
         return $this->_helper->redirector->gotoUrl('/admin/actor/view/id/' . $actor->id);
     }
@@ -158,37 +144,40 @@ class Admin_ActorController extends Zend_Controller_Action {
         if ($actor->class->code != 'E21') {
             $this->view->memberLinks = Model_LinkMapper::getLinks($actor, 'P107');
         }
-        $objects = [];
+        $objectIds = [];
         $residence = Model_LinkMapper::getLinkedEntity($actor, 'P74');
         if ($residence) {
             $object = Model_LinkMapper::getLinkedEntity($residence, 'P53', true);
-            $objects[] = $object;
+            $objectIds[] = $object->id;
             $this->view->residence = $object;
         }
         $firstPlace = Model_LinkMapper::getLinkedEntity($actor, 'OA8');
         if ($firstPlace) {
             $object = Model_LinkMapper::getLinkedEntity($firstPlace, 'P53', true);
-            $objects[] = $object;
+            $objectIds[] = $object->id;
             $this->view->first = $object;
         }
         $lastPlace = Model_LinkMapper::getLinkedEntity($actor, 'OA9');
         if ($lastPlace) {
             $object = Model_LinkMapper::getLinkedEntity($lastPlace, 'P53', true);
-            $objects[] = $object;
+            $objectIds[] = $object->id;
             $this->view->last = $object;
         }
         foreach ($eventLinks as $link) {
             $event = $link->domain;
             $place = Model_LinkMapper::getLinkedEntity($event, 'P7');
             if ($place) {
-                $objects[] = Model_LinkMapper::getLinkedEntity($place, 'P53', true);
+                $object = Model_LinkMapper::getLinkedEntity($place, 'P53', true);
+                $objectIds[] = $object->id;
             }
             $acquisition = Model_LinkMapper::getLinkedEntity($event, 'P24');
             if ($acquisition) {
-                $objects[] = $acquisition;
+                $objectIds[] = $acquisition->id;
             }
         }
-        $this->view->objects = $objects;
+        if ($objectIds) {
+            $this->view->gisData = Model_GisMapper::getAll($objectIds);
+        }
     }
 
     private function getFormName($code) {
@@ -202,9 +191,6 @@ class Admin_ActorController extends Zend_Controller_Action {
             case 'E40':
                 $formName = 'Legal Body';
                 break;
-            default:
-                echo $this->view->ucstring('error_missing_class');
-                exit;
         }
         return $formName;
     }
@@ -230,16 +216,7 @@ class Admin_ActorController extends Zend_Controller_Action {
     }
 
     private function save(Model_Entity $entity, Zend_Form $form, array $hierarchies) {
-        foreach ($hierarchies as $hierarchy) {
-            $idField = $hierarchy->nameClean . 'Id';
-            if ($form->getValue($idField)) {
-                foreach (explode(",", $form->getValue($idField)) as $id) {
-                    Model_LinkMapper::insert('P2', $entity, Model_NodeMapper::getById($id));
-                }
-            } else if ($hierarchy->system) {
-                Model_LinkMapper::insert('P2', $entity, $hierarchy);
-            }
-        }
+        Model_LinkMapper::insertTypeLinks($entity, $form, $hierarchies);
         Model_DateMapper::saveDates($entity, $form);
         foreach (['residenceId' => 'P74', 'appearsFirstId' => 'OA8', 'appearsLastId' => 'OA9'] as $formField => $propertyCode) {
             if ($form->getValue($formField)) {
@@ -250,8 +227,8 @@ class Admin_ActorController extends Zend_Controller_Action {
         $data = $form->getValues();
         foreach (array_unique($data['alias']) as $name) {
             if (trim($name)) {
-                $alias = Model_EntityMapper::insert('E82', trim($name));
-                Model_LinkMapper::insert('P131', $entity, $alias);
+                $aliasId = Model_EntityMapper::insert('E82', trim($name));
+                Model_LinkMapper::insert('P131', $entity, $aliasId);
             }
         }
     }

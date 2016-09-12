@@ -17,16 +17,11 @@ class Model_EntityMapper extends \Model_AbstractMapper {
     ";
 
     public static function search($term, $codes, $description = false, $own = false) {
-        if ($own) {
-            self::$sql .= " LEFT JOIN web.user_log ul ON e.id = ul.table_id AND ul.table_name LIKE 'entity'";
-        }
-        $sql = self::$sql . " WHERE lower(e.name) LIKE :term AND ";
-        if ($description) {
-            $sql = self::$sql . " WHERE (lower(e.name) LIKE :term OR lower(e.description) LIKE :term) AND ";
-        }
-        if ($own) {
-            $sql .= " ul.user_id = :user_id AND ";
-        }
+        $sql = self::$sql;
+        $sql .= ($own) ? " LEFT JOIN web.user_log ul ON e.id = ul.table_id AND ul.table_name LIKE 'entity'" : '';
+        $sql .= " WHERE lower(e.name) LIKE :term ";
+        $sql .= ($description) ? " OR lower(e.description) LIKE :term AND " : " AND ";
+        $sql .= ($own) ? " ul.user_id = :user_id AND " : '';
         $sql .= "e.class_id IN (SELECT id from model.class WHERE code IN ('" . implode("', '", $codes) . "'))";
         $sql .= " GROUP BY e.id, c.code ORDER BY e.name";
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
@@ -35,11 +30,11 @@ class Model_EntityMapper extends \Model_AbstractMapper {
             $statement->bindValue(':user_id', Zend_Registry::get('user')->id);
         }
         $statement->execute();
-        $rows = $statement->fetchAll();
         $entitites = [];
-        foreach ($rows as $row) {
+        foreach ($statement->fetchAll() as $row) {
             $entity = self::populate(new Model_Entity(), $row);
             switch ($entity->class->code) {
+                // @codeCoverageIgnoreStart
                 case 'E82':
                     $entityForAlias = Model_LinkMapper::getLinkedEntity($entity, 'P131', true);
                     if (!isset($entitites[$entityForAlias->id])) { // otherwise the one with dates would be overwriten
@@ -52,6 +47,7 @@ class Model_EntityMapper extends \Model_AbstractMapper {
                         $entitites[$entityForAlias->id] = $entityForAlias;
                     }
                     break;
+                // @codeCoverageIgnoreEnd
                 default:
                     $entitites[$entity->id] = $entity;
             }
@@ -60,7 +56,7 @@ class Model_EntityMapper extends \Model_AbstractMapper {
     }
 
     public static function getLatest($limit) {
-        $codes = array_merge (
+        $codes = array_merge(
             Zend_Registry::get('config')->get('code' . 'Source')->toArray(),
             Zend_Registry::get('config')->get('code' . 'Event')->toArray(),
             Zend_Registry::get('config')->get('code' . 'Actor')->toArray(),
@@ -80,6 +76,9 @@ class Model_EntityMapper extends \Model_AbstractMapper {
     }
 
     public static function getById($id) {
+        if (in_array($id, Zend_Registry::get('nodesIds'))) {
+            return Model_NodeMapper::getById($id);
+        }
         $sql = self::$sql . ' WHERE e.id = :id GROUP BY e.id, c.code;';
         $row = parent::getRowById($sql, $id);
         return self::populate(new Model_Entity(), $row);
@@ -118,50 +117,25 @@ class Model_EntityMapper extends \Model_AbstractMapper {
     }
 
     protected static function populate(Model_Entity $entity, array $row) {
-        if (
-            APPLICATION_ENV == 'development' &&
-            Zend_Registry::isRegistered('nodesIds') &&
-            is_a($entity, 'Model_entity') &&
-            in_array($row['id'], Zend_Registry::get('nodesIds'))) {
-
-            $trace = debug_backtrace();
-            $caller = $trace[2];
-            if (!in_array($caller['function'], ['tablelog'])) {
-                echo "Entity populate called by {$caller['function']}";
-                if (isset($caller['class'])) {
-                    echo " in {$caller['class']}";
-                }
-                exit;
-                throw new \Zend_Application_Bootstrap_Exception("Entity populate instead of using existing node");
-            }
-        }
         $classes = Zend_Registry::get('classes');
         $entity->id = $row['id'];
         $entity->class = $classes[$row['class_id']];
         $entity->name = $row['name'];
         $entity->description = $row['description'];
-        if (isset($row['value_timestamp'])) {
-            $entity->date = parent::toZendDate($row['value_timestamp']);
-        }
+        $entity->date = (isset($row['value_timestamp'])) ? parent::toZendDate($row['value_timestamp']) : null;
         $entity->created = parent::toZendDate($row['created']);
         $entity->modified = parent::toZendDate($row['modified']);
-        if (isset($row['first'])) {
-            $entity->first = $row['first'];
-        }
-        if (isset($row['last'])) {
-            $entity->last = $row['last'];
-        }
+        $entity->first = (isset($row['first'])) ? $row['first'] : null;
+        $entity->last = (isset($row['last'])) ? $row['last'] : null;
         return $entity;
     }
 
     public static function insert($class, $name, $description = null, $date = null) {
-        if (!is_numeric($class)) { // if $class was a string (code) get the id
-            $class = Model_ClassMapper::getByCode($class)->id;
-        }
+        $classId = (is_numeric($class)) ? $class : Model_ClassMapper::getByCode($class)->id;
         $sql = 'INSERT INTO model.entity (class_id, name, description, value_timestamp)
             VALUES (:class_id, :name, :description, :value_timestamp) RETURNING id;';
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
-        $statement->bindValue(':class_id', (int) $class);
+        $statement->bindValue(':class_id', (int) $classId);
         if ($description) {
             $statement->bindValue(':description', \Craws\FilterInput::filter($description, 'crm'));
         } else {
@@ -178,10 +152,7 @@ class Model_EntityMapper extends \Model_AbstractMapper {
         }
         $statement->execute();
         $result = $statement->fetch(PDO::FETCH_ASSOC);
-        $entity = self::getById($result['id']);
-        Model_UserLogMapper::insert('entity', $entity->id, 'insert');
-        Model_LogMapper::log('info', 'insert', 'insert Entity (' . $entity->id . ')');
-        return $entity;
+        return $result['id'];
     }
 
     public static function update(Model_Entity $entity) {
@@ -195,7 +166,6 @@ class Model_EntityMapper extends \Model_AbstractMapper {
             $statement->bindValue(':description', null, PDO::PARAM_NULL);
         }
         $statement->execute();
-        Model_UserLogMapper::insert('entity', $entity->id, 'update');
     }
 
     public static function delete(Model_Entity $entity) {
@@ -212,10 +182,9 @@ class Model_EntityMapper extends \Model_AbstractMapper {
         }
     }
 
-    /* checks if an entry was modified since opening the update form */
     public static function checkIfModified(Model_Entity $entity, $modified) {
         if ($entity->modified && $entity->modified->getTimestamp() > $modified) {
-            return true;
+            return true; /* return true if an entry was modified since opening the update form */
         }
     }
 

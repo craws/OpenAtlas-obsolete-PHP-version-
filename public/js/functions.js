@@ -1,7 +1,18 @@
+tinymce.init({
+    menubar: false,
+    relative_urls : false,
+    mode: "specific_textareas",
+    editor_selector: "tinymce",
+    resize: "both",
+    toolbar_items_size : 'small',
+    plugins: "link code textcolor colorpicker",
+    toolbar: "bold italic underline strikethrough alignleft aligncenter alignright alignjustify undo redo link " +
+        "unlink fontselect fontsizeselect forecolor code",
+});
 
 function createOverlay(name, title, multi) {
     /* remove line below and use multiple = false as function param when netbeans fix for 257826 available */
-    var multiple = typeof multi !== 'undefined' ?  multi : false;
+    var multiple = typeof multi !== 'undefined' ? multi : false;
     $("#" + name + "Overlay").click(function () {
         $("#" + name + "Dialog").dialog("close");
     });
@@ -17,7 +28,7 @@ function createOverlay(name, title, multi) {
             width: "auto",
             height: "auto",
             close: function () {
-                if(multiple) {
+                if (multiple) {
                     selectFromTableMulti(name);
                 }
                 $("#" + name + "Overlay").css("display", "none");
@@ -52,7 +63,7 @@ function createTableOverlayMulti(name, title) {
 
 function createTreeOverlay(name, title, multi) {
     /* remove line below and use multiple = false as function param when netbeans fix for 257826 available */
-    var multiple = typeof multi !== 'undefined' ?  multi : false;
+    var multiple = typeof multi !== 'undefined' ? multi : false;
     $("#" + name + "Overlay").click(function () {
         $("#" + name + "Dialog").dialog("close");
     });
@@ -68,7 +79,7 @@ function createTreeOverlay(name, title, multi) {
             width: "auto",
             height: "auto",
             close: function () {
-                if(multiple) {
+                if (multiple) {
                     selectFromTreeMulti(name);
                 }
                 $("#" + name + "Overlay").css("display", "none");
@@ -81,7 +92,7 @@ function selectFromTree(name, id, text) {
     $("#" + name + "Id").val(id);
     $("#" + name + "Button").val(text);
     $("#" + name + "Button").focus(); /* to refresh/fill button and remove validation errors */
-    if ($('#' + name + 'Dialog').hasClass("ui-dialog-content") &&  $('#' + name + 'Dialog').dialog("isOpen")) {
+    if ($('#' + name + 'Dialog').hasClass("ui-dialog-content") && $('#' + name + 'Dialog').dialog("isOpen")) {
         $('#' + name + 'Dialog').dialog('close');
     }
     $("#" + name + "Clear").show();
@@ -90,7 +101,7 @@ function selectFromTree(name, id, text) {
 function selectFromTreeMulti(name) {
     var ids = $('#' + name + 'Tree').jstree('get_selected');
     var checkedNames = '';
-    ids.forEach(function(item, index, array){
+    ids.forEach(function (item, index, array) {
         var node = $('#' + name + 'Tree').jstree().get_node(item);
         checkedNames += node['text'] + "<br/>";
     });
@@ -110,7 +121,7 @@ function selectFromTable(element, table, id) {
 function selectFromTableMulti(name) {
     var checkedNames = '';
     var ids = [];
-    $(".multiTableSelect").each(function() {
+    $(".multiTableSelect").each(function () {
         if ($(this).is(':checked')) {
             checkedNames += $(this).val() + "<br/>";
             ids.push($(this).attr('id'));

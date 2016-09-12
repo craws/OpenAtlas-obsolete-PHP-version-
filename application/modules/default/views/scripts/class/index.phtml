@@ -1,0 +1,21 @@
+<? $this->breadcrumb = ['<a href="model">' . $this->ucstring('model') . '</a>', $this->ucstring('class')]; ?>
+<? $table = ['id' => 'class', 'pager' => true, 'filter' => true]; ?>
+<? $table['header'] = [_('code'), _('name')]; ?>
+<? foreach ($this->classes as $class) : ?>
+    <? $table['data'][] = [$this->link($class, 'view', $class->code), $class->nameTranslated]; ?>
+<? endforeach ?>
+<? $this->table = $table; ?>
+<? $this->addScriptPath(APPLICATION_PATH . '/modules/admin/views/scripts'); ?>
+<?= $this->render('tableSorter.phtml'); ?>
+<script type="text/javascript">
+    $.tablesorter.addParser({
+        id: 'code',
+        is: function (string, table, cell, $cell) {
+            return false;
+        },
+        format: function (string, table, cell, cellIndex) {
+            return string.replace(/E/, '');
+        },
+        type: 'numeric'
+    });
+</script>

@@ -1,0 +1,41 @@
+<? $property = $this->property;
+    $this->breadcrumb = [
+        '<a href="/model">' . $this->ucstring('model') . '</a>',
+        '<a href="/property">' . $this->ucstring('property') . '</a>',
+        $property->getCodeName()
+    ];
+?>
+<div style="float:left;padding-right:2em;">
+    <p><strong><?= $this->ucstring('info') ?></strong></p>
+    <?
+    $table['data'] = [
+        _('code') => $property->code,
+        _('name') => $property->nameTranslated,
+        _('inverse') => $property->nameInverseTranslated,
+        _('domain') => $this->link($property->domain, 'view', $property->domain->getCodeName()),
+        _('range') => $this->link($property->range, 'view', $property->range->getCodeName()),
+    ];
+    $this->table = $table;
+    ?>
+    <? $this->addScriptPath(APPLICATION_PATH . '/modules/admin/views/scripts'); ?>
+    <?= $this->render('tableDataItem.phtml') ?>
+</div>
+<? foreach (['super' => $property->getSuper(), 'subs' => $property->getSub()] as $title => $array): ?>
+    <? if ($array): ?>
+        <div style="float:left;padding-right:2em;">
+            <p><strong><?= $this->ucstring($title) ?></strong></p>
+            <? foreach ($array as $item): ?>
+                <p><?= $this->link($item, 'view', $item->getCodeName()) ?></p>
+            <? endforeach ?><br/>
+        </div>
+    <? endif ?>
+<? endforeach ?>
+<div style="clear:both;">
+    <? if ($property->commentTranslated): ?>
+        <div class="description">
+            <p><strong><?= $this->ucstring('comment') ?></strong></p>
+            <p><?= $property->commentTranslated ?></p>
+        </div>
+    </div>
+<? endif ?>
+

@@ -1,0 +1,30 @@
+<? $this->breadcrumb = ['<a href="model">' . $this->ucstring('model') . '</a>', $this->ucstring('property')]; ?>
+<?
+
+$table = ['id' => 'property', 'pager' => true, 'filter' => true];
+$table['header'] = [_('code'), _('name'), _('inverse'), _('domain'), _('range')];
+foreach ($this->properties as $property) {
+    $table['data'][] = [
+        $this->link($property, 'view', $property->code),
+        $property->nameTranslated,
+        $property->nameInverseTranslated,
+        $this->link($property->domain),
+        $this->link($property->range)
+    ];
+}
+$this->table = $table;
+?>
+<? $this->addScriptPath(APPLICATION_PATH . '/modules/admin/views/scripts'); ?>
+<?= $this->render('tableSorter.phtml'); ?>
+<script type="text/javascript">
+    $.tablesorter.addParser({
+        id: 'code',
+        is: function (string, table, cell, $cell) {
+            return false;
+        },
+        format: function (string, table, cell, cellIndex) {
+            return string.replace(/P/, '').replace(/OA/, '100');
+        },
+        type: 'numeric'
+    });
+</script>

@@ -1,6 +1,48 @@
 INFO
 ====
-Watch out for database role in SQLs and change "openatlas_dpp" if needed.
+
+Watch out for database role in SQLs and change "openatlas_master" if needed.
+
+2.1.0 to 2.2.0 Upgrade
+======================
+
+BEGIN;
+
+ALTER TABLE gis.linestring RENAME text TO type;
+ALTER TABLE gis.point RENAME text TO type;
+ALTER TABLE gis.polygon RENAME text TO type;
+INSERT INTO gis.point (entity_id, type, geom, name) SELECT entity_id, 'centerpoint', geom,
+    (SELECT name FROM model.entity e JOIN model.link l ON e.id = l.domain_id WHERE l.range_id = entity_id AND l.property_id = (SELECT id from model.property WHERE code LIKE 'P53'))
+FROM gis.centerpoint;
+DROP TABLE IF EXISTS gis.centerpoint;
+DROP FUNCTION IF EXISTS gis.geometry_creation();
+COMMIT;
+
+Favicons: add SVG to apache.conf RewriteRule like:
+
+RewriteRule !\.(js|ico|gif|jpg|png|css|svg)$ /index.php
+
+and if you want to change the default OpenAtlas ones:
+
+- use http://realfavicongenerator.net/ to generate files and copy files to public
+- change line endings in browserconfig.xml from windows to unix
+
+
+2.0.0 to 2.1.0 Upgrade
+======================
+
+BEGIN;
+
+UPDATE web.settings SET value = 6 WHERE name = 'log_level';
+TRUNCATE log.detail, log.log;
+DELETE FROM web.user_log WHERE table_name IN ('link', 'LinkProperty');
+DELETE FROM web.user_log WHERE action LIKE ('gis insert');
+DELETE FROM web.user_log WHERE table_id NOT IN (SELECT id FROM model.entity);
+DELETE FROM web.user_log WHERE table_id IN (SELECT e.id FROM model.entity e JOIN model.class c ON e.class_id = c.id WHERE c.code = 'E61');
+
+COMMIT;
+
+
 
 1.6.0 to 2.0.0 Upgrade
 ======================
@@ -17,14 +59,14 @@ CREATE TABLE web.form (
     modified timestamp without time zone
 
 );
-ALTER TABLE web.form OWNER TO openatlas_dpp;
+ALTER TABLE web.form OWNER TO openatlas_master;
 CREATE SEQUENCE web.form_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-ALTER TABLE web.form_id_seq OWNER TO openatlas_dpp;
+ALTER TABLE web.form_id_seq OWNER TO openatlas_master;
 ALTER SEQUENCE web.form_id_seq OWNED BY web.form.id;
 
 CREATE TABLE web.hierarchy (
@@ -37,7 +79,7 @@ CREATE TABLE web.hierarchy (
     created timestamp without time zone DEFAULT now() NOT NULL,
     modified timestamp without time zone
 );
-ALTER TABLE web.hierarchy OWNER TO openatlas_dpp;
+ALTER TABLE web.hierarchy OWNER TO openatlas_master;
 COMMENT ON COLUMN web.hierarchy.id IS 'same as model.entity.id';
 COMMENT ON COLUMN web.hierarchy.name IS 'same as model.entity.name, to ensure unique root type names';
 
@@ -47,7 +89,7 @@ CREATE SEQUENCE web.hierarchy_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-ALTER TABLE web.hierarchy_id_seq OWNER TO openatlas_dpp;
+ALTER TABLE web.hierarchy_id_seq OWNER TO openatlas_master;
 ALTER SEQUENCE web.hierarchy_id_seq OWNED BY web.hierarchy.id;
 
 CREATE TABLE web.hierarchy_form (
@@ -57,7 +99,7 @@ CREATE TABLE web.hierarchy_form (
     created timestamp without time zone DEFAULT now() NOT NULL,
     modified timestamp without time zone
 );
-ALTER TABLE web.hierarchy_form OWNER TO openatlas_dpp;
+ALTER TABLE web.hierarchy_form OWNER TO openatlas_master;
 
 CREATE SEQUENCE web.hierarchy_form_id_seq
     START WITH 1
@@ -65,7 +107,7 @@ CREATE SEQUENCE web.hierarchy_form_id_seq
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-ALTER TABLE web.hierarchy_form_id_seq OWNER TO openatlas_dpp;
+ALTER TABLE web.hierarchy_form_id_seq OWNER TO openatlas_master;
 ALTER SEQUENCE web.hierarchy_form_id_seq OWNED BY web.hierarchy_form.id;
 
 ALTER TABLE ONLY web.hierarchy ALTER COLUMN id SET DEFAULT nextval('web."hierarchy_id_seq"'::regclass);
@@ -181,14 +223,14 @@ CREATE TABLE user_bookmarks (
     created timestamp without time zone DEFAULT now() NOT NULL,
     modified timestamp without time zone
 );
-ALTER TABLE user_bookmarks OWNER TO openatlas_dpp;
+ALTER TABLE user_bookmarks OWNER TO openatlas_master;
 CREATE SEQUENCE user_bookmarks_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
     NO MAXVALUE
     CACHE 1;
-ALTER TABLE user_bookmarks_id_seq OWNER TO openatlas_dpp;
+ALTER TABLE user_bookmarks_id_seq OWNER TO openatlas_master;
 ALTER SEQUENCE user_bookmarks_id_seq OWNED BY user_bookmarks.id;
 ALTER TABLE ONLY user_bookmarks ALTER COLUMN id SET DEFAULT nextval('user_bookmarks_id_seq'::regclass);
 ALTER TABLE ONLY user_bookmarks ADD CONSTRAINT user_bookmarks_pkey PRIMARY KEY (id);

@@ -44,28 +44,24 @@ class Craws_View_Helper_Link extends Zend_View_Helper_Abstract {
         return $link;
     }
 
-    private function printObjectLink($object, $action, $label, $tab) {
-        if (!$action) {
-            $action = 'view';
-        }
-        if ($tab) {
-            $tab = '/#tab' . $tab;
-        }
+    private function printObjectLink($object, $actionParam, $label, $tabParam) {
+        $action = ($actionParam) ? $actionParam : 'view';
+        $tab = ($tabParam) ? '/#tab' . $tabParam : '';
         $onclick = '';
-        if ($label) {
-            $label = $this->view->ucstring($label);
-        } else if ($action == 'update') {
+        if ($action == 'update') {
             $label = $this->view->ucstring('edit');
         } else if ($action == 'delete') {
             $label = $this->view->ucstring('delete');
             $onclick = " onclick=\"return confirm('" .
                 $this->view->ucstring($this->view->translate('confirm_delete', $object->name)) . "')\" ";
+        } else if ($label) {
+            // dont change given label
         } else if (isset($object->nameTranslated) && $object->nameTranslated) {
             $label = $object->nameTranslated;
         } else {
             $label = $object->name;
         }
-        $link = '<a href="/admin/' . $this->getController($object) . '/' . $action . '/id/' . $object->id . $tab . '"' .
+        $link = '<a href="/' . $this->getController($object) . '/' . $action . '/id/' . $object->id . $tab . '"' .
             $onclick . '>' . $label . '</a>';
         return $link;
     }
@@ -83,7 +79,7 @@ class Craws_View_Helper_Link extends Zend_View_Helper_Abstract {
             return '"</a><span style="color:red;">undefined code ' . $object->class->code . ' for link <';
         }
         // @codeCoverageIgnoreEnd
-        return $array[$object->class->code];
+        return 'admin/' . $array[$object->class->code];
     }
 
 }

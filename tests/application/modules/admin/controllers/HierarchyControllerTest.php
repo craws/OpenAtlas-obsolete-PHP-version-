@@ -42,8 +42,12 @@ class Admin_HierarchyControllerTest extends ControllerTestCase {
         $this->resetRequest()->resetResponse();
         $formValues['super'] = $kindredship->superId;
         $this->request->setMethod('POST')->setPost($formValues);
-        $this->dispatch('admin/hierarchy/update/id/' . $kindredship->id);
-        $this->dispatch('admin/hierarchy/delete/id/' . $kindredship->superId);
+        $site = Model_NodeMapper::getByNodeCategoryName('Site', 'Settlement');
+        $this->dispatch('admin/hierarchy/update/id/' . $site->id);
+        $this->resetRequest()->resetResponse();
+        $this->dispatch('admin/hierarchy/delete/id/' . $kindredship->superId); // test delete forbid if subnodes
+        $this->resetRequest()->resetResponse();
+        $this->dispatch('admin/hierarchy/delete/id/' . $kindredship->rootId); // test delete forbid if root
         $this->resetRequest()->resetResponse();
         $this->dispatch('admin/hierarchy/delete/id/' . $kindredship->id);
         $this->resetRequest()->resetResponse();
@@ -53,7 +57,8 @@ class Admin_HierarchyControllerTest extends ControllerTestCase {
         $formValues = [
             'name' => 'new name',
             'description' => 'description',
-            'multiple' => 1
+            'multiple' => 1,
+            'forms' => [1 => 1]
         ];
         $this->dispatch('admin/hierarchy/insert-hierarchy');
         $this->request->setMethod('POST')->setPost($formValues);
@@ -68,6 +73,7 @@ class Admin_HierarchyControllerTest extends ControllerTestCase {
         $this->request->setMethod('POST')->setPost($formValues);
         $this->dispatch('admin/hierarchy/insert-hierarchy');
         $this->resetRequest()->resetResponse();
+        $formValues['forms'] = [2 => 2];
         $this->dispatch('admin/hierarchy/update-hierarchy/id/' . $this->customHierarchyId);
         $this->resetRequest()->resetResponse();
         $this->request->setMethod('POST')->setPost($formValues);
@@ -76,6 +82,7 @@ class Admin_HierarchyControllerTest extends ControllerTestCase {
         $formValues['name'] = 'a complete new name';
         $this->request->setMethod('POST')->setPost($formValues);
         $this->dispatch('admin/hierarchy/update-hierarchy/id/' . $this->customHierarchyId);
+        Model_NodeMapper::getHierarchyByName('007'); // test non existing hierarchy name
     }
 
     public function testDeleteDenied() {

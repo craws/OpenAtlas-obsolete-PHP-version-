@@ -40,11 +40,7 @@ if (isset($this->table['filter']) && $this->table['filter']) {
     <thead>
         <tr>
             <? foreach ($this->table['header'] as $title): ?>
-                <? $class = '' ?>
-                <? if (!$title): ?>
-                    <? $class = ' class="sorter-false" ' ?>
-                <? endif ?>
-                <th <?= $class ?>><?= $this->ucstring($title) ?></th>
+                <th <?= ($title) ? '' : ' class="sorter-false" ' ?>><?= $this->ucstring($title) ?></th>
             <? endforeach ?>
         </tr>
     </thead>

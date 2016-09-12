@@ -5,6 +5,7 @@
 class Admin_Form_PasswordReset extends Craws\Form\Table {
 
     // @codeCoverageIgnoreStart
+    // Ignore coverage because no mail in testing
     public function init() {
         $this->setName('passwordResetForm');
         $this->setMethod('post');
@@ -20,6 +21,5 @@ class Admin_Form_PasswordReset extends Craws\Form\Table {
         $this->addElement('button', 'formSubmit', ['label' => $this->getView()->ucstring('password_reset'), 'type' => 'submit']);
         $this->setElementFilters(['StringTrim']);
     }
-
     // @codeCoverageIgnoreEnd
 }

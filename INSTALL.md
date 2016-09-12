@@ -51,7 +51,7 @@ PostGis is needed. To add it uncomment "CREATE EXTENSION postgis;" on top of dat
 as postgres
 
     $ createuser openatlas_master -P
-    $ createdb -O openatlas_master openatlas_master
+    $ createdb openatlas_master -O openatlas_master
     $ cd data/install
     $ cat structure.sql data_web.sql data_model.sql data_node.sql | psql -d openatlas_master -f -
 
@@ -61,16 +61,15 @@ optional - create database openatlas_master_test for unittests
 
 adapt /application/configs/config.ini
 
-adapt and rename /application/configs/password.example.ini to password.ini
+adapt and rename /application/configs/password_example.ini to password.ini
 
 ### Apache
 
-use apache_config as template for a new vhost
-mkdir for error logs
+use apache_example.conf as template for a new vhost
 
-    # a2ensite
+    # a2ensite your_sitename
     # apacha2ctl configtest
-    # /etc/init.d/apache restart
+    # /etc/init.d/apache2 restart
 
 ### I18N
 

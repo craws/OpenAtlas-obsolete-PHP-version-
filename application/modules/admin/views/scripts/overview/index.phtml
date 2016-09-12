@@ -11,15 +11,10 @@
     ?>
     <?= $this->render('tableSorter.phtml'); ?>
 </div>
-<div style="float:left;">
+<div style="float:left;margin-top:10px;">
     <? if (!$namespace->lastLogin): ?>
         <p style="margin-top:1em;"><?= $this->translate('first_login') ?></p>
     <? endif ?>
-    <p style="margin-top:1em;">
-        <a href="/admin/overview/model"><?= $this->ucstring('model') ?></a> -
-        <a href="/admin/overview/changelog">Changelog</a> -
-        <a href="/admin/overview/credits"><?= $this->ucstring('credits') ?></a>
-    </p>
     <p><?= $this->translate('feedback_teaser') ?>
         <a href="/admin/overview/feedback"><?= $this->ucstring('feedback') ?></a>
     </p>

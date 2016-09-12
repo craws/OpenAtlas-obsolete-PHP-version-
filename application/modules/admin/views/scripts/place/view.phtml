@@ -3,7 +3,7 @@
 <div id="tabs" class="tabsContainer">
     <ul>
         <li><a href="#tabInfo"><?= $this->ucstring('info') ?></a></li>
-        <? if ($this->jsonData): ?>
+        <? if ($this->gisData): ?>
             <li><a href="#tabMap"><?= $this->ucstring('map') ?></a></li>
         <? endif ?>
         <li><a href="#tabEvents"><?= $this->ucstring('events') ?> (<?= count($this->events) ?>)</a></li>
@@ -11,10 +11,12 @@
         <li><a href="#tabSource"><?= $this->ucstring('sources') ?> (<?= count($this->sourceLinks) ?>)</a></li>
         <li><a href="#tabReference"><?= $this->ucstring('references') ?> (<?= count($this->referenceLinks) ?>)</a></li>
     </ul>
-    <? if ($this->jsonData): ?>
+    <? if ($this->gisData): ?>
         <div id="tabMap">
             <div id="map" class="map" style="float: none;margin:0;width:70em;"></div>
             <script type="text/javascript" src="/js/leaflet/map.js"></script>
+            <script type="text/javascript" src="/js/leaflet/draw/leaflet.draw.js"></script>
+            <script type="text/javascript" src="/js/leaflet/draw/edithandler.js"></script>
         </div>
     <? endif ?>
     <div id="tabInfo">

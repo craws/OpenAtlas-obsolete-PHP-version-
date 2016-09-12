@@ -4,25 +4,18 @@
 
 class Admin_PlaceController extends Zend_Controller_Action {
 
-    public function addAction() {
-        $origin = Model_EntityMapper::getById($this->_getParam('id'));
-        $array = Zend_Registry::get('config')->get('codeView')->toArray();
-        $controller = $array[$origin->class->code];
-        $this->view->controller = $controller;
-        $this->view->menuHighlight = $controller;
-        $this->view->origin = $origin;
-        $this->view->objects = Model_EntityMapper::getByCodes('PhysicalObject');
-    }
-
     public function deleteAction() {
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         Model_EntityMapper::getById($this->_getParam('id'))->delete();
+        Model_UserLogMapper::insert('entity', $this->_getParam('id'), 'delete');
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_delete');
         return $this->_helper->redirector->gotoUrl('/admin/place');
     }
 
     public function indexAction() {
         $this->view->objects = Model_EntityMapper::getByCodes('PhysicalObject');
-        $this->view->jsonData = Model_GisMapper::getJsonData($this->view->objects);
+        $this->view->gisData = Model_GisMapper::getAll();
     }
 
     public function insertAction() {
@@ -40,42 +33,31 @@ class Admin_PlaceController extends Zend_Controller_Action {
         if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
             $this->view->form = $form;
             $this->view->source = $source;
+            $this->view->gisData = Model_GisMapper::getAll();
             return;
         }
-        $object = Model_EntityMapper::insert('E18', $form->getValue('name'), $form->getValue('description'));
-        $place = Model_EntityMapper::insert('E53', 'Location of ' . $form->getValue('name'));
-        Model_LinkMapper::insert('P53', $object, $place);
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
+        $objectId = Model_EntityMapper::insert('E18', $form->getValue('name'), $form->getValue('description'));
+        $object = Model_EntityMapper::getById($objectId);
+        $placeId = Model_EntityMapper::insert('E53', 'Location of ' . $form->getValue('name'));
+        $place = Model_EntityMapper::getById($placeId);
+        Model_LinkMapper::insert('P53', $objectId, $placeId);
         self::save($form, $object, $place, $hierarchies);
         if ($source) {
             Model_LinkMapper::insert('P67', $source, $object);
         }
+        Model_UserLogMapper::insert('entity', $objectId, 'insert');
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_insert');
-        // @codeCoverageIgnoreStart
+        $url = '/admin/place/view/id/' . $object->id;
         if ($form->getElement('continue')->getValue() && $source) {
-            return $this->_helper->redirector->gotoUrl('/admin/place/insert/sourceId/' . $source->id);
+            $url = '/admin/place/insert/sourceId/' . $source->id;
+        } else if ($form->getElement('continue')->getValue()) {
+            $url = '/admin/place/insert';
+        } else if ($source) {
+            $url = '/admin/source/view/id/' . $source->id . '/#tabPlace';
         }
-        if ($form->getElement('continue')->getValue()) {
-            return $this->_helper->redirector->gotoUrl('/admin/place/insert');
-        }
-        if ($source) {
-            return $this->_helper->redirector->gotoUrl('/admin/source/view/id/' . $source->id . '/#tabPlace');
-        }
-        // @codeCoverageIgnoreEnd
-        return $this->_helper->redirector->gotoUrl('/admin/place/view/id/' . $object->id);
-    }
-
-    public function linkAction() {
-        $place = Model_EntityMapper::getById($this->_getParam('placeId'));
-        $entity = Model_EntityMapper::getById($this->_getParam('rangeId'));
-        if (Model_LinkMapper::linkExists('P67', $entity, $place)) {
-            $this->_helper->message('error_link_exists');
-        } else {
-            Model_LinkMapper::insert('P67', $entity, $place);
-            $this->_helper->message('info_insert');
-        }
-        $array = Zend_Registry::get('config')->get('codeView')->toArray();
-        $controller = $array[$entity->class->code];
-        return $this->_helper->redirector->gotoUrl('/admin/' . $controller . '/view/id/' . $entity->id . '/#tabPlace');
+        return $this->_helper->redirector->gotoUrl($url);
     }
 
     public function updateAction() {
@@ -85,21 +67,7 @@ class Admin_PlaceController extends Zend_Controller_Action {
         $hierarchies = $form->addHierarchies('Place', $object);
         $this->view->form = $form;
         $this->view->object = $object;
-        $aliasIndex = 0;
-        $aliasElements = Model_LinkMapper::getLinkedEntities($object, 'P1');
-        if ($aliasElements) {
-            foreach ($aliasElements as $alias) {
-                $element = $form->createElement('text', 'alias' . $aliasIndex, ['belongsTo' => 'alias']);
-                $element->setValue($alias->name);
-                $form->addElement($element);
-                $aliasIndex++;
-            }
-        } else {
-            $element = $form->createElement('text', 'alias0', ['belongsTo' => 'alias']);
-            $form->addElement($element);
-            $aliasIndex++;
-        }
-        $form->populate(['aliasId' => $aliasIndex]);
+        $form->prepareUpdate($object);
         if (!$this->getRequest()->isPost()) {
             self::prepareDefaultUpdate($form, $object, $place);
             return;
@@ -117,6 +85,7 @@ class Admin_PlaceController extends Zend_Controller_Action {
         }
         $object->name = $form->getValue('name');
         $object->description = $form->getValue('description');
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         $object->update();
         foreach (Model_LinkMapper::getLinks($object, 'P2') as $objectLink) {
             $objectLink->delete();
@@ -131,6 +100,8 @@ class Admin_PlaceController extends Zend_Controller_Action {
             $link->delete();
         }
         self::save($form, $object, $place, $hierarchies);
+        Model_UserLogMapper::insert('entity', $object->id, 'update');
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_update');
         return $this->_helper->redirector->gotoUrl('/admin/place/view/id/' . $object->id);
     }
@@ -138,12 +109,7 @@ class Admin_PlaceController extends Zend_Controller_Action {
     public function viewAction() {
         $object = Model_EntityMapper::getById($this->_getParam('id'));
         $place = Model_LinkMapper::getLinkedEntity($object, 'P53');
-        $this->view->gis = Model_GisMapper::getByEntity($place);
-        // @codeCoverageIgnoreStart
-        if ($this->view->gis) {
-            $this->view->jsonData = Model_GisMapper::getJsonData();
-        }
-        // @codeCoverageIgnoreEnd
+        $this->view->gisData = Model_GisMapper::getAll($object->id);
         $this->view->object = $object;
         $this->view->aliases = Model_LinkMapper::getLinkedEntities($object, 'P1');
         $this->view->dates = Model_DateMapper::getDates($object);
@@ -174,17 +140,13 @@ class Admin_PlaceController extends Zend_Controller_Action {
     }
 
     private function prepareDefaultUpdate(Zend_Form $form, Model_Entity $object, Model_Entity $place) {
+        $gisData = Model_GisMapper::getAll($object->id);
+        $this->view->gisData = $gisData;
         $form->populate([
             'name' => $object->name,
             'description' => $object->description,
             'modified' => ($object->modified) ? $object->modified->getTimestamp() : 0
         ]);
-        $gis = Model_GisMapper::getByEntity($place);
-        // @codeCoverageIgnoreStart
-        if ($gis) {
-            $form->populate(['easting' => $gis->easting, 'northing' => $gis->northing]);
-        }
-        // @codeCoverageIgnoreEnd
         $form->populateDates($object, ['OA1' => 'begin', 'OA2' => 'end']);
         return;
     }
@@ -195,11 +157,11 @@ class Admin_PlaceController extends Zend_Controller_Action {
             if ($form->getValue($idField)) {
                 if ($hierarchy->propertyToEntity == 'P89') {
                     foreach (explode(",", $form->getValue($idField)) as $id) {
-                        Model_LinkMapper::insert($hierarchy->propertyToEntity, $place, Model_NodeMapper::getById($id));
+                        Model_LinkMapper::insert($hierarchy->propertyToEntity, $place, $id);
                     }
                 } else {
                     foreach (explode(",", $form->getValue($idField)) as $id) {
-                        Model_LinkMapper::insert($hierarchy->propertyToEntity, $object, Model_NodeMapper::getById($id));
+                        Model_LinkMapper::insert($hierarchy->propertyToEntity, $object, $id);
                     }
                 }
             } else if ($hierarchy->system && $hierarchy->propertyToEntity != 'P89') {
@@ -210,19 +172,11 @@ class Admin_PlaceController extends Zend_Controller_Action {
         $data = $form->getValues();
         foreach (array_unique($data['alias']) as $name) {
             if (trim($name)) {
-                $alias = Model_EntityMapper::insert('E41', trim($name));
-                Model_LinkMapper::insert('P1', $object, $alias);
+                $aliasId = Model_EntityMapper::insert('E41', trim($name));
+                Model_LinkMapper::insert('P1', $object, $aliasId);
             }
         }
-        // @codeCoverageIgnoreStart
-        if ($form->getValue('easting') && $form->getValue('northing')) {
-            $gis = new Model_Gis();
-            $gis->setEntity($place);
-            $gis->easting = $form->getValue('easting');
-            $gis->northing = $form->getValue('northing');
-            $gis->insert();
-        }
-        // @codeCoverageIgnoreEnd
+        Model_GisMapper::insert($place, $form);
     }
 
 }

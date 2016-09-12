@@ -6,7 +6,6 @@
         <?
         foreach ($data as $name => $value) {
             $elementName = $group . "__" . $name;
-            $name = str_replace("_", " ", $this->ucstring($name));
             if ($elementName == 'general__language') {
                 $language = Model_LanguageMapper::getById($value);
                 $value = $language->name;
@@ -19,15 +18,18 @@
                 $value = $array[$value];
             } else if ($name == 'log_level') {
                 $array = [
-                    1 => 'emergency',
-                    2 => 'alert',
-                    3 => 'critical',
-                    4 => 'error', 5 => 'warn',
-                    6 => 'notice', 7 => 'debug'
+                    0 => 'emergency',
+                    1 => 'alert',
+                    2 => 'critical',
+                    3 => 'error',
+                    4 => 'warn',
+                    5 => 'notice',
+                    6 => 'info',
+                    7 => 'debug'
                 ];
-                $value = '<span class="log ' . $array[$value] . '">' . $this->ucstring($array[$value]) . '</span>';
+                $value = $this->ucstring($array[$value]);
             }
-            echo '<div><div>' . $name . '</div><div>' . $value . '</div></div>';
+            echo '<div><div>' . str_replace("_", " ", $this->ucstring($name)) . '</div><div>' . $value . '</div></div>';
         }
     }
     ?>

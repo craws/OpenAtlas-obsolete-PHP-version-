@@ -12,11 +12,8 @@
             <li><a href="#tabMember"><?= $this->ucstring('members') ?> (<?= count($this->memberLinks) ?>)</a></li>
         <? endif ?>
         <li><a href="#tabReference"><?= $this->ucstring('references') ?> (<?= count($this->referenceLinks) ?>)</a></li>
-        <? if ($this->objects): ?>
-            <? $this->jsonData = Model_GisMapper::getJsonData($this->objects); ?>
-            <? if ($this->jsonData): ?>
-                <li><a href="#tabPlace"><?= $this->ucstring('places') ?></a></li>
-            <? endif ?>
+        <? if ($this->gisData['gisPointSelected']): ?>
+            <li><a href="#tabPlace"><?= $this->ucstring('places') ?></a></li>
         <? endif ?>
     </ul>
     <div id="tabInfo">
@@ -263,7 +260,7 @@
         <? $this->table = $biblioTable; ?>
     <?= $this->render('tableSorter.phtml'); ?>
     </div>
-    <? if ($this->jsonData): ?>
+    <? if ($this->gisData['gisPointSelected']): ?>
         <div id="tabPlace">
             <div id="map" class="map" style="float:none;margin:0;width:70em;"></div>
             <script type="text/javascript" src="/js/leaflet/map.js"></script>

@@ -9,20 +9,13 @@ class Admin_EventController extends Zend_Controller_Action {
         $this->view->rootEvent = $this->rootEvent;
     }
 
-    public function addAction() {
-        $origin = Model_EntityMapper::getById($this->_getParam('id'));
-        $array = Zend_Registry::get('config')->get('codeView')->toArray();
-        $controller = $array[$origin->class->code];
-        $this->view->controller = $controller;
-        $this->view->events = Model_EntityMapper::getByCodes('Event');
-        $this->view->menuHighlight = $controller;
-        $this->view->origin = $origin;
-    }
-
     public function deleteAction() {
         $event = Model_EntityMapper::getById($this->_getParam('id'));
         if ($event->id != $this->rootEvent->id) {
+            Zend_Db_Table::getDefaultAdapter()->beginTransaction();
             $event->delete();
+            Model_UserLogMapper::insert('entity', $event->id, 'delete');
+            Zend_Db_Table::getDefaultAdapter()->commit();
             $this->_helper->message('info_delete');
         }
         return $this->_helper->redirector->gotoUrl('/admin/event');
@@ -33,12 +26,12 @@ class Admin_EventController extends Zend_Controller_Action {
     }
 
     public function insertAction() {
-        $class = Model_ClassMapper::getByCode($this->_getParam('code'));
-        if (!$class) {
+        if (!in_array($this->_getParam('code'), Zend_Registry::get('config')->get('codeEvent')->toArray())) {
             $this->getHelper('viewRenderer')->setNoRender(true);
             $this->_helper->message('error_missing_class');
             return;
         }
+        $class = Model_ClassMapper::getByCode($this->_getParam('code'));
         $source = null;
         if ($this->_getParam('sourceId')) {
             $source = Model_EntityMapper::getById($this->_getParam('sourceId'));
@@ -62,42 +55,27 @@ class Admin_EventController extends Zend_Controller_Action {
             $this->view->events = Model_EntityMapper::getByCodes('Event');
             return;
         }
-        $event = Model_EntityMapper::insert($class->id, $form->getValue('name'), $form->getValue('description'));
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
+        $eventId = Model_EntityMapper::insert($class->id, $form->getValue('name'), $form->getValue('description'));
+        $event = Model_EntityMapper::getById($eventId);
         self::save($event, $form, $hierarchies);
         if ($source) {
             Model_LinkMapper::insert('P67', $source, $event);
         }
+        Model_UserLogMapper::insert('entity', $eventId, 'insert');
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_insert');
         $url = '/admin/event/view/id/' . $event->id;
-        // @codeCoverageIgnoreStart
         if ($actor) {
             $url = '/admin/involvement/insert/origin/actor/eventId/' . $event->id . '/actorId/' . $actor->id;
-        }
-        if ($form->getElement('continue')->getValue() && $source) {
+        } else if ($form->getElement('continue')->getValue() && $source) {
             $url = '/admin/event/insert/code/' . $class->code . '/sourceId/' . $source->id;
-        }
-        if ($form->getElement('continue')->getValue()) {
+        } else if ($form->getElement('continue')->getValue()) {
             $url = '/admin/event/insert/code/' . $class->code;
-        }
-        if ($source) {
+        } else if ($source) {
             $url = '/admin/source/view/id/' . $source->id . '/#tabEvent';
         }
-        // @codeCoverageIgnoreEnd
         return $this->_helper->redirector->gotoUrl($url);
-    }
-
-    public function linkAction() {
-        $event = Model_EntityMapper::getById($this->_getParam('eventId'));
-        $entity = Model_EntityMapper::getById($this->_getParam('rangeId'));
-        if (Model_LinkMapper::linkExists('P67', $entity, $event)) {
-            $this->_helper->message('error_link_exists');
-        } else {
-            Model_LinkMapper::insert('P67', $entity, $event);
-            $this->_helper->message('info_insert');
-        }
-        $array = Zend_Registry::get('config')->get('codeView')->toArray();
-        $controller = $array[$entity->class->code];
-        return $this->_helper->redirector->gotoUrl('/admin/' . $controller . '/view/id/' . $entity->id . '/#tabEvent');
     }
 
     public function updateAction() {
@@ -132,11 +110,14 @@ class Admin_EventController extends Zend_Controller_Action {
         }
         $event->name = $form->getValue('name');
         $event->description = $form->getValue('description');
+        Model_UserLogMapper::insert('entity', $event->id, 'update');
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         $event->update();
         foreach (Model_LinkMapper::getLinks($event, ['P2', 'P7', 'P117', 'P22', 'P23', 'P24']) as $link) {
             $link->delete();
         }
         self::save($event, $form, $hierarchies);
+        Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_update');
         return $this->_helper->redirector->gotoUrl('/admin/event/view/id/' . $event->id);
     }
@@ -223,35 +204,23 @@ class Admin_EventController extends Zend_Controller_Action {
     }
 
     private function save(Model_Entity $event, Zend_Form $form, array $hierarchies) {
-        foreach ($hierarchies as $hierarchy) {
-            $idField = $hierarchy->nameClean . 'Id';
-            if ($form->getValue($idField)) {
-                foreach (explode(",", $form->getValue($idField)) as $id) {
-                    Model_LinkMapper::insert('P2', $event, Model_NodeMapper::getById($id));
-                }
-            } else if ($hierarchy->system) {
-                Model_LinkMapper::insert('P2', $event, $hierarchy);
-            }
-        }
+        Model_LinkMapper::insertTypeLinks($event, $form, $hierarchies);
         Model_DateMapper::saveDates($event, $form);
         if ($form->getValue('placeId')) {
             $place = Model_LinkMapper::getLinkedEntity($form->getValue('placeId'), 'P53');
             Model_LinkMapper::insert('P7', $event, $place);
         }
-        $superEvent = $this->rootEvent;
-        if ($form->getValue('superId')) {
-            $superEvent = Model_EntityMapper::getById($form->getValue('superId'));
-        }
-        Model_LinkMapper::insert('P117', $event, $superEvent);
+        $superEventId = ($form->getValue('superId')) ? $form->getValue('superId') : $this->rootEvent->id;
+        Model_LinkMapper::insert('P117', $event, $superEventId);
         if ($event->class->name == 'Acquisition') {
             if ($this->_getParam('recipientId')) {
-                Model_LinkMapper::insert('P22', $event, Model_EntityMapper::getById($this->_getParam('recipientId')));
+                Model_LinkMapper::insert('P22', $event, $this->_getParam('recipientId'));
             }
             if ($this->_getParam('donorId')) {
-                Model_LinkMapper::insert('P23', $event, Model_EntityMapper::getById($this->_getParam('donorId')));
+                Model_LinkMapper::insert('P23', $event, $this->_getParam('donorId'));
             }
             if ($this->_getParam('acquisitionPlaceId')) {
-                Model_LinkMapper::insert('P24', $event, Model_EntityMapper::getById($this->_getParam('acquisitionPlaceId')));
+                Model_LinkMapper::insert('P24', $event, $this->_getParam('acquisitionPlaceId'));
             }
         }
     }
