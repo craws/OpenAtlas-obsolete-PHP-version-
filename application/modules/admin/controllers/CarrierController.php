@@ -111,7 +111,7 @@ class Admin_CarrierController extends Zend_Controller_Action {
         Model_DateMapper::saveDates($entity, $form);
         if ($form->getValue('objectId')) {
             $place = Model_LinkMapper::getLinkedEntity($form->getValue('objectId'), 'P53');
-            Model_LinkMapper::insert('OA8', $entity, $place);
+            $entity->link('OA8', $place);
         }
     }
 }

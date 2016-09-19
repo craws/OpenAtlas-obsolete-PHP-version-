@@ -44,7 +44,7 @@ class Admin_PlaceController extends Zend_Controller_Action {
         Model_LinkMapper::insert('P53', $objectId, $placeId);
         self::save($form, $object, $place, $hierarchies);
         if ($source) {
-            Model_LinkMapper::insert('P67', $source, $object);
+            $source->link('P67', $object);
         }
         Model_UserLogMapper::insert('entity', $objectId, 'insert');
         Zend_Db_Table::getDefaultAdapter()->commit();
@@ -157,15 +157,15 @@ class Admin_PlaceController extends Zend_Controller_Action {
             if ($form->getValue($idField)) {
                 if ($hierarchy->propertyToEntity == 'P89') {
                     foreach (explode(",", $form->getValue($idField)) as $id) {
-                        Model_LinkMapper::insert($hierarchy->propertyToEntity, $place, $id);
+                        $place->link($hierarchy->propertyToEntity, $id);
                     }
                 } else {
                     foreach (explode(",", $form->getValue($idField)) as $id) {
-                        Model_LinkMapper::insert($hierarchy->propertyToEntity, $object, $id);
+                        $object->link($hierarchy->propertyToEntity, $id);
                     }
                 }
             } else if ($hierarchy->system && $hierarchy->propertyToEntity != 'P89') {
-                Model_LinkMapper::insert($hierarchy->propertyToEntity, $object, $hierarchy);
+                $object->link($hierarchy->propertyToEntity, $hierarchy);
             }
         }
         Model_DateMapper::saveDates($object, $form);
@@ -173,7 +173,7 @@ class Admin_PlaceController extends Zend_Controller_Action {
         foreach (array_unique($data['alias']) as $name) {
             if (trim($name)) {
                 $aliasId = Model_EntityMapper::insert('E41', trim($name));
-                Model_LinkMapper::insert('P1', $object, $aliasId);
+                $object->link('P1', $aliasId);
             }
         }
         Model_GisMapper::insert($place, $form);

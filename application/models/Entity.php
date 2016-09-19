@@ -22,4 +22,8 @@ class Model_Entity extends Model_AbstractObject {
         return trim($array[0]);
     }
 
+    public function link($propertyCode, $range, $description = null) {
+        return Model_LinkMapper::insert($propertyCode, $this, $range, $description);
+    }
+
 }

@@ -47,12 +47,12 @@ class Admin_InvolvementController extends Zend_Controller_Action {
         }
         Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         if ($actor) {
-            $linkId = Model_LinkMapper::insert($activity->code, $event, $actor, $form->getValue('description'));
+            $linkId = $event->link($activity->code, $actor, $form->getValue('description'));
             self::save($linkId, $form, $hierarchies);
             Model_UserLogMapper::insert('link', $linkId, 'insert');
         } else {
             foreach (explode(",", $form->getValue('actorIds')) as $actorId) {
-                $linkId = Model_LinkMapper::insert($activity->code, $event, $actorId, $form->getValue('description'));
+                $linkId = $event->link($activity->code, $actorId, $form->getValue('description'));
                 self::save($linkId, $form, $hierarchies);
                 Model_UserLogMapper::insert('link', $linkId, 'insert');
             }
@@ -92,7 +92,7 @@ class Admin_InvolvementController extends Zend_Controller_Action {
         } else {
             $activity = Model_PropertyMapper::getById($this->_getParam('activity'));
         }
-        $linkId = Model_LinkMapper::insert($activity->code, $event, $actor, $form->getValue('description'));
+        $linkId = $event->link($activity->code, $actor, $form->getValue('description'));
         self::save($linkId, $form, $hierarchies);
         Model_UserLogMapper::insert('entity', $linkId, 'update');
         Zend_Db_Table::getDefaultAdapter()->commit();

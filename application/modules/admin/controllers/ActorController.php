@@ -56,7 +56,7 @@ class Admin_ActorController extends Zend_Controller_Action {
         $actorId = Model_EntityMapper::insert($class->id, $form->getValue('name'), $form->getValue('description'));
         $actor = Model_EntityMapper::getById($actorId);
         if ($source) {
-            Model_LinkMapper::insert('P67', $source, $actor);
+            $source->link('P67', $actor);
         }
         self::save($actor, $form, $hierarchies);
         Model_UserLogMapper::insert('entity', $actorId, 'insert');
@@ -221,14 +221,14 @@ class Admin_ActorController extends Zend_Controller_Action {
         foreach (['residenceId' => 'P74', 'appearsFirstId' => 'OA8', 'appearsLastId' => 'OA9'] as $formField => $propertyCode) {
             if ($form->getValue($formField)) {
                 $place = Model_LinkMapper::getLinkedEntity($form->getValue($formField), 'P53');
-                Model_LinkMapper::insert($propertyCode, $entity, $place);
+                $entity->link($propertyCode, $place);
             }
         }
         $data = $form->getValues();
         foreach (array_unique($data['alias']) as $name) {
             if (trim($name)) {
                 $aliasId = Model_EntityMapper::insert('E82', trim($name));
-                Model_LinkMapper::insert('P131', $entity, $aliasId);
+                $entity->link('P131', $aliasId);
             }
         }
     }

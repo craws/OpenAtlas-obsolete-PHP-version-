@@ -59,9 +59,9 @@ class Admin_RelationController extends Zend_Controller_Action {
         $form->getValue('inverse');
         if (($originActor->id == $actor->id && !$form->getValue('inverse')) ||
             ($originActor->id != $actor->id && $form->getValue('inverse'))) {
-            $linkId = Model_LinkMapper::insert('OA7', $actor, $relatedActor, $this->_getParam('description'));
+            $linkId = $actor->link('OA7', $relatedActor, $this->_getParam('description'));
         } else {
-            $linkId = Model_LinkMapper::insert('OA7', $relatedActor, $actor, $this->_getParam('description'));
+            $linkId = $relatedActor->link('OA7', $actor, $this->_getParam('description'));
         }
         self::save($linkId, $form, $hierarchies);
         Model_UserLogMapper::insert('link', $linkId, 'update');

@@ -39,8 +39,8 @@ class Admin_SourceController extends Zend_Controller_Action {
         }
         Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         foreach ($this->getRequest()->getPost() as $entityId) {
-            if (!Model_LinkMapper::linkExists('P67', $source->id, $entityId)) {
-                Model_LinkMapper::insert('P67', $source->id, $entityId);
+            if (!Model_LinkMapper::linkExists('P67', $source, $entityId)) {
+                $source->link('P67', $entityId);
             }
         }
         Zend_Db_Table::getDefaultAdapter()->commit();
@@ -91,16 +91,16 @@ class Admin_SourceController extends Zend_Controller_Action {
         $sourceId = Model_EntityMapper::insert('E33', $form->getValue('name'), $form->getValue('description'));
         $source = Model_EntityMapper::getById($sourceId);
         $type = Model_NodeMapper::getByNodeCategoryName('Linguistic object classification', 'Source Content');
-        Model_LinkMapper::insert('P2', $source, $type);
+        $source->link('P2', $type);
         self::save($form, $source, $hierarchies);
         if ($event) {
-            Model_LinkMapper::insert('P67', $source, $event);
+            $source->link('P67', $event);
         }
         if ($actor) {
-            Model_LinkMapper::insert('P67', $source, $actor);
+            $source->link('P67', $actor);
         }
         if ($object) {
-            Model_LinkMapper::insert('P67', $source, $object);
+            $source->link('P67', $object);
         }
         Model_UserLogMapper::insert('entity', $source->id, 'insert');
         Zend_Db_Table::getDefaultAdapter()->commit();
@@ -135,7 +135,7 @@ class Admin_SourceController extends Zend_Controller_Action {
         Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         $textId = Model_EntityMapper::insert('E33', $form->getValue('name'), $form->getValue('description'));
         Model_LinkMapper::insert('P2', $textId, Model_NodeMapper::getById($form->getValue('type')));
-        Model_LinkMapper::insert('P73', $source, $textId);
+        $source->link('P73', $textId);
         Model_UserLogMapper::insert('entity', $textId, 'insert');
         Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_insert');
@@ -174,7 +174,7 @@ class Admin_SourceController extends Zend_Controller_Action {
         Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         $text->update();
         $typeLink->delete();
-        Model_LinkMapper::insert('P2', $text, Model_NodeMapper::getById($form->getValue('type')));
+        $text->link('P2', Model_NodeMapper::getById($form->getValue('type')));
         Model_UserLogMapper::insert('entity', $text->id, 'update');
         Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_update');

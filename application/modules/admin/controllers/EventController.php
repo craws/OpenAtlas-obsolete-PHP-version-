@@ -60,7 +60,7 @@ class Admin_EventController extends Zend_Controller_Action {
         $event = Model_EntityMapper::getById($eventId);
         self::save($event, $form, $hierarchies);
         if ($source) {
-            Model_LinkMapper::insert('P67', $source, $event);
+            $source->link('P67', $event);
         }
         Model_UserLogMapper::insert('entity', $eventId, 'insert');
         Zend_Db_Table::getDefaultAdapter()->commit();
@@ -208,19 +208,19 @@ class Admin_EventController extends Zend_Controller_Action {
         Model_DateMapper::saveDates($event, $form);
         if ($form->getValue('placeId')) {
             $place = Model_LinkMapper::getLinkedEntity($form->getValue('placeId'), 'P53');
-            Model_LinkMapper::insert('P7', $event, $place);
+            $event->link('P7', $place);
         }
         $superEventId = ($form->getValue('superId')) ? $form->getValue('superId') : $this->rootEvent->id;
-        Model_LinkMapper::insert('P117', $event, $superEventId);
+        $event->link('P117', $superEventId);
         if ($event->class->name == 'Acquisition') {
             if ($this->_getParam('recipientId')) {
-                Model_LinkMapper::insert('P22', $event, $this->_getParam('recipientId'));
+                $event->link('P22', $this->_getParam('recipientId'));
             }
             if ($this->_getParam('donorId')) {
-                Model_LinkMapper::insert('P23', $event, $this->_getParam('donorId'));
+                $event->link('P23', $this->_getParam('donorId'));
             }
             if ($this->_getParam('acquisitionPlaceId')) {
-                Model_LinkMapper::insert('P24', $event, $this->_getParam('acquisitionPlaceId'));
+                $event->link('P24', $this->_getParam('acquisitionPlaceId'));
             }
         }
     }
