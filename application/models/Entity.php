@@ -11,7 +11,23 @@ class Model_Entity extends Model_AbstractObject {
     public $last; // for list views
     public $name;
 
-    /* for getting part of a direced type e.g. Actor Actor relation: "Parent of (Child of)" */
+    public function getLinks($codes, $inverse = false) {
+        return Model_LinkMapper::getLinks($this, $codes, $inverse);
+    }
+
+    public function getLinkedEntities($code, $inverse = false) {
+        return Model_LinkMapper::getLinkedEntities($this, $code, $inverse);
+    }
+
+    public function getLinkedEntity($code, $inverse = false) {
+        return Model_LinkMapper::getLinkedEntity($this, $code, $inverse);
+    }
+
+    public function link($propertyCode, $range, $description = null) {
+        return Model_LinkMapper::insert($propertyCode, $this, $range, $description);
+    }
+
+    /* getting part of a direced type e.g. Actor Actor relation: "Parent of (Child of)" */
     public function getNameDirected($inverse = false) {
         $array = explode('(', $this->name);
         // @codeCoverageIgnoreStart
@@ -20,10 +36,6 @@ class Model_Entity extends Model_AbstractObject {
         }
         // @codeCoverageIgnoreEnd
         return trim($array[0]);
-    }
-
-    public function link($propertyCode, $range, $description = null) {
-        return Model_LinkMapper::insert($propertyCode, $this, $range, $description);
     }
 
 }

@@ -21,7 +21,7 @@
             $table = ['id' => 'reference', 'pager' => true, 'filter' => true];
             $table['header'] = [_('name'), _('class'), _('type')];
             foreach ($this->references as $reference) {
-                $type = Model_LinkMapper::getLinkedEntity($reference, 'P2');
+                $type = $reference->getLinkedEntity('P2');
                 $className = $type->name;
                 $typeName = '';
                 if ($type->rootId) {

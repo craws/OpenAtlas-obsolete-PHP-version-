@@ -53,9 +53,9 @@ class Admin_CarrierController extends Zend_Controller_Action {
                 'modified' => ($carrier->modified) ? $carrier->modified->getTimestamp() : 0
             ]);
             $form->populateDates($carrier, ['OA1' => 'begin', 'OA2' => 'end']);
-            $place = Model_LinkMapper::getLinkedEntity($carrier, ['OA8']);
+            $place = $carrier->getLinkedEntity('OA8');
             if ($place) {
-                $object = Model_LinkMapper::getLinkedEntity($place, 'P53', true);
+                $object = $place->getLinkedEntity('P53', true);
                 $form->populate([
                     'objectButton' => $object->name,
                     'objectId' => $object->id
@@ -84,7 +84,7 @@ class Admin_CarrierController extends Zend_Controller_Action {
         Model_UserLogMapper::insert('entity', $carrier->id, 'update');
         Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         $carrier->update();
-        foreach (Model_LinkMapper::getLinks($carrier, ['P2', 'OA8']) as $link) {
+        foreach ($carrier->getLinks(['P2', 'OA8']) as $link) {
             $link->delete();
         }
         self::save($form, $carrier, $hierarchies);
@@ -95,14 +95,14 @@ class Admin_CarrierController extends Zend_Controller_Action {
 
     public function viewAction() {
         $carrier = Model_EntityMapper::getById($this->_getParam('id'));
-        $sourceLinks = Model_LinkMapper::getLinks($carrier, 'P128');
+        $sourceLinks = $carrier->getLinks('P128');
         $this->view->carrier = $carrier;
         $this->view->dates = Model_DateMapper::getDates($carrier);
         $this->view->menuHighlight = 'reference';
         $this->view->sourceLinks = $sourceLinks;
-        $place = Model_LinkMapper::getLinkedEntity($carrier, 'OA8');
+        $place = $carrier->getLinkedEntity('OA8');
         if ($place) {
-            $this->view->object = Model_LinkMapper::getLinkedEntity($place, 'P53', true);
+            $this->view->object = $place->getLinkedEntity('P53', true);
         }
     }
 

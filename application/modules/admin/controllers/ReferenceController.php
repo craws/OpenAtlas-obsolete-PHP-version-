@@ -45,7 +45,7 @@ class Admin_ReferenceController extends Zend_Controller_Action {
         $form = new Admin_Form_Reference();
         $referenceRootType = null;
         $referenceType = null;
-        $types = Model_LinkMapper::getLinkedEntities($reference, 'P2');
+        $types = $reference->getLinkedEntities('P2');
         // @codeCoverageIgnoreStart
         // Determine if Bibliography or Edition. Difficult to test with complete coverage, needs refactoring
         foreach ($types as $type) {
@@ -92,7 +92,7 @@ class Admin_ReferenceController extends Zend_Controller_Action {
         $reference->description = $form->getValue('description');
         Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         $reference->update();
-        foreach (Model_LinkMapper::getLinks($reference, ['P2']) as $link) {
+        foreach ($reference->getLinks('P2') as $link) {
             $link->delete();
         }
         self::save($form, $reference->id, $hierarchies);
@@ -108,7 +108,7 @@ class Admin_ReferenceController extends Zend_Controller_Action {
         $sourceLinks = [];
         $eventLinks = [];
         $placeLinks = [];
-        foreach (Model_LinkMapper::getLinks($reference, 'P67') as $link) {
+        foreach ($reference->getLinks('P67') as $link) {
             $code = $link->range->class->code;
             if ($code == 'E33') {
                 $sourceLinks[] = $link;
@@ -121,7 +121,7 @@ class Admin_ReferenceController extends Zend_Controller_Action {
             }
         }
         $this->view->reference = $reference;
-        $this->view->referenceType = Model_LinkMapper::getLinkedEntity($reference, 'P2');
+        $this->view->referenceType = $reference->getLinkedEntity('P2');
         $this->view->actorLinks = $actorLinks;
         $this->view->sourceLinks = $sourceLinks;
         $this->view->eventLinks = $eventLinks;

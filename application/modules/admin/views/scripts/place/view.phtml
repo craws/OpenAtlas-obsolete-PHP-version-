@@ -140,7 +140,7 @@
         $tableBiblio['header'] = [_('reference'), _('page'), 'class', 'type', '', ''];
         foreach ($this->referenceLinks as $link) {
             $reference = $link->domain;
-            $type = Model_LinkMapper::getLinkedEntity($reference, 'P2');
+            $type = $reference->getLinkedEntity('P2');
             $text = $this->ucstring('referred_by') . ': ' . $reference->name;
             $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_remove', $text)) . "')\" ";
             $deleteLink = '<div><a href="/admin/function/unlink/id/' . $link->id . '/entityId/' . $object->id .

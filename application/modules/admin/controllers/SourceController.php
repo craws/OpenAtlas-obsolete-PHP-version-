@@ -157,7 +157,7 @@ class Admin_SourceController extends Zend_Controller_Action {
         $text = Model_EntityMapper::getById($link->range->id);
         $source = Model_EntityMapper::getById($link->domain->id);
         $form = new Admin_Form_Text();
-        foreach (Model_LinkMapper::getLinks($text, 'P2') as $link) {
+        foreach ($text->getLinks('P2') as $link) {
             if (array_key_exists($link->range->id, $form->getElement('type')->getMultiOptions())) {
                 $typeLink = $link;
             }
@@ -213,7 +213,7 @@ class Admin_SourceController extends Zend_Controller_Action {
         $source->description = $form->getValue('description');
         Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         $source->update();
-        foreach (Model_LinkMapper::getLinks($source, 'P2') as $link) {
+        foreach ($source->getLinks('P2') as $link) {
             if ($link->range->name != "Source Content") {
                 $link->delete();
             }
@@ -234,7 +234,7 @@ class Admin_SourceController extends Zend_Controller_Action {
         $this->view->actorLinks = [];
         $this->view->eventLinks = [];
         $this->view->placeLinks = [];
-        foreach (Model_LinkMapper::getLinks($source, 'P67') as $link) {
+        foreach ($source->getLinks('P67') as $link) {
             $code = $link->range->class->code;
             if ($code == 'E18') {
                 $this->view->placeLinks[] = $link;
@@ -245,19 +245,19 @@ class Admin_SourceController extends Zend_Controller_Action {
             }
         }
         $referenceLinks = [];
-        foreach (Model_LinkMapper::getLinks($source, 'P67', true) as $link) {
+        foreach ($source->getLinks('P67', true) as $link) {
             switch ($link->domain->class->code) {
                 case 'E31':
                     $referenceLinks[] = $link;
                     break;
             }
         }
-        foreach (Model_LinkMapper::getLinks($source, 'P128', true) as $link) {
+        foreach ($source->getLinks('P128', true) as $link) {
             $referenceLinks[] = $link;
         }
         $this->view->referenceLinks = $referenceLinks;
         $this->view->source = $source;
-        $this->view->textLinks = Model_LinkMapper::getLinks($source, 'P73');
+        $this->view->textLinks = $source->getLinks('P73');
     }
 
 }

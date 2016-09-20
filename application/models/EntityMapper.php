@@ -36,13 +36,13 @@ class Model_EntityMapper extends \Model_AbstractMapper {
             switch ($entity->class->code) {
                 // @codeCoverageIgnoreStart
                 case 'E82':
-                    $entityForAlias = Model_LinkMapper::getLinkedEntity($entity, 'P131', true);
+                    $entityForAlias = $entity->getLinkedEntity('P131', true);
                     if (!isset($entitites[$entityForAlias->id])) { // otherwise the one with dates would be overwriten
                         $entitites[$entityForAlias->id] = $entityForAlias;
                     }
                     break;
                 case 'E41':
-                    $entityForAlias = Model_LinkMapper::getLinkedEntity($entity, 'P1', true);
+                    $entityForAlias = $entity->getLinkedEntity('P1', true);
                     if (!isset($entitites[$entityForAlias->id])) { // otherwise the one with dates would be overwriten
                         $entitites[$entityForAlias->id] = $entityForAlias;
                     }
@@ -94,7 +94,7 @@ class Model_EntityMapper extends \Model_AbstractMapper {
         foreach ($statement->fetchAll() as $row) {
             $entity = self::populate(new Model_Entity(), $row);
             if ($nodeRoot) {
-                foreach (Model_LinkMapper::getLinkedEntities($entity, 'P2') as $node) {
+                foreach ($entity->getLinkedEntities('P2') as $node) {
                     if ($node->name == $nodeRoot) {
                         $entitites[] = $entity;
                     }
@@ -170,14 +170,14 @@ class Model_EntityMapper extends \Model_AbstractMapper {
 
     public static function delete(Model_Entity $entity) {
         self::deleteDates($entity);
-        foreach (Model_LinkMapper::getLinks($entity, ['P1', 'P53', 'P73', 'P131']) as $link) {
+        foreach ($entity->getLinks(['P1', 'P53', 'P73', 'P131']) as $link) {
             parent::deleteAbstract('model.entity', $link->range->id);
         }
         parent::deleteAbstract('model.entity', $entity->id);
     }
 
     public static function deleteDates(Model_Entity $entity) {
-        foreach (Model_LinkMapper::getLinks($entity, ['OA1', 'OA2', 'OA3', 'OA4', 'OA5', 'OA6']) as $link) {
+        foreach ($entity->getLinks(['OA1', 'OA2', 'OA3', 'OA4', 'OA5', 'OA6']) as $link) {
             parent::deleteAbstract('model.entity', $link->range->id);
         }
     }

@@ -128,7 +128,7 @@
                 "')\" ";
             $deleteLink = '<div><a href="/admin/function/unlink/id/' . $link->id . '/entityId/' . $source->id .
                 '/#tabReference' . '" class="button"' . $confirm . '>' . $this->ucstring('remove') . '</a></div>';
-            $type = Model_LinkMapper::getLinkedEntity($reference, 'P2');
+            $type = $reference->getLinkedEntity('P2');
             $className = $type->name;
             $typeName = '';
             if ($type->rootId) {
@@ -156,7 +156,7 @@
         <? $tableText = ['id' => 'text', 'pager' => true, 'filter' => true]; ?>
         <? $tableText['header'] = [$this->ucstring('texts'), _('type'), '', '']; ?>
         <? foreach ($this->textLinks as $textLink) {
-            $type = Model_LinkMapper::getLinkedEntity($textLink->range, 'P2');
+            $type = $textLink->range->getLinkedEntity('P2');
             $confirm = " onclick=\"return confirm('" .
             $this->ucstring($this->translate('confirm_delete', $textLink->range->name)) . "')\" ";
             $tableText['data'][] = [

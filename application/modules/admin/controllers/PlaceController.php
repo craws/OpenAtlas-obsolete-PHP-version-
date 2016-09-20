@@ -62,7 +62,7 @@ class Admin_PlaceController extends Zend_Controller_Action {
 
     public function updateAction() {
         $object = Model_EntityMapper::getById($this->_getParam('id'));
-        $place = Model_LinkMapper::getLinkedEntity($object, 'P53');
+        $place = $object->getLinkedEntity('P53');
         $form = new Admin_Form_Place();
         $hierarchies = $form->addHierarchies('Place', $object);
         $this->view->form = $form;
@@ -87,16 +87,16 @@ class Admin_PlaceController extends Zend_Controller_Action {
         $object->description = $form->getValue('description');
         Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         $object->update();
-        foreach (Model_LinkMapper::getLinks($object, 'P2') as $objectLink) {
+        foreach ($object->getLinks('P2') as $objectLink) {
             $objectLink->delete();
         }
         $place->name = 'Location of ' . $form->getValue('name');
         $place->update();
         Model_GisMapper::deleteByEntity($place);
-        foreach (Model_LinkMapper::getLinkedEntities($object, 'P1') as $alias) {
+        foreach ($object->getLinkedEntities('P1') as $alias) {
             $alias->delete();
         }
-        foreach (Model_LinkMapper::getLinks($place, 'P89') as $link) {
+        foreach ($place->getLinks('P89') as $link) {
             $link->delete();
         }
         self::save($form, $object, $place, $hierarchies);
@@ -108,24 +108,20 @@ class Admin_PlaceController extends Zend_Controller_Action {
 
     public function viewAction() {
         $object = Model_EntityMapper::getById($this->_getParam('id'));
-        $place = Model_LinkMapper::getLinkedEntity($object, 'P53');
+        $place = $object->getLinkedEntity('P53');
         $this->view->gisData = Model_GisMapper::getAll($object->id);
         $this->view->object = $object;
-        $this->view->aliases = Model_LinkMapper::getLinkedEntities($object, 'P1');
+        $this->view->aliases = $object->getLinkedEntities('P1');
         $this->view->dates = Model_DateMapper::getDates($object);
         $this->view->administrative = Model_NodeMapper::getNodesByEntity('Administrative Unit', $object);
         $this->view->historicals = Model_NodeMapper::getNodesByEntity('Historical Place', $object);
         $this->view->events = array_merge(
-            Model_LinkMapper::getLinkedEntities($place, 'P7', true), Model_LinkMapper::getLinkedEntities($object, 'P24', true)
+            $place->getLinkedEntities('P7', true), $object->getLinkedEntities('P24', true)
         );
-        $this->view->actorLinks = array_merge(
-            Model_LinkMapper::getLinks($place, 'P74', true),
-            Model_LinkMapper::getLinks($place, 'OA8', true),
-            Model_LinkMapper::getLinks($place, 'OA9', true)
-        );
+        $this->view->actorLinks = $place->getLinks(['P74', 'OA8', 'OA9'], true);
         $sourceLinks = [];
         $referenceLinks = [];
-        foreach (Model_LinkMapper::getLinks($object, 'P67', true) as $link) {
+        foreach ($object->getLinks('P67', true) as $link) {
             switch ($link->domain->class->code) {
                 case 'E31':
                     $referenceLinks[] = $link;

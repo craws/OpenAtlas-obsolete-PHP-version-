@@ -16,7 +16,7 @@ class Admin_HierarchyController extends Zend_Controller_Action {
             $this->_helper->message('error_subs_exists');
             return $this->_helper->redirector->gotoUrl('/admin/hierarchy/view/id/' . $type->id);
         }
-        if (Model_LinkMapper::getLinks($type, 'P2', true) || Model_LinkMapper::getLinks($type, 'P89', true)) {
+        if ($type->getLinks(['P2', 'P89'], true)) {
             $this->_helper->message('error_links_exists');
             return $this->_helper->redirector->gotoUrl('/admin/hierarchy/view/id/' . $type->id);
         }
@@ -171,11 +171,11 @@ class Admin_HierarchyController extends Zend_Controller_Action {
 
     public function viewAction() {
         $node = Model_NodeMapper::getById($this->_getParam('id'));
-        $linksEntitites = Model_LinkMapper::getLinkedEntities($node, $node->propertyToEntity, true);
+        $linksEntitites = $node->getLinkedEntities($node->propertyToEntity, true);
         if ($node->class->code == 'E53') {
             $linksEntitites = [];
-            foreach (Model_LinkMapper::getLinkedEntities($node, $node->propertyToEntity, true) as $object) {
-                $linkedEntity = Model_LinkMapper::getLinkedEntity($object, 'P53', true);
+            foreach ($node->getLinkedEntities($node->propertyToEntity, true) as $object) {
+                $linkedEntity = $object->getLinkedEntity('P53', true);
                 if ($linkedEntity) { // needed to remove node subs
                     $linksEntitites[] = $linkedEntity;
                 }
