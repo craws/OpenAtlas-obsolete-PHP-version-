@@ -1,36 +1,69 @@
 <? $this->buttonBar = '<a href="/admin/settings/update">' . $this->ucstring('edit') . '</a>'; ?>
 <? $this->breadcrumb = [$this->ucstring('settings')]; ?>
-<div class="dataTable">
-    <? foreach ($this->settings as $group => $data) { ?>
-        <div class="groupLabel"><?= $this->ucstring($group) ?></div>
-        <?
-        foreach ($data as $name => $value) {
-            $elementName = $group . "__" . $name;
-            if ($elementName == 'general__language') {
-                $language = Model_LanguageMapper::getById($value);
-                $value = $language->name;
-            } else if ($group == 'module' ||
-                in_array($elementName, ['general__maintenance', 'general__offline', 'mail__notify_login'])) {
-                $array = [
-                    0 => '<span class="inactive">' . $this->ucstring('off') . '</span>',
-                    1 => '<span class="active">' . $this->ucstring('on') . '</span>'
-                ];
-                $value = $array[$value];
-            } else if ($name == 'log_level') {
-                $array = [
-                    0 => 'emergency',
-                    1 => 'alert',
-                    2 => 'critical',
-                    3 => 'error',
-                    4 => 'warn',
-                    5 => 'notice',
-                    6 => 'info',
-                    7 => 'debug'
-                ];
-                $value = $this->ucstring($array[$value]);
-            }
-            echo '<div><div>' . str_replace("_", " ", $this->ucstring($name)) . '</div><div>' . $value . '</div></div>';
+<? $settings = Model_SettingsMapper::getSettings(); ?>
+<?
+    $logArray = [
+        0 => 'emergency',
+        1 => 'alert',
+        2 => 'critical',
+        3 => 'error',
+        4 => 'warn',
+        5 => 'notice',
+        6 => 'info',
+        7 => 'debug'
+    ];
+?>
+<div id="tabs" class="tabsContainer">
+    <ul>
+        <li><a href="#tabGeneral"><?= $this->ucstring('general') ?></a></li>
+        <li><a href="#tabMail"><?= $this->ucstring('mail') ?></a></li>
+        <li><a href="#tabAuthentication"><?= $this->ucstring('authentication') ?></a></li>
+    </ul>
+<div id="tabGeneral">
+    <div class="dataTable">
+        <? $settingsGeneral = [
+            _('sitename') => $settings['sitename'],
+            _('language') => $settings['language'],
+            _('log_level') => $logArray[$settings['log_level']],
+            _('maintenance') => $settings['maintenance'] ? $this->ucstring('on') : $this->ucstring('off'),
+            _('offline') => $settings['offline'] ? $this->ucstring('on') : $this->ucstring('off'),
+            _('default_table_rows') => $settings['default_table_rows'],
+        ];
+        foreach($settingsGeneral as $name => $value) {
+            echo '<div><div>' . $name . '</div><div>' . $value . '</div></div>';
         }
-    }
-    ?>
+        ?>
+    </div>
 </div>
+<div id="tabMail">
+    <div class="dataTable">
+        <? $settingsMail = [
+            _('mail') => $settings['mail'] ? $this->ucstring('on') : $this->ucstring('off'),
+            _('notify_login') => $settings['notify_login'],
+        ];
+        foreach($settingsMail as $name => $value) {
+            echo '<div><div>' . $name . '</div><div>' . $value . '</div></div>';
+        }
+        ?>
+    </div>
+</div>
+<div id="tabAuthentication">
+    <div class="dataTable">
+        <? $settingsAuthentication = [
+            _('random_password_length') => $settings['random_password_length'],
+            _('reset_confirm_hours') => $settings['reset_confirm_hours'],
+            _('failed_login_tries') => $settings['failed_login_tries'],
+            _('failed_login_forget_minutes') => $settings['failed_login_forget_minutes']
+        ];
+        foreach($settingsAuthentication as $name => $value) {
+            echo '<div><div>' . $name . '</div><div>' . $value . '</div></div>';
+        }
+        ?>
+    </div>
+</div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $("#tabs").tabs();
+    });
+</script>

@@ -84,7 +84,7 @@ class Model_LogMapper extends Model_AbstractMapper {
 
     public static function log($priorityName, $type, $message = '') {
         $priority = array_search($priorityName, self::$logLevels);
-        if ($priority === false || $priority > Model_SettingsMapper::getSetting('general', 'log_level')) {
+        if ($priority === false || $priority > Model_SettingsMapper::getSetting('log_level')) {
             return;
         }
         $ip = (filter_input(INPUT_SERVER, 'REMOTE_ADDR')) ? filter_input(INPUT_SERVER, 'REMOTE_ADDR') : '';

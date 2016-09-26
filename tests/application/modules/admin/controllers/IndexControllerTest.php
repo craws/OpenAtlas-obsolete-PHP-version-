@@ -47,8 +47,11 @@ class Admin_IndexControllerTest extends ControllerTestCase {
 
     public function testLoginTries() {
         $this->assertFalse(Model_User::loginAttemptsExceeded(Model_UserMapper::getByUsername($this->defaultUsername)));
-        for ($i = 0; $i < Model_SettingsMapper::getSetting('authentication', 'failed_login_tries') + 1; $i++) {
-            $this->request->setMethod('POST')->setPost(['username' => $this->defaultUsername, 'password' => 'wrong password']);
+        for ($i = 0; $i < Model_SettingsMapper::getSetting('failed_login_tries') + 1; $i++) {
+            $this->request->setMethod('POST')->setPost([
+                'username' => $this->defaultUsername,
+                'password' => 'wrong password'
+            ]);
             $this->dispatch('admin/index/index');
             $this->resetRequest()->resetResponse();
         }

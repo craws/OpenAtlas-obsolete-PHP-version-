@@ -13,19 +13,19 @@ INSERT INTO "group" (name) VALUES
 ('manager'),
 ('readonly');
 
-INSERT INTO settings ("group", name, value) VALUES
-('authentication', 'failed_login_forget_minutes', '1'),
-('authentication', 'failed_login_tries', '3'),
-('authentication', 'random_password_length', '16'),
-('authentication', 'reset_confirm_hours', '24'),
-('general', 'language', '1'),
-('general', 'log_level', '6'),
-('general', 'maintenance', '0'),
-('general', 'offline', '1'),
-('general', 'sitename', 'OpenAtlas'),
-('general', 'default_table_rows', '20'),
-('mail', 'notify_login', '1'),
-('module', 'mail', '0');
+INSERT INTO settings (name, value) VALUES
+('failed_login_forget_minutes', '1'),
+('failed_login_tries', '3'),
+('random_password_length', '16'),
+( 'reset_confirm_hours', '24'),
+('language', '1'),
+('log_level', '6'),
+('maintenance', '0'),
+('offline', '1'),
+('sitename', 'OpenAtlas'),
+('default_table_rows', '20'),
+('notify_login', '1'),
+('mail', '0');
 
 INSERT INTO "user" (username, password, active, email, group_id) VALUES
 ('a', '$2a$08$cVEBAnh6MIp/KEcEoMcYAOOK9B70eeq9FVQ6pNxKJK8UBfsKQeW5ycVEBAnh6MIp/KEcEoMcYAQ', 1, null, 1);

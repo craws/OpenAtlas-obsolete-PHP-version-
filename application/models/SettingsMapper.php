@@ -5,14 +5,14 @@
 class Model_SettingsMapper {
 
     public static function getSettings() {
-        $sql = 'SELECT "name", "value", "group" FROM web.settings ORDER BY "group" ASC, "name" ASC;';
+        $sql = 'SELECT name, value FROM web.settings;';
         $statement = Zend_DB_Table::getDefaultAdapter()->prepare($sql);
         $statement->execute();
         $rows = $statement->fetchall();
         if ($rows) {
             $settings = [];
             foreach ($rows as $row) {
-                $settings[$row['group']][$row['name']] = $row['value'];
+                $settings[$row['name']] = $row['value'];
             }
             return $settings;
             // @codeCoverageIgnoreStart
@@ -22,10 +22,10 @@ class Model_SettingsMapper {
         // @codeCoverageIgnoreEnd
     }
 
-    public static function getSetting($group, $name) {
+    public static function getSetting($name) {
         $settings = Zend_Registry::get('settings');
-        if (isset($settings[$group][$name])) {
-            return $settings[$group][$name];
+        if (isset($settings[$name])) {
+            return $settings[$name];
         }
         // @codeCoverageIgnoreStart
         echo "Something is rotten in the state of Denmark (missing setting " . $group . "/" . $name . ").";

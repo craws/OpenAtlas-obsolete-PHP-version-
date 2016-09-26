@@ -11,7 +11,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         $this->bootstrap('View');
         $view = $this->getResource('view');
         Zend_Registry::set('settings', Model_SettingsMapper::getSettings());
-        $view->headTitle(Model_SettingsMapper::getSetting('general', 'sitename'))->setSeparator(' - ');
+        $view->headTitle(Model_SettingsMapper::getSetting('sitename'))->setSeparator(' - ');
         Zend_Controller_Action_HelperBroker::addHelper(new \Craws\Controller\Helper\Message());
         Zend_Controller_Action_HelperBroker::addPath(APPLICATION_PATH .
             '/modules/default/controllers/helper/', 'Controller_Helper_Log');
@@ -19,8 +19,8 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
 
     protected function _initPlugin() {
         $this->bootstrap('user');
-        if (Model_SettingsMapper::getSetting('general', 'offline') ||
-            Model_SettingsMapper::getSetting('general', 'maintenance')) {
+        if (Model_SettingsMapper::getSetting('offline') ||
+            Model_SettingsMapper::getSetting('maintenance')) {
             $front = $this->getResource('frontController');
             $plugin = new \Craws\Plugin\Offline();
             $front->registerPlugin($plugin);
@@ -57,16 +57,11 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         return $databaseAdapter;
     }
 
-    protected function _initModuleSettings() {
-        $settings = Model_SettingsMapper::getSettings();
-        Zend_Registry::set('moduleSettings', $settings['module']); /* needed for acl */
-    }
-
     protected function _initLanguage() {
         $this->bootstrap('user');
         $user = Zend_Registry::get('user');
         $defaultNamespace = new Zend_Session_Namespace('Default');
-        $defaultLocale = Model_LanguageMapper::getById(Model_SettingsMapper::getSetting('general', 'language'))->shortform;
+        $defaultLocale = Model_LanguageMapper::getById(Model_SettingsMapper::getSetting('language'))->shortform;
         $translate = $this->getPluginResource("translate")->getTranslate();
         // @codeCoverageIgnoreStart
         // CoverageIgnore because not accessing with a browser

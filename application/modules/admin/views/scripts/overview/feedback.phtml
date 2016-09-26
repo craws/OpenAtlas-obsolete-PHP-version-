@@ -10,7 +10,7 @@
     2. <?= $this->translate('feedback_mail') ?>
     <a href="mailto:<?= $this->feedbackReceiver ?>"><?= $this->feedbackReceiver ?></a>
 </p>
-<? if (Model_SettingsMapper::getSetting('module', 'mail')): ?>
+<? if (Model_SettingsMapper::getSetting('mail')): ?>
     <?= $this->form->renderForm(false); ?>
     <p>3. <?= $this->translate('feedback_form') ?></p>
     <div class="tableRow">

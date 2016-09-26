@@ -13,12 +13,12 @@ class Admin_OverviewController extends Zend_Controller_Action {
         // @codeCoverageIgnoreStart
         // Ignore coverage because no mail in testing
         if ($this->getRequest()->isPost() && $form->isValid($this->getRequest()->getPost()) &&
-            Model_SettingsMapper::getSetting('module', 'mail')) {
+            Model_SettingsMapper::getSetting('mail')) {
             $mail = new Zend_Mail('utf-8');
             foreach($receivers as $receiver) {
                 $mail->addTo($receiver);
             }
-            $mail->setSubject($form->getValue('subject') . ' from ' . Model_SettingsMapper::getSetting('general', 'sitename'));
+            $mail->setSubject($form->getValue('subject') . ' from ' . Model_SettingsMapper::getSetting('sitename'));
             $user = Zend_Registry::get('user');
             $body = $form->getValue('subject') . ' from ' . $user->username . ' (' . $user->id . ') ' . $user->email .
                 ' at ' . $this->getRequest()->getHttpHost() . "\n\n" . $form->getValue('description');

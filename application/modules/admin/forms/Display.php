@@ -12,7 +12,7 @@ class Admin_Form_Display extends Craws\Form\Table {
         $language = $this->createElement('select', 'language');
         $language->setLabel($this->getView()->ucstring('language'));
         $language->addMultiOptions($languages);
-        $language->setValue(Model_SettingsMapper::getSetting('general', 'language'));
+        $language->setValue(Model_SettingsMapper::getSetting('language'));
         $this->addElement($language);
         foreach (array_merge(['default'], glob('themes/admin/*', GLOB_ONLYDIR)) as $theme) {
             $themes[basename($theme)] = $this->getView()->ucstring(str_replace('_', ' ', basename($theme)));
@@ -30,7 +30,7 @@ class Admin_Form_Display extends Craws\Form\Table {
         $this->addElement($layout);
         $tableRows = $this->createElement('select', 'tableRows', ['style' => 'width:5em;']);
         $tableRows->setLabel($this->getView()->ucstring('table_rows'));
-        $tableRows->setValue(Model_SettingsMapper::getSetting('general', 'default_table_rows'));
+        $tableRows->setValue(Model_SettingsMapper::getSetting('default_table_rows'));
         $tableRows->addMultiOptions([10 => 10, 20 => 20, 50 => 50, 100 => 100]);
         $this->addElement($tableRows);
         $this->setElementFilters(['StringTrim']);

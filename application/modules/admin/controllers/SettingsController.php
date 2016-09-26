@@ -15,9 +15,8 @@ class Admin_SettingsController extends Zend_Controller_Action {
             return;
         }
         $settings = [];
-        foreach ($this->getRequest()->getPost() as $groupAndName => $value) {
-            $array = explode("__", $groupAndName);
-            $settings[$array[0]][$array[1]] = $value;
+        foreach ($this->getRequest()->getPost() as $name => $value) {
+            $settings[$name] = $value;
         }
         Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         Model_SettingsMapper::updateSettings($settings);

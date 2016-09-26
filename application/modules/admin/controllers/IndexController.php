@@ -62,11 +62,11 @@ class Admin_IndexController extends Zend_Controller_Action {
         // @codeCoverageIgnoreStart
         // Ignore coverage because no mail in testing
         if (!strpos(filter_input(INPUT_SERVER, 'HTTP_HOST'), 'local') &&
-            Model_SettingsMapper::getSetting('module', 'mail') &&
-            Model_SettingsMapper::getSetting('mail', 'notify_login')
+            Model_SettingsMapper::getSetting('mail') &&
+            Model_SettingsMapper::getSetting('notify_login')
         ) {
             $message = "Login from " . $user->username . "(" . $user->id . ") at " .
-                Model_SettingsMapper::getSetting('general', 'sitename') . "(" . $this->getRequest()->getHttpHost() .
+                Model_SettingsMapper::getSetting('sitename') . "(" . $this->getRequest()->getHttpHost() .
                 ").\r\n\r";
             $mail = new Zend_Mail('utf-8');
             foreach(Zend_Registry::get('config')->get('mailRecipientsLogin')->toArray() as $receiver) {
@@ -106,13 +106,13 @@ class Admin_IndexController extends Zend_Controller_Action {
             return $this->_helper->redirector->gotoUrl('/admin');
         }
         $resetDate = $user->passwordResetDate;
-        $resetDate->addHour(Model_SettingsMapper::getSetting('authentication', 'reset_confirm_hours'));
+        $resetDate->addHour(Model_SettingsMapper::getSetting('reset_confirm_hours'));
         if (!$resetDate->isLater(new Zend_Date())) {
             $this->_helper->log('error', 'password', 'Password reset confirmed too late by ' . $user->id);
             $this->_helper->message('error_reset_outdated');
             return $this->_helper->redirector->gotoUrl('/admin');
         }
-        $password = Model_User::randomPassword(Model_SettingsMapper::getSetting('authentication', 'random_password_length'));
+        $password = Model_User::randomPassword(Model_SettingsMapper::getSetting('random_password_length'));
         $hash = Model_User::hasher($password);
         $user->password = $hash;
         $user->passwordResetCode = null;
@@ -148,14 +148,14 @@ class Admin_IndexController extends Zend_Controller_Action {
                 $this->_helper->message('error_nonexist_email');
                 return;
             }
-            $resetCode = Model_User::randomPassword(Model_SettingsMapper::getSetting('authentication', 'random_password_length'));
+            $resetCode = Model_User::randomPassword(Model_SettingsMapper::getSetting('random_password_length'));
             $user->passwordResetCode = $resetCode;
             $user->passwordResetDate = new Zend_Date();
             $user->update();
             $this->view->mailLink = 'http://' . $this->getRequest()->getHttpHost() . "/admin/index/reset-confirm/code/" . $resetCode;
             $this->view->mailUsername = $user->username;
             $this->view->mailHost = $this->getRequest()->getHttpHost();
-            $this->view->mailResetConfirmHours = Model_SettingsMapper::getSetting('authentication', 'reset_confirm_hours');
+            $this->view->mailResetConfirmHours = Model_SettingsMapper::getSetting('reset_confirm_hours');
             $mail = new Zend_Mail('utf-8');
             $mail->addTo($email);
             $mail->setSubject($this->view->translate('mail_reset_password_subject'));

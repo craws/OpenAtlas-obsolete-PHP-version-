@@ -8,8 +8,6 @@ class Acl extends \Zend_Acl {
 
     public function __construct() {
 
-        $moduleSettings = \Zend_Registry::get('moduleSettings');
-
         $this->addRole(new \Zend_Acl_Role('guest'));
         $this->addRole(new \Zend_Acl_Role('readonly'), ('guest'));
         $this->addRole(new \Zend_Acl_Role('editor'), 'readonly');
@@ -250,7 +248,7 @@ class Acl extends \Zend_Acl {
 
         // @codeCoverageIgnoreStart
         // Ignore coverage because no mail in testing
-        if ($moduleSettings['mail']) {
+        if (\Model_SettingsMapper::getSetting('mail')) {
             $this->add(new \Zend_Acl_Resource('admin:index:reset-password'));
             $this->add(new \Zend_Acl_Resource('admin:index:reset-confirm'));
             $this->allow('guest', 'admin:index:reset-password');
