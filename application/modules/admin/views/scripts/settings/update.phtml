@@ -1,2 +1,54 @@
 <? $this->breadcrumb = [$this->link('settings'), $this->ucstring('edit')]; ?>
-<?= $this->form->setAction($this->url()) ?>
+<?
+$settings = Model_SettingsMapper::getSettings();
+$settingsGroups[_('general')] = [
+    'sitename',
+    'language',
+    #'log_level',
+    #'maintenance',
+    #'offline',
+    #'default_table_rows',
+];
+
+$settingsGroups[_('mail')] = [
+    #'mail',
+    #'notify_login'
+];
+
+$settingsGroups[_('authentication')] = [
+    #'random_password_length',
+    #'reset_confirm_hours',
+    #'failed_login_tries',
+    #'failed_login_forget_minutes'
+];
+?>
+<? $form = $this->form; ?>
+<?= $this->displayErrors($form); ?>
+<?= $form->renderForm(false); ?>
+<div id="tabs" class="tabsContainer">
+    <ul>
+        <? foreach ($settingsGroups as $name => $items): ?>
+            <li><a href="#tab<?= ucfirst($name) ?>"><?= $this->ucstring($name) ?></a></li>
+        <? endforeach ?>
+    </ul>
+    <? foreach ($settingsGroups as $name => $items): ?>
+        <div id="tab<?= ucfirst($name) ?>">
+            <div class="dataTable">
+                <? foreach ($items as $item): ?>
+                    <div class="tableRow">
+                        <?= $form->$item->renderLabel() ?>
+                        <div class="tableCell"><?= $form->$item->renderViewHelper() ?></div>
+                    </div>
+                <? endforeach ?>
+            </div>
+        </div>
+    <? endforeach ?>
+</div>
+<div style="margin-top:1em;margin-bottom:1em;">
+    <?= $form->formSubmit->renderViewHelper() ?>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $("#tabs").tabs();
+    });
+</script>

@@ -49,10 +49,7 @@ table.tablesorter a.button:hover,
 }
 
 p.hint,
-tr.tableGroup,
-div#tabs a.add,
-div.dataTable > div.groupLabel,
-div.tableRow div.formGroupLabel
+div#tabs a.add
 {
     color: #efefef;
 }
@@ -100,7 +97,6 @@ span.button,
 #breadcrumb,
 .dateSwitch,
 .placeSwitch,
-tr.tableGroup,
 div.tabsContainer a.add,
 .ui-state-default,
 .ui-widget-content .ui-state-default,
@@ -143,8 +139,6 @@ p.hint,
 #languageMenu span,
 .overlay,
 .ui-widget-header,
-div.tableRow div.formGroupLabel,
-div.dataTable > div.groupLabel,
 .pagedisplay[disabled="disabled"],
 table.tablesorter thead tr th,
 table.tablesorter tfoot tr th,

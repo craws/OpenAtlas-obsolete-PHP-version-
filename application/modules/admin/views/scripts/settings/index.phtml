@@ -1,66 +1,56 @@
 <? $this->buttonBar = '<a href="/admin/settings/update">' . $this->ucstring('edit') . '</a>'; ?>
 <? $this->breadcrumb = [$this->ucstring('settings')]; ?>
-<? $settings = Model_SettingsMapper::getSettings(); ?>
 <?
-    $logArray = [
-        0 => 'emergency',
-        1 => 'alert',
-        2 => 'critical',
-        3 => 'error',
-        4 => 'warn',
-        5 => 'notice',
-        6 => 'info',
-        7 => 'debug'
-    ];
+
+$logArray = [
+    0 => 'emergency',
+    1 => 'alert',
+    2 => 'critical',
+    3 => 'error',
+    4 => 'warn',
+    5 => 'notice',
+    6 => 'info',
+    7 => 'debug'
+];
+
+$settings = Model_SettingsMapper::getSettings();
+$settingsGroups[_('general')] = [
+    'sitename' => $settings['sitename'],
+    'language' => $settings['language'],
+    'log_level' => $logArray[$settings['log_level']],
+    'maintenance' => $settings['maintenance'] ? $this->ucstring('on') : $this->ucstring('off'),
+    'offline' => $settings['offline'] ? $this->ucstring('on') : $this->ucstring('off'),
+    'default_table_rows' => $settings['default_table_rows'],
+];
+
+$settingsGroups[_('mail')] = [
+    'mail' => $settings['mail'] ? $this->ucstring('on') : $this->ucstring('off'),
+    'notify_login' => $settings['notify_login'],
+];
+
+$settingsGroups[_('authentication')] = [
+    'random_password_length' => $settings['random_password_length'],
+    'reset_confirm_hours' => $settings['reset_confirm_hours'],
+    'failed_login_tries' => $settings['failed_login_tries'],
+    'failed_login_forget_minutes' => $settings['failed_login_forget_minutes']
+];
+
 ?>
 <div id="tabs" class="tabsContainer">
     <ul>
-        <li><a href="#tabGeneral"><?= $this->ucstring('general') ?></a></li>
-        <li><a href="#tabMail"><?= $this->ucstring('mail') ?></a></li>
-        <li><a href="#tabAuthentication"><?= $this->ucstring('authentication') ?></a></li>
+        <? foreach ($settingsGroups as $name => $items): ?>
+            <li><a href="#tab<?= ucfirst($name) ?>"><?= $this->ucstring($name) ?></a></li>
+        <? endforeach ?>
     </ul>
-<div id="tabGeneral">
-    <div class="dataTable">
-        <? $settingsGeneral = [
-            _('sitename') => $settings['sitename'],
-            _('language') => $settings['language'],
-            _('log_level') => $logArray[$settings['log_level']],
-            _('maintenance') => $settings['maintenance'] ? $this->ucstring('on') : $this->ucstring('off'),
-            _('offline') => $settings['offline'] ? $this->ucstring('on') : $this->ucstring('off'),
-            _('default_table_rows') => $settings['default_table_rows'],
-        ];
-        foreach($settingsGeneral as $name => $value) {
-            echo '<div><div>' . $name . '</div><div>' . $value . '</div></div>';
-        }
-        ?>
-    </div>
-</div>
-<div id="tabMail">
-    <div class="dataTable">
-        <? $settingsMail = [
-            _('mail') => $settings['mail'] ? $this->ucstring('on') : $this->ucstring('off'),
-            _('notify_login') => $settings['notify_login'],
-        ];
-        foreach($settingsMail as $name => $value) {
-            echo '<div><div>' . $name . '</div><div>' . $value . '</div></div>';
-        }
-        ?>
-    </div>
-</div>
-<div id="tabAuthentication">
-    <div class="dataTable">
-        <? $settingsAuthentication = [
-            _('random_password_length') => $settings['random_password_length'],
-            _('reset_confirm_hours') => $settings['reset_confirm_hours'],
-            _('failed_login_tries') => $settings['failed_login_tries'],
-            _('failed_login_forget_minutes') => $settings['failed_login_forget_minutes']
-        ];
-        foreach($settingsAuthentication as $name => $value) {
-            echo '<div><div>' . $name . '</div><div>' . $value . '</div></div>';
-        }
-        ?>
-    </div>
-</div>
+    <? foreach ($settingsGroups as $name => $items): ?>
+        <div id="tab<?= ucfirst($name) ?>">
+            <div class="dataTable">
+                <? foreach ($items as $name => $value): ?>
+                    <div><div><?= $this->ucstring($name) ?></div><div><?= $value ?></div></div>
+                <? endforeach ?>
+            </div>
+        </div>
+    <? endforeach ?>
 </div>
 <script type="text/javascript">
     $(function () {

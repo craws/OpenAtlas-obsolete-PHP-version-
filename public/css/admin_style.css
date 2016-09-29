@@ -286,11 +286,8 @@ p.descriptionTitle {
     font-weight: bold;
 }
 
-h1, tr.tableGroup {
-    font-weight: bold;
-}
-
 h1 {
+    font-weight: bold;
     margin-bottom: 1em;
     font-size: 1.1em;
 }
@@ -389,13 +386,6 @@ div.tableSubmit {
     margin-top: 0.5em;
 }
 
-div.dataTable > div.groupLabel {
-    font-weight: bold;
-    padding: 0.3em;
-    margin-bottom: 0.2em;
-    display: block;
-}
-
 div.dataTable > div {
     display: table-row;
 }
@@ -425,11 +415,6 @@ div.tableRow div {
 
 div.tableRow  div.mce-tinymce div, div.tableRow  div.mce-tinymce {
     padding: 0;
-    text-align: left;
-}
-
-div.tableRow div.formGroupLabel {
-    font-weight: bold;
     text-align: left;
 }
 
@@ -584,10 +569,6 @@ form td.data, form td.button, form.table td {
     text-align: left;
 }
 
-tr.tableGroup td {
-    padding: 0.3em 0.5em;
-}
-
 th a {
     text-decoration: none;
 }
@@ -651,7 +632,7 @@ table .button {
     margin-right: 0;
 }
 
-.tableRow .button {
+.tableRow .button, .ui-widget select {
     font-size: 0.9em;
 }
 

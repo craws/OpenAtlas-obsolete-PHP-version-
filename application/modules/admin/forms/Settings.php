@@ -9,9 +9,15 @@ class Admin_Form_Settings extends Craws\Form\Table {
         foreach (Model_LanguageMapper::getAll() as $language) {
             $languages[$language->id] = $language->name;
         }
-        foreach (Model_SettingsMapper::getSettings() as $group => $items) {
-            $this->process_group($group, $items, $languages);
-        }
+        $settings = Model_SettingsMapper::getSettings();
+        $this->addElement('text', 'sitename', [
+            'label' => $this->getView()->ucstring('sitename'),
+            'value' => $settings['sitename']
+        ]);
+        $language = $this->createElement('select', 'language', ['label' => $this->getView()->ucstring('language')]);
+        $language->addMultiOptions($languages);
+        $language->setValue($settings['language']);
+        $this->addElement($language);
         $this->addElement('button', 'formSubmit', ['label' => $this->getView()->ucstring('save'), 'type' => 'submit']);
         $this->setElementFilters(['StringTrim']);
     }
@@ -19,9 +25,6 @@ class Admin_Form_Settings extends Craws\Form\Table {
     private function process_group($group, $items, $languages) {
         $view = $this->getView();
         foreach ($items as $name => $value) {
-            $text = new Zend_Form_Element_Text($group);
-            $text->setValue('<div class="formGroupLabel">' . $view->ucstring($group) . '</div>')->helper = 'formNote';
-            $this->addElement($text);
             $elementName = $group . '__' . $name;
             if ($elementName == 'general__language') {
                 $element = $this->createElement('select', $elementName, ['label' => $this->getLabel('language')]);
