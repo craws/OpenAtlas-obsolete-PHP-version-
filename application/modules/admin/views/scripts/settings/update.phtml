@@ -2,24 +2,24 @@
 <?
 $settings = Model_SettingsMapper::getSettings();
 $settingsGroups[_('general')] = [
-    'sitename',
-    'language',
-    #'log_level',
-    #'maintenance',
-    #'offline',
-    #'default_table_rows',
+    _('sitename'),
+    _('language'),
+    _('log_level'),
+    _('maintenance'),
+    _('offline'),
+    _('default_table_rows'),
 ];
 
 $settingsGroups[_('mail')] = [
-    #'mail',
-    #'notify_login'
+    _('mail'),
+    _('notify_login')
 ];
 
 $settingsGroups[_('authentication')] = [
-    #'random_password_length',
-    #'reset_confirm_hours',
-    #'failed_login_tries',
-    #'failed_login_forget_minutes'
+    _('random_password_length'),
+    _('reset_confirm_hours'),
+    _('failed_login_tries'),
+    _('failed_login_forget_minutes')
 ];
 ?>
 <? $form = $this->form; ?>

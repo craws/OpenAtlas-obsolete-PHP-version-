@@ -34,15 +34,12 @@ class Model_SettingsMapper {
     }
 
     public static function updateSettings($settings) {
-        foreach ($settings as $group => $items) {
-            foreach ($items as $name => $value) {
-                $sql = 'UPDATE web.settings SET "value" = :value WHERE "name" = :name AND "group" = :group;';
-                $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
-                $statement->bindValue('name', $name);
-                $statement->bindValue('value', $value);
-                $statement->bindValue('group', $group);
-                $statement->execute();
-            }
+        foreach ($settings as $name => $value) {
+            $sql = 'UPDATE web.settings SET "value" = :value WHERE "name" = :name;';
+            $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
+            $statement->bindValue('name', $name);
+            $statement->bindValue('value', $value);
+            $statement->execute();
         }
     }
 

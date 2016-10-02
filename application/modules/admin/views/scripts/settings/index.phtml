@@ -16,7 +16,7 @@ $logArray = [
 $settings = Model_SettingsMapper::getSettings();
 $settingsGroups[_('general')] = [
     'sitename' => $settings['sitename'],
-    'language' => $settings['language'],
+    'language' => Model_LanguageMapper::getById($settings['language'])->name,
     'log_level' => $logArray[$settings['log_level']],
     'maintenance' => $settings['maintenance'] ? $this->ucstring('on') : $this->ucstring('off'),
     'offline' => $settings['offline'] ? $this->ucstring('on') : $this->ucstring('off'),
@@ -25,7 +25,7 @@ $settingsGroups[_('general')] = [
 
 $settingsGroups[_('mail')] = [
     'mail' => $settings['mail'] ? $this->ucstring('on') : $this->ucstring('off'),
-    'notify_login' => $settings['notify_login'],
+    'notify_login' => $settings['notify_login'] ? $this->ucstring('on') : $this->ucstring('off')
 ];
 
 $settingsGroups[_('authentication')] = [
