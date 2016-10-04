@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenATLAS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-06 19:13+0100\n"
+"POT-Creation-Date: 2016-10-04 16:16+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Alexander Watzinger <alexander.watzinger@craws.net>\n"
 "Language-Team: craws.net <alexander.watzinger@craws.net>\n"
@@ -75,7 +75,7 @@ msgstr "Änderung fehlgeschlagen."
 #: ../../../application/modules/admin/controllers/ProfileController.php:86
 #: ../../../application/modules/admin/controllers/ReferenceController.php:101
 #: ../../../application/modules/admin/controllers/RelationController.php:69
-#: ../../../application/modules/admin/controllers/SettingsController.php:26
+#: ../../../application/modules/admin/controllers/SettingsController.php:25
 #: ../../../application/modules/admin/controllers/SourceController.php:180
 #: ../../../application/modules/admin/controllers/SourceController.php:224
 #: ../../../application/modules/admin/controllers/UserController.php:69
@@ -348,13 +348,15 @@ msgstr "Ausstellungsort"
 #: ../../../application/modules/admin/forms/Node.php:22
 #: ../../../application/modules/admin/forms/Password.php:26
 #: ../../../application/modules/admin/forms/Profile.php:30
-#: ../../../application/modules/admin/forms/Settings.php:15
+#: ../../../application/modules/admin/forms/Settings.php:49
 #: ../../../application/modules/admin/forms/User.php:68
 #: ../../../application/layouts/scripts/map.phtml:26
 msgid "save"
 msgstr "speichern"
 
 #: ../../../application/modules/admin/forms/Display.php:13
+#: ../../../application/modules/admin/forms/Settings.php:28
+#: ../../../application/modules/admin/views/scripts/settings/update.phtml:6
 #: ../../../application/modules/admin/views/scripts/user/view.phtml:22
 msgid "language"
 msgstr "Sprache"
@@ -496,7 +498,7 @@ msgid "password"
 msgstr "Passwort"
 
 #: ../../../application/modules/admin/forms/Login.php:26
-#: ../../../application/layouts/scripts/default.phtml:63
+#: ../../../application/layouts/scripts/default.phtml:68
 #: ../../../application/modules/admin/views/scripts/index/index.phtml:1
 #: ../../../application/modules/admin/views/scripts/index/index.phtml:2
 #: ../../../application/modules/admin/views/scripts/index/reset-password.phtml:1
@@ -550,41 +552,52 @@ msgstr "Suchbegriff"
 msgid "search"
 msgstr "Suche"
 
-#: ../../../application/modules/admin/forms/Settings.php:33
-#: ../../../application/modules/admin/views/scripts/settings/index.phtml:15
+#: ../../../application/modules/admin/forms/Settings.php:21
+#: ../../../application/modules/admin/views/scripts/settings/index.phtml:20
+#: ../../../application/modules/admin/views/scripts/settings/index.phtml:21
+#: ../../../application/modules/admin/views/scripts/settings/index.phtml:27
+#: ../../../application/modules/admin/views/scripts/settings/index.phtml:28
 msgid "off"
 msgstr "Aus"
 
-#: ../../../application/modules/admin/forms/Settings.php:33
-#: ../../../application/modules/admin/views/scripts/settings/index.phtml:16
+#: ../../../application/modules/admin/forms/Settings.php:21
+#: ../../../application/modules/admin/views/scripts/settings/index.phtml:20
+#: ../../../application/modules/admin/views/scripts/settings/index.phtml:21
+#: ../../../application/modules/admin/views/scripts/settings/index.phtml:27
+#: ../../../application/modules/admin/views/scripts/settings/index.phtml:28
 msgid "on"
 msgstr "An"
 
-#: ../../../application/modules/admin/forms/Settings.php:38
+#: ../../../application/modules/admin/forms/Settings.php:32
+#: ../../../application/modules/admin/views/scripts/settings/update.phtml:7
+msgid "log_level"
+msgstr "Log Level"
+
+#: ../../../application/modules/admin/forms/Settings.php:34
 msgid "emergency"
 msgstr "emergency"
 
-#: ../../../application/modules/admin/forms/Settings.php:39
+#: ../../../application/modules/admin/forms/Settings.php:35
 msgid "alert"
 msgstr "alert"
 
-#: ../../../application/modules/admin/forms/Settings.php:40
+#: ../../../application/modules/admin/forms/Settings.php:36
 msgid "critical"
 msgstr "critical"
 
-#: ../../../application/modules/admin/forms/Settings.php:41
+#: ../../../application/modules/admin/forms/Settings.php:37
 msgid "error"
 msgstr "Fehler"
 
-#: ../../../application/modules/admin/forms/Settings.php:42
+#: ../../../application/modules/admin/forms/Settings.php:38
 msgid "warn"
 msgstr "warn"
 
-#: ../../../application/modules/admin/forms/Settings.php:43
+#: ../../../application/modules/admin/forms/Settings.php:39
 msgid "notice"
 msgstr "notice"
 
-#: ../../../application/modules/admin/forms/Settings.php:44
+#: ../../../application/modules/admin/forms/Settings.php:40
 #: ../../../application/modules/admin/forms/User.php:57
 #: ../../../application/modules/admin/views/scripts/actor/view.phtml:5
 #: ../../../application/modules/admin/views/scripts/carrier/view.phtml:5
@@ -599,9 +612,14 @@ msgstr "notice"
 msgid "info"
 msgstr "Info"
 
-#: ../../../application/modules/admin/forms/Settings.php:45
+#: ../../../application/modules/admin/forms/Settings.php:41
 msgid "debug"
 msgstr "debug"
+
+#: ../../../application/modules/admin/forms/Settings.php:45
+#: ../../../application/modules/admin/views/scripts/settings/update.phtml:10
+msgid "default_table_rows"
+msgstr "Default Tabellenreihen"
 
 #: ../../../application/modules/admin/forms/Source.php:15
 #: ../../../application/modules/admin/views/scripts/content/index.phtml:3
@@ -826,23 +844,23 @@ msgid "hide"
 msgstr "ausblenden"
 
 #: ../../../application/layouts/scripts/admin.phtml:85
-#: ../../../application/layouts/scripts/default.phtml:47
+#: ../../../application/layouts/scripts/default.phtml:52
 msgid "hello"
 msgstr "Hallo"
 
 #: ../../../application/layouts/scripts/admin.phtml:88
-#: ../../../application/layouts/scripts/default.phtml:50
+#: ../../../application/layouts/scripts/default.phtml:55
 #: ../../../application/modules/admin/views/scripts/profile/index.phtml:2
 msgid "profile"
 msgstr "Profil"
 
 #: ../../../application/layouts/scripts/admin.phtml:89
-#: ../../../application/layouts/scripts/default.phtml:51
+#: ../../../application/layouts/scripts/default.phtml:56
 msgid "logout"
 msgstr "Abmelden"
 
 #: ../../../application/layouts/scripts/admin.phtml:93
-#: ../../../application/layouts/scripts/default.phtml:55
+#: ../../../application/layouts/scripts/default.phtml:60
 msgid "version"
 msgstr "Version"
 
@@ -864,7 +882,7 @@ msgstr ""
 "JavaScript scheint deaktiviert zu sein. Die Funktionalität dieser Seite ist "
 "dadurch eingeschränkt."
 
-#: ../../../application/layouts/scripts/default.phtml:61
+#: ../../../application/layouts/scripts/default.phtml:66
 msgid "admin"
 msgstr "admin"
 
@@ -873,38 +891,38 @@ msgid "details"
 msgstr "Details"
 
 #: ../../../application/layouts/scripts/map.phtml:30
+msgid "map_clear"
+msgstr "clear"
+
+#: ../../../application/layouts/scripts/map.phtml:31
 msgid "map_info_reedit"
 msgstr "Für erneutes Bearbeiten bitte speichern oder neu laden."
 
-#: ../../../application/layouts/scripts/map.phtml:31
+#: ../../../application/layouts/scripts/map.phtml:32
 msgid "map_info_shape"
 msgstr ""
 "Zeichne den Umriss eines physischen Objekts dessen genaue Ausdehnung bekannt "
 "ist."
 
-#: ../../../application/layouts/scripts/map.phtml:32
+#: ../../../application/layouts/scripts/map.phtml:33
 msgid "map_info_area"
 msgstr ""
 "Zeichne die Fläche in dem sich das physikalische Objekt befindet. Z.B. wenn "
 "der genaue Umriss nicht bekannt ist, aber es sich innerhalb eines bestimmten "
 "Gebiet befindet."
 
-#: ../../../application/layouts/scripts/map.phtml:33
+#: ../../../application/layouts/scripts/map.phtml:34
 msgid "map_info_point"
 msgstr ""
 "Setze einen Marker an die Position wo sich das physikalische Objekt befindet."
 
-#: ../../../application/layouts/scripts/map.phtml:34
+#: ../../../application/layouts/scripts/map.phtml:35
 msgid "map_info_close"
 msgstr "Schließen ohne zu Speichern"
 
-#: ../../../application/layouts/scripts/map.phtml:35
+#: ../../../application/layouts/scripts/map.phtml:36
 msgid "map_info_description"
 msgstr "Hier kann eine Beschreibung eingeben werden."
-
-#: ../../../application/layouts/scripts/map.phtml:36
-msgid "map_clear"
-msgstr "clear"
 
 #: ../../../application/modules/admin/views/scripts/actor/form.phtml:44
 #: ../../../application/modules/admin/views/scripts/actor/index.phtml:9
@@ -1497,6 +1515,55 @@ msgstr "Keine Suchergebnisse"
 msgid "settings"
 msgstr "Einstellungen"
 
+#: ../../../application/modules/admin/views/scripts/settings/index.phtml:17
+#: ../../../application/modules/admin/views/scripts/settings/update.phtml:4
+msgid "general"
+msgstr "Allgemein"
+
+#: ../../../application/modules/admin/views/scripts/settings/index.phtml:26
+#: ../../../application/modules/admin/views/scripts/settings/update.phtml:13
+#: ../../../application/modules/admin/views/scripts/settings/update.phtml:14
+#, fuzzy
+msgid "mail"
+msgstr "E-Mail"
+
+#: ../../../application/modules/admin/views/scripts/settings/index.phtml:31
+#: ../../../application/modules/admin/views/scripts/settings/update.phtml:18
+msgid "authentication"
+msgstr "Authentifizierung "
+
+#: ../../../application/modules/admin/views/scripts/settings/update.phtml:5
+msgid "sitename"
+msgstr "Seitenname"
+
+#: ../../../application/modules/admin/views/scripts/settings/update.phtml:8
+msgid "maintenance"
+msgstr "Wartung"
+
+#: ../../../application/modules/admin/views/scripts/settings/update.phtml:9
+msgid "offline"
+msgstr "Offline"
+
+#: ../../../application/modules/admin/views/scripts/settings/update.phtml:15
+msgid "notify_login"
+msgstr "Bei Login benachrichtigen"
+
+#: ../../../application/modules/admin/views/scripts/settings/update.phtml:19
+msgid "random_password_length"
+msgstr "Länge des Zufallspassworts"
+
+#: ../../../application/modules/admin/views/scripts/settings/update.phtml:20
+msgid "reset_confirm_hours"
+msgstr "Reset Stunden Limit"
+
+#: ../../../application/modules/admin/views/scripts/settings/update.phtml:21
+msgid "failed_login_tries"
+msgstr "Maximale Anmeldeversuche"
+
+#: ../../../application/modules/admin/views/scripts/settings/update.phtml:22
+msgid "failed_login_forget_minutes"
+msgstr "Anmeldeversuche vergessen Minuten"
+
 #: ../../../application/modules/admin/views/scripts/source/text-add.phtml:1
 msgid "add_text"
 msgstr "Text hinzufügen"
@@ -1626,9 +1693,6 @@ msgstr "Diese Seite ist in Bearbeitung. Bitte probiere es später noch einmal."
 
 #~ msgid "involvement"
 #~ msgstr "Beteiligung"
-
-#~ msgid "function"
-#~ msgstr "Funktion"
 
 #~ msgid "node"
 #~ msgstr "Knoten"
