@@ -17,9 +17,9 @@ $settings = Model_SettingsMapper::getSettings();
 $settingsGroups[_('general')] = [
     'sitename' => $settings['sitename'],
     'language' => Model_LanguageMapper::getById($settings['language'])->name,
-    'log_level' => $logArray[$settings['log_level']],
     'maintenance' => $settings['maintenance'] ? $this->ucstring('on') : $this->ucstring('off'),
     'offline' => $settings['offline'] ? $this->ucstring('on') : $this->ucstring('off'),
+    'log_level' => $logArray[$settings['log_level']],
     'default_table_rows' => $settings['default_table_rows'],
 ];
 

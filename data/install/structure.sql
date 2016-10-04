@@ -13,8 +13,6 @@ SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET row_security = off;
 
--- CREATE EXTENSION postgis;
-
 SET search_path = web, pg_catalog;
 
 ALTER TABLE IF EXISTS ONLY web.user_settings DROP CONSTRAINT IF EXISTS user_settings_user_id_fkey;
@@ -87,7 +85,7 @@ ALTER TABLE IF EXISTS ONLY web."user" DROP CONSTRAINT IF EXISTS user_email_key;
 ALTER TABLE IF EXISTS ONLY web.user_bookmarks DROP CONSTRAINT IF EXISTS user_bookmarks_user_id_entity_id_key;
 ALTER TABLE IF EXISTS ONLY web.user_bookmarks DROP CONSTRAINT IF EXISTS user_bookmarks_pkey;
 ALTER TABLE IF EXISTS ONLY web.settings DROP CONSTRAINT IF EXISTS settings_pkey;
-ALTER TABLE IF EXISTS ONLY web.settings DROP CONSTRAINT IF EXISTS settings_name_group_key;
+ALTER TABLE IF EXISTS ONLY web.settings DROP CONSTRAINT IF EXISTS settings_name_key;
 ALTER TABLE IF EXISTS ONLY web.language DROP CONSTRAINT IF EXISTS language_shortform_key;
 ALTER TABLE IF EXISTS ONLY web.language DROP CONSTRAINT IF EXISTS language_pkey;
 ALTER TABLE IF EXISTS ONLY web.language DROP CONSTRAINT IF EXISTS language_name_key;
@@ -1121,8 +1119,7 @@ ALTER SEQUENCE language_id_seq OWNED BY language.id;
 CREATE TABLE settings (
     id integer NOT NULL,
     name text NOT NULL,
-    value text NOT NULL,
-    "group" text NOT NULL
+    value text NOT NULL
 );
 
 
@@ -1729,11 +1726,11 @@ ALTER TABLE ONLY language
 
 
 --
--- Name: settings_name_group_key; Type: CONSTRAINT; Schema: web; Owner: openatlas_master
+-- Name: settings_name_key; Type: CONSTRAINT; Schema: web; Owner: openatlas_master
 --
 
 ALTER TABLE ONLY settings
-    ADD CONSTRAINT settings_name_group_key UNIQUE (name, "group");
+    ADD CONSTRAINT settings_name_key UNIQUE (name);
 
 
 --
