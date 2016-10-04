@@ -62,7 +62,7 @@ class Admin_IndexControllerTest extends ControllerTestCase {
         $this->dispatch('admin/index/password-reset');
         $this->dispatch('admin/index/reset-confirm');
         $settings = Zend_Registry::get('settings');
-        $settings['mail']['enabled'] = 1;
+        $settings['mail'] = 1;
         Zend_Registry::set('settings', $settings);
         $this->request->setMethod('POST')->setPost(['email' => $this->defaultEmail]);
         $this->dispatch('admin/index/password-reset');

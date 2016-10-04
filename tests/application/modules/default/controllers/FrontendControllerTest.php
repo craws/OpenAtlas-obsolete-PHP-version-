@@ -10,7 +10,7 @@ class FrontendControllerTest extends ControllerTestCase {
         $this->login();
         $this->resetRequest()->resetResponse();
         $settings = Zend_Registry::get('settings');
-        $settings['general']['offline'] = 0;
+        $settings['offline'] = 0;
         Zend_Registry::set('settings', $settings);
         $this->dispatch('offline');
         $this->resetRequest()->resetResponse();
