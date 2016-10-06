@@ -25,7 +25,18 @@ INSERT INTO settings (name, value) VALUES
 ('sitename', 'OpenAtlas'),
 ('default_table_rows', '20'),
 ('notify_login', '1'),
-('mail', '0');
+('mail', '0'),
+('mail_transport_username', ''),
+('mail_transport_passwort', ''),
+('mail_transport_ssl', ''),
+('mail_transport_auth', ''),
+('mail_transport_port', ''),
+('mail_transport_host', ''),
+('mail_from_email', ''),
+('mail_from_name', ''),
+('mail_recipients_login', ''),
+('mail_recipients_feedback', '')
+;
 
 INSERT INTO "user" (username, password, active, email, group_id) VALUES
 ('a', '$2a$08$cVEBAnh6MIp/KEcEoMcYAOOK9B70eeq9FVQ6pNxKJK8UBfsKQeW5ycVEBAnh6MIp/KEcEoMcYAQ', 1, null, 1);

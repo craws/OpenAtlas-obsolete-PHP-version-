@@ -28,7 +28,7 @@ class Model_SettingsMapper {
             return $settings[$name];
         }
         // @codeCoverageIgnoreStart
-        echo "Something is rotten in the state of Denmark (missing setting " . $group . "/" . $name . ").";
+        echo "Something is rotten in the state of Denmark (missing setting: " . $name . ").";
         exit;
         // @codeCoverageIgnoreEnd
     }

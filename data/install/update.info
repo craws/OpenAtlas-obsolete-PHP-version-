@@ -6,7 +6,39 @@ Watch out for database role in SQLs and change "openatlas_master" if needed.
 2.2.0 to 2.3.0 Upgrade
 ======================
 
+Mail config is now handled in backend and saved in database instead in application.ini
+Before upgrading make sure to take note of mail settings in application.ini and password.ini
+
+1) Merge and add update database
+
+BEGIN;
+
 ALTER TABLE web.settings DROP COLUMN "group";
+INSERT INTO web.settings (name, value) VALUES
+    ('mail_transport_username', ''),
+    ('mail_transport_passwort', ''),
+    ('mail_transport_ssl', ''),
+    ('mail_transport_auth', ''),
+    ('mail_transport_port', ''),
+    ('mail_transport_host', ''),
+    ('mail_from_email', ''),
+    ('mail_from_name', ''),
+    ('mail_recipients_login', ''),
+    ('mail_recipients_feedback', '')
+;
+
+COMMIT;
+
+
+2) Update mail configuration with browser as admin in admin->settings->mail
+
+3) Test new mail config
+
+4) Delete Mail related configuration in application.ini and password.ini
+
+
+
+
 
 2.1.0 to 2.2.0 Upgrade
 ======================
