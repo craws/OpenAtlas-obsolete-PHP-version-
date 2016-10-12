@@ -25,7 +25,16 @@ $settingsGroups[_('general')] = [
 
 $settingsGroups[_('mail')] = [
     'mail' => $settings['mail'] ? $this->ucstring('on') : $this->ucstring('off'),
-    'notify_login' => $settings['notify_login'] ? $this->ucstring('on') : $this->ucstring('off')
+    'mail_transport_username' => $settings['mail_transport_username'],
+    'mail_transport_password' => $settings['mail_transport_password'],
+    'mail_transport_ssl' => $settings['mail_transport_ssl'],
+    'mail_transport_auth' => $settings['mail_transport_auth'],
+    'mail_transport_port' => $settings['mail_transport_port'],
+    'mail_transport_host' => $settings['mail_transport_host'],
+    'mail_from_email' => $settings['mail_from_email'],
+    'mail_from_name' => $settings['mail_from_name'],
+    'mail_recipients_login' => $settings['mail_recipients_login'],
+    'mail_recipients_feedback' => $settings['mail_recipients_feedback'],
 ];
 
 $settingsGroups[_('authentication')] = [

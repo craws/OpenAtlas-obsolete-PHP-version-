@@ -16,8 +16,9 @@ BEGIN;
 ALTER TABLE web.settings DROP COLUMN "group";
 INSERT INTO web.settings (name, value) VALUES
     ('mail_transport_username', ''),
-    ('mail_transport_passwort', ''),
+    ('mail_transport_password', ''),
     ('mail_transport_ssl', ''),
+    ('mail_transport_type', ''),
     ('mail_transport_auth', ''),
     ('mail_transport_port', ''),
     ('mail_transport_host', ''),
@@ -26,6 +27,7 @@ INSERT INTO web.settings (name, value) VALUES
     ('mail_recipients_login', ''),
     ('mail_recipients_feedback', '')
 ;
+DELETE FROM web.settings WHERE name LIKE 'notify_login';
 
 COMMIT;
 

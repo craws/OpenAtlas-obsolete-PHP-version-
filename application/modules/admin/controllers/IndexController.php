@@ -63,7 +63,7 @@ class Admin_IndexController extends Zend_Controller_Action {
         // Ignore coverage because no mail in testing
         if (!strpos(filter_input(INPUT_SERVER, 'HTTP_HOST'), 'local') &&
             Model_SettingsMapper::getSetting('mail') &&
-            Model_SettingsMapper::getSetting('notify_login')
+            Model_SettingsMapper::getSetting('mail_recipients_login')
         ) {
             $message = "Login from " . $user->username . "(" . $user->id . ") at " .
                 Model_SettingsMapper::getSetting('sitename') . "(" . $this->getRequest()->getHttpHost() .

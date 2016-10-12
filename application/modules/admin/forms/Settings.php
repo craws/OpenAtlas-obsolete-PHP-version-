@@ -8,15 +8,46 @@ class Admin_Form_Settings extends Craws\Form\Table {
         $view = $this->getView();
         $this->setName('settingsForm')->setMethod('post');
         $settings = Model_SettingsMapper::getSettings();
-        foreach([
-            'sitename',
-            'random_password_length',
-            'reset_confirm_hours',
-            'failed_login_tries',
-            'failed_login_forget_minutes'] as $name) {
-            $this->addElement('text', $name, ['label' => $view->ucstring($name),'value' => $settings[$name]]);
+        $this->addElement('password', 'mail_transport_password', [
+            'label' => $this->getView()->ucstring('mail_transport_password'),
+            'value' => $settings['mail_transport_password'],
+        ]);
+        $this->addElement('password', 'mail_transport_password_retype', [
+            'label' => $this->getView()->ucstring('mail_transport_password_retype'),
+            'value' => $settings['mail_transport_password'],
+        ]);
+        $this->addElement('select', 'mail_transport_type', [
+            'label' => $this->getView()->ucstring('mail_transport_type'),
+            'multiOptions' => ['' => 'SMTP']
+        ]);
+        foreach ([
+            'sitename' => '',
+            'random_password_length' => '',
+            'reset_confirm_hours' => '',
+            'failed_login_tries' => '3',
+            'failed_login_forget_minutes' => '',
+            'mail_transport_username' => '',
+            'mail_transport_ssl' => 'tls',
+            'mail_transport_auth' => 'plain',
+            'mail_transport_port' => '25',
+            'mail_transport_host' => '',
+            'mail_from_email' => 'office@openatlas.eu',
+            'mail_from_name' => 'OpenAtlas',
+            'mail_recipients_login' => 'al@xyz.eu, bo@xyz.eu',
+            'mail_recipients_feedback' => 'al@xyz.eu, bo@xyz.eu',
+        ] as $name => $placeholder) {
+            $this->addElement('text', $name, [
+                'label' => $view->ucstring($name),
+                'value' => $settings[$name],
+                'placeholder' => $placeholder,
+            ]
+        );
         }
-        foreach (['mail', 'notify_login', 'maintenance', 'offline'] as $name) {
+        foreach ([
+            'mail',
+            'maintenance',
+            'offline',
+        ] as $name) {
             $element = $this->createElement('select', $name, ['label' => $view->ucstring($name)]);
             $element->addMultiOptions([0 => $view->ucstring('off'), 1 => $view->ucstring('on')]);
             $element->setValue($settings[$name]);
