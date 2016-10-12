@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenATLAS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-04 16:16+0100\n"
+"POT-Creation-Date: 2016-10-12 17:30+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Alexander Watzinger <alexander.watzinger@craws.net>\n"
 "Language-Team: craws.net <alexander.watzinger@craws.net>\n"
@@ -348,14 +348,14 @@ msgstr "Ausstellungsort"
 #: ../../../application/modules/admin/forms/Node.php:22
 #: ../../../application/modules/admin/forms/Password.php:26
 #: ../../../application/modules/admin/forms/Profile.php:30
-#: ../../../application/modules/admin/forms/Settings.php:49
+#: ../../../application/modules/admin/forms/Settings.php:66
 #: ../../../application/modules/admin/forms/User.php:68
 #: ../../../application/layouts/scripts/map.phtml:26
 msgid "save"
 msgstr "speichern"
 
 #: ../../../application/modules/admin/forms/Display.php:13
-#: ../../../application/modules/admin/forms/Settings.php:28
+#: ../../../application/modules/admin/forms/Settings.php:45
 #: ../../../application/modules/admin/views/scripts/settings/update.phtml:6
 #: ../../../application/modules/admin/views/scripts/user/view.phtml:22
 msgid "language"
@@ -552,7 +552,7 @@ msgstr "Suchbegriff"
 msgid "search"
 msgstr "Suche"
 
-#: ../../../application/modules/admin/forms/Settings.php:21
+#: ../../../application/modules/admin/forms/Settings.php:38
 #: ../../../application/modules/admin/views/scripts/settings/index.phtml:20
 #: ../../../application/modules/admin/views/scripts/settings/index.phtml:21
 #: ../../../application/modules/admin/views/scripts/settings/index.phtml:27
@@ -560,7 +560,7 @@ msgstr "Suche"
 msgid "off"
 msgstr "Aus"
 
-#: ../../../application/modules/admin/forms/Settings.php:21
+#: ../../../application/modules/admin/forms/Settings.php:38
 #: ../../../application/modules/admin/views/scripts/settings/index.phtml:20
 #: ../../../application/modules/admin/views/scripts/settings/index.phtml:21
 #: ../../../application/modules/admin/views/scripts/settings/index.phtml:27
@@ -568,36 +568,36 @@ msgstr "Aus"
 msgid "on"
 msgstr "An"
 
-#: ../../../application/modules/admin/forms/Settings.php:32
+#: ../../../application/modules/admin/forms/Settings.php:49
 #: ../../../application/modules/admin/views/scripts/settings/update.phtml:7
 msgid "log_level"
 msgstr "Log Level"
 
-#: ../../../application/modules/admin/forms/Settings.php:34
+#: ../../../application/modules/admin/forms/Settings.php:51
 msgid "emergency"
 msgstr "emergency"
 
-#: ../../../application/modules/admin/forms/Settings.php:35
+#: ../../../application/modules/admin/forms/Settings.php:52
 msgid "alert"
 msgstr "alert"
 
-#: ../../../application/modules/admin/forms/Settings.php:36
+#: ../../../application/modules/admin/forms/Settings.php:53
 msgid "critical"
 msgstr "critical"
 
-#: ../../../application/modules/admin/forms/Settings.php:37
+#: ../../../application/modules/admin/forms/Settings.php:54
 msgid "error"
 msgstr "Fehler"
 
-#: ../../../application/modules/admin/forms/Settings.php:38
+#: ../../../application/modules/admin/forms/Settings.php:55
 msgid "warn"
 msgstr "warn"
 
-#: ../../../application/modules/admin/forms/Settings.php:39
+#: ../../../application/modules/admin/forms/Settings.php:56
 msgid "notice"
 msgstr "notice"
 
-#: ../../../application/modules/admin/forms/Settings.php:40
+#: ../../../application/modules/admin/forms/Settings.php:57
 #: ../../../application/modules/admin/forms/User.php:57
 #: ../../../application/modules/admin/views/scripts/actor/view.phtml:5
 #: ../../../application/modules/admin/views/scripts/carrier/view.phtml:5
@@ -612,11 +612,11 @@ msgstr "notice"
 msgid "info"
 msgstr "Info"
 
-#: ../../../application/modules/admin/forms/Settings.php:41
+#: ../../../application/modules/admin/forms/Settings.php:58
 msgid "debug"
 msgstr "debug"
 
-#: ../../../application/modules/admin/forms/Settings.php:45
+#: ../../../application/modules/admin/forms/Settings.php:62
 #: ../../../application/modules/admin/views/scripts/settings/update.phtml:10
 msgid "default_table_rows"
 msgstr "Default Tabellenreihen"
@@ -1528,7 +1528,7 @@ msgid "mail"
 msgstr "E-Mail"
 
 #: ../../../application/modules/admin/views/scripts/settings/index.phtml:31
-#: ../../../application/modules/admin/views/scripts/settings/update.phtml:18
+#: ../../../application/modules/admin/views/scripts/settings/update.phtml:29
 msgid "authentication"
 msgstr "Authentifizierung "
 
@@ -1548,19 +1548,60 @@ msgstr "Offline"
 msgid "notify_login"
 msgstr "Bei Login benachrichtigen"
 
+#: ../../../application/modules/admin/views/scripts/settings/update.phtml:16
+#: ../../../application/modules/admin/views/scripts/settings/update.phtml:17
+msgid "mail_transport_username"
+msgstr "Username"
+
+#: ../../../application/modules/admin/views/scripts/settings/update.phtml:18
+msgid "mail_transport_passwort"
+msgstr "Password"
+
 #: ../../../application/modules/admin/views/scripts/settings/update.phtml:19
+msgid "mail_transport_ssl"
+msgstr "SSL"
+
+#: ../../../application/modules/admin/views/scripts/settings/update.phtml:20
+msgid "mail_transport_auth"
+msgstr "Auth"
+
+#: ../../../application/modules/admin/views/scripts/settings/update.phtml:21
+msgid "mail_transport_port"
+msgstr "Port"
+
+#: ../../../application/modules/admin/views/scripts/settings/update.phtml:22
+msgid "mail_transport_host"
+msgstr "Host"
+
+#: ../../../application/modules/admin/views/scripts/settings/update.phtml:23
+msgid "mail_from_email"
+msgstr "E-Mail Sender"
+
+#: ../../../application/modules/admin/views/scripts/settings/update.phtml:24
+msgid "mail_from_name"
+msgstr "Name"
+
+#: ../../../application/modules/admin/views/scripts/settings/update.phtml:25
+msgid "mail_recipients_login"
+msgstr "Login Empfänger"
+
+#: ../../../application/modules/admin/views/scripts/settings/update.phtml:26
+msgid "mail_recipients_feedback"
+msgstr "Feedback Empfänger"
+
+#: ../../../application/modules/admin/views/scripts/settings/update.phtml:30
 msgid "random_password_length"
 msgstr "Länge des Zufallspassworts"
 
-#: ../../../application/modules/admin/views/scripts/settings/update.phtml:20
+#: ../../../application/modules/admin/views/scripts/settings/update.phtml:31
 msgid "reset_confirm_hours"
 msgstr "Reset Stunden Limit"
 
-#: ../../../application/modules/admin/views/scripts/settings/update.phtml:21
+#: ../../../application/modules/admin/views/scripts/settings/update.phtml:32
 msgid "failed_login_tries"
 msgstr "Maximale Anmeldeversuche"
 
-#: ../../../application/modules/admin/views/scripts/settings/update.phtml:22
+#: ../../../application/modules/admin/views/scripts/settings/update.phtml:33
 msgid "failed_login_forget_minutes"
 msgstr "Anmeldeversuche vergessen Minuten"
 
