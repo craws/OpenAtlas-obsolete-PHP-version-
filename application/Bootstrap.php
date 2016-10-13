@@ -102,26 +102,14 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         }
         $config = array(
             'username' => $this->settings['mail_transport_username'],
-            'password' => $this->settings['mail_transport_passwort'],
+            'password' => $this->settings['mail_transport_password'],
             'ssl' => $this->settings['mail_transport_ssl'],
             'auth' => $this->settings['mail_transport_auth'],
             'port' => $this->settings['mail_transport_port']
         );
         Zend_Mail::setDefaultTransport(new Zend_Mail_Transport_Smtp($this->settings['mail_transport_host'], $config));
+        # setDefaultFrom doesn't seem to work and has to be set before $mail->send() with $mail->setFrom
         Zend_Mail::setDefaultFrom($this->settings['mail_from_email'], $this->settings['mail_from_name']);
-        /*
-        mail_recipients_login: mailRecipientsLogin[] = "office@craws.net"
-        mail_recipients_feedback: mailRecipientsFeedback[] = "office@craws.net" ; first entry is shown on feedback site
-
-        resources.mail.transport.ssl = tls
-        resources.mail.transport.type = smtp
-        resources.mail.transport.host = "mail.craws.net"
-        resources.mail.transport.username = "office@craws.net"
-        resources.mail.transport.password = CHANGEME
-        resources.mail.transport.auth = plain
-        resources.mail.defaultFrom.email = "office@craws.net"
-        resources.mail.defaultFrom.name = "craws.net"
-        */
     }
 
     protected function _initModel() {

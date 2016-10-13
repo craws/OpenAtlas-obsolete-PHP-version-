@@ -11,10 +11,12 @@ class Admin_Form_Settings extends Craws\Form\Table {
         $this->addElement('password', 'mail_transport_password', [
             'label' => $this->getView()->ucstring('mail_transport_password'),
             'value' => $settings['mail_transport_password'],
+            'renderPassword' => true
         ]);
         $this->addElement('password', 'mail_transport_password_retype', [
             'label' => $this->getView()->ucstring('mail_transport_password_retype'),
             'value' => $settings['mail_transport_password'],
+            'renderPassword' => true
         ]);
         $this->addElement('select', 'mail_transport_type', [
             'label' => $this->getView()->ucstring('mail_transport_type'),
@@ -30,11 +32,11 @@ class Admin_Form_Settings extends Craws\Form\Table {
             'mail_transport_ssl' => 'tls',
             'mail_transport_auth' => 'plain',
             'mail_transport_port' => '25',
-            'mail_transport_host' => '',
+            'mail_transport_host' => 'localhost',
             'mail_from_email' => 'office@openatlas.eu',
             'mail_from_name' => 'OpenAtlas',
-            'mail_recipients_login' => 'al@xyz.eu, bo@xyz.eu',
-            'mail_recipients_feedback' => 'al@xyz.eu, bo@xyz.eu',
+            'mail_recipients_login' => 'a@xyz.eu, b@xyz.eu',
+            'mail_recipients_feedback' => 'a@xyz.eu, b@xyz.eu',
         ] as $name => $placeholder) {
             $this->addElement('text', $name, [
                 'label' => $view->ucstring($name),

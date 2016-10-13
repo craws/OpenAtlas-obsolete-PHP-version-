@@ -59,17 +59,16 @@ class Admin_IndexController extends Zend_Controller_Action {
         $user->loginFailedCount = 0;
         $user->update();
         $this->_helper->log('info', 'login');
+        $settings = Model_SettingsMapper::getSettings();
         // @codeCoverageIgnoreStart
         // Ignore coverage because no mail in testing
-        if (!strpos(filter_input(INPUT_SERVER, 'HTTP_HOST'), 'local') &&
-            Model_SettingsMapper::getSetting('mail') &&
-            Model_SettingsMapper::getSetting('mail_recipients_login')
-        ) {
+        if (!strpos(filter_input(INPUT_SERVER, 'HTTP_HOST'), 'local') && $settings['mail']) {
             $message = "Login from " . $user->username . "(" . $user->id . ") at " .
-                Model_SettingsMapper::getSetting('sitename') . "(" . $this->getRequest()->getHttpHost() .
+                $settings['sitename'] . "(" . $this->getRequest()->getHttpHost() .
                 ").\r\n\r";
             $mail = new Zend_Mail('utf-8');
-            foreach(Zend_Registry::get('config')->get('mailRecipientsLogin')->toArray() as $receiver) {
+            $mail->setFrom($settings['mail_from_email'], $settings['mail_from_name']);
+            foreach (explode(',', $settings['mail_recipients_login']) as $receiver) {
                 $mail->addTo($receiver);
             }
             $mail->setSubject('Login ' . $user->username . ' on ' . $this->getRequest()->getHttpHost());
@@ -105,14 +104,15 @@ class Admin_IndexController extends Zend_Controller_Action {
             $this->_helper->message("error_invalid_request");
             return $this->_helper->redirector->gotoUrl('/admin');
         }
+        $settings = Model_SettingsMapper::getSettings();
         $resetDate = $user->passwordResetDate;
-        $resetDate->addHour(Model_SettingsMapper::getSetting('reset_confirm_hours'));
+        $resetDate->addHour($settings['reset_confirm_hours']);
         if (!$resetDate->isLater(new Zend_Date())) {
             $this->_helper->log('error', 'password', 'Password reset confirmed too late by ' . $user->id);
             $this->_helper->message('error_reset_outdated');
             return $this->_helper->redirector->gotoUrl('/admin');
         }
-        $password = Model_User::randomPassword(Model_SettingsMapper::getSetting('random_password_length'));
+        $password = Model_User::randomPassword($settings['random_password_length']);
         $hash = Model_User::hasher($password);
         $user->password = $hash;
         $user->passwordResetCode = null;
@@ -123,6 +123,7 @@ class Admin_IndexController extends Zend_Controller_Action {
         $this->view->mailPassword = $password;
         $this->view->mailUrl = 'http://' . $this->getRequest()->getHttpHost() . '/admin';
         $mail = new Zend_Mail('utf-8');
+        $mail->setFrom($settings['mail_from_email'], $settings['mail_from_name']);
         $mail->addTo($user->email);
         $mail->setSubject($this->view->translate('mail_new_password_subject'));
         $mail->setBodyHtml($this->view->render('mail/reset-confirm.phtml'));
@@ -131,7 +132,8 @@ class Admin_IndexController extends Zend_Controller_Action {
             $this->_helper->log('info', 'mail', 'New password mail to ' . $user->email . ' for ' . $user->username);
             $this->_helper->message($this->view->translate('info_mail_new_password_send', $user->email));
         } else {
-            $this->_helper->log('error', 'mail', 'Failed to send new password to email ' . $user->email . ' for ' . $user->username);
+            $this->_helper->log('error', 'mail', 'Failed to send new password to email ' . $user->email .
+                ' for ' . $user->username);
             $this->_helper->message('error_mail_send');
         }
         return $this->_helper->redirector->gotoUrl('/admin');
@@ -148,15 +150,18 @@ class Admin_IndexController extends Zend_Controller_Action {
                 $this->_helper->message('error_nonexist_email');
                 return;
             }
-            $resetCode = Model_User::randomPassword(Model_SettingsMapper::getSetting('random_password_length'));
+            $settings = Model_SettingsMapper::getSettings();
+            $resetCode = Model_User::randomPassword($settings['random_password_length']);
             $user->passwordResetCode = $resetCode;
             $user->passwordResetDate = new Zend_Date();
             $user->update();
-            $this->view->mailLink = 'http://' . $this->getRequest()->getHttpHost() . "/admin/index/reset-confirm/code/" . $resetCode;
+            $this->view->mailLink = 'http://' . $this->getRequest()->getHttpHost() .
+                '/admin/index/reset-confirm/code/' . $resetCode;
             $this->view->mailUsername = $user->username;
             $this->view->mailHost = $this->getRequest()->getHttpHost();
-            $this->view->mailResetConfirmHours = Model_SettingsMapper::getSetting('reset_confirm_hours');
+            $this->view->mailResetConfirmHours = $settings['reset_confirm_hours'];
             $mail = new Zend_Mail('utf-8');
+            $mail->setFrom($settings['mail_from_email'], $settings['mail_from_name']);
             $mail->addTo($email);
             $mail->setSubject($this->view->translate('mail_reset_password_subject'));
             $mail->setBodyHtml($this->view->render('mail/reset-password.phtml'));

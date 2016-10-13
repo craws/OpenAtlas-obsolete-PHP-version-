@@ -7,18 +7,19 @@ class Admin_OverviewController extends Zend_Controller_Action {
 
     public function feedbackAction() {
         $form = new Admin_Form_Feedback();
-        $receivers = Zend_Registry::get('config')->get('mailRecipientsFeedback')->toArray();
+        $settings = Model_SettingsMapper::getSettings();
+        $receivers = explode(',', $settings['mail_recipients_feedback']);
         $this->view->form = $form;
-        $this->view->feedbackReceiver = $receivers[0];
+        $this->view->feedbackEmail = $receivers[0];
         // @codeCoverageIgnoreStart
         // Ignore coverage because no mail in testing
-        if ($this->getRequest()->isPost() && $form->isValid($this->getRequest()->getPost()) &&
-            Model_SettingsMapper::getSetting('mail')) {
+        if ($this->getRequest()->isPost() && $form->isValid($this->getRequest()->getPost()) && $settings['mail']) {
             $mail = new Zend_Mail('utf-8');
             foreach($receivers as $receiver) {
                 $mail->addTo($receiver);
             }
-            $mail->setSubject($form->getValue('subject') . ' from ' . Model_SettingsMapper::getSetting('sitename'));
+            $mail->setFrom($settings['mail_from_email'], $settings['mail_from_name']);
+            $mail->setSubject($form->getValue('subject') . ' from ' . $settings['sitename']);
             $user = Zend_Registry::get('user');
             $body = $form->getValue('subject') . ' from ' . $user->username . ' (' . $user->id . ') ' . $user->email .
                 ' at ' . $this->getRequest()->getHttpHost() . "\n\n" . $form->getValue('description');
