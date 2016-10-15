@@ -50,14 +50,22 @@ $settingsGroups[_('authentication')] = [
             <li><a href="#tab<?= ucfirst($name) ?>"><?= $this->ucstring($name) ?></a></li>
         <? endforeach ?>
     </ul>
-    <? foreach ($settingsGroups as $name => $items): ?>
-        <div id="tab<?= ucfirst($name) ?>">
+    <? foreach ($settingsGroups as $group => $items): ?>
+        <div id="tab<?= ucfirst($group) ?>">
             <div class="dataTable">
                 <? foreach ($items as $name => $value): ?>
                     <? $style = (0 === strpos($name, 'mail_') && !$settings['mail']) ? 'faded' : ''; ?>
                     <div class="<?= $style ?>"><div><?= $this->ucstring($name) ?></div><div><?= $value ?></div></div>
                 <? endforeach ?>
             </div>
+            <? if ($settings['mail'] && $group == 'mail'): ?>
+                <form id="testMailForm" name="testMailForm" style="margin-top:1em;">
+                    <input id="testMailReceiver" name="testMailReceiver" value="<?= $settings['mail_from_email'] ?>"
+                           class="required"><br/>
+                    <button id="formSubmit" name="formSubmit" style="font-size:0.9em;"
+                        type="submit"><?= $this->translate('send_test_mail') ?></button>
+                </form>
+            <? endif ?>
         </div>
     <? endforeach ?>
 </div>
