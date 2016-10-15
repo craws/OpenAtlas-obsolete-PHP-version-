@@ -8,6 +8,14 @@ html, body, input, select, textarea {
     display: none;
 }
 
+.faded {
+    opacity: 0.5;
+}
+
+.opaque {
+    opacity: 1;
+}
+
 #description {
     width: 33em;
     height: 8em;

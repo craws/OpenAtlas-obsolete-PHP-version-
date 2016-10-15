@@ -54,7 +54,8 @@ $settingsGroups[_('authentication')] = [
         <div id="tab<?= ucfirst($name) ?>">
             <div class="dataTable">
                 <? foreach ($items as $name => $value): ?>
-                    <div><div><?= $this->ucstring($name) ?></div><div><?= $value ?></div></div>
+                    <? $style = (0 === strpos($name, 'mail_') && !$settings['mail']) ? 'faded' : ''; ?>
+                    <div class="<?= $style ?>"><div><?= $this->ucstring($name) ?></div><div><?= $value ?></div></div>
                 <? endforeach ?>
             </div>
         </div>

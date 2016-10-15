@@ -100,13 +100,13 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         if (!$this->setting['mail'] || !$this->settings['mail_transport_type'] == 'smtp') {
             return; // at the moment only smtp is supported
         }
-        $config = array(
+        $config = [
             'username' => $this->settings['mail_transport_username'],
             'password' => $this->settings['mail_transport_password'],
             'ssl' => $this->settings['mail_transport_ssl'],
             'auth' => $this->settings['mail_transport_auth'],
             'port' => $this->settings['mail_transport_port']
-        );
+        ];
         Zend_Mail::setDefaultTransport(new Zend_Mail_Transport_Smtp($this->settings['mail_transport_host'], $config));
         # setDefaultFrom doesn't seem to work and has to be set before $mail->send() with $mail->setFrom
         Zend_Mail::setDefaultFrom($this->settings['mail_from_email'], $this->settings['mail_from_name']);

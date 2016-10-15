@@ -36,6 +36,9 @@ $settingsGroups[_('authentication')] = [
 <? $form = $this->form; ?>
 <?= $this->displayErrors($form); ?>
 <?= $form->renderForm(false); ?>
+<div class="buttonBar">
+    <?= $form->formSubmit->renderViewHelper(); ?>
+</div>
 <div id="tabs" class="tabsContainer">
     <ul>
         <? foreach ($settingsGroups as $name => $items): ?>
@@ -46,7 +49,8 @@ $settingsGroups[_('authentication')] = [
         <div id="tab<?= ucfirst($name) ?>">
             <div class="dataTable">
                 <? foreach ($items as $item): ?>
-                    <div class="tableRow">
+                    <? $classes = (0 === strpos($item, 'mail_')) ? 'mailOption opaque' : ''; ?>
+                    <div class="tableRow <?= $classes ?>">
                         <?= $form->$item->renderLabel() ?>
                         <div class="tableCell"><?= $form->$item->renderViewHelper() ?></div>
                     </div>
@@ -55,11 +59,15 @@ $settingsGroups[_('authentication')] = [
         </div>
     <? endforeach ?>
 </div>
-<div style="margin-top:1em;margin-bottom:1em;">
-    <?= $form->formSubmit->renderViewHelper() ?>
-</div>
+<?= '</form>' ?>
 <script type="text/javascript">
     $(function () {
         $("#tabs").tabs();
+        <? if (!$settings['mail']): ?>
+            $(".mailOption").toggleClass('faded opaque');
+        <? endif ?>
+        $('input[type=radio][name=mail]').on('change', function() {
+            $(".mailOption").toggleClass('faded opaque');
+        });
     });
 </script>
