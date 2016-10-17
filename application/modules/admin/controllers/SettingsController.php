@@ -19,10 +19,10 @@ class Admin_SettingsController extends Zend_Controller_Action {
         $mail->setBodyText('This test mail was sent by ' . $user->username . ' at ' . $this->getRequest()->getHttpHost());
         if ($mail->send()) {
             $this->_helper->log('info', 'mail', 'A test mail was sent to ' . $recipient);
-            $this->_helper->message($this->view->translate('info_test_mail_send'), $recipient);
+            $this->_helper->message($this->view->translate('info_test_mail_send', $recipient));
         } else {
             $this->_helper->log('error', 'mail', 'Failed to send a test mail to ' . $recipient);
-            $this->_helper->message($this->view->translate('error_test_mail_send'), $recipient);
+            $this->_helper->message($this->view->translate('error_test_mail_send', $recipient));
         }
     }
     // @codeCoverageIgnoreEnd
