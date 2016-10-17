@@ -27,6 +27,7 @@ INSERT INTO web.settings (name, value) VALUES
     ('mail_recipients_login', ''),
     ('mail_recipients_feedback', '')
 ;
+UPDATE web.settings SET name = 'default_language' WHERE name LIKE 'language';
 DELETE FROM web.settings WHERE name LIKE 'notify_login';
 
 COMMIT;

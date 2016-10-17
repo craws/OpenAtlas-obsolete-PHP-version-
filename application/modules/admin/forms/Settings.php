@@ -20,7 +20,7 @@ class Admin_Form_Settings extends Craws\Form\Table {
         ]);
         $this->addElement('select', 'mail_transport_type', [
             'label' => $this->getView()->ucstring('mail_transport_type'),
-            'multiOptions' => ['' => 'SMTP']
+            'multiOptions' => ['SMTP' => 'SMTP']
         ]);
         foreach ([
             'sitename' => '',
@@ -56,10 +56,10 @@ class Admin_Form_Settings extends Craws\Form\Table {
         foreach (Model_LanguageMapper::getAll() as $language) {
             $languages[$language->id] = $language->name;
         }
-        $this->addElement('select', 'language', [
-            'label' => $view->ucstring('language'),
+        $this->addElement('select', 'default_language', [
+            'label' => $view->ucstring('default_language'),
             'multiOptions' => $languages,
-            'value' => $settings['language']
+            'value' => $settings['default_language']
         ]);
         $this->addElement('select', 'log_level', [
             'label' => $view->ucstring('log_level'),

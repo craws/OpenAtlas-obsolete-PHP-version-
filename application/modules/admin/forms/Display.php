@@ -12,7 +12,7 @@ class Admin_Form_Display extends Craws\Form\Table {
         $language = $this->createElement('select', 'language');
         $language->setLabel($this->getView()->ucstring('language'));
         $language->addMultiOptions($languages);
-        $language->setValue(Model_SettingsMapper::getSetting('language'));
+        $language->setValue(Model_SettingsMapper::getSetting('default_language'));
         $this->addElement($language);
         foreach (array_merge(['default'], glob('themes/admin/*', GLOB_ONLYDIR)) as $theme) {
             $themes[basename($theme)] = $this->getView()->ucstring(str_replace('_', ' ', basename($theme)));

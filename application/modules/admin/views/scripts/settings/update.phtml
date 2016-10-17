@@ -1,39 +1,6 @@
 <? $this->breadcrumb = [$this->link('settings'), $this->ucstring('edit')]; ?>
-<?
-$settings = Model_SettingsMapper::getSettings();
-$settingsGroups[_('general')] = [
-    _('sitename'),
-    _('language'),
-    _('log_level'),
-    _('maintenance'),
-    _('offline'),
-    _('default_table_rows'),
-];
-
-$settingsGroups[_('mail')] = [
-    _('mail'),
-    _('mail_transport_username'),
-    _('mail_transport_password'),
-    _('mail_transport_password_retype'),
-    _('mail_transport_host'),
-    _('mail_transport_port'),
-    _('mail_transport_type'),
-    _('mail_transport_ssl'),
-    _('mail_transport_auth'),
-    _('mail_from_email'),
-    _('mail_from_name'),
-    _('mail_recipients_login'),
-    _('mail_recipients_feedback')
-];
-
-$settingsGroups[_('authentication')] = [
-    _('random_password_length'),
-    _('reset_confirm_hours'),
-    _('failed_login_tries'),
-    _('failed_login_forget_minutes')
-];
-?>
 <? $form = $this->form; ?>
+<? $settings = Model_SettingsMapper::getSettings(); ?>
 <?= $this->displayErrors($form); ?>
 <?= $form->renderForm(false); ?>
 <div class="buttonBar">
@@ -41,11 +8,11 @@ $settingsGroups[_('authentication')] = [
 </div>
 <div id="tabs" class="tabsContainer">
     <ul>
-        <? foreach ($settingsGroups as $name => $items): ?>
+        <? foreach ($this->groups as $name => $items): ?>
             <li><a href="#tab<?= ucfirst($name) ?>"><?= $this->ucstring($name) ?></a></li>
         <? endforeach ?>
     </ul>
-    <? foreach ($settingsGroups as $name => $items): ?>
+    <? foreach ($this->groups as $name => $items): ?>
         <div id="tab<?= ucfirst($name) ?>">
             <div class="dataTable">
                 <? foreach ($items as $item): ?>

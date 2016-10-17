@@ -18,7 +18,7 @@ INSERT INTO settings (name, value) VALUES
 ('failed_login_tries', '3'),
 ('random_password_length', '16'),
 ('reset_confirm_hours', '24'),
-('language', '1'),
+('default_language', '1'),
 ('log_level', '6'),
 ('maintenance', '0'),
 ('offline', '1'),

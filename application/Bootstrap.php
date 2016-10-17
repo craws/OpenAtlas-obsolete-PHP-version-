@@ -63,7 +63,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         $this->bootstrap('user');
         $user = Zend_Registry::get('user');
         $defaultNamespace = new Zend_Session_Namespace('Default');
-        $defaultLocale = Model_LanguageMapper::getById($this->settings['language'])->shortform;
+        $defaultLocale = Model_LanguageMapper::getById($this->settings['default_language'])->shortform;
         $translate = $this->getPluginResource("translate")->getTranslate();
         // @codeCoverageIgnoreStart
         // CoverageIgnore because not accessing with a browser

@@ -32,30 +32,31 @@ class Admin_SettingsController extends Zend_Controller_Action {
             $this->sendTestMail($settings, trim($this->_getParam('testMailReceiver')));
         }
         $logArray = [
-            0 => 'emergency',
-            1 => 'alert',
-            2 => 'critical',
-            3 => 'error',
-            4 => 'warn',
-            5 => 'notice',
-            6 => 'info',
-            7 => 'debug'
+            0 => 'Emergency',
+            1 => 'Alert',
+            2 => 'Critical',
+            3 => 'Error',
+            4 => 'Warn',
+            5 => 'Notice',
+            6 => 'Info',
+            7 => 'Debug'
         ];
         $groups[_('general')] = [
             'sitename' => $settings['sitename'],
-            'language' => Model_LanguageMapper::getById($settings['language'])->name,
+            'default_language' => Model_LanguageMapper::getById($settings['default_language'])->name,
+            'default_table_rows' => $settings['default_table_rows'],
+            'log_level' => $logArray[$settings['log_level']],
             'maintenance' => $settings['maintenance'] ? $this->view->ucstring('on') : $this->view->ucstring('off'),
             'offline' => $settings['offline'] ? $this->view->ucstring('on') : $this->view->ucstring('off'),
-            'log_level' => $logArray[$settings['log_level']],
-            'default_table_rows' => $settings['default_table_rows'],
         ];
         $groups[_('mail')] = [
             'mail' => $settings['mail'] ? $this->view->ucstring('on') : $this->view->ucstring('off'),
             'mail_transport_username' => $settings['mail_transport_username'],
+            'mail_transport_host' => $settings['mail_transport_host'],
+            'mail_transport_port' => $settings['mail_transport_port'],
+            'mail_transport_type' => $settings['mail_transport_type'],
             'mail_transport_ssl' => $settings['mail_transport_ssl'],
             'mail_transport_auth' => $settings['mail_transport_auth'],
-            'mail_transport_port' => $settings['mail_transport_port'],
-            'mail_transport_host' => $settings['mail_transport_host'],
             'mail_from_email' => $settings['mail_from_email'],
             'mail_from_name' => $settings['mail_from_name'],
             'mail_recipients_login' => $settings['mail_recipients_login'],
@@ -74,6 +75,37 @@ class Admin_SettingsController extends Zend_Controller_Action {
     public function updateAction() {
         $form = new Admin_Form_Settings();
         if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
+            $groups[_('general')] = [
+                _('sitename'),
+                _('default_language'),
+                _('default_table_rows'),
+                _('log_level'),
+                _('maintenance'),
+                _('offline'),
+            ];
+            $groups[_('mail')] = [
+                _('mail'),
+                _('mail_transport_username'),
+                _('mail_transport_password'),
+                _('mail_transport_password_retype'),
+                _('mail_transport_host'),
+                _('mail_transport_port'),
+                _('mail_transport_type'),
+                _('mail_transport_ssl'),
+                _('mail_transport_auth'),
+                _('mail_from_email'),
+                _('mail_from_name'),
+                _('mail_recipients_login'),
+                _('mail_recipients_feedback')
+            ];
+            $groups[_('authentication')] = [
+                _('random_password_length'),
+                _('reset_confirm_hours'),
+                _('failed_login_tries'),
+                _('failed_login_forget_minutes')
+            ];
+            $this->view->settings = Model_SettingsMapper::getSettings();
+            $this->view->groups = $groups;
             $this->view->form = $form;
             return;
         }
