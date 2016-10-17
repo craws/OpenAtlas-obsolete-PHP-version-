@@ -15,14 +15,13 @@ class Admin_SettingsController extends Zend_Controller_Action {
         $mail->addTo($recipient);
         $mail->setSubject('Test mail from ' . $settings['sitename']);
         $user = Zend_Registry::get('user');
-        $mail->setBodyText('This test mail was send by ' . $user->username . ' at ' . $this->getRequest()->getHttpHost());
+        $mail->setBodyText('This test mail was sent by ' . $user->username . ' at ' . $this->getRequest()->getHttpHost());
         if ($mail->send()) {
-            $this->_helper->log('info', 'mail', 'A test mail was send.');
-            // Zend_Registry::get('user')->name
-            $this->_helper->message($this->view->translate('info_test_mail_send'));
+            $this->_helper->log('info', 'mail', 'A test mail was sent to ' . $recipient);
+            $this->_helper->message($this->view->translate('info_test_mail_send'), $recipient);
         } else {
             $this->_helper->log('error', 'mail', 'Failed to send a test mail to ' . $recipient);
-            $this->_helper->message('error_mail_send');
+            $this->_helper->message($this->view->translate('error_test_mail_send'), $recipient);
         }
     }
 
@@ -76,33 +75,34 @@ class Admin_SettingsController extends Zend_Controller_Action {
         $form = new Admin_Form_Settings();
         if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
             $groups[_('general')] = [
-                _('sitename'),
-                _('default_language'),
-                _('default_table_rows'),
-                _('log_level'),
-                _('maintenance'),
-                _('offline'),
+                _('sitename') =>  '',
+                _('default_language') =>  '',
+                _('default_table_rows') =>  '',
+                _('log_level') =>  '',
+                _('maintenance') =>  '',
+                _('offline') =>  '',
             ];
             $groups[_('mail')] = [
-                _('mail'),
-                _('mail_transport_username'),
-                _('mail_transport_password'),
-                _('mail_transport_password_retype'),
-                _('mail_transport_host'),
-                _('mail_transport_port'),
-                _('mail_transport_type'),
-                _('mail_transport_ssl'),
-                _('mail_transport_auth'),
-                _('mail_from_email'),
-                _('mail_from_name'),
-                _('mail_recipients_login'),
-                _('mail_recipients_feedback')
+                _('mail') =>  '',
+                _('mail_transport_username') =>  '',
+                _('mail_transport_password') =>  '',
+                _('mail_transport_password_retype') =>  '',
+                _('mail_transport_host') =>  '',
+                _('mail_transport_port') =>  '',
+                _('mail_transport_type') =>  '',
+                _('mail_transport_ssl') =>  '',
+                _('mail_transport_auth') =>  '',
+                _('mail_from_email') =>  '',
+                _('mail_from_name') =>  '',
+                _('mail_recipients_login') =>  _('info_mail_recipients_login'),
+                _('mail_recipients_feedback') =>  _('info_mail_recipients_feedback'),
+
             ];
             $groups[_('authentication')] = [
-                _('random_password_length'),
-                _('reset_confirm_hours'),
-                _('failed_login_tries'),
-                _('failed_login_forget_minutes')
+                _('random_password_length') =>  '',
+                _('reset_confirm_hours') =>  '',
+                _('failed_login_tries') =>  '',
+                _('failed_login_forget_minutes') =>  '',
             ];
             $this->view->settings = Model_SettingsMapper::getSettings();
             $this->view->groups = $groups;

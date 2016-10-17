@@ -15,10 +15,15 @@
     <? foreach ($this->groups as $name => $items): ?>
         <div id="tab<?= ucfirst($name) ?>">
             <div class="dataTable">
-                <? foreach ($items as $item): ?>
+                <? foreach ($items as $item => $info): ?>
                     <? $classes = (0 === strpos($item, 'mail_')) ? 'mailOption opaque' : ''; ?>
                     <div class="tableRow <?= $classes ?>">
-                        <?= $form->$item->renderLabel() ?>
+                        <div>
+                            <label><?= $form->$item->getLabel() ?></label>
+                            <? if ($info): ?>
+                                <span class="tooltip" title="<?= $this->translate($info) ?>">i</span>
+                            <? endif ?>
+                        </div>
                         <div class="tableCell"><?= $form->$item->renderViewHelper() ?></div>
                     </div>
                 <? endforeach ?>
