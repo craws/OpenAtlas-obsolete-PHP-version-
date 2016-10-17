@@ -96,6 +96,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         Zend_Registry::set('Default_Locale', $defaultLocale);
     }
 
+    // @codeCoverageIgnoreStart
     protected function _initMail() {
         if (!$this->setting['mail'] || !$this->settings['mail_transport_type'] == 'smtp') {
             return; // at the moment only smtp is supported
@@ -111,6 +112,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         # setDefaultFrom doesn't seem to work and has to be set before $mail->send() with $mail->setFrom
         Zend_Mail::setDefaultFrom($this->settings['mail_from_email'], $this->settings['mail_from_name']);
     }
+    // @codeCoverageIgnoreEnd
 
     protected function _initModel() {
         Zend_Registry::set('classes', Model_ClassMapper::getAll());

@@ -4,6 +4,7 @@
 
 class Admin_SettingsController extends Zend_Controller_Action {
 
+    // @codeCoverageIgnoreStart
     private function sendTestMail($settings, $recipient) {
         $validator = new Zend_Validate_EmailAddress();
         if (!$validator->isValid($recipient)) {
@@ -24,12 +25,15 @@ class Admin_SettingsController extends Zend_Controller_Action {
             $this->_helper->message($this->view->translate('error_test_mail_send'), $recipient);
         }
     }
+    // @codeCoverageIgnoreEnd
 
     public function indexAction() {
         $settings = Model_SettingsMapper::getSettings();
+        // @codeCoverageIgnoreStart
         if ($this->_getParam('testMailReceiver')) {
             $this->sendTestMail($settings, trim($this->_getParam('testMailReceiver')));
         }
+        // @codeCoverageIgnoreEnd
         $logArray = [
             0 => 'Emergency',
             1 => 'Alert',
