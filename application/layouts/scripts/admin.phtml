@@ -74,9 +74,9 @@
                 <? if (Model_SettingsMapper::getSetting('maintenance') && $user->group == 'admin'): ?>
                     <span class="error">Maintenance</span>
                 <? endif ?>
-                <br/>
+                <br/><br/>
                 <? foreach ($this->messenger() as $message): ?>
-                    <br/><div class='message <?= $message['type'] ?>'><?= $this->translate($message['message']) ?></div>
+                    <div class='message <?= $message['type'] ?>'><?= $this->translate($message['message']) ?></div>
                 <? endforeach ?>
             </div>
             <div id="adminUser">

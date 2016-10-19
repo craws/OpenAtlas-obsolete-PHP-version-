@@ -25,7 +25,7 @@ class Admin_Form_User extends Craws\Form\Table {
         $groups = Model_GroupMapper::getAll();
         foreach ($groups as $group) {
             // @codeCoverageIgnoreStart
-            // Ignore coverage because always testing as admin
+            // Ignore coverage because testing as admin
             if ($group->name == 'admin' && Zend_Registry::get('user')->group != 'admin') {
                 continue;
             }
@@ -55,6 +55,11 @@ class Admin_Form_User extends Craws\Form\Table {
             'validators' => [['EmailAddress']],
         ]);
         $this->addElement('textarea', 'info', ['label' => $this->getView()->ucstring('info'), 'rows' => 4, 'cols' => 50]);
+        $this->addElement('checkbox', 'registrationMail', [
+            'label' => $this->getView()->ucstring('send_registration_mail'),
+            'checkedValue' => 1,
+            'uncheckedValue' => 0
+        ]);
         $this->addElement('button', 'formSubmit', ['label' => $this->getView()->ucstring('insert'), 'type' => 'submit']);
         $this->setElementFilters(['StringTrim']);
     }

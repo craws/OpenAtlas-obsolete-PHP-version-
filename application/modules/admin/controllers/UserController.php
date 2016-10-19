@@ -36,6 +36,7 @@ class Admin_UserController extends Zend_Controller_Action {
         // @codeCoverageIgnoreEnd
         $this->view->user = $user;
         $form = new Admin_Form_User();
+        $form->removeElement('registrationMail');
         $this->view->form = $form;
         $form->prepareUpdate($user);
         if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
@@ -99,6 +100,27 @@ class Admin_UserController extends Zend_Controller_Action {
         $user->group = Model_GroupMapper::getById($form->getValue('group'))->name;
         $user->insert();
         $this->_helper->message('info_insert');
+        // @codeCoverageIgnoreStart
+        if ($form->getValue('registrationMail') && $user->email) {
+            $settings = Model_SettingsMapper::getSettings();
+            $this->view->mailUsername = $user->username;
+            $this->view->mailPassword = $form->getValue('password');
+            $this->view->mailUrl = 'http://' . $this->getRequest()->getHttpHost() . '/admin';
+            $mail = new Zend_Mail('utf-8');
+            $mail->setFrom($settings['mail_from_email'], $settings['mail_from_name']);
+            $mail->addTo($user->email);
+            $mail->setSubject($this->view->translate('mail_registration_subject') . ' ' . $settings['sitename']);
+            $mail->setBodyHtml($this->view->render('mail/registration.phtml'));
+            $mail->setBodyText(strip_tags($this->view->render('mail/registration.phtml')));
+            if (!$mail->send()) {
+                $this->_helper->log('error', 'mail', 'Failed to send registration mail to ' . $user->email);
+                $this->_helper->message('error_mail_send');
+            } else {
+                $this->_helper->log('info', 'mail', 'Send registration mail to ' . $user->email);
+                $this->_helper->message('info_registration_mail_sent');
+            }
+        }
+        // @codeCoverageIgnoreEnd
         return $this->_helper->redirector->gotoUrl('/admin/user/view/id/' . $user->id);
     }
 
