@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenATLAS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-17 15:13+0100\n"
+"POT-Creation-Date: 2016-10-19 18:16+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Alexander Watzinger <alexander.watzinger@craws.net>\n"
 "Language-Team: craws.net <alexander.watzinger@craws.net>\n"
@@ -48,7 +48,7 @@ msgstr "missing class"
 #: ../../../application/modules/admin/controllers/RelationController.php:28
 #: ../../../application/modules/admin/controllers/SourceController.php:107
 #: ../../../application/modules/admin/controllers/SourceController.php:141
-#: ../../../application/modules/admin/controllers/UserController.php:101
+#: ../../../application/modules/admin/controllers/UserController.php:102
 msgid "info_insert"
 msgstr "An entry has been created."
 
@@ -75,10 +75,10 @@ msgstr "Update failed."
 #: ../../../application/modules/admin/controllers/ProfileController.php:86
 #: ../../../application/modules/admin/controllers/ReferenceController.php:101
 #: ../../../application/modules/admin/controllers/RelationController.php:69
-#: ../../../application/modules/admin/controllers/SettingsController.php:130
+#: ../../../application/modules/admin/controllers/SettingsController.php:134
 #: ../../../application/modules/admin/controllers/SourceController.php:180
 #: ../../../application/modules/admin/controllers/SourceController.php:224
-#: ../../../application/modules/admin/controllers/UserController.php:69
+#: ../../../application/modules/admin/controllers/UserController.php:70
 msgid "info_update"
 msgstr "Changes have been saved."
 
@@ -136,6 +136,7 @@ msgstr "A new password has been sent to %s."
 #: ../../../application/modules/admin/controllers/IndexController.php:137
 #: ../../../application/modules/admin/controllers/IndexController.php:175
 #: ../../../application/modules/admin/controllers/OverviewController.php:34
+#: ../../../application/modules/admin/controllers/UserController.php:116
 msgid "error_mail_send"
 msgstr "The mail couldn't be sent."
 
@@ -160,7 +161,7 @@ msgid "error_wrong_password"
 msgstr "Wrong Password"
 
 #: ../../../application/modules/admin/controllers/ProfileController.php:46
-#: ../../../application/modules/admin/controllers/UserController.php:80
+#: ../../../application/modules/admin/controllers/UserController.php:81
 msgid "error_password_retype"
 msgstr "The passwords didn't mach."
 
@@ -169,163 +170,171 @@ msgid "info_password_update"
 msgstr "Your password has been updated."
 
 #: ../../../application/modules/admin/controllers/ProfileController.php:73
-#: ../../../application/modules/admin/controllers/UserController.php:57
-#: ../../../application/modules/admin/controllers/UserController.php:86
+#: ../../../application/modules/admin/controllers/UserController.php:58
+#: ../../../application/modules/admin/controllers/UserController.php:87
 msgid "error_email_exists"
 msgstr "This email address is already in use."
 
-#: ../../../application/modules/admin/controllers/SettingsController.php:10
+#: ../../../application/modules/admin/controllers/SettingsController.php:11
 msgid "error_invalid_mail"
 msgstr "invalid_mail"
 
-#: ../../../application/modules/admin/controllers/SettingsController.php:21
+#: ../../../application/modules/admin/controllers/SettingsController.php:22
 msgid "info_test_mail_send"
 msgstr "A test mail was sent to %s."
 
-#: ../../../application/modules/admin/controllers/SettingsController.php:24
+#: ../../../application/modules/admin/controllers/SettingsController.php:25
 msgid "error_test_mail_send"
 msgstr "The mail couldn't be sent to %s."
 
-#: ../../../application/modules/admin/controllers/SettingsController.php:43
-#: ../../../application/modules/admin/controllers/SettingsController.php:77
+#: ../../../application/modules/admin/controllers/SettingsController.php:47
+#: ../../../application/modules/admin/controllers/SettingsController.php:81
 msgid "general"
 msgstr "general"
 
-#: ../../../application/modules/admin/controllers/SettingsController.php:48
-#: ../../../application/modules/admin/controllers/SettingsController.php:49
 #: ../../../application/modules/admin/controllers/SettingsController.php:52
+#: ../../../application/modules/admin/controllers/SettingsController.php:53
+#: ../../../application/modules/admin/controllers/SettingsController.php:56
 #: ../../../application/modules/admin/forms/Settings.php:53
 msgid "on"
 msgstr "on"
 
-#: ../../../application/modules/admin/controllers/SettingsController.php:48
-#: ../../../application/modules/admin/controllers/SettingsController.php:49
 #: ../../../application/modules/admin/controllers/SettingsController.php:52
+#: ../../../application/modules/admin/controllers/SettingsController.php:53
+#: ../../../application/modules/admin/controllers/SettingsController.php:56
 #: ../../../application/modules/admin/forms/Settings.php:53
 msgid "off"
 msgstr "off"
 
-#: ../../../application/modules/admin/controllers/SettingsController.php:51
-#: ../../../application/modules/admin/controllers/SettingsController.php:85
-#: ../../../application/modules/admin/controllers/SettingsController.php:86
+#: ../../../application/modules/admin/controllers/SettingsController.php:55
+#: ../../../application/modules/admin/controllers/SettingsController.php:89
+#: ../../../application/modules/admin/controllers/SettingsController.php:90
 msgid "mail"
 msgstr "email"
 
-#: ../../../application/modules/admin/controllers/SettingsController.php:64
-#: ../../../application/modules/admin/controllers/SettingsController.php:101
+#: ../../../application/modules/admin/controllers/SettingsController.php:68
+#: ../../../application/modules/admin/controllers/SettingsController.php:105
 msgid "authentication"
 msgstr "authentication"
 
-#: ../../../application/modules/admin/controllers/SettingsController.php:78
+#: ../../../application/modules/admin/controllers/SettingsController.php:82
 msgid "sitename"
 msgstr "sitename"
 
-#: ../../../application/modules/admin/controllers/SettingsController.php:79
+#: ../../../application/modules/admin/controllers/SettingsController.php:83
 #: ../../../application/modules/admin/forms/Settings.php:60
 msgid "default_language"
 msgstr "default language"
 
-#: ../../../application/modules/admin/controllers/SettingsController.php:80
+#: ../../../application/modules/admin/controllers/SettingsController.php:84
 #: ../../../application/modules/admin/forms/Settings.php:79
 msgid "default_table_rows"
 msgstr "default table rows"
 
-#: ../../../application/modules/admin/controllers/SettingsController.php:81
+#: ../../../application/modules/admin/controllers/SettingsController.php:85
 #: ../../../application/modules/admin/forms/Settings.php:65
 msgid "log_level"
 msgstr "log level"
 
-#: ../../../application/modules/admin/controllers/SettingsController.php:82
+#: ../../../application/modules/admin/controllers/SettingsController.php:86
 msgid "maintenance"
 msgstr "maintenance"
 
-#: ../../../application/modules/admin/controllers/SettingsController.php:83
+#: ../../../application/modules/admin/controllers/SettingsController.php:87
 msgid "offline"
 msgstr "offline"
 
-#: ../../../application/modules/admin/controllers/SettingsController.php:87
+#: ../../../application/modules/admin/controllers/SettingsController.php:91
 msgid "mail_transport_username"
 msgstr "username"
 
-#: ../../../application/modules/admin/controllers/SettingsController.php:88
+#: ../../../application/modules/admin/controllers/SettingsController.php:92
 #: ../../../application/modules/admin/forms/Settings.php:12
 msgid "mail_transport_password"
 msgstr "password"
 
-#: ../../../application/modules/admin/controllers/SettingsController.php:89
+#: ../../../application/modules/admin/controllers/SettingsController.php:93
 #: ../../../application/modules/admin/forms/Settings.php:17
 msgid "mail_transport_password_retype"
 msgstr "retype password"
 
-#: ../../../application/modules/admin/controllers/SettingsController.php:90
+#: ../../../application/modules/admin/controllers/SettingsController.php:94
 msgid "mail_transport_host"
 msgstr "host"
 
-#: ../../../application/modules/admin/controllers/SettingsController.php:91
+#: ../../../application/modules/admin/controllers/SettingsController.php:95
 msgid "mail_transport_port"
 msgstr "port"
 
-#: ../../../application/modules/admin/controllers/SettingsController.php:92
+#: ../../../application/modules/admin/controllers/SettingsController.php:96
 #: ../../../application/modules/admin/forms/Settings.php:22
 msgid "mail_transport_type"
 msgstr "transport type"
 
-#: ../../../application/modules/admin/controllers/SettingsController.php:93
+#: ../../../application/modules/admin/controllers/SettingsController.php:97
 msgid "mail_transport_ssl"
 msgstr "SSL"
 
-#: ../../../application/modules/admin/controllers/SettingsController.php:94
+#: ../../../application/modules/admin/controllers/SettingsController.php:98
 msgid "mail_transport_auth"
 msgstr "auth"
 
-#: ../../../application/modules/admin/controllers/SettingsController.php:95
+#: ../../../application/modules/admin/controllers/SettingsController.php:99
 msgid "mail_from_email"
 msgstr "email from"
 
-#: ../../../application/modules/admin/controllers/SettingsController.php:96
+#: ../../../application/modules/admin/controllers/SettingsController.php:100
 msgid "mail_from_name"
 msgstr "from name"
 
-#: ../../../application/modules/admin/controllers/SettingsController.php:97
+#: ../../../application/modules/admin/controllers/SettingsController.php:101
 msgid "mail_recipients_login"
 msgstr "recipients login"
 
-#: ../../../application/modules/admin/controllers/SettingsController.php:97
+#: ../../../application/modules/admin/controllers/SettingsController.php:101
 msgid "info_mail_recipients_login"
 msgstr ""
 "You can use multiple mails separated by comma. Each recipient will be "
 "informed when somebody logs in."
 
-#: ../../../application/modules/admin/controllers/SettingsController.php:98
+#: ../../../application/modules/admin/controllers/SettingsController.php:102
 msgid "mail_recipients_feedback"
 msgstr "recipients feedback"
 
-#: ../../../application/modules/admin/controllers/SettingsController.php:98
+#: ../../../application/modules/admin/controllers/SettingsController.php:102
 msgid "info_mail_recipients_feedback"
 msgstr ""
 "You can use multiple mails separated by comma. The first one will be shown "
 "on the feedback site."
 
-#: ../../../application/modules/admin/controllers/SettingsController.php:102
+#: ../../../application/modules/admin/controllers/SettingsController.php:106
 msgid "random_password_length"
 msgstr "random password length"
 
-#: ../../../application/modules/admin/controllers/SettingsController.php:103
+#: ../../../application/modules/admin/controllers/SettingsController.php:107
 msgid "reset_confirm_hours"
 msgstr "reset confirm hours"
 
-#: ../../../application/modules/admin/controllers/SettingsController.php:104
+#: ../../../application/modules/admin/controllers/SettingsController.php:108
 msgid "failed_login_tries"
 msgstr "failed login tries"
 
-#: ../../../application/modules/admin/controllers/SettingsController.php:105
+#: ../../../application/modules/admin/controllers/SettingsController.php:109
 msgid "failed_login_forget_minutes"
 msgstr "Failed login forget minutes"
 
-#: ../../../application/modules/admin/controllers/UserController.php:53
-#: ../../../application/modules/admin/controllers/UserController.php:83
+#: ../../../application/modules/admin/controllers/UserController.php:54
+#: ../../../application/modules/admin/controllers/UserController.php:84
 msgid "error_username_exists"
 msgstr "This username is already in use"
+
+#: ../../../application/modules/admin/controllers/UserController.php:111
+msgid "mail_registration_subject"
+msgstr "Your account information for"
+
+#: ../../../application/modules/admin/controllers/UserController.php:119
+msgid "info_registration_mail_sent"
+msgstr "A registration mail was sent."
 
 #: ../../../application/modules/admin/forms/Actor.php:12
 #: ../../../application/modules/admin/views/scripts/actor/view.phtml:47
@@ -495,7 +504,7 @@ msgstr "place of issue"
 #: ../../../application/modules/admin/forms/Password.php:26
 #: ../../../application/modules/admin/forms/Profile.php:30
 #: ../../../application/modules/admin/forms/Settings.php:83
-#: ../../../application/modules/admin/forms/User.php:68
+#: ../../../application/modules/admin/forms/User.php:73
 #: ../../../application/layouts/scripts/map.phtml:26
 msgid "save"
 msgstr "save"
@@ -629,6 +638,7 @@ msgstr "apply"
 
 #: ../../../application/modules/admin/forms/Login.php:10
 #: ../../../application/modules/admin/forms/User.php:17
+#: ../../../application/modules/admin/views/scripts/mail/registration.phtml:4
 #: ../../../application/modules/admin/views/scripts/mail/reset-confirm.phtml:4
 #: ../../../application/modules/admin/views/scripts/user/index.phtml:6
 #: ../../../application/modules/admin/views/scripts/user/view.phtml:18
@@ -637,6 +647,7 @@ msgstr "username"
 
 #: ../../../application/modules/admin/forms/Login.php:19
 #: ../../../application/modules/admin/forms/User.php:37
+#: ../../../application/modules/admin/views/scripts/mail/registration.phtml:5
 #: ../../../application/modules/admin/views/scripts/mail/reset-confirm.phtml:5
 msgid "password"
 msgstr "password"
@@ -806,7 +817,11 @@ msgstr "active"
 msgid "group"
 msgstr "group"
 
-#: ../../../application/modules/admin/forms/User.php:58
+#: ../../../application/modules/admin/forms/User.php:59
+msgid "send_registration_mail"
+msgstr "Send account information to the user"
+
+#: ../../../application/modules/admin/forms/User.php:63
 msgid "insert"
 msgstr "Insert"
 
@@ -1438,14 +1453,19 @@ msgstr "path"
 msgid "message"
 msgstr "message"
 
-#: ../../../application/modules/admin/views/scripts/mail/reset-confirm.phtml:2
-msgid "mail_new_password_for"
-msgstr "New password for"
+#: ../../../application/modules/admin/views/scripts/mail/registration.phtml:2
+msgid "mail_registration_for"
+msgstr "Your account information for"
 
+#: ../../../application/modules/admin/views/scripts/mail/registration.phtml:2
 #: ../../../application/modules/admin/views/scripts/mail/reset-confirm.phtml:2
 #: ../../../application/modules/admin/views/scripts/mail/reset-password.phtml:3
 msgid "at"
 msgstr "at"
+
+#: ../../../application/modules/admin/views/scripts/mail/reset-confirm.phtml:2
+msgid "mail_new_password_for"
+msgstr "New password for"
 
 #: ../../../application/modules/admin/views/scripts/mail/reset-password.phtml:2
 msgid "mail_received_request_for"
@@ -1727,6 +1747,10 @@ msgstr "credits"
 #: ../../../application/modules/default/views/scripts/offline/index.phtml:18
 msgid "under_maintenance"
 msgstr "This site is under maintenance. Please try again later."
+
+#, fuzzy
+#~ msgid "error_mail_sent"
+#~ msgstr "The mail couldn't be sent."
 
 #~ msgid "notify_login"
 #~ msgstr "notify login"
