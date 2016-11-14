@@ -53,6 +53,8 @@ class Admin_Form_User extends Craws\Form\Table {
             'label' => $this->getView()->ucstring('email'),
             'filters' => ['StringToLower'],
             'validators' => [['EmailAddress']],
+            'required' => true,
+            'class' => 'required',
         ]);
         $this->addElement('textarea', 'info', ['label' => $this->getView()->ucstring('info'), 'rows' => 4, 'cols' => 50]);
         $this->addElement('checkbox', 'registrationMail', [

@@ -27,6 +27,7 @@
                         <div class="tableCell"><?= $form->$item->renderViewHelper() ?></div>
                     </div>
                 <? endforeach ?>
+                <div></div> <? // needed a div here for fade out effect ?>
             </div>
         </div>
     <? endforeach ?>
@@ -37,9 +38,15 @@
         $("#tabs").tabs();
         <? if (!$settings['mail']): ?>
             $(".mailOption").toggleClass('faded opaque');
+            $(".faded:not(:last-child) :input").attr("disabled", true);
         <? endif ?>
         $('input[type=radio][name=mail]').on('change', function() {
             $(".mailOption").toggleClass('faded opaque');
+            if ($('#mail_transport_username').is(':disabled')) {
+                $(".mailOption:not(:last-child) :input").attr("disabled", false);
+            } else {
+                $(".mailOption:not(:last-child) :input").attr("disabled", true);
+            }
         });
     });
 </script>
