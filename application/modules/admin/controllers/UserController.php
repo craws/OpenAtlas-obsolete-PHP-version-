@@ -26,6 +26,19 @@ class Admin_UserController extends Zend_Controller_Action {
         $this->view->user = Model_UserMapper::getById($this->_getParam('id'));
     }
 
+    public function newsletterAction() {
+        // @codeCoverageIgnoreStart
+        $users = Model_UserMapper::getAll();
+        $recipients = [];
+        foreach ($users as $user) {
+            if ($user->getSetting('newsletter') && $user->active) {
+                $recipients[] = $user;
+            }
+        }
+        $this->view->recipients = $recipients;
+        // @codeCoverageIgnoreEnd
+    }
+
     public function updateAction() {
         // @codeCoverageIgnoreStart
         $user = Model_UserMapper::getById($this->_getParam('id'));

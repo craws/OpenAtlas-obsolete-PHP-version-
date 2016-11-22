@@ -110,6 +110,7 @@ class Acl extends \Zend_Acl {
         $this->add(new \Zend_Acl_Resource('admin:user:delete'));
         $this->add(new \Zend_Acl_Resource('admin:user:index'));
         $this->add(new \Zend_Acl_Resource('admin:user:insert'));
+        $this->add(new \Zend_Acl_Resource('admin:user:newsletter'));
         $this->add(new \Zend_Acl_Resource('admin:user:update'));
         $this->add(new \Zend_Acl_Resource('admin:user:view'));
 
@@ -232,6 +233,7 @@ class Acl extends \Zend_Acl {
         $this->allow('manager', 'admin:user:delete');
         $this->allow('manager', 'admin:user:index');
         $this->allow('manager', 'admin:user:insert');
+        $this->allow('manager', 'admin:user:newsletter');
         $this->allow('manager', 'admin:user:update');
         $this->allow('manager', 'admin:user:view');
 

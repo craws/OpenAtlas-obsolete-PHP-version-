@@ -1,0 +1,18 @@
+<? $this->breadcrumb = [[$this->ucstring('user'), '/admin/user'], $this->ucstring('newsletter')]; ?>
+<? if (!$this->recipients): ?>
+    <?= $this->ucstring('no_entries') ?>
+    <? return ?>
+<? endif ?>
+<?
+$table = ['id' => 'newsletter', 'pager' => true, 'filter' => true];
+$table['header'] = [_('username'), _('email'), _('newsletter')];
+foreach ($this->recipients as $user) {
+    $table['data'][] = [
+        '<a href="/admin/user/view/id/' . $user->id . '">' . $user->username . '</a>',
+        $user->email,
+        '<input id="' . $user->id . '" name="' . $user->id . '" type="checkbox" checked="checked">'
+    ];
+}
+?>
+<? $this->table = $table; ?>
+<?= $this->render('tableSorter.phtml'); ?>
