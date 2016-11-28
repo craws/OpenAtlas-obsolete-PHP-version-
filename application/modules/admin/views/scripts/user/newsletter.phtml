@@ -1,11 +1,11 @@
 <? $this->breadcrumb = [[$this->ucstring('user'), '/admin/user'], $this->ucstring('newsletter')]; ?>
-<? if (!$this->recipients): ?>
-    <?= $this->ucstring('no_entries') ?>
-    <? return ?>
-<? endif ?>
 <?
+if (!$this->recipients) {
+    echo $this->ucstring('no_entries');
+    return;
+}
 $table = ['id' => 'newsletter', 'pager' => true, 'filter' => true];
-$table['header'] = [_('username'), _('email'), _('newsletter')];
+$table['header'] = [_('username'), _('email'), _('recipient')];
 foreach ($this->recipients as $user) {
     $table['data'][] = [
         '<a href="/admin/user/view/id/' . $user->id . '">' . $user->username . '</a>',
@@ -13,6 +13,17 @@ foreach ($this->recipients as $user) {
         '<input id="' . $user->id . '" name="' . $user->id . '" type="checkbox" checked="checked">'
     ];
 }
+$this->table = $table;
+$form = $this->form;
 ?>
-<? $this->table = $table; ?>
-<?= $this->render('tableSorter.phtml'); ?>
+<?= $this->displayErrors($form); ?>
+<?= $form->renderForm(false); ?>
+    <div style="float:left;">
+        <?= $form->subject->renderViewHelper() ?><br/><br/>
+        <?= $form->body->renderViewHelper() ?><br/>
+        <button id="formSubmit" type="submit" name="formSubmit"><?= $this->ucstring('send') ?></button>
+    </div>
+    <div style="float:left;margin-left:1em;">
+        <?= $this->render('tableSorter.phtml'); ?>
+    </div>
+<?= '</form>' ?>

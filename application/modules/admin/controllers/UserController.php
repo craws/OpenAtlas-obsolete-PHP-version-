@@ -28,14 +28,52 @@ class Admin_UserController extends Zend_Controller_Action {
 
     public function newsletterAction() {
         // @codeCoverageIgnoreStart
-        $users = Model_UserMapper::getAll();
+        $form = new Admin_Form_Newsletter();
+        $this->view->form = $form;
+        if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
+            $users = Model_UserMapper::getAll();
+            $recipients = [];
+            foreach ($users as $user) {
+                if ($user->getSetting('newsletter') && $user->active) {
+                    $recipients[] = $user;
+                }
+            }
+            $this->view->recipients = $recipients;
+            return;
+        }
+        $settings = Model_SettingsMapper::getSettings();
         $recipients = [];
-        foreach ($users as $user) {
-            if ($user->getSetting('newsletter') && $user->active) {
-                $recipients[] = $user;
+        foreach(filter_input_array(INPUT_POST) as $key => $value) {
+            if (is_int($key)) {
+                $recipient = Model_UserMapper::getById($key);
+                $code = Model_User::randomPassword(16);
+                $recipient->unsubscribeCode = $code;
+                $recipient->update();
+                $link = 'http://' . $this->getRequest()->getHttpHost() . '/unsubscribe/index/code/' . $code;
+                $htmlLink = '<a href="' . $link . '">' . $this->view->translate('unsubscribe') . '</a>';
+                $unsubscribeText = '<br><br>' . $this->view->translate('mail_unsubscribe', $htmlLink);
+                $mail = new Zend_Mail('utf-8');
+                $mail->addTo($recipient->email);
+                $mail->setFrom($settings['mail_from_email'], $settings['mail_from_name']);
+                $mail->setSubject($form->getValue('subject'));
+                $user = Zend_Registry::get('user');
+                $body = $form->getValue('content') . $unsubscribeText;
+                $mail->setBodyHtml($body);
+                $mail->setBodyText(strip_tags($body));
+                if (true) {
+                # if ($mail->send()) {
+                    $recipients[] = $recipient->email;
+                } else {
+                    $this->_helper->log('error', 'mail', 'Sending newsletter failed from ' .
+                        Zend_Registry::get('config')->resources->mail->transport->username) . ' to ' . $recipient->email;
+                        $this->_helper->message('error_mail_send');
+
+                }
             }
         }
-        $this->view->recipients = $recipients;
+        $this->_helper->log('info', 'mail', 'Newsletter mail send to ' . implode(', ', $recipients));
+        $this->_helper->message($this->view->translate('info_newsletter_send', count($recipients)));
+        $this->_helper->redirector->gotoUrl('/admin/user');
         // @codeCoverageIgnoreEnd
     }
 

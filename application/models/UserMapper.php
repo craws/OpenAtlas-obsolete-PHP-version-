@@ -68,13 +68,28 @@ class Model_UserMapper extends Model_AbstractMapper {
 
     // @codeCoverageIgnoreStart
     // Ignore coverage because no mail in testing
-    public static function getByResetCode($resetCode) {
-        if (!$resetCode) {
+    public static function getByResetCode($code) {
+        if (!$code) {
             return false;
         }
         $sql = 'SELECT id FROM web."user" WHERE password_reset_code = :password_reset_code;';
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
-        $statement->bindValue(':password_reset_code', $resetCode);
+        $statement->bindValue(':password_reset_code', $code);
+        $statement->execute();
+        $row = $statement->fetch();
+        if (!$row) {
+            return false;
+        }
+        return self::getById($row['id']);
+    }
+
+    public static function getByUnsubscribeCode($code) {
+        if (!$code) {
+            return false;
+        }
+        $sql = 'SELECT id FROM web."user" WHERE unsubscribe_code = :unsubscribe_code;';
+        $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
+        $statement->bindValue(':unsubscribe_code', $code);
         $statement->execute();
         $row = $statement->fetch();
         if (!$row) {
@@ -138,9 +153,9 @@ class Model_UserMapper extends Model_AbstractMapper {
     public static function update(Model_User $user) {
         $sql = 'UPDATE web."user" SET
             (username, active, login_last_success, login_last_failure, login_failed_count, real_name, info,
-            email, password_reset_code, password_reset_date, group_id) =
+            email, password_reset_code, password_reset_date, group_id, unsubscribe_code) =
             (:username, :active, :login_last_success, :login_last_failure, :login_failed_count, :real_name, :info,
-            :email, :password_reset_code, :password_reset_date, :group_id)
+            :email, :password_reset_code, :password_reset_date, :group_id, :unsubscribe_code)
             WHERE id = :id RETURNING id;';
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->bindValue(':id', $user->id);
@@ -155,6 +170,7 @@ class Model_UserMapper extends Model_AbstractMapper {
         $statement->bindValue(':password_reset_date', parent::toDbDate($user->passwordResetDate));
         $statement->bindValue(':login_last_success', parent::toDbDate($user->loginLastSuccess));
         $statement->bindValue(':login_last_failure', parent::toDbDate($user->loginLastFailure));
+        $statement->bindValue(':unsubscribe_code', $user->unsubscribeCode);
         $statement->execute();
         $result = $statement->fetch(PDO::FETCH_ASSOC);
         return $result['id'];

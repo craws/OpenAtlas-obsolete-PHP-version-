@@ -22,7 +22,10 @@ foreach ($this->entries as $entry) {
             $userLink = 'Deleted user (' . $entry->userId . ')';
         }
     }
-    $message = mb_strlen($entry->message) > 30 ? mb_substr($entry->message, 0, 27) . "..." : $entry->message;
+    $message = $entry->message;
+    if (mb_strlen($message) > 30) {
+        $message =  '<span title="' . str_replace('"', '', $message) . '">' . mb_substr($message, 0, 27) . "...</span>";
+    }
     $table['data'][] = [
         '<a href="/admin/log/view/id/' . $entry->id . '">' . $entry->created . '</a>',
         $entry->priority . ' ' . Model_LogMapper::$logLevels[$entry->priority],

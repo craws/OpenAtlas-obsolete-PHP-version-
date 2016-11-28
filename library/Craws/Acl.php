@@ -127,6 +127,7 @@ class Acl extends \Zend_Acl {
         $this->add(new \Zend_Acl_Resource('default:offline:index'));
         $this->add(new \Zend_Acl_Resource('default:property:index'));
         $this->add(new \Zend_Acl_Resource('default:property:view'));
+        $this->add(new \Zend_Acl_Resource('default:unsubscribe:index'));
 
 
         /* guest (not logged in) */
@@ -141,6 +142,7 @@ class Acl extends \Zend_Acl {
         $this->allow('guest', 'default:index:index');
         $this->allow('guest', 'default:model:index');
         $this->allow('guest', 'default:offline:index');
+        $this->allow('guest', 'default:unsubscribe:index');
 
         $this->allow('guest', 'admin:index:index');
         $this->allow('guest', 'admin:index:logout');

@@ -30,6 +30,9 @@ INSERT INTO web.settings (name, value) VALUES
 UPDATE web.settings SET name = 'default_language' WHERE name LIKE 'language';
 DELETE FROM web.settings WHERE name LIKE 'notify_login';
 
+ALTER TABLE web.user ADD COLUMN unsubscribe_code text;
+ALTER TABLE ONLY web.user ADD CONSTRAINT unsubscribe_code_key UNIQUE (unsubscribe_code);
+
 COMMIT;
 
 

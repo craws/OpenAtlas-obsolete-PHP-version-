@@ -17,6 +17,7 @@ class Model_User extends Model_AbstractObject {
     public $bookmarks = [];
     public $passwordResetCode;
     public $passwordResetDate;
+    public $unsubscribeCode;
     public $group = 'guest';
 
     public function getSetting($name) {
