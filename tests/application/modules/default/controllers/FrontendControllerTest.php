@@ -31,6 +31,7 @@ class FrontendControllerTest extends ControllerTestCase {
         $this->resetRequest()->resetResponse();
         $this->dispatch('property');
         $this->dispatch('property/view/id/' . Model_PropertyMapper::getByCode('P2')->id);
+        $this->dispatch('unsubscribe');
     }
 
     public function testModelAction() {

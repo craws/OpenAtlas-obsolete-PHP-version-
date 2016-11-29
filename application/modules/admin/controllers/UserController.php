@@ -26,8 +26,8 @@ class Admin_UserController extends Zend_Controller_Action {
         $this->view->user = Model_UserMapper::getById($this->_getParam('id'));
     }
 
+    // @codeCoverageIgnoreStart
     public function newsletterAction() {
-        // @codeCoverageIgnoreStart
         $form = new Admin_Form_Newsletter();
         $this->view->form = $form;
         if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
@@ -74,8 +74,8 @@ class Admin_UserController extends Zend_Controller_Action {
         $this->_helper->log('info', 'mail', 'Newsletter mail send to ' . implode(', ', $recipients));
         $this->_helper->message($this->view->translate('info_newsletter_send', count($recipients)));
         $this->_helper->redirector->gotoUrl('/admin/user');
-        // @codeCoverageIgnoreEnd
     }
+    // @codeCoverageIgnoreEnd
 
     public function updateAction() {
         // @codeCoverageIgnoreStart

@@ -9,6 +9,7 @@ class UnsubscribeController extends Zend_Controller_Action {
         $subscriber = Model_UserMapper::getByUnsubscribeCode($code);
         $this->view->subscriber = $subscriber;
         $this->view->code = $code;
+        // @codeCoverageIgnoreStart
         if ($this->_getParam('confirm') && $subscriber) {
             $subscriber->unsubscribeCode = Null;
             $subscriber->settings['newsletter'] = 0;
@@ -17,6 +18,7 @@ class UnsubscribeController extends Zend_Controller_Action {
             $this->_helper->message($this->view->translate('info_unsubscribed'));
             return $this->_helper->redirector->gotoUrl('/');
         }
+        // @codeCoverageIgnoreEnd
     }
 
 }

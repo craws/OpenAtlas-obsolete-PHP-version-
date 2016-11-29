@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.4
--- Dumped by pg_dump version 9.5.4
+-- Dumped from database version 9.5.5
+-- Dumped by pg_dump version 9.5.5
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -86,6 +86,7 @@ ALTER TABLE IF EXISTS ONLY web.user_log DROP CONSTRAINT IF EXISTS user_log_pkey;
 ALTER TABLE IF EXISTS ONLY web."user" DROP CONSTRAINT IF EXISTS user_email_key;
 ALTER TABLE IF EXISTS ONLY web.user_bookmarks DROP CONSTRAINT IF EXISTS user_bookmarks_user_id_entity_id_key;
 ALTER TABLE IF EXISTS ONLY web.user_bookmarks DROP CONSTRAINT IF EXISTS user_bookmarks_pkey;
+ALTER TABLE IF EXISTS ONLY web."user" DROP CONSTRAINT IF EXISTS unsubscribe_code_key;
 ALTER TABLE IF EXISTS ONLY web.settings DROP CONSTRAINT IF EXISTS settings_pkey;
 ALTER TABLE IF EXISTS ONLY web.settings DROP CONSTRAINT IF EXISTS settings_name_key;
 ALTER TABLE IF EXISTS ONLY web.language DROP CONSTRAINT IF EXISTS language_shortform_key;
@@ -1167,7 +1168,8 @@ CREATE TABLE "user" (
     password_reset_code text,
     password_reset_date timestamp without time zone,
     created timestamp without time zone DEFAULT now() NOT NULL,
-    modified timestamp without time zone
+    modified timestamp without time zone,
+    unsubscribe_code text
 );
 
 
@@ -1741,6 +1743,14 @@ ALTER TABLE ONLY settings
 
 ALTER TABLE ONLY settings
     ADD CONSTRAINT settings_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: unsubscribe_code_key; Type: CONSTRAINT; Schema: web; Owner: openatlas_master
+--
+
+ALTER TABLE ONLY "user"
+    ADD CONSTRAINT unsubscribe_code_key UNIQUE (unsubscribe_code);
 
 
 --
