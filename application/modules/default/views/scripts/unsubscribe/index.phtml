@@ -2,8 +2,8 @@
 <? if (!$this->subscriber): ?>
     <?= $this->translate('unsubscribe_user_not_found'); ?>
 <? else: ?>
-    <?= $this->translate('unsubscribe_confirmation'); ?>
-    <a href="/unsubscribe/index/code/<?= $this->code ?>/confirm/true">
+    <p><?= $this->translate('unsubscribe_confirmation'); ?></p>
+    <a class="button" href="/unsubscribe/index/code/<?= $this->code ?>/confirm/true">
         <?= $this->ucstring('unsubscribe') ?>
     </a>
 <? endif ?>
