@@ -9,7 +9,6 @@ class Admin_Form_Newsletter extends Craws\Form\Table {
         $this->setName('newsletterForm')->setMethod('post');
         $this->addElement('text', 'subject', [
             'label' => $this->getView()->ucstring('subject'),
-            'validators' => [['StringLength', false, [1, 32]]],
             'required' => true,
             'class' => 'required',
             'style' => 'width:28em;',

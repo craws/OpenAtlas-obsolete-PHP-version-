@@ -57,11 +57,10 @@ class Admin_UserController extends Zend_Controller_Action {
                 $mail->setFrom($settings['mail_from_email'], $settings['mail_from_name']);
                 $mail->setSubject($form->getValue('subject'));
                 $user = Zend_Registry::get('user');
-                $body = $form->getValue('content') . $unsubscribeText;
+                $body = nl2br($form->getValue('body')) . $unsubscribeText;
                 $mail->setBodyHtml($body);
                 $mail->setBodyText(strip_tags($body));
-                if (true) {
-                # if ($mail->send()) {
+                if ($mail->send()) {
                     $recipients[] = $recipient->email;
                 } else {
                     $this->_helper->log('error', 'mail', 'Sending newsletter failed from ' .
