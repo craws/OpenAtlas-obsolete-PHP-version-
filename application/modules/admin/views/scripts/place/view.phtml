@@ -35,7 +35,7 @@
             }
             $table['data'][_('alias')] = implode('<br/>', $aliasArray);
         }
-        foreach ($this->getNodesForView($object) as $rootName => $nodes) {
+        foreach ($object->getTypesForView() as $rootName => $nodes) {
             $table['data'][$rootName] = implode('<br/>', $nodes);
         }
         if ($this->administrative) {
@@ -140,7 +140,7 @@
         $tableBiblio['header'] = [_('reference'), _('page'), 'class', 'type', '', ''];
         foreach ($this->referenceLinks as $link) {
             $reference = $link->domain;
-            $type = $reference->getLinkedEntity('P2');
+            $type = reset($reference->types)[0]; // get first and only type
             $text = $this->ucstring('referred_by') . ': ' . $reference->name;
             $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_remove', $text)) . "')\" ";
             $deleteLink = '<div><a href="/admin/function/unlink/id/' . $link->id . '/entityId/' . $object->id .
@@ -148,8 +148,8 @@
             $tableBiblio['data'][] = [
                 $this->link($reference),
                 $link->description,
-                Model_NodeMapper::getById($type->rootId)->name,
-                $type->name,
+                ($type->rootId) ? Model_NodeMapper::getById($type->rootId)->name : $type->name,
+                ($type->rootId) ? $type->name : '',
                 '<a class="button" href="/admin/biblio/update/id/' . $link->id . '">' . $this->ucstring('edit') . '</a>',
                 $deleteLink
             ];

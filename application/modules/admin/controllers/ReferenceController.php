@@ -121,7 +121,7 @@ class Admin_ReferenceController extends Zend_Controller_Action {
             }
         }
         $this->view->reference = $reference;
-        $this->view->referenceType = $reference->getLinkedEntity('P2');
+        $this->view->referenceType = reset($reference->types)[0]; // get first and only type
         $this->view->actorLinks = $actorLinks;
         $this->view->sourceLinks = $sourceLinks;
         $this->view->eventLinks = $eventLinks;

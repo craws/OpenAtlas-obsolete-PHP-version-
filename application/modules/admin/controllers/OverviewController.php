@@ -38,7 +38,7 @@ class Admin_OverviewController extends Zend_Controller_Action {
     }
 
     public function indexAction() {
-        $count['source'] = count(Model_EntityMapper::getByCodes('Source', 'Source Content'));
+        $count['source'] = count(Model_EntityMapper::getByCodes('Source'));
         $count['event'] = Model_EntityMapper::countByCodes('Event');
         $count['actor'] = Model_EntityMapper::countByCodes('Actor');
         $count['place'] = Model_EntityMapper::countByCodes('PhysicalObject');

@@ -10,6 +10,37 @@ class Model_Entity extends Model_AbstractObject {
     public $first; // for list views
     public $last; // for list views
     public $name;
+    public $types = [];
+
+    public function __toString() {
+        return $this->name;
+    }
+
+    public function printTypes($rootName) {
+        if (!isset($this->types[$rootName])) {
+            return '';
+        }
+        $typeNames = [];
+        foreach ($this->types[$rootName] as $type) {
+            if ($type->rootId) {
+                $typeNames[] = $type->name;
+            }
+        }
+        return implode(',', $typeNames);
+    }
+
+    public function getTypesForView() {
+        $printTypes = [];
+        foreach ($this->types as $rootName => $types) {
+            foreach ($types as $type) {
+                if ($type->rootId && !in_array($type->name, ['Source Content'])) {
+                    $printTypes[$rootName][] = $type->name;
+                }
+            }
+        }
+        ksort($printTypes);
+        return $printTypes;
+    }
 
     public function getLinks($codes, $inverse = false) {
         return Model_LinkMapper::getLinks($this, $codes, $inverse);

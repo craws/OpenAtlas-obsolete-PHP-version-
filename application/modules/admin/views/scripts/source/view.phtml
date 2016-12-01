@@ -21,16 +21,13 @@
         <h1><?= $source->name ?></h1>
         <?
             $table['data'] = [];
-            foreach ($this->getNodesForView($source) as $rootName => $nodes) {
+            foreach ($source->getTypesForView() as $rootName => $nodes) {
                 $table['data'][$rootName] = implode('<br/>', $nodes);
             }
             $this->table = $this->tableLog($table, 'entity', $source->id);
         ?>
         <?= $this->render('tableDataItem.phtml'); ?>
-        <? if ($source->description): ?>
-            <p class="descriptionTitle"><?= $this->ucstring('content') ?><p>
-            <p><?= $source->description ?></p>
-        <? endif ?>
+        <?= $this->description($source) ?>
     </div>
     <div id="tabActor">
         <div class="buttonBar">
@@ -128,18 +125,12 @@
                 "')\" ";
             $deleteLink = '<div><a href="/admin/function/unlink/id/' . $link->id . '/entityId/' . $source->id .
                 '/#tabReference' . '" class="button"' . $confirm . '>' . $this->ucstring('remove') . '</a></div>';
-            $type = $reference->getLinkedEntity('P2');
-            $className = $type->name;
-            $typeName = '';
-            if ($type->rootId) {
-                $className = Model_NodeMapper::getById($type->rootId)->name;
-                $typeName = $type->name;
-            }
+            $type = reset($reference->types)[0]; // get first and only type
             $tableBiblio['data'][] = [
                 $this->link($reference),
                 $link->description,
-                $className,
-                $typeName,
+                ($type->rootId) ? Model_NodeMapper::getById($type->rootId)->name : $type->name,
+                ($type->rootId) ? $type->name : '',
                 '<a class="button" href="/admin/biblio/update/origin/actor/id/' . $link->id . '">' .
                 $this->ucstring('edit') . '</a>',
                 $deleteLink

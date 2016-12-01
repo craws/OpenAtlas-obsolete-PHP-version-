@@ -27,7 +27,7 @@
         if ($this->place) {
             $table['data'][_('place')] = $this->link($this->place);
         }
-        foreach ($this->getNodesForView($event) as $rootName => $nodes) {
+        foreach ($event->getTypesForView() as $rootName => $nodes) {
             $table['data'][$rootName] = implode('<br/>', $nodes);
         }
         foreach (['OA5' => _('begin'), 'OA6' => _('end')] as $key => $label) {
@@ -126,7 +126,7 @@
             $table['header'] = [_('name'), _('page'), 'class', 'type', '', ''];
             foreach ($this->referenceLinks as $link) {
                 $reference = $link->domain;
-                $type = $reference->getLinkedEntity('P2');
+                $type = reset($reference->types)[0]; // get first and only type
                 $text = $this->ucstring('referred_by') . ': ' . $reference->name;
                 $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_remove', $text)) .
                     "')\" ";
@@ -135,10 +135,10 @@
                 $table['data'][] = [
                     $this->link($reference),
                     $link->description,
-                    Model_NodeMapper::getById($type->rootId)->name,
-                    $type->name,
-                        '<a class="button" href="/admin/biblio/update/origin/actor/id/' . $link->id . '">' .
-                    $this->ucstring('edit') . '</a>',
+                    ($type->rootId) ? Model_NodeMapper::getById($type->rootId)->name : $type->name,
+                    ($type->rootId) ? $type->name : '',
+                    '<a class="button" href="/admin/biblio/update/origin/actor/id/' . $link->id . '">' .
+                        $this->ucstring('edit') . '</a>',
                     $deleteLink
                 ];
             }

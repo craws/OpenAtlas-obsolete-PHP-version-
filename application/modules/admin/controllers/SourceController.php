@@ -13,7 +13,7 @@ class Admin_SourceController extends Zend_Controller_Action {
             $this->view->menuHighlight = $controller;
             $this->view->controller = $controller;
             $this->view->origin = $origin;
-            $this->view->sources = Model_EntityMapper::getByCodes('Source', 'Source Content');
+            $this->view->sources = Model_EntityMapper::getByCodes('Source');
             return;
         }
         Zend_Db_Table::getDefaultAdapter()->beginTransaction();
@@ -57,7 +57,7 @@ class Admin_SourceController extends Zend_Controller_Action {
     }
 
     public function indexAction() {
-        $this->view->sources = Model_EntityMapper::getByCodes('Source', 'Source Content');
+        $this->view->sources = Model_EntityMapper::getByCodes('Source');
         $this->view->places = [];
     }
 

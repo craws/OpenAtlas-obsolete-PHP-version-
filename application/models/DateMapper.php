@@ -8,7 +8,7 @@ class Model_DateMapper {
         $dates = [];
         foreach (['OA1', 'OA2', 'OA3', 'OA4', 'OA5', 'OA6'] as $code) {
             foreach ($entity->getLinkedEntities($code) as $date) {
-                $type = $date->getLinkedEntity('P2');
+                $type = $date->types['Date value type'][0];
                 $dates[$code][$type->name] = $date;
             }
         }
@@ -19,8 +19,8 @@ class Model_DateMapper {
         $dates = [];
         foreach (['OA5', 'OA6'] as $code) {
             foreach (Model_LinkPropertyMapper::getLinkedEntities($link, $code) as $date) {
-                $dateType = $date->getLinkedEntity('P2');
-                $dates[$code][$dateType->name] = $date;
+                $type = $date->types['Date value type'][0];
+                $dates[$code][$type->name] = $date;
             }
         }
         return $dates;

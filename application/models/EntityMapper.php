@@ -86,7 +86,7 @@ class Model_EntityMapper extends \Model_AbstractMapper {
         return self::populate(new Model_Entity(), $row);
     }
 
-    public static function getByCodes($code, $nodeRoot = false) {
+    public static function getByCodes($code) {
         $codes = Zend_Registry::get('config')->get('code' . $code)->toArray();
         $sql = self::$sql . " WHERE c.code IN ('" . implode("', '", $codes) . "') GROUP BY e.id, c.code
             ORDER BY e.name;";
@@ -95,11 +95,10 @@ class Model_EntityMapper extends \Model_AbstractMapper {
         $entitites = [];
         foreach ($statement->fetchAll() as $row) {
             $entity = self::populate(new Model_Entity(), $row);
-            if ($nodeRoot) {
-                foreach ($entity->getLinkedEntities('P2') as $node) {
-                    if ($node->name == $nodeRoot) {
+            if ($code == 'Source') {
+                if (isset($entity->types['Linguistic object classification']) &&
+                    $entity->types['Linguistic object classification'][0]->name == 'Source Content') {
                         $entitites[] = $entity;
-                    }
                 }
                 continue;
             }

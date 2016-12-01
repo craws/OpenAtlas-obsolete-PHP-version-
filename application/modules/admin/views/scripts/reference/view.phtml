@@ -17,7 +17,7 @@
         <h1><?= $reference->name ?></h1>
         <?
             $table['data'] = [];
-            foreach ($this->getNodesForView($reference) as $rootName => $nodes) {
+            foreach ($reference->getTypesForView() as $rootName => $nodes) {
                 $table['data'][$rootName] = implode('<br/>', $nodes);
             }
             $this->table = $this->tableLog($table, 'entity', $reference->id);
