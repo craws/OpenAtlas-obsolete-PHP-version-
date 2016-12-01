@@ -5,17 +5,24 @@
 class Model_EntityMapper extends \Model_AbstractMapper {
 
     private static $sql = "
-        SELECT e.id, e.class_id, e.name, e.description, e.created, e.modified, c.code,
-            e.value_timestamp, e.value_integer, string_agg(CAST(t.id AS text), ', ') AS types,
-            (SELECT min(date_part('year', d.value_timestamp)) FROM model.entity d
-                JOIN model.link dl ON d.id = dl.range_id AND dl.domain_id = e.id) AS first,
-            (SELECT max(date_part('year', d.value_timestamp)) FROM model.entity d
-                JOIN model.link dl ON d.id = dl.range_id AND dl.domain_id = e.id) AS last
+        SELECT
+            e.id, e.class_id, e.name, e.description, e.created, e.modified, c.code,
+            e.value_timestamp, e.value_integer, string_agg(CAST(t.id AS text), ',') AS types,
+            min(date_part('year', d1.value_timestamp)) AS first,
+            max(date_part('year', d2.value_timestamp)) AS last
+
         FROM model.entity e
+
         JOIN model.class c ON e.class_id = c.id
+
         LEFT JOIN model.link tl ON e.id = tl.domain_id
-        LEFT JOIN model.entity t ON tl.range_id = t.id AND
-        tl.property_id = (SELECT id FROM model.property WHERE name LIKE 'has type')
+        LEFT JOIN model.entity t ON tl.range_id = t.id AND tl.property_id = (SELECT id FROM model.property WHERE name LIKE 'has type')
+
+        LEFT JOIN model.link dl1 ON e.id = dl1.domain_id AND dl1.property_id IN (SELECT id FROM model.property WHERE code in ('OA1', 'OA3'))
+        LEFT JOIN model.entity d1 ON dl1.range_id = d1.id
+
+        LEFT JOIN model.link dl2 ON e.id = dl2.domain_id AND dl2.property_id IN (SELECT id FROM model.property WHERE code in ('OA2', 'OA4'))
+        LEFT JOIN model.entity d2 ON dl2.range_id = d2.id
     ";
 
     public static function search($term, $codes, $description = false, $own = false) {
@@ -130,7 +137,7 @@ class Model_EntityMapper extends \Model_AbstractMapper {
         $entity->last = (isset($row['last'])) ? $row['last'] : null;
         $types = [];
         if (isset($row['types']) && $row['types']) {
-            foreach (explode(',', $row['types']) as $type_id) {
+            foreach (array_unique(explode(',', $row['types'])) as $type_id) {
                 $type = Model_NodeMapper::getById($type_id);
                 $root_name = ($type->rootId) ? Model_NodeMapper::getById($type->rootId)->name : $type->name;
                 $types[$root_name][] = $type;
