@@ -12,22 +12,23 @@ class Model_EntityMapper extends \Model_AbstractMapper {
             max(date_part('year', d2.value_timestamp)) AS last
 
         FROM model.entity e
-
         JOIN model.class c ON e.class_id = c.id
 
         LEFT JOIN model.link tl ON e.id = tl.domain_id
-        LEFT JOIN model.entity t ON tl.range_id = t.id AND tl.property_id = (SELECT id FROM model.property WHERE name LIKE 'has type')
+        LEFT JOIN model.entity t ON tl.range_id = t.id AND tl.property_id = (SELECT id FROM model.property WHERE code = 'P2')
 
-        LEFT JOIN model.link dl1 ON e.id = dl1.domain_id AND dl1.property_id IN (SELECT id FROM model.property WHERE code in ('OA1', 'OA3'))
+        LEFT JOIN model.link dl1 ON e.id = dl1.domain_id AND
+            dl1.property_id IN (SELECT id FROM model.property WHERE code in ('OA1', 'OA3'))
         LEFT JOIN model.entity d1 ON dl1.range_id = d1.id
 
-        LEFT JOIN model.link dl2 ON e.id = dl2.domain_id AND dl2.property_id IN (SELECT id FROM model.property WHERE code in ('OA2', 'OA4'))
+        LEFT JOIN model.link dl2 ON e.id = dl2.domain_id
+            AND dl2.property_id IN (SELECT id FROM model.property WHERE code in ('OA2', 'OA4'))
         LEFT JOIN model.entity d2 ON dl2.range_id = d2.id
     ";
 
     public static function search($term, $codes, $description = false, $own = false) {
         $sql = self::$sql;
-        $sql .= ($own) ? " LEFT JOIN web.user_log ul ON e.id = ul.table_id AND ul.table_name LIKE 'entity'" : '';
+        $sql .= ($own) ? " LEFT JOIN web.user_log ul ON e.id = ul.table_id AND ul.table_name = 'entity'" : '';
         $sql .= " WHERE lower(e.name) LIKE :term ";
         $sql .= ($description) ? " OR lower(e.description) LIKE :term AND " : " AND ";
         $sql .= ($own) ? " ul.user_id = :user_id AND " : '';
@@ -209,7 +210,7 @@ class Model_EntityMapper extends \Model_AbstractMapper {
         $sql = "
             SELECT e.id, e.class_id, e.name, e.description, e.created, e.modified, c.code
             FROM model.entity e JOIN model.class c ON e.class_id = c.id
-            WHERE e.name LIKE :name ORDER BY id ASC LIMIT 1;";
+            WHERE e.name = :name ORDER BY id ASC LIMIT 1;";
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->bindValue(':name', Zend_Registry::get('config')->get('eventRootName'));
         $statement->execute();

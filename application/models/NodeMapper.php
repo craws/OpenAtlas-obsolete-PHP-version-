@@ -59,7 +59,8 @@ class Model_NodeMapper extends Model_EntityMapper {
     }
 
     private static function addSubs(Model_Node $node, &$nodeIds) {
-        $sql = "SELECT e.id, e.name, e.description, e.class_id, e.created, e.modified
+        $sql = "
+            SELECT e.id, e.name, e.description, e.class_id, e.created, e.modified
             FROM model.entity e JOIN model.link l ON e.id = l.domain_id
             WHERE
                 l.range_id = :range_id AND

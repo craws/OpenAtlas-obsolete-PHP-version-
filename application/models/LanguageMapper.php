@@ -19,7 +19,7 @@ class Model_LanguageMapper extends Model_AbstractMapper {
     }
 
     public static function getByShortform($shortform) {
-        $sql = 'SELECT id, name, shortform, active FROM web.language WHERE shortform LIKE :shortform';
+        $sql = 'SELECT id, name, shortform, active FROM web.language WHERE shortform = :shortform';
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->bindValue(':shortform', $shortform);
         $statement->execute();
