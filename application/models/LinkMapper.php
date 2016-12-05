@@ -4,7 +4,8 @@
 
 class Model_LinkMapper extends Model_AbstractMapper {
 
-    private static $sqlSelect = 'SELECT l.id, l.property_id, l.domain_id, l.range_id, l.description, l.created, l.modified ';
+    private static $sqlSelect =
+        'SELECT l.id, l.property_id, l.domain_id, l.range_id, l.description, l.created, l.modified ';
 
     public static function getById($id) {
         $row = parent::getRowById(self::$sqlSelect . ' FROM model.link l WHERE l.id = :id;', $id);
@@ -51,27 +52,22 @@ class Model_LinkMapper extends Model_AbstractMapper {
     }
     // @codeCoverageIgnoreEnd
 
-    public static function getLinks($entity, $codes, $inverse = false) {
-        if (!is_array($codes)) {
-            $codes = [$codes];
-        }
-        $objects = [];
-        foreach ($codes as $code) {
-            $objects = array_merge($objects, self::getLinksByCode($entity, $code, $inverse));
-        }
-        return $objects;
-    }
-
-    private static function getLinksByCode($entity, $code, $inverse) {
+    public static function getLinks($entity, $code, $inverse = false) {
         $entityId = (is_a($entity, 'Model_Entity')) ? $entity->id : $entity;
-        $sql = self::$sqlSelect . ', e.name FROM model.link l JOIN model.entity e ON l.range_id = e.id
-            WHERE l.property_id = :property_id AND l.domain_id = :entity_id ORDER BY e.name;';
+        $codes = (is_array($code)) ? $code : [$code];
+        $sql = self::$sqlSelect . ", e.name
+            FROM model.link l
+            JOIN model.entity e ON l.range_id = e.id
+            JOIN model.property p ON l.property_id = p.id AND p.code IN ('" . implode("','", $codes) . "')
+            WHERE l.domain_id = :entity_id ORDER BY e.name;";
         if ($inverse) {
-            $sql = self::$sqlSelect . ', e.name FROM model.link l JOIN model.entity e ON l.domain_id = e.id
-                WHERE l.property_id = :property_id AND l.range_id = :entity_id ORDER BY e.name;';
+            $sql = self::$sqlSelect . ", e.name
+                FROM model.link l
+                JOIN model.entity e ON l.domain_id = e.id
+                JOIN model.property p ON l.property_id = p.id AND p.code IN ('" . implode("','", $codes) . "')
+                WHERE l.range_id = :entity_id ORDER BY e.name;";
         }
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
-        $statement->bindValue(':property_id', Model_PropertyMapper::getByCode($code)->id);
         $statement->bindValue(':entity_id', $entityId);
         $statement->execute();
         $objects = [];
@@ -151,10 +147,8 @@ class Model_LinkMapper extends Model_AbstractMapper {
     }
 
     public static function delete(Model_Link $link) {
-        foreach (['OA5', 'OA6'] as $code) {
-            foreach (Model_LinkPropertyMapper::getLinks($link, $code) as $dateLink) {
-                parent::deleteAbstract('model.entity', $dateLink->range->id);
-            }
+        foreach (Model_LinkPropertyMapper::getLinks($link, ['OA5', 'OA6']) as $dateLink) {
+            parent::deleteAbstract('model.entity', $dateLink->range->id);
         }
         parent::deleteAbstract('model.link', $link->id);
     }

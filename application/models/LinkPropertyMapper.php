@@ -39,10 +39,13 @@ class Model_LinkPropertyMapper extends Model_AbstractMapper {
     // @codeCoverageIgnoreEnd
 
     public static function getLinks(Model_Link $link, $code) {
-        $sql = self::$sqlSelect . ', e.name FROM model.link_property l JOIN model.entity e ON l.range_id = e.id
-            WHERE l.property_id = :property_id AND l.domain_id = :domain_id ORDER BY e.name;';
+        $codes = (is_array($code)) ? $code : [$code];
+        $sql = self::$sqlSelect . ", e.name
+            FROM model.link_property l
+            JOIN model.entity e ON l.range_id = e.id
+            JOIN model.property p ON l.property_id = p.id AND p.code IN ('" . implode("','", $codes) . "')
+            WHERE l.domain_id = :domain_id ORDER BY e.name;";
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
-        $statement->bindValue(':property_id', Model_PropertyMapper::getByCode($code)->id);
         $statement->bindValue(':domain_id', $link->id);
         $statement->execute();
         $objects = [];
