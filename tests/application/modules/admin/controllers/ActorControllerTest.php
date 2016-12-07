@@ -87,7 +87,6 @@ class Admin_ActorControllerTest extends ControllerTestCase {
         $relation = Model_NodeMapper::getByNodeCategoryName('Actor Actor Relation', 'Kindredship');
         $this->request->setMethod('POST')->setPost([
             'typeId' => $relation->id,
-            'typeButton' => $relation->name,
             'name' => 'relation',
             'relatedActorId' => $this->actorId,
             'description' => 'description',
@@ -96,7 +95,6 @@ class Admin_ActorControllerTest extends ControllerTestCase {
         $this->resetRequest()->resetResponse();
         $this->request->setMethod('POST')->setPost([
             'typeId' => $relation->id,
-            'typeButton' => $relation->name,
             'inverse' => '1',
             'name' => 'relation',
             'relatedActorId' => $this->actorId,

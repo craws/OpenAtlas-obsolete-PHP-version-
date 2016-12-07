@@ -71,9 +71,6 @@ class Admin_ReferenceController extends Zend_Controller_Action {
                 'typeId' => $referenceType->id,
                 'modified' => ($reference->modified) ? $reference->modified->getTimestamp() : 0
             ]);
-            if ($referenceType->rootId) {
-                $form->populate(['typeButton' => $referenceType->name]);
-            }
             $this->view->typeTreeData = Model_NodeMapper::getTreeData($referenceRootType->name, $referenceType);
             return;
         }

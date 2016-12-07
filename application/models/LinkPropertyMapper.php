@@ -6,15 +6,6 @@ class Model_LinkPropertyMapper extends Model_AbstractMapper {
 
     private static $sqlSelect = 'SELECT l.id, l.property_id, l.domain_id, l.range_id, l.created, l.modified ';
 
-    public static function getLinkedEntity(Model_Link $link, $code) {
-        $linkedEntity = self::getLink($link, $code);
-        if (!$linkedEntity) {
-            return false;
-        }
-        $entity = $linkedEntity->range;
-        return $entity;
-    }
-
     public static function getLinkedEntities(Model_Link $link, $code) {
         $entities = [];
         foreach (self::getLinks($link, $code) as $link) {

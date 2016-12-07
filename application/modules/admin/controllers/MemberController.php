@@ -67,8 +67,7 @@ class Admin_MemberController extends Zend_Controller_Action {
         $form->removeElement('relatedActorIds');
         if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
             $form->populateDates($link, ['OA5' => 'begin', 'OA6' => 'end']);
-            $type = Model_LinkPropertyMapper::getLinkedEntity($link, 'P2');
-            $node = Model_NodeMapper::getById($type->id);
+            $node = Model_NodeMapper::getById($link->type->id);
             $form->populate(['typeId' => $node->id, 'description' => $link->description]);
             $this->view->actor = $originActor;
             $this->view->form = $form;

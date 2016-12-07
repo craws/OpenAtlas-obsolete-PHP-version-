@@ -114,19 +114,18 @@ class Model_NodeMapper extends Model_EntityMapper {
         $nodes = [];
         foreach (Zend_Registry::get('nodes') as $node) {
             if (\Craws\FilterInput::filter($node->name, 'node') == \Craws\FilterInput::filter($rootName, 'node')) {
-                $realEntity = $entity;
                 /* if its a place we need the object for locations */
                 if (in_array($node->name, ['Administrative Unit', 'Historical Place'])) {
-                    $realEntity = Model_LinkMapper::getLinkedEntity($entity, 'P53');
+                    $entity = Model_LinkMapper::getLinkedEntity($entity, 'P53');
                 }
                 if (is_a($entity, 'Model_Entity')) {
-                    foreach (Model_LinkMapper::getLinkedEntities($realEntity, $node->propertyToEntity) as $linkedNode) {
+                    foreach (Model_LinkMapper::getLinkedEntities($entity, $node->propertyToEntity) as $linkedNode) {
                         if ($linkedNode->rootId == $node->id || $linkedNode->id == $node->id) {
                             $nodes[] = $linkedNode;
                         }
                     }
                 } else if (is_a($entity, 'Model_Link')) {
-                    foreach (Model_LinkPropertyMapper::getLinkedEntities($realEntity, $node->propertyToEntity) as $linkedNode) {
+                    foreach (Model_LinkPropertyMapper::getLinkedEntities($entity, $node->propertyToEntity) as $linkedNode) {
                         if ($linkedNode->rootId == $node->id || $linkedNode->id == $node->id) {
                             $nodes[] = $linkedNode;
                         }

@@ -6,8 +6,8 @@ class Model_EntityMapper extends \Model_AbstractMapper {
 
     private static $sql = "
         SELECT
-            e.id, e.class_id, e.name, e.description, e.created, e.modified, c.code,
-            e.value_timestamp, e.value_integer, string_agg(CAST(t.id AS text), ',') AS types,
+            e.id, e.class_id, e.name, e.description, e.created, e.modified, c.code, e.value_timestamp, e.value_integer,
+            string_agg(CAST(t.id AS text), ',') AS types,
             min(date_part('year', d1.value_timestamp)) AS first,
             max(date_part('year', d2.value_timestamp)) AS last
 

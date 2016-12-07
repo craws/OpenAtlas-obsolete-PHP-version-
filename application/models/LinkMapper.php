@@ -4,11 +4,16 @@
 
 class Model_LinkMapper extends Model_AbstractMapper {
 
-    private static $sqlSelect =
-        'SELECT l.id, l.property_id, l.domain_id, l.range_id, l.description, l.created, l.modified ';
-
     public static function getById($id) {
-        $row = parent::getRowById(self::$sqlSelect . ' FROM model.link l WHERE l.id = :id;', $id);
+        $sql = "
+            SELECT l.id, l.property_id, l.domain_id, l.range_id, l.description, l.created, l.modified, t.id AS type_id
+            FROM model.link l
+            LEFT JOIN model.link_property lp ON l.id = lp.domain_id
+            JOIN model.entity t ON lp.range_id = t.id AND
+                lp.property_id = (SELECT id FROM model.property WHERE code = 'P2')
+            WHERE l.id = :id;
+        ";
+        $row = parent::getRowById($sql, $id);
         return self::populate($row);
     }
 
@@ -55,16 +60,24 @@ class Model_LinkMapper extends Model_AbstractMapper {
     public static function getLinks($entity, $code, $inverse = false) {
         $entityId = (is_a($entity, 'Model_Entity')) ? $entity->id : $entity;
         $codes = (is_array($code)) ? $code : [$code];
-        $sql = self::$sqlSelect . ", e.name
+        $sql = "
+            SELECT l.id, l.property_id, l.domain_id, l.range_id, l.description, l.created, l.modified, e.name, t.id AS type_id
             FROM model.link l
             JOIN model.entity e ON l.range_id = e.id
             JOIN model.property p ON l.property_id = p.id AND p.code IN ('" . implode("','", $codes) . "')
+            LEFT JOIN model.link_property lp ON l.id = lp.domain_id
+            JOIN model.entity t ON lp.range_id = t.id AND
+                lp.property_id = (SELECT id FROM model.property WHERE code = 'P2')
             WHERE l.domain_id = :entity_id ORDER BY e.name;";
         if ($inverse) {
-            $sql = self::$sqlSelect . ", e.name
+            $sql = "
+                SELECT l.id, l.property_id, l.domain_id, l.range_id, l.description, l.created, l.modified, e.name, e.name, t.id AS type_id
                 FROM model.link l
                 JOIN model.entity e ON l.domain_id = e.id
                 JOIN model.property p ON l.property_id = p.id AND p.code IN ('" . implode("','", $codes) . "')
+                LEFT JOIN model.link_property lp ON l.id = lp.domain_id
+                JOIN model.entity t ON lp.range_id = t.id AND
+                    lp.property_id = (SELECT id FROM model.property WHERE code = 'P2')
                 WHERE l.range_id = :entity_id ORDER BY e.name;";
         }
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
@@ -92,6 +105,9 @@ class Model_LinkMapper extends Model_AbstractMapper {
             $link->range = Model_NodeMapper::getById($row['range_id']);
         } else {
             $link->range = Model_EntityMapper::getById($row['range_id']);
+        }
+        if (isset($row['type_id']) && $row['type_id']) {
+            $link->type = Model_NodeMapper::getById($row['type_id']);
         }
         return $link;
     }
