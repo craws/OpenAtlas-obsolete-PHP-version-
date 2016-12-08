@@ -13,6 +13,7 @@
     <div id="tabInfo">
         <? if ($event->id != $this->rootEvent->id): ?>
             <div class="buttonBar">
+                <?= $this->pageButtons($event) ?>
                 <?= $this->link($event, 'update') ?>
                 <?= $this->link($event, 'delete') ?>
                 <?= $this->bookmarkToggle($event->id) ?>

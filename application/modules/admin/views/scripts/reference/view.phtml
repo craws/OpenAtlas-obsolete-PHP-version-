@@ -10,6 +10,7 @@
     </ul>
     <div id="tabInfo">
         <div class="buttonBar">
+            <?= $this->pageButtons($reference) ?>
             <?= $this->link($reference, 'update') ?>
             <?= $this->link($reference, 'delete') ?>
             <?= $this->bookmarkToggle($reference->id) ?>

@@ -26,6 +26,30 @@ class Model_EntityMapper extends \Model_AbstractMapper {
         LEFT JOIN model.entity d2 ON dl2.range_id = d2.id
     ";
 
+    public static function get_previous_id($entity, $classCodes) {
+        $sql = "
+            SELECT max(e.id) AS id
+            FROM model.entity e
+            JOIN model.class c ON e.class_id = c.id
+            WHERE e.id < :id AND c.code = ANY('{" . implode(',',$classCodes) . "}'::text[]);";
+        $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
+        $statement->bindValue(':id', $entity->id);
+        $statement->execute();
+        return $statement->fetchColumn();
+    }
+
+    public static function get_next_id($entity, $classCodes) {
+        $sql = "
+            SELECT min(e.id) AS id
+            FROM model.entity e
+            JOIN model.class c ON e.class_id = c.id
+            WHERE e.id > :id AND c.code = ANY('{" . implode(',',$classCodes) . "}'::text[]);";
+        $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
+        $statement->bindValue(':id', $entity->id);
+        $statement->execute();
+        return $statement->fetchColumn();
+    }
+
     public static function search($term, $codes, $description = false, $own = false) {
         $sql = self::$sql;
         $sql .= ($own) ? " LEFT JOIN web.user_log ul ON e.id = ul.table_id AND ul.table_name = 'entity'" : '';

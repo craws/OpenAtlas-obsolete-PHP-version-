@@ -21,6 +21,7 @@
     <? endif ?>
     <div id="tabInfo">
         <div class="buttonBar">
+            <?= $this->pageButtons($object) ?>
             <?= $this->link($object, 'update') ?>
             <?= $this->link($object, 'delete') ?>
             <?= $this->bookmarkToggle($object->id) ?>
