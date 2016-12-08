@@ -26,24 +26,6 @@ class Model_DateMapper {
         return $dates;
     }
 
-    public static function getLinkDateRange(Model_Link $link) {
-        $sql = "
-            SELECT
-            (SELECT min(date_part('year', e.value_timestamp)) FROM model.entity e
-            JOIN model.link_property lp ON e.id = lp.range_id
-            JOIN model.link l ON lp.domain_id = l.id
-            WHERE l.id = :link_id) AS first,
-            max(date_part('year', e.value_timestamp)) AS last FROM model.entity e
-            JOIN model.link_property lp ON e.id = lp.range_id
-            JOIN model.link l ON lp.domain_id = l.id
-            WHERE l.id = :link_id;";
-        $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
-        $statement->bindValue(':link_id', $link->id);
-        $statement->execute();
-        $row = $statement->fetch();
-        return ['first' => $row['first'], 'last' => $row['last']];
-    }
-
     public static function saveDates(Model_Entity $entity, Zend_Form $form) {
         Model_EntityMapper::deleteDates($entity);
         switch ($entity->class->name) {

@@ -73,7 +73,6 @@
         $eventTable = ['id' => 'event', 'pager' => true, 'filter' => true];
         $eventTable['header'] = [_('activity'), _('event'), 'Involvement', _('first'), _('last'), '', ''];
         foreach ($this->eventLinks as $link) {
-            $dates = Model_DateMapper::getLinkDateRange($link);
             $text = $this->translate('activity') . ': ' . $link->property->nameInverseTranslated . ' ' . $link->domain->name;
             $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_remove', $text)) . "')\" ";
             $deleteLink = '<div><a href="/admin/function/unlink/id/' . $link->id . '/entityId/' . $actor->id . '/#tabEvent' .
@@ -82,8 +81,8 @@
                 $link->property->nameInverseTranslated,
                 $this->link($link->domain),
                 ($link->type->rootId) ? $link->type->name : '',
-                $dates['first'],
-                $dates['last'],
+                $link->first,
+                $link->last,
                 '<a class="button" href="/admin/involvement/update/origin/actor/id/' . $link->id . '">' .
                     $this->ucstring('edit') . '</a>',
                 $deleteLink
@@ -102,7 +101,6 @@
             $relationTable = ['id' => 'relation', 'pager' => true, 'filter' => true];
             $relationTable['header'] = ['Actor Actor Relation', _('actor'), _('first'), _('last'), '', ''];
             foreach ($this->relationLinks as $link) {
-                $dates = Model_DateMapper::getLinkDateRange($link);
                 $typeName = ($link->type->rootId) ? $link->type->getNameDirected() : '';
                 $text = $this->translate('relation') . ': ' . $typeName . ' ' . $link->range->name;
                 $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_remove', $text)) .
@@ -112,15 +110,14 @@
                 $relationTable['data'][] = [
                     $typeName,
                     $this->link($link->range),
-                    $dates['first'],
-                    $dates['last'],
+                    $link->first,
+                    $link->last,
                     '<a class="button" href="/admin/relation/update/id/' . $link->id . '/originActorId/' . $actor->id .
                         '">' . $this->ucstring('edit') . '</a>',
                     $deleteLink
                 ];
             }
             foreach ($this->relationInverseLinks as $link) {
-                $dates = Model_DateMapper::getLinkDateRange($link);
                 $typeName = ($link->type->rootId) ? $link->type->getNameDirected(true) : '';
                 $text = $this->translate('relation') . ': ' . $typeName . ' ' . $link->domain->name;
                 $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_remove', $text)) .
@@ -130,8 +127,8 @@
                 $relationTable['data'][] = [
                     $typeName,
                     $this->link($link->domain),
-                    $dates['first'],
-                    $dates['last'],
+                    $link->first,
+                    $link->last,
                     '<a class="button" href="/admin/relation/update/id/' . $link->id . '/originActorId/' . $actor->id .
                         '">' . $this->ucstring('edit') . '</a>',
                     $deleteLink
@@ -176,7 +173,6 @@
             $memberTable = ['id' => 'member', 'pager' => true, 'filter' => true];
             $memberTable['header'] = [ _('actor'), 'Actor Function', _('first'), _('last'), '', ''];
             foreach ($this->memberLinks as $link) {
-                $dates = Model_DateMapper::getLinkDateRange($link);
                 $typeName = ($link->type->rootId) ? $link->type->getNameDirected() : '';
                 $text = $this->translate('membership') . ': ' . $typeName . ' ' . $link->range->name;
                 $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_remove', $text)) .
@@ -186,8 +182,8 @@
                 $memberTable['data'][] = [
                     $this->link($link->range),
                     $typeName,
-                    $dates['first'],
-                    $dates['last'],
+                    $link->first,
+                    $link->last,
                     '<a class="button" href="/admin/member/update/id/' . $link->id . '/originActorId/' .
                         $actor->id . '">' . $this->ucstring('edit') . '</a>',
                     $deleteLink
@@ -206,7 +202,6 @@
         $memberOfTable = ['id' => 'memberOf', 'pager' => true, 'filter' => true];
         $memberOfTable['header'] = [ _('member_of'), 'Actor Function', _('first'), _('last'), '', ''];
         foreach ($this->memberOfLinks as $link) {
-            $dates = Model_DateMapper::getLinkDateRange($link);
             $typeName = ($link->type->rootId) ? $link->type->getNameDirected() : '';
             $text = $this->translate('membership') . ': ' . $typeName . ' ' . $link->range->name;
             $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_remove', $text)) .
@@ -216,8 +211,8 @@
             $memberOfTable['data'][] = [
                 $this->link($link->domain),
                 $typeName,
-                $dates['first'],
-                $dates['last'],
+                $link->first,
+                $link->last,
                 '<a class="button" href="/admin/member/update/id/' . $link->id . '/originActorId/' .
                     $actor->id . '">' . $this->ucstring('edit') . '</a>',
                 $deleteLink

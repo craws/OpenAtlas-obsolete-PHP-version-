@@ -6,11 +6,12 @@ class Model_LinkMapper extends Model_AbstractMapper {
 
     public static function getById($id) {
         $sql = "
-            SELECT l.id, l.property_id, l.domain_id, l.range_id, l.description, l.created, l.modified, t.id AS type_id
+            SELECT l.id, l.property_id, l.domain_id, l.range_id, l.description, l.created, l.modified,
+                (SELECT t.id FROM model.entity t
+                    JOIN model.link_property lp ON t.id = lp.range_id AND lp.domain_id = l.id
+                    WHERE lp.property_id = (SELECT id FROM model.property WHERE code = 'P2')
+                ) AS type_id
             FROM model.link l
-            LEFT JOIN model.link_property lp ON l.id = lp.domain_id
-            JOIN model.entity t ON lp.range_id = t.id AND
-                lp.property_id = (SELECT id FROM model.property WHERE code = 'P2')
             WHERE l.id = :id;
         ";
         $row = parent::getRowById($sql, $id);
@@ -60,26 +61,31 @@ class Model_LinkMapper extends Model_AbstractMapper {
     public static function getLinks($entity, $code, $inverse = false) {
         $entityId = (is_a($entity, 'Model_Entity')) ? $entity->id : $entity;
         $codes = (is_array($code)) ? $code : [$code];
+        $first = ($inverse)?  'range' : 'domain';
+        $second = ($inverse)?  'domain' : 'range';
         $sql = "
-            SELECT l.id, l.property_id, l.domain_id, l.range_id, l.description, l.created, l.modified, e.name, t.id AS type_id
+            SELECT l.id, l.property_id, l.domain_id, l.range_id, l.description, l.created, l.modified, e.name,
+                min(date_part('year', d1.value_timestamp)) AS first,
+                max(date_part('year', d2.value_timestamp)) AS last,
+                (SELECT t.id FROM model.entity t
+                    JOIN model.link_property lp ON t.id = lp.range_id AND lp.domain_id = l.id
+                    WHERE lp.property_id = (SELECT id FROM model.property WHERE code = 'P2')
+                ) AS type_id
+
             FROM model.link l
-            JOIN model.entity e ON l.range_id = e.id
+            JOIN model.entity e ON l." . $second . "_id = e.id
             JOIN model.property p ON l.property_id = p.id AND p.code IN ('" . implode("','", $codes) . "')
-            LEFT JOIN model.link_property lp ON l.id = lp.domain_id
-            JOIN model.entity t ON lp.range_id = t.id AND
-                lp.property_id = (SELECT id FROM model.property WHERE code = 'P2')
-            WHERE l.domain_id = :entity_id ORDER BY e.name;";
-        if ($inverse) {
-            $sql = "
-                SELECT l.id, l.property_id, l.domain_id, l.range_id, l.description, l.created, l.modified, e.name, e.name, t.id AS type_id
-                FROM model.link l
-                JOIN model.entity e ON l.domain_id = e.id
-                JOIN model.property p ON l.property_id = p.id AND p.code IN ('" . implode("','", $codes) . "')
-                LEFT JOIN model.link_property lp ON l.id = lp.domain_id
-                JOIN model.entity t ON lp.range_id = t.id AND
-                    lp.property_id = (SELECT id FROM model.property WHERE code = 'P2')
-                WHERE l.range_id = :entity_id ORDER BY e.name;";
-        }
+
+            LEFT JOIN model.link_property dl1 ON l.id = dl1.domain_id AND
+                dl1.property_id IN (SELECT id FROM model.property WHERE code = 'OA5')
+            LEFT JOIN model.entity d1 ON dl1.range_id = d1.id
+
+            LEFT JOIN model.link_property dl2 ON l.id = dl2.domain_id
+                AND dl2.property_id IN (SELECT id FROM model.property WHERE code = 'OA6')
+            LEFT JOIN model.entity d2 ON dl2.range_id = d2.id
+
+            WHERE l." . $first . "_id = :entity_id GROUP BY l.id, e.name ORDER BY e.name;";
+
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->bindValue(':entity_id', $entityId);
         $statement->execute();
@@ -96,6 +102,8 @@ class Model_LinkMapper extends Model_AbstractMapper {
         $link->description = $row['description'];
         $property = Model_PropertyMapper::getById($row['property_id']);
         $link->property = $property;
+        $link->first = (isset($row['first'])) ? $row['first'] : null;
+        $link->last = (isset($row['last'])) ? $row['last'] : null;
         if (in_array($row['domain_id'], Zend_Registry::get('nodesIds'))) {
             $link->domain = Model_NodeMapper::getById($row['domain_id']);
         } else {

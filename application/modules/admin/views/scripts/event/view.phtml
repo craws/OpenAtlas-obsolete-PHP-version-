@@ -74,14 +74,13 @@
                     "')\" ";
                 $deleteButton = '<a href="/admin/function/unlink/id/' . $link->id . '/entityId/' . $event->id .
                     '/#tabActor' . '" class="button"' . $confirm . '>' . $this->ucstring('remove') . '</a>';
-                $dates = Model_DateMapper::getLinkDateRange($link);
                 $actorTable['data'][] = [
                     $this->link($link->range),
                     $link->range->class->nameTranslated,
                     $link->property->nameInverseTranslated,
                     ($link->type->rootId) ? $link->type->name : '',
-                    $dates['first'],
-                    $dates['last'],
+                    $link->first,
+                    $link->last,
                     '<a class="button" href="/admin/involvement/update/origin/event/id/' . $link->id . '">' .
                     $this->ucstring('edit') . '</a>',
                     $deleteButton,

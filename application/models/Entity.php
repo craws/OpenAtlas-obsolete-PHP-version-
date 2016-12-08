@@ -12,10 +12,6 @@ class Model_Entity extends Model_AbstractObject {
     public $name;
     public $types = [];
 
-    public function __toString() {
-        return $this->name;
-    }
-
     public function printTypes($rootName) {
         if (!isset($this->types[$rootName])) {
             return '';

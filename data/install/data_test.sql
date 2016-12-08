@@ -40,8 +40,6 @@ INSERT INTO link (property_id, domain_id, range_id) VALUES
 ((SELECT id FROM property WHERE code='P128'), (SELECT id FROM entity WHERE name='tCarrier' ), (SELECT id FROM entity WHERE name='tSource')),
 ((SELECT id FROM property WHERE code='P117'), (SELECT id FROM entity WHERE name='tEvent'   ), (SELECT id FROM entity WHERE name='History of the World')),
 ((SELECT id FROM property WHERE code='P24' ), (SELECT id FROM entity WHERE name='tEvent'   ), (SELECT id FROM entity WHERE name='tObject')),
-((SELECT id FROM property WHERE code='P22' ), (SELECT id FROM entity WHERE name='tEvent'   ), (SELECT id FROM entity WHERE name='tActor')),
-((SELECT id FROM property WHERE code='P23' ), (SELECT id FROM entity WHERE name='tEvent'   ), (SELECT id FROM entity WHERE name='tActor')),
 ((SELECT id FROM property WHERE code='P117'), (SELECT id FROM entity WHERE name='tSubEvent'), (SELECT id FROM entity WHERE name='tEvent')),
 ((SELECT id FROM property WHERE code='P89' ), (SELECT id FROM entity WHERE name='tPlace'   ), (SELECT id FROM entity WHERE name='Austria')),
 ((SELECT id FROM property WHERE code='P67' ), (SELECT id FROM entity WHERE name='tBiblio'  ), (SELECT id FROM entity WHERE name='tActor')),

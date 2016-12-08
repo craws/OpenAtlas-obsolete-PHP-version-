@@ -14,21 +14,6 @@ class Model_LinkPropertyMapper extends Model_AbstractMapper {
         return $entities;
     }
 
-    public static function getLink(Model_Link $link, $code) {
-        $links = self::getLinks($link, $code);
-        switch (count($links)) {
-            case 0:
-                return false;
-            case 1:
-                return $links[0];
-            // @codeCoverageIgnoreStart
-        }
-        $error = 'Found ' . count($links) . ' ' . $code . ' property links for link(' . $link->id . ') instead one.';
-        Model_LogMapper::log('error', 'model', $error);
-    }
-
-    // @codeCoverageIgnoreEnd
-
     public static function getLinks(Model_Link $link, $code) {
         $codes = (is_array($code)) ? $code : [$code];
         $sql = self::$sqlSelect . ", e.name
