@@ -82,8 +82,8 @@
                 $link->property->nameInverseTranslated,
                 $this->link($link->domain),
                 ($link->type->rootId) ? $link->type->name : '',
-                $link->first,
-                $link->last,
+                ($link->first) ? $link->first : '<span class="inactive" style="float:right;">' . $link->domain->first . '</span>',
+                ($link->last) ? $link->last : '<span class="inactive" style="float:right;">' . $link->domain->last . '</span>',
                 '<a class="button" href="/admin/involvement/update/origin/actor/id/' . $link->id . '">' .
                     $this->ucstring('edit') . '</a>',
                 $deleteLink
