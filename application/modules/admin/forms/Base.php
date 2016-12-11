@@ -86,13 +86,18 @@ class Admin_Form_Base extends Craws\Form\Table {
 
     /* add hierarchies form elements and return used hierarchies */
 
-    public function addHierarchies($formName, $entity = null) {
+    public function addHierarchies($formName, $entity = null, $forStructure = false) {
         $forms = Zend_Registry::get('forms');
         $hierarchies = [];
-        foreach ($forms[$formName]['hierarchyIds'] as $hierarchyId) {
-            $hierarchy = Model_NodeMapper::getById($hierarchyId);
-            if ($hierarchy) {
-                $hierarchies[] = $hierarchy;
+        if ($forStructure) {
+            $rootId = ($entity->rootId) ? $entity->rootId : $entity->id;
+            $hierarchies[] = Model_NodeMapper::getById($rootId);
+        } else {
+            foreach ($forms[$formName]['hierarchyIds'] as $hierarchyId) {
+                $hierarchy = Model_NodeMapper::getById($hierarchyId);
+                if ($hierarchy) {
+                    $hierarchies[] = $hierarchy;
+                }
             }
         }
         foreach ($hierarchies as $hierarchy) {
@@ -105,7 +110,7 @@ class Admin_Form_Base extends Craws\Form\Table {
                 'placeholder' => $this->getView()->ucstring('select'),
                 'attribs' => ['readonly' => 'true'],
             ]);
-            if ($hierarchy->directional) {
+            if ($hierarchy->directional && !$forStructure) {
                 $this->addElement('checkbox', 'inverse', [
                     'label' => $this->getView()->ucstring('inverse'),
                     'checkedValue' => 1,
@@ -115,6 +120,7 @@ class Admin_Form_Base extends Craws\Form\Table {
             }
             $treeVariable = $hierarchy->nameClean . 'TreeData';
             $nodes = ($entity) ? Model_NodeMapper::getNodesByEntity($hierarchy->name, $entity) : [];
+            $nodes = ($forStructure) ? [$entity] : $nodes;
             $nodeIds = [];
             $nodeNames = [];
             foreach ($nodes as $node) {

@@ -7,17 +7,12 @@ class Admin_Form_Node extends Admin_Form_Base {
     public function init() {
         $this->setAction($this->getView()->url());
         $this->setName('nodeForm')->setMethod('post');
-        $this->addElement('select', 'super', [
-            'label' => $this->getView()->ucstring('super'),
-            'required' => true,
-            'class' => 'required',
-        ]);
         $this->addElement('text', 'name', [
             'label' => $this->getView()->ucstring('name'),
             'required' => true,
             'class' => 'required',
         ]);
-        $this->addElement('text', 'inverse', ['label' => $this->getView()->ucstring('inverse')]);
+        $this->addElement('text', 'inverse_text', ['label' => $this->getView()->ucstring('inverse')]);
         $this->addElement('textarea', 'description', ['label' => $this->getView()->ucstring('description')]);
         $this->addElement('button', 'formSubmit', ['label' => $this->getView()->ucstring('save'), 'type' => 'submit']);
         $this->setElementFilters(['StringTrim']);

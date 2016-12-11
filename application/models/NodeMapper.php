@@ -5,9 +5,10 @@
 class Model_NodeMapper extends Model_EntityMapper {
 
     public static function registerHierarchies() {
-        $sqlForms = "SELECT f.id, f.name, f.extendable,
-            (SELECT ARRAY(SELECT h.id FROM web.hierarchy h JOIN web.hierarchy_form hf ON h.id = hf.hierarchy_id
-            WHERE hf.form_id = f.id )) AS hierarchy_ids
+        $sqlForms = "
+            SELECT f.id, f.name, f.extendable,
+                (SELECT ARRAY(SELECT h.id FROM web.hierarchy h JOIN web.hierarchy_form hf ON h.id = hf.hierarchy_id
+                    WHERE hf.form_id = f.id )) AS hierarchy_ids
             FROM web.form f ORDER BY name ASC;";
         $statementForms = Zend_Db_Table::getDefaultAdapter()->prepare($sqlForms);
         $statementForms->execute();
@@ -19,9 +20,11 @@ class Model_NodeMapper extends Model_EntityMapper {
             $forms[$row['name']]['extendable'] = $row['extendable'];
         }
         Zend_Registry::set('forms', $forms);
-        $sql = "SELECT h.id, h.multiple, h.system, h.extendable, h.directional,
-            e.name, e.description, e.class_id, e.created, e.modified
-            FROM web.hierarchy h JOIN model.entity e ON h.id = e.id;";
+        $sql = "
+            SELECT h.id, h.multiple, h.system, h.extendable, h.directional,
+                e.name, e.description, e.class_id, e.created, e.modified
+            FROM web.hierarchy h
+            JOIN model.entity e ON h.id = e.id;";
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->execute();
         $nodes = [];
@@ -60,7 +63,13 @@ class Model_NodeMapper extends Model_EntityMapper {
 
     private static function addSubs(Model_Node $node, &$nodeIds) {
         $sql = "
-            SELECT e.id, e.name, e.description, e.class_id, e.created, e.modified
+            SELECT e.id, e.name, e.description, e.class_id, e.created, e.modified,
+                (SELECT COUNT(*) FROM model.link l JOIN model.property p ON l.property_id = p.id
+                    WHERE l.range_id = e.id AND p.code = 'P2') AS type_count,
+                (SELECT COUNT(*) FROM model.link_property l JOIN model.property p ON l.property_id = p.id
+                    WHERE l.range_id = e.id AND p.code = 'P2') AS type_property_count,
+                (SELECT COUNT(*) FROM model.link l JOIN model.property p ON l.property_id = p.id
+                    WHERE l.range_id = e.id AND p.code = 'P89') AS place_count
             FROM model.entity e JOIN model.link l ON e.id = l.domain_id
             WHERE
                 l.range_id = :range_id AND
@@ -81,6 +90,7 @@ class Model_NodeMapper extends Model_EntityMapper {
             $sub->propertyToEntity = $node->propertyToEntity;
             $sub->propertyToSuper = $node->propertyToSuper;
             $node->subs[] = $sub;
+            $sub->count = $row['place_count'] + $row['type_count'] + $row['type_property_count'];
             $nodeIds[] = $sub->id;
             self::addSubs($sub, $nodeIds);
         }
