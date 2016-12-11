@@ -21,7 +21,7 @@ class Craws_View_Helper_DisplayTreeSelect extends Zend_View_Helper_Abstract {
                 $html .= '<label class="optional" for="' . $elementName . '">Super</label>';
             } else  {
                 $html .= '<label class="optional" for="' . $elementName . '">' . $displayName . '</label>';
-                $html .= '<span class="tooltip" title="' . $tip . '">i</span>';
+                $html .= ' <span class="tooltip" title="' . $tip . '">i</span>';
             }
             $html .= '</div>';
             $html .= '<div class="tableCell">';
