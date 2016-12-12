@@ -19,11 +19,11 @@ class Craws_View_Helper_PageButtons extends Zend_View_Helper_Abstract {
         }
         $html = '';
         $controller = Zend_Controller_Front::getInstance()->getRequest()->getParam('controller');
-        $previous_id = Model_EntityMapper::get_previous_id($entity, $classCodes);
+        $previous_id = Model_EntityMapper::getPreviousId($entity, $classCodes);
         if ($previous_id) {
             $html .= '<a class="button" href="/admin/' . $controller . '/view/id/' . $previous_id . '"><</a> ';
         }
-        $next_id = Model_EntityMapper::get_next_id($entity, $classCodes);
+        $next_id = Model_EntityMapper::getNextId($entity, $classCodes);
         if ($next_id) {
             $html .= '<a class="button" href="/admin/' . $controller . '/view/id/' . $next_id . '">></a> ';
         }

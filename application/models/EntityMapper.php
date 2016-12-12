@@ -26,24 +26,48 @@ class Model_EntityMapper extends \Model_AbstractMapper {
         LEFT JOIN model.entity d2 ON dl2.range_id = d2.id
     ";
 
-    public static function get_previous_id($entity, $classCodes) {
+    public static function getPreviousId($entity, $classCodes) {
         $sql = "
             SELECT max(e.id) AS id
             FROM model.entity e
             JOIN model.class c ON e.class_id = c.id
             WHERE e.id < :id AND c.code = ANY('{" . implode(',',$classCodes) . "}'::text[]);";
+        if ($entity->class->name == 'Linguistic Object') {
+            $sql = "
+                SELECT max(e.id) AS id
+                FROM model.entity e
+                JOIN model.class c ON e.class_id = c.id
+                JOIN model.link tl ON e.id = tl.domain_id
+                JOIN model.entity t ON
+                    tl.range_id = t.id AND
+                    tl.property_id = (SELECT id FROM model.property WHERE code = 'P2') AND
+                    NOT t.name = ANY ('{Comment,Source Content,Source Original Text,Source Translation,Source Transliteration}'::text[])
+                WHERE e.id < :id AND c.code = ANY('{" . implode(',',$classCodes) . "}'::text[]);";
+        }
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->bindValue(':id', $entity->id);
         $statement->execute();
         return $statement->fetchColumn();
     }
 
-    public static function get_next_id($entity, $classCodes) {
+    public static function getNextId($entity, $classCodes) {
         $sql = "
             SELECT min(e.id) AS id
             FROM model.entity e
             JOIN model.class c ON e.class_id = c.id
             WHERE e.id > :id AND c.code = ANY('{" . implode(',',$classCodes) . "}'::text[]);";
+        if ($entity->class->name == 'Linguistic Object') {
+            $sql = "
+                SELECT min(e.id) AS id
+                FROM model.entity e
+                JOIN model.class c ON e.class_id = c.id
+                JOIN model.link tl ON e.id = tl.domain_id
+                JOIN model.entity t ON
+                    tl.range_id = t.id AND
+                    tl.property_id = (SELECT id FROM model.property WHERE code = 'P2') AND
+                    NOT t.name = ANY ('{Comment,Source Content,Source Original Text,Source Translation,Source Transliteration}'::text[])
+                WHERE e.id > :id AND c.code = ANY('{" . implode(',',$classCodes) . "}'::text[]);";
+        }
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->bindValue(':id', $entity->id);
         $statement->execute();

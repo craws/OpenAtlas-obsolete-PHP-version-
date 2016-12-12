@@ -44,7 +44,7 @@ class Admin_OverviewController extends Zend_Controller_Action {
         $count['place'] = Model_EntityMapper::countByCodes('PhysicalObject');
         $count['reference'] = Model_EntityMapper::countByCodes('Reference');
         $this->view->count = $count;
-        $this->view->latestEntries = Model_EntityMapper::getLatest(5);
+        $this->view->latestEntries = Model_EntityMapper::getLatest(8);
         $bookmarks = [];
         foreach (Zend_Registry::get('user')->bookmarks as $id) {
             $bookmarks[] = Model_EntityMapper::getById($id);

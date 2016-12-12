@@ -12,6 +12,7 @@
     </ul>
     <div id="tabInfo">
         <div class="buttonBar">
+            <?= $this->pageButtons($source) ?>
             <?= $this->link($source, 'update') ?>
             <?= $this->link($source, 'delete') ?>
             <?= $this->bookmarkToggle($source->id) ?>
