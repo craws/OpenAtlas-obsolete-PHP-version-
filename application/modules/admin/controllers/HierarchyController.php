@@ -73,9 +73,6 @@ class Admin_HierarchyController extends Zend_Controller_Action {
                 $nodes[$nodeType][$node->id] = ['node' => $node, 'tree' => self::treeSelect($node)];
             }
         }
-        #usort($nodes, function($a, $b) {
-        #    return strcmp($a->name, $b->name);
-        #});
         $this->view->nodes = $nodes;
     }
 
@@ -147,6 +144,7 @@ class Admin_HierarchyController extends Zend_Controller_Action {
                 'inverse_text' => $inverse,
                 'name' => trim($array[0])
             ]);
+            $this->view->root = ($node->rootId) ? Model_NodeMapper::getById($node->rootId) : NULL;
             $this->view->form = $form;
             $this->view->node = $node;
             return;
@@ -224,6 +222,7 @@ class Admin_HierarchyController extends Zend_Controller_Action {
             }
         }
         $this->view->node = $node;
+        $this->view->root = ($node->rootId) ? Model_NodeMapper::getById($node->rootId) : NULL;
         $this->view->linksEntities = $linksEntitites;
         $this->view->linksProperties = Model_LinkPropertyMapper::getByEntity($node);
     }

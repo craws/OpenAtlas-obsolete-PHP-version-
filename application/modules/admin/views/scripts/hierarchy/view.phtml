@@ -1,7 +1,7 @@
 <? $node = $this->node; ?>
 <? $this->breadcrumb = [$this->link('hierarchy')]; ?>
-<? if ($node->superId): ?>
-    <? $this->breadcrumb[] = $this->link(Model_NodeMapper::getById($node->rootId)); ?>
+<? if ($this->root): ?>
+    <? $this->breadcrumb[] = '<a href="/admin/hierarchy#tab' . $this->root->id . '">' . $this->root->name . '</a>'; ?>
     <? $this->buttonBar = $this->link($node, 'update'); ?>
     <? if (!$this->linksEntities && !$this->linksProperties && empty($node->subs)): ?>
         <? $this->buttonBar .= $this->link($node, 'delete'); ?>

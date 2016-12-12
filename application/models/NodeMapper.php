@@ -74,7 +74,8 @@ class Model_NodeMapper extends Model_EntityMapper {
             WHERE
                 l.range_id = :range_id AND
                 l.property_id = :property_id AND
-                e.name NOT LIKE 'Location of%';";
+                e.name NOT LIKE 'Location of%'
+            ORDER BY e.name;";
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->bindValue(':range_id', $node->id);
         $statement->bindValue(':property_id', Model_PropertyMapper::getByCode($node->propertyToSuper)->id);
