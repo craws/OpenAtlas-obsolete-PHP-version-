@@ -14,33 +14,34 @@ class Craws_View_Helper_Link extends Zend_View_Helper_Abstract {
             }
             return '<a href="/admin/' . $object . '">' . $this->view->ucstring($label) . '</a>';
         }
-        $class = Model_ClassMapper::getByCode($object);
-        $caption = '+ ' . $class->nameTranslated;
-        if (in_array($object, Zend_Registry::get('config')->get('codeEvent')->toArray())) {
+        $caption = '+ ' . Model_ClassMapper::getByCode($object)->nameTranslated;
+        $registry = Zend_Registry::get('config');
+        if (in_array($object, $registry->codeEvent->toArray())) {
             $controller = 'event';
-        } else if (in_array($object, Zend_Registry::get('config')->get('codeActor')->toArray())) {
+        } else if (in_array($object, $registry->codeActor->toArray())) {
             $controller = 'actor';
-        } else if (in_array($object, Zend_Registry::get('config')->get('codeSource')->toArray())) {
+        } else if (in_array($object, $registry->codeSource->toArray())) {
             $controller = 'source';
             $caption = '+ ' . $this->view->ucstring('source');
-        } else if (in_array($object, Zend_Registry::get('config')->get('codePhysicalObject')->toArray())) {
+        } else if (in_array($object, $registry->codePhysicalObject->toArray())) {
             $controller = 'place';
             $caption = '+ ' . $this->view->ucstring('place');
         }
         $relatedParam = '';
         if ($relatedObject) {
-            if (in_array($relatedObject->class->code, Zend_Registry::get('config')->get('codeEvent')->toArray())) {
+            if (in_array($relatedObject->class->code, $registry->codeEvent->toArray())) {
                 $relatedParam = '/origin/event/eventId';
-            } else if (in_array($relatedObject->class->code, Zend_Registry::get('config')->get('codeActor')->toArray())) {
+            } else if (in_array($relatedObject->class->code, $registry->codeActor->toArray())) {
                 $relatedParam = '/origin/actor/actorId';
-            } else if (in_array($relatedObject->class->code, Zend_Registry::get('config')->get('codeSource')->toArray())) {
+            } else if (in_array($relatedObject->class->code, $registry->codeSource->toArray())) {
                 $relatedParam = '/origin/source/sourceId';
-            } else if (in_array($relatedObject->class->code, Zend_Registry::get('config')->get('codePhysicalObject')->toArray())) {
+            } else if (in_array($relatedObject->class->code, $registry->codePhysicalObject->toArray())) {
                 $relatedParam = '/origin/source/objectId';
             }
             $relatedParam .= '/' . $relatedObject->id;
         }
-        $link = '<a href="' . '/admin/' . $controller . '/insert' . '/code/' . $object . $relatedParam . '">' . $caption . '</a>';
+        $link = '<a href="' . '/admin/' . $controller . '/insert' . '/code/' . $object . $relatedParam . '">' .
+            $caption . '</a>';
         return $link;
     }
 
