@@ -19,15 +19,19 @@ class Craws_View_Helper_PageButtons extends Zend_View_Helper_Abstract {
         }
         $html = '';
         $controller = Zend_Controller_Front::getInstance()->getRequest()->getParam('controller');
-        $previous_id = Model_EntityMapper::getPreviousId($entity, $classCodes);
-        if ($previous_id) {
-            $html .= '<a class="button" href="/admin/' . $controller . '/view/id/' . $previous_id . '"><</a> ';
+        $pagerIds = Model_EntityMapper::getPagerIds($entity, $classCodes);
+        if ($pagerIds['first_id'] != $entity->id) {
+            $html .= '
+                <a class="button list-pager" href="/admin/' . $controller . '/view/id/' . $pagerIds['first_id'] . '">|<</a>
+                <a class="button list-pager" href="/admin/' . $controller . '/view/id/' . $pagerIds['previous_id'] . '"><</a> ';
         }
-        $next_id = Model_EntityMapper::getNextId($entity, $classCodes);
-        if ($next_id) {
-            $html .= '<a class="button" href="/admin/' . $controller . '/view/id/' . $next_id . '">></a> ';
+        if ($pagerIds['last_id'] != $entity->id) {
+            $html .= '
+                <a class="button list-pager" href="/admin/' . $controller . '/view/id/' . $pagerIds['next_id'] . '">></a>
+                <a class="button list-pager" href="/admin/' . $controller . '/view/id/' . $pagerIds['last_id'] . '">>|</a> ';
         }
-        return $html;
+        $returnHtml = ($html) ? '<span style="margin-right:1em;">' . $html . '</span>' : '';
+        return $returnHtml;
     }
 
 }

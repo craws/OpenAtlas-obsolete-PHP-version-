@@ -26,52 +26,66 @@ class Model_EntityMapper extends \Model_AbstractMapper {
         LEFT JOIN model.entity d2 ON dl2.range_id = d2.id
     ";
 
-    public static function getPreviousId($entity, $classCodes) {
-        $sql = "
-            SELECT max(e.id) AS id
-            FROM model.entity e
-            JOIN model.class c ON e.class_id = c.id
-            WHERE e.id < :id AND c.code = ANY('{" . implode(',',$classCodes) . "}'::text[]);";
-        if ($entity->class->name == 'Linguistic Object') {
-            $sql = "
-                SELECT max(e.id) AS id
-                FROM model.entity e
-                JOIN model.class c ON e.class_id = c.id
-                JOIN model.link tl ON e.id = tl.domain_id
-                JOIN model.entity t ON
-                    tl.range_id = t.id AND
-                    tl.property_id = (SELECT id FROM model.property WHERE code = 'P2') AND
-                    NOT t.name = ANY ('{Comment,Source Content,Source Original Text,Source Translation,Source Transliteration}'::text[])
-                WHERE e.id < :id AND c.code = ANY('{" . implode(',',$classCodes) . "}'::text[]);";
-        }
-        $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
-        $statement->bindValue(':id', $entity->id);
-        $statement->execute();
-        return $statement->fetchColumn();
-    }
-
-    public static function getNextId($entity, $classCodes) {
-        $sql = "
+    public static function getPagerIds($entity, $classCodes) {
+        $sqlFirst = "
             SELECT min(e.id) AS id
             FROM model.entity e
-            JOIN model.class c ON e.class_id = c.id
-            WHERE e.id > :id AND c.code = ANY('{" . implode(',',$classCodes) . "}'::text[]);";
+            JOIN model.class c ON e.class_id = c.id ";
         if ($entity->class->name == 'Linguistic Object') {
-            $sql = "
-                SELECT min(e.id) AS id
-                FROM model.entity e
-                JOIN model.class c ON e.class_id = c.id
+            $sqlFirst .= "
                 JOIN model.link tl ON e.id = tl.domain_id
                 JOIN model.entity t ON
                     tl.range_id = t.id AND
                     tl.property_id = (SELECT id FROM model.property WHERE code = 'P2') AND
-                    NOT t.name = ANY ('{Comment,Source Content,Source Original Text,Source Translation,Source Transliteration}'::text[])
-                WHERE e.id > :id AND c.code = ANY('{" . implode(',',$classCodes) . "}'::text[]);";
+                    NOT t.name = ANY ('{Comment,Source Content,Source Original Text,Source Translation,Source Transliteration}'::text[])";
         }
-        $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
+        $sqlFirst .= " WHERE c.code = ANY('{" . implode(',',$classCodes) . "}'::text[])";
+        $sqlPrevious = "
+            SELECT max(e.id) AS id
+            FROM model.entity e
+            JOIN model.class c ON e.class_id = c.id ";
+        if ($entity->class->name == 'Linguistic Object') {
+            $sqlPrevious .= "
+                JOIN model.link tl ON e.id = tl.domain_id
+                JOIN model.entity t ON
+                    tl.range_id = t.id AND
+                    tl.property_id = (SELECT id FROM model.property WHERE code = 'P2') AND
+                    NOT t.name = ANY ('{Comment,Source Content,Source Original Text,Source Translation,Source Transliteration}'::text[])";
+        }
+        $sqlPrevious .= " WHERE e.id < :id AND c.code = ANY('{" . implode(',',$classCodes) . "}'::text[])";
+        $sqlNext = "
+            SELECT min(e.id) AS id
+            FROM model.entity e
+            JOIN model.class c ON e.class_id = c.id ";
+        if ($entity->class->name == 'Linguistic Object') {
+            $sqlNext .= "
+                JOIN model.link tl ON e.id = tl.domain_id
+                JOIN model.entity t ON
+                    tl.range_id = t.id AND
+                    tl.property_id = (SELECT id FROM model.property WHERE code = 'P2') AND
+                    NOT t.name = ANY ('{Comment,Source Content,Source Original Text,Source Translation,Source Transliteration}'::text[])";
+        }
+        $sqlNext .= " WHERE e.id > :id AND c.code = ANY('{" . implode(',',$classCodes) . "}'::text[])";
+        $sqlLast = "SELECT max(e.id) AS last_id, ";
+        $sqlLast .= "(" . $sqlNext . ") as next_id, ";
+        $sqlLast .= "(" . $sqlFirst . ") as first_id, ";
+        $sqlLast .= "(" . $sqlPrevious . ") as previous_id ";
+        $sqlLast .= "
+            FROM model.entity e
+            JOIN model.class c ON e.class_id = c.id ";
+        if ($entity->class->name == 'Linguistic Object') {
+            $sqlLast .= "
+                JOIN model.link tl ON e.id = tl.domain_id
+                JOIN model.entity t ON
+                    tl.range_id = t.id AND
+                    tl.property_id = (SELECT id FROM model.property WHERE code = 'P2') AND
+                    NOT t.name = ANY ('{Comment,Source Content,Source Original Text,Source Translation,Source Transliteration}'::text[])";
+        }
+        $sqlLast .= " WHERE c.code = ANY('{" . implode(',',$classCodes) . "}'::text[]);";
+        $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sqlLast);
         $statement->bindValue(':id', $entity->id);
         $statement->execute();
-        return $statement->fetchColumn();
+        return $statement->fetch();
     }
 
     public static function search($term, $codes, $description = false, $own = false) {

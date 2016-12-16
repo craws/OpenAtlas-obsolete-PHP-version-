@@ -16,6 +16,10 @@ html, body, input, select, textarea {
     opacity: 1;
 }
 
+a.button.list-pager {
+    margin-right: 0;
+}
+
 #description {
     width: 33em;
     height: 8em;
