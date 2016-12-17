@@ -1,7 +1,7 @@
 <?
 
 $this->breadcrumb = [$this->ucstring('user')];
-$this->buttonBar = '<a href="/admin/user/insert">' . $this->ucstring('new') . '</a>';
+$this->buttonBar = '<a href="/admin/user/insert">+</a>';
 if (Model_SettingsMapper::getSetting('mail')) {
     $this->buttonBar .= ' <a href="/admin/user/newsletter">' . $this->ucstring('newsletter') . '</a>';
 }
