@@ -701,6 +701,11 @@ div.pager div {
     float: left;
 }
 
+div.pager a {
+    padding: 0.1em 0 0 0;
+    margin-right: 0.5em;
+}
+
 a.add {
     border: none;
     font-size: 0.8em;

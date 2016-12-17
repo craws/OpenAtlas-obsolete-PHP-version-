@@ -22,15 +22,24 @@ class Craws_View_Helper_PageButtons extends Zend_View_Helper_Abstract {
         $pagerIds = Model_EntityMapper::getPagerIds($entity, $classCodes);
         if ($pagerIds['first_id'] != $entity->id) {
             $html .= '
-                <a class="button list-pager" href="/admin/' . $controller . '/view/id/' . $pagerIds['first_id'] . '">|<</a>
-                <a class="button list-pager" href="/admin/' . $controller . '/view/id/' . $pagerIds['previous_id'] . '"><</a> ';
+                <a href="/admin/' . $controller . '/view/id/' . $pagerIds['first_id'] . '">
+                    <div class="navigation first disabled" tabindex="0" aria-disabled="true"></div>
+                </a>
+                <a href="/admin/' . $controller . '/view/id/' . $pagerIds['previous_id'] . '">
+                    <div class="navigation prev disabled" tabindex="0" aria-disabled="true"></div>
+                </a>';
         }
         if ($pagerIds['last_id'] != $entity->id) {
             $html .= '
-                <a class="button list-pager" href="/admin/' . $controller . '/view/id/' . $pagerIds['next_id'] . '">></a>
-                <a class="button list-pager" href="/admin/' . $controller . '/view/id/' . $pagerIds['last_id'] . '">>|</a> ';
+                <a href="/admin/' . $controller . '/view/id/' . $pagerIds['next_id'] . '">
+                    <div class="navigation next" tabindex="0" aria-disabled="false"></div>
+                </a>
+                <a href="/admin/' . $controller . '/view/id/' . $pagerIds['last_id'] . '">
+                    <div class="navigation last" tabindex="0" aria-disabled="false"></div>
+                </a> ';
         }
-        $returnHtml = ($html) ? '<span style="margin-right:1em;">' . $html . '</span>' : '';
+        $returnHtml = ($html) ? '<div class="pager" style="float:left;margin-right:0.5em;margin-top:0.1em;">' . $html .
+            '</div>' : '';
         return $returnHtml;
     }
 
