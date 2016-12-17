@@ -26,7 +26,7 @@ class Craws_View_Helper_DisplayTreeSelect extends Zend_View_Helper_Abstract {
             $html .= '</div>';
             $html .= '<div class="tableCell">';
             $html .= $form->$elementId->renderViewHelper();
-            if ($hierarchy->multiple) {
+            if ($hierarchy->multiple && !$forType) {
                 $html .= '<span id="' . $hierarchy->nameClean . 'Button" class="button">' . $this->view->ucstring('change') . '</span><br/>';
                 $selectionElement = $hierarchy->nameClean . 'Selection';
                 $html .= '<div style="text-align:left;" id="' . $hierarchy->nameClean . 'Selection">' . $form->$selectionElement->renderViewHelper() . '</div>';

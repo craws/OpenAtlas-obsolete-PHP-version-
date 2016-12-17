@@ -130,7 +130,7 @@ class Admin_Form_Base extends Craws\Form\Table {
                 }
             }
             $this->populate([$hierarchy->nameClean . 'Id' => implode(',', $nodeIds)]);
-            if ($hierarchy->multiple) {
+            if ($hierarchy->multiple && !$forStructure) {
                 $selection = new Admin_Form_Element_Note($hierarchy->nameClean . 'Selection',
                     ['value' => implode('<br/>', $nodeNames)]);
                 $this->addElement($selection);
