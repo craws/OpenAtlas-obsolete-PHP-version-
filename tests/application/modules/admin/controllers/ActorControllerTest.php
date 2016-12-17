@@ -6,7 +6,7 @@ class Admin_ActorControllerTest extends ControllerTestCase {
 
     private $formValues = [
         'name' => 'Hector',
-        'description' => 'Hector',
+        'description' => 'Hector with a long description to test truncate function in actor over view for real.',
         'beginYear' => '23',
         'beginMonth' => '12',
         'beginDay' => '23',
@@ -26,10 +26,6 @@ class Admin_ActorControllerTest extends ControllerTestCase {
         $this->formValues['appearsFirstId'] = $this->objectId;
         $this->formValues['appearsLastId'] = $this->objectId;
         $this->formValues['genderId'] = Model_NodeMapper::getByNodeCategoryName('Gender', 'Female')->id;
-    }
-
-    public function testIndex() {
-        $this->dispatch('admin/actor');
     }
 
     public function testCrudActor() {
@@ -52,6 +48,8 @@ class Admin_ActorControllerTest extends ControllerTestCase {
         $actors = Model_EntityMapper::getByCodes('Person');
         $actorId = $actors[0]->id;
         $this->dispatch('admin/actor/view/id/' . $actorId);
+        $this->resetRequest()->resetResponse();
+        $this->dispatch('admin/actor');
         $this->resetRequest()->resetResponse();
         $this->dispatch('admin/actor/view/id/' . $this->actorId); // for biblio link
         $this->resetRequest()->resetResponse();

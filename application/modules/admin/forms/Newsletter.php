@@ -4,6 +4,8 @@
 
 class Admin_Form_Newsletter extends Craws\Form\Table {
 
+    // @codeCoverageIgnoreStart
+    // Ignore coverage because no mail in testing
     public function init() {
         $this->setAction($this->getView()->url());
         $this->setName('newsletterForm')->setMethod('post');
@@ -24,5 +26,6 @@ class Admin_Form_Newsletter extends Craws\Form\Table {
         $this->addElement('button', 'formSubmit', ['label' => $this->getView()->ucstring('send'), 'type' => 'submit']);
         $this->setElementFilters(['StringTrim']);
     }
+    // @codeCoverageIgnoreEnd
 
 }
