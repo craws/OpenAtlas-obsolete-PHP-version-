@@ -30,7 +30,7 @@ class Admin_HierarchyController extends Zend_Controller_Action {
     private function walkTree($node) {
         $count = ($node->class->code == 'E53') ? $node->count - count($node->subs) : $node->count;
         $text = "{href: '/admin/hierarchy/view/id/" . $node->id . "',";
-        $text .= "text: '" . $node->name . " (" . $count . ")', 'id':'" . $node->id . "'";
+        $text .= "text: '" . str_replace("'", "\'", $node->name) . " (" . $count . ")', 'id':'" . $node->id . "'";
         if ($node->subs) {
             $text .= ",'children' : [";
             foreach ($node->subs as $sub) {
