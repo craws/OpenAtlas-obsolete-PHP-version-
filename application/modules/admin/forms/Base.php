@@ -86,10 +86,10 @@ class Admin_Form_Base extends Craws\Form\Table {
 
     /* add hierarchies form elements and return used hierarchies */
 
-    public function addHierarchies($formName, $entity = null, $forStructure = false) {
+    public function addHierarchies($formName, $entity = null) {
         $forms = Zend_Registry::get('forms');
         $hierarchies = [];
-        if ($forStructure) {
+        if ($formName == 'super') {
             $rootId = ($entity->rootId) ? $entity->rootId : $entity->id;
             $hierarchies[] = Model_NodeMapper::getById($rootId);
         } else {
@@ -110,7 +110,7 @@ class Admin_Form_Base extends Craws\Form\Table {
                 'placeholder' => $this->getView()->ucstring('select'),
                 'attribs' => ['readonly' => 'true'],
             ]);
-            if ($hierarchy->directional && !$forStructure) {
+            if ($hierarchy->directional && $formName != 'super') {
                 $this->addElement('checkbox', 'inverse', [
                     'label' => $this->getView()->ucstring('inverse'),
                     'checkedValue' => 1,
@@ -119,18 +119,20 @@ class Admin_Form_Base extends Craws\Form\Table {
                 ]);
             }
             $treeVariable = $hierarchy->nameClean . 'TreeData';
-            $nodes = ($entity) ? Model_NodeMapper::getNodesByEntity($hierarchy->name, $entity) : [];
-            $nodes = ($forStructure) ? [$entity] : $nodes;
+            $selectedNodes = ($entity) ? Model_NodeMapper::getNodesByEntity($hierarchy->name, $entity) : [];
+            if ($formName == 'super' && $entity->superId) {
+                $selectedNodes =  [Model_NodeMapper::getById($entity->superId)];
+            }
             $nodeIds = [];
             $nodeNames = [];
-            foreach ($nodes as $node) {
+            foreach ($selectedNodes as $node) {
                 $nodeIds[] = $node->id;
                 if ($node->rootId) {
                     $nodeNames[] = $node->name;
                 }
             }
             $this->populate([$hierarchy->nameClean . 'Id' => implode(',', $nodeIds)]);
-            if ($hierarchy->multiple && !$forStructure) {
+            if ($hierarchy->multiple && $formName != 'super') {
                 $selection = new Admin_Form_Element_Note($hierarchy->nameClean . 'Selection',
                     ['value' => implode('<br/>', $nodeNames)]);
                 $this->addElement($selection);
@@ -138,7 +140,8 @@ class Admin_Form_Base extends Craws\Form\Table {
                 $selection = ($nodeNames) ? $nodeNames[0] : '';
                 $this->populate([$hierarchy->nameClean . 'Button' => $selection]);
             }
-            $this->getView()->$treeVariable = Model_NodeMapper::getTreeData($hierarchy->name, $nodes);
+            $hierarchyEntityId = ($formName == 'super') ? $entity->id : null;
+            $this->getView()->$treeVariable = Model_NodeMapper::getTreeData($hierarchy->name, $selectedNodes, $hierarchyEntityId);
         }
         $this->getView()->hierarchies = $hierarchies;
         return $hierarchies;

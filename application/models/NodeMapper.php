@@ -205,7 +205,7 @@ class Model_NodeMapper extends Model_EntityMapper {
         return $returnCandidates;
     }
 
-    public static function getTreeData($rootName, $selection = false) {
+    public static function getTreeData($rootName, $selection = false, $hierarchyEntityId = null) {
         if ($selection && !is_array($selection)) {
             $selection = [$selection];
         }
@@ -216,11 +216,11 @@ class Model_NodeMapper extends Model_EntityMapper {
             }
         }
         $item = self::getHierarchyByName($rootName);
-        $data = "{'data':[" . self::walkTree($item, $selectedIds) . "]}";
+        $data = "{'data':[" . self::walkTree($item, $selectedIds, $hierarchyEntityId) . "]}";
         return $data;
     }
 
-    private static function walkTree(Model_Node $item, $selectedIds) {
+    private static function walkTree(Model_Node $item, $selectedIds, $hierarchyEntityId) {
         $text = '';
         if ($item->rootId) { // only if not root item
             $text = "{'text':'" . str_replace("'", "\'", $item->name) . "', 'id':'" . $item->id . "',";
@@ -230,7 +230,10 @@ class Model_NodeMapper extends Model_EntityMapper {
             if ($item->subs) {
                 $text .= "'children' : [";
                 foreach ($item->subs as $sub) {
-                    $text .= self::walkTree($sub, $selectedIds);
+                    if ($hierarchyEntityId == $sub->id) {
+                        continue; // don't offer self and subs as super in hierarchy update
+                    }
+                    $text .= self::walkTree($sub, $selectedIds, $hierarchyEntityId);
                 }
                 $text .= "]";
             }
@@ -239,7 +242,10 @@ class Model_NodeMapper extends Model_EntityMapper {
         }
         if ($item->subs) {
             foreach ($item->subs as $sub) {
-                $text .= self::walkTree($sub, $selectedIds);
+                if ($hierarchyEntityId == $sub->id) {
+                    continue; // don't offer self and subs as super in hierarchy update
+                }
+                $text .= self::walkTree($sub, $selectedIds, $hierarchyEntityId);
             }
         }
         return $text;

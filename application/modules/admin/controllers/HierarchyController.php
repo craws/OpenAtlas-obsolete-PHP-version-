@@ -149,7 +149,7 @@ class Admin_HierarchyController extends Zend_Controller_Action {
             $this->view->node = $node;
             return;
         }
-        $inverse = trim(str_replace(['(', ')'], '', $form->getValue('inverse')));
+        $inverse = trim(str_replace(['(', ')'], '', $form->getValue('inverse_text')));
         $node->name = str_replace(['(', ')'], '', $form->getValue('name'));
         $node->name .= ($inverse) ? ' (' . $inverse . ')' : '';
         $node->description = $this->_getParam('description');

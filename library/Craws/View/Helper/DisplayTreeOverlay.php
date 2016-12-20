@@ -4,7 +4,7 @@
 
 class Craws_View_Helper_DisplayTreeOverlay extends Zend_View_Helper_Abstract {
 
-    public function displayTreeOverlay($hierarchy, $treeData, $forType = false) {
+    public function displayTreeOverlay($hierarchy, $treeData, $forHierarchy = false) {
         if (!is_a($hierarchy, 'Model_Node')) {
             $hierarchy = Model_NodeMapper::getHierarchyByName($hierarchy);
         }
@@ -15,7 +15,7 @@ class Craws_View_Helper_DisplayTreeOverlay extends Zend_View_Helper_Abstract {
                     </div>
                 </div>';
         $html .= '<script type="text/javascript">$(document).ready(function () {';
-        if ($hierarchy->multiple && !$forType) {
+        if ($hierarchy->multiple && !$forHierarchy) {
             $html .= 'createTreeOverlay("' . $hierarchy->nameClean . '", "' . $hierarchy->name . '", true);
                 $("#' . $hierarchy->nameClean . 'Tree").jstree({
                     "search": {"case_insensitive": true, "show_only_matches": true},

@@ -4,7 +4,7 @@
 
 class Craws_View_Helper_DisplayTreeSelect extends Zend_View_Helper_Abstract {
 
-    public function displayTreeSelect(array $hierarchies, Zend_Form $form, $forType = False) {
+    public function displayTreeSelect(array $hierarchies, Zend_Form $form, $forHierarchy = false) {
         usort($hierarchies, function($a, $b) {
             return strcmp($a->name, $b->name);
         });
@@ -17,7 +17,7 @@ class Craws_View_Helper_DisplayTreeSelect extends Zend_View_Helper_Abstract {
             $tip = $this->view->ucstring('tip_hierarchy');
             $tip .= ($hierarchy->description) ? '&#013;' . str_replace('"', '', $hierarchy->description) : '';
             $html .= '<div class="tableRow' . $class . '"><div id="' . $elementName . '-label">';
-            if ($forType) {
+            if ($forHierarchy) {
                 $html .= '<label class="optional" for="' . $elementName . '">Super</label>';
             } else  {
                 $html .= '<label class="optional" for="' . $elementName . '">' . $displayName . '</label>';
@@ -26,7 +26,7 @@ class Craws_View_Helper_DisplayTreeSelect extends Zend_View_Helper_Abstract {
             $html .= '</div>';
             $html .= '<div class="tableCell">';
             $html .= $form->$elementId->renderViewHelper();
-            if ($hierarchy->multiple && !$forType) {
+            if ($hierarchy->multiple && !$forHierarchy) {
                 $html .= '<span id="' . $hierarchy->nameClean . 'Button" class="button">' . $this->view->ucstring('change') . '</span><br/>';
                 $selectionElement = $hierarchy->nameClean . 'Selection';
                 $html .= '<div style="text-align:left;" id="' . $hierarchy->nameClean . 'Selection">' . $form->$selectionElement->renderViewHelper() . '</div>';
