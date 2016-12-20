@@ -35,6 +35,7 @@ function createOverlay(name, title, multi) {
             }
         });
         $("#" + name + "Table").trigger('sorton', [[[0, 0]]]);
+        $("#" + name + "TableSearch").focus();
     });
 }
 

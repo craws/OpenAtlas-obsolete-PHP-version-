@@ -46,7 +46,7 @@ class Admin_InvolvementControllerTest extends ControllerTestCase {
         $this->resetRequest()->resetResponse();
         $this->request->setMethod('POST')->setPost($formValues);
         $actor = Model_EntityMapper::getById($this->actorId);
-        $involvements = Model_LinkMapper::getLinks($actor, ['P11'], true);
+        $involvements = Model_LinkMapper::getLinks($actor, 'P11', true);
         $this->dispatch('admin/involvement/update/origin/actor/id/' . $involvements[0]->id);
     }
 

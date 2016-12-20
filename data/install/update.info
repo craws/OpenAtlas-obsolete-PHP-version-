@@ -3,6 +3,49 @@ INFO
 
 Watch out for database role in SQLs and change "openatlas_medcon" if needed.
 
+2.2.0 to 2.3.0 Upgrade
+======================
+
+Mail config is now handled in backend and saved in database instead in application.ini
+Before upgrading make sure to take note of mail settings in application.ini and password.ini
+
+1) Merge and add update database
+
+BEGIN;
+
+ALTER TABLE web.settings DROP COLUMN "group";
+INSERT INTO web.settings (name, value) VALUES
+    ('mail_transport_username', ''),
+    ('mail_transport_password', ''),
+    ('mail_transport_ssl', ''),
+    ('mail_transport_type', ''),
+    ('mail_transport_auth', ''),
+    ('mail_transport_port', ''),
+    ('mail_transport_host', ''),
+    ('mail_from_email', ''),
+    ('mail_from_name', ''),
+    ('mail_recipients_login', ''),
+    ('mail_recipients_feedback', '')
+;
+UPDATE web.settings SET name = 'default_language' WHERE name LIKE 'language';
+DELETE FROM web.settings WHERE name LIKE 'notify_login';
+
+ALTER TABLE web.user ADD COLUMN unsubscribe_code text;
+ALTER TABLE ONLY web.user ADD CONSTRAINT unsubscribe_code_key UNIQUE (unsubscribe_code);
+
+COMMIT;
+
+
+2) Update mail configuration with browser as admin in admin->settings->mail
+
+3) Test new mail config
+
+4) Delete Mail related configuration in application.ini and password.ini
+
+
+
+
+
 2.1.0 to 2.2.0 Upgrade
 ======================
 

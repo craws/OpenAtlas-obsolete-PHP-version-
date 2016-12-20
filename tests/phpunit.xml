@@ -5,6 +5,7 @@
     convertNoticesToExceptions="true"
     convertWarningsToExceptions="true"
     strict="true"
+    stopOnFailure="true"
 >
     <testsuite name="Test Suite">
         <directory>./</directory>

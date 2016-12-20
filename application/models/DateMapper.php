@@ -7,8 +7,8 @@ class Model_DateMapper {
     public static function getDates(Model_Entity $entity) {
         $dates = [];
         foreach (['OA1', 'OA2', 'OA3', 'OA4', 'OA5', 'OA6'] as $code) {
-            foreach (Model_LinkMapper::getLinkedEntities($entity, $code) as $date) {
-                $type = Model_LinkMapper::getLinkedEntity($date, 'P2');
+            foreach ($entity->getLinkedEntities($code) as $date) {
+                $type = $date->types['Date value type'][0];
                 $dates[$code][$type->name] = $date;
             }
         }
@@ -19,29 +19,11 @@ class Model_DateMapper {
         $dates = [];
         foreach (['OA5', 'OA6'] as $code) {
             foreach (Model_LinkPropertyMapper::getLinkedEntities($link, $code) as $date) {
-                $dateType = Model_LinkMapper::getLinkedEntity($date, 'P2');
-                $dates[$code][$dateType->name] = $date;
+                $type = $date->types['Date value type'][0];
+                $dates[$code][$type->name] = $date;
             }
         }
         return $dates;
-    }
-
-    public static function getLinkDateRange(Model_Link $link) {
-        $sql = "
-            SELECT
-            (SELECT min(date_part('year', e.value_timestamp)) FROM model.entity e
-            JOIN model.link_property lp ON e.id = lp.range_id
-            JOIN model.link l ON lp.domain_id = l.id
-            WHERE l.id = :link_id) AS first,
-            max(date_part('year', e.value_timestamp)) AS last FROM model.entity e
-            JOIN model.link_property lp ON e.id = lp.range_id
-            JOIN model.link l ON lp.domain_id = l.id
-            WHERE l.id = :link_id;";
-        $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
-        $statement->bindValue(':link_id', $link->id);
-        $statement->execute();
-        $row = $statement->fetch();
-        return ['first' => $row['first'], 'last' => $row['last']];
     }
 
     public static function saveDates(Model_Entity $entity, Zend_Form $form) {

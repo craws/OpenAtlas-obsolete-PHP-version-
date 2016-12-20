@@ -21,17 +21,11 @@
             $table = ['id' => 'reference', 'pager' => true, 'filter' => true];
             $table['header'] = [_('name'), _('class'), _('type')];
             foreach ($this->references as $reference) {
-                $type = Model_LinkMapper::getLinkedEntity($reference, 'P2');
-                $className = $type->name;
-                $typeName = '';
-                if ($type->rootId) {
-                    $className = Model_NodeMapper::getById($type->rootId)->name;
-                    $typeName = $type->name;
-                }
+                $type = reset($reference->types)[0]; // get first and only type
                 $table['data'][] = [
                     '<a onclick="selectFromTable(this, \'reference\', ' . $reference->id . ')">' . $reference->name . '</a>',
-                    $className,
-                    $typeName
+                    ($type->rootId) ? Model_NodeMapper::getById($type->rootId)->name : $type->name,
+                    ($type->rootId) ? $type->name : '',
                 ];
             }
             $this->table = $table;

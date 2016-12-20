@@ -5,8 +5,8 @@
 class OfflineController extends Zend_Controller_Action {
 
     public function indexAction() {
-        $offline = Model_SettingsMapper::getSetting('general', 'offline');
-        $maintenance = Model_SettingsMapper::getSetting('general', 'maintenance');
+        $offline = Model_SettingsMapper::getSetting('offline');
+        $maintenance = Model_SettingsMapper::getSetting('maintenance');
         if (!$offline && !$maintenance) {
             return $this->_helper->redirector->gotoUrl('/');
         }

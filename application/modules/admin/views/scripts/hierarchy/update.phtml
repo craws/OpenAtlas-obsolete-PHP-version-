@@ -1,2 +1,7 @@
-<? $this->breadcrumb = [$this->link('hierarchy'), $this->link($this->type), $this->ucstring('edit')]; ?>
-<?= $this->form ?>
+<? $this->breadcrumb = [$this->link('hierarchy')]; ?>
+<? if ($this->root): ?>
+    <? $this->breadcrumb[] = '<a href="/admin/hierarchy#tab' . $this->root->id . '">' . $this->root->name . '</a>'; ?>
+<? endif ?>
+<? $this->breadcrumb[] = $this->link($this->node); ?>
+<? $this->breadcrumb[] = $this->ucstring('edit'); ?>
+<?= $this->render('hierarchy/form.phtml'); ?>

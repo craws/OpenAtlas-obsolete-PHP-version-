@@ -14,5 +14,6 @@ class Model_Node extends Model_Entity {
     public $superId = null;
     public $system = null;
     public $subs = [];
+    public $count = 0;
 
 }

@@ -1,36 +1,33 @@
 <? $this->buttonBar = '<a href="/admin/settings/update">' . $this->ucstring('edit') . '</a>'; ?>
 <? $this->breadcrumb = [$this->ucstring('settings')]; ?>
-<div class="dataTable">
-    <? foreach ($this->settings as $group => $data) { ?>
-        <div class="groupLabel"><?= $this->ucstring($group) ?></div>
-        <?
-        foreach ($data as $name => $value) {
-            $elementName = $group . "__" . $name;
-            if ($elementName == 'general__language') {
-                $language = Model_LanguageMapper::getById($value);
-                $value = $language->name;
-            } else if ($group == 'module' ||
-                in_array($elementName, ['general__maintenance', 'general__offline', 'mail__notify_login'])) {
-                $array = [
-                    0 => '<span class="inactive">' . $this->ucstring('off') . '</span>',
-                    1 => '<span class="active">' . $this->ucstring('on') . '</span>'
-                ];
-                $value = $array[$value];
-            } else if ($name == 'log_level') {
-                $array = [
-                    0 => 'emergency',
-                    1 => 'alert',
-                    2 => 'critical',
-                    3 => 'error',
-                    4 => 'warn',
-                    5 => 'notice',
-                    6 => 'info',
-                    7 => 'debug'
-                ];
-                $value = $this->ucstring($array[$value]);
-            }
-            echo '<div><div>' . str_replace("_", " ", $this->ucstring($name)) . '</div><div>' . $value . '</div></div>';
-        }
-    }
-    ?>
+<div id="tabs" class="tabsContainer">
+    <ul>
+        <? foreach ($this->groups as $name => $items): ?>
+            <li><a href="#tab<?= ucfirst($name) ?>"><?= $this->ucstring($name) ?></a></li>
+        <? endforeach ?>
+    </ul>
+    <? foreach ($this->groups as $group => $items): ?>
+        <div id="tab<?= ucfirst($group) ?>">
+            <div class="dataTable">
+                <? foreach ($items as $name => $value): ?>
+                    <? $style = (0 === strpos($name, 'mail_') && !$this->settings['mail']) ? 'faded' : ''; ?>
+                    <div class="<?= $style ?>"><div><?= $this->ucstring($name) ?></div><div><?= $value ?></div></div>
+                <? endforeach ?>
+            </div>
+            <? if ($this->settings['mail'] && $group == 'mail'): ?>
+                <form id="testMailForm" name="testMailForm" style="margin-top:1em;" method="post"
+                      action="/admin/settings#tabMail">
+                    <input id="testMailReceiver" name="testMailReceiver"
+                           value="<?= $this->settings['mail_from_email'] ?>" class="required"><br/>
+                    <button id="formSubmit" name="formSubmit" style="font-size:0.9em;"
+                        type="submit"><?= $this->translate('send_test_mail') ?></button>
+                </form>
+            <? endif ?>
+        </div>
+    <? endforeach ?>
 </div>
+<script type="text/javascript">
+    $(function () {
+        $("#tabs").tabs();
+    });
+</script>

@@ -19,9 +19,11 @@ add "CREATE EXTENSION postgis;" and uncomment after installation for unittests
 ### CSV Export
 
     COPY model.class TO '/tmp/model_class.csv' DELIMITER ',' CSV HEADER FORCE QUOTE *;
+    COPY model.class_inheritance TO '/tmp/model_class_inheritance.csv' DELIMITER ',' CSV HEADER FORCE QUOTE *;
     COPY model.entity TO '/tmp/model_entity.csv' DELIMITER ',' CSV HEADER FORCE QUOTE *;
     COPY model.link TO '/tmp/model_link.csv' DELIMITER ',' CSV HEADER FORCE QUOTE *;
     COPY model.link_property TO '/tmp/model_link_property.csv' DELIMITER ',' CSV HEADER FORCE QUOTE *;
     COPY model.property TO '/tmp/model_property.csv' DELIMITER ',' CSV HEADER FORCE QUOTE *;
-    COPY model.property TO '/tmp/model_property.csv' DELIMITER ',' CSV HEADER FORCE QUOTE *;
-    COPY gis.centerpoint TO '/tmp/gis_centerpoint.csv' DELIMITER ',' CSV HEADER FORCE QUOTE *;
+    COPY model.property_inheritance TO '/tmp/model_property_inheritance.csv' DELIMITER ',' CSV HEADER FORCE QUOTE *;
+    COPY gis.point TO '/tmp/gis_point.csv' DELIMITER ',' CSV HEADER FORCE QUOTE *;
+    COPY gis.polygon TO '/tmp/gis_polygon.csv' DELIMITER ',' CSV HEADER FORCE QUOTE *;

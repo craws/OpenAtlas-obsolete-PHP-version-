@@ -7,22 +7,22 @@ class Model_PropertyMapper extends Model_AbstractMapper {
     public static function getAll() {
         $sql = "SELECT p.id, p.code, p.domain_class_id, p.range_class_id, p.name, p.name_inverse, p.created, p.modified,
                 COALESCE (
-                  (SELECT text FROM model.i18n WHERE table_name LIKE 'property' AND table_field LIKE 'name' AND
-                    table_id = p.id AND language_code LIKE :language_code),
-                  (SELECT text FROM model.i18n WHERE table_name LIKE 'property' AND table_field LIKE 'name' AND
-                    table_id = p.id AND language_code LIKE :language_default_code)
+                  (SELECT text FROM model.i18n WHERE table_name = 'property' AND table_field = 'name' AND
+                    table_id = p.id AND language_code = :language_code),
+                  (SELECT text FROM model.i18n WHERE table_name = 'property' AND table_field = 'name' AND
+                    table_id = p.id AND language_code = :language_default_code)
                 ) as name_i18n,
                 COALESCE (
-                  (SELECT text FROM model.i18n WHERE table_name LIKE 'property' AND table_field LIKE 'name_inverse' AND
-                    table_id = p.id AND language_code LIKE :language_code),
-                  (SELECT text FROM model.i18n WHERE table_name LIKE 'property' AND table_field LIKE 'name_inverse' AND
-                    table_id = p.id AND language_code LIKE :language_default_code)
+                  (SELECT text FROM model.i18n WHERE table_name = 'property' AND table_field = 'name_inverse' AND
+                    table_id = p.id AND language_code = :language_code),
+                  (SELECT text FROM model.i18n WHERE table_name = 'property' AND table_field = 'name_inverse' AND
+                    table_id = p.id AND language_code = :language_default_code)
                 ) as name_inverse_i18n,
                 COALESCE (
-                  (SELECT text FROM model.i18n WHERE table_name LIKE 'property' AND table_field LIKE 'comment' AND
-                    table_id = p.id AND language_code LIKE :language_code),
-                  (SELECT text FROM model.i18n WHERE table_name LIKE 'property' AND table_field LIKE 'comment' AND
-                    table_id = p.id AND language_code LIKE :language_default_code)
+                  (SELECT text FROM model.i18n WHERE table_name = 'property' AND table_field = 'comment' AND
+                    table_id = p.id AND language_code = :language_code),
+                  (SELECT text FROM model.i18n WHERE table_name = 'property' AND table_field = 'comment' AND
+                    table_id = p.id AND language_code = :language_default_code)
                 ) as comment_i18n
                 FROM model.property p";
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);

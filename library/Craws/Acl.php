@@ -8,8 +8,6 @@ class Acl extends \Zend_Acl {
 
     public function __construct() {
 
-        $moduleSettings = \Zend_Registry::get('moduleSettings');
-
         $this->addRole(new \Zend_Acl_Role('guest'));
         $this->addRole(new \Zend_Acl_Role('readonly'), ('guest'));
         $this->addRole(new \Zend_Acl_Role('editor'), 'readonly');
@@ -112,6 +110,7 @@ class Acl extends \Zend_Acl {
         $this->add(new \Zend_Acl_Resource('admin:user:delete'));
         $this->add(new \Zend_Acl_Resource('admin:user:index'));
         $this->add(new \Zend_Acl_Resource('admin:user:insert'));
+        $this->add(new \Zend_Acl_Resource('admin:user:newsletter'));
         $this->add(new \Zend_Acl_Resource('admin:user:update'));
         $this->add(new \Zend_Acl_Resource('admin:user:view'));
 
@@ -128,6 +127,7 @@ class Acl extends \Zend_Acl {
         $this->add(new \Zend_Acl_Resource('default:offline:index'));
         $this->add(new \Zend_Acl_Resource('default:property:index'));
         $this->add(new \Zend_Acl_Resource('default:property:view'));
+        $this->add(new \Zend_Acl_Resource('default:unsubscribe:index'));
 
 
         /* guest (not logged in) */
@@ -142,6 +142,7 @@ class Acl extends \Zend_Acl {
         $this->allow('guest', 'default:index:index');
         $this->allow('guest', 'default:model:index');
         $this->allow('guest', 'default:offline:index');
+        $this->allow('guest', 'default:unsubscribe:index');
 
         $this->allow('guest', 'admin:index:index');
         $this->allow('guest', 'admin:index:logout');
@@ -234,6 +235,7 @@ class Acl extends \Zend_Acl {
         $this->allow('manager', 'admin:user:delete');
         $this->allow('manager', 'admin:user:index');
         $this->allow('manager', 'admin:user:insert');
+        $this->allow('manager', 'admin:user:newsletter');
         $this->allow('manager', 'admin:user:update');
         $this->allow('manager', 'admin:user:view');
 
@@ -250,7 +252,7 @@ class Acl extends \Zend_Acl {
 
         // @codeCoverageIgnoreStart
         // Ignore coverage because no mail in testing
-        if ($moduleSettings['mail']) {
+        if (\Model_SettingsMapper::getSetting('mail')) {
             $this->add(new \Zend_Acl_Resource('admin:index:reset-password'));
             $this->add(new \Zend_Acl_Resource('admin:index:reset-confirm'));
             $this->allow('guest', 'admin:index:reset-password');

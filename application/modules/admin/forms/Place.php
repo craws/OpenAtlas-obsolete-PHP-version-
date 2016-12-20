@@ -35,7 +35,7 @@ class Admin_Form_Place extends Admin_Form_Base {
 
     public function prepareUpdate(Model_Entity $object) {
         $aliasIndex = 0;
-        $aliasElements = Model_LinkMapper::getLinkedEntities($object, 'P1');
+        $aliasElements = $object->getLinkedEntities('P1');
         if ($aliasElements) {
             foreach ($aliasElements as $alias) {
                 $element = $this->createElement('text', 'alias' . $aliasIndex, ['belongsTo' => 'alias']);

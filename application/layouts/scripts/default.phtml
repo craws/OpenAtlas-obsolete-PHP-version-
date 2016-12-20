@@ -28,14 +28,14 @@
         <div id="adminHead">
             <div id="adminLogo"><a href="/"></a></div>
             <div id="websiteName">
+                <?= Model_SettingsMapper::getSetting('sitename') ?>
                 <? if (strpos(filter_input(INPUT_SERVER, 'HTTP_HOST'), 'local') !== false): ?>
                     <span class="info">local</span>
                 <? endif ?>
-                <? if (Model_SettingsMapper::getSetting("general", "offline") &&
-                    in_array($user->group, ['admin', 'editor'])): ?>
+                <? if (Model_SettingsMapper::getSetting('offline') && in_array($user->group, ['admin', 'editor'])): ?>
                     <span class="error">Offline</span>
                 <? endif ?>
-                <? if (Model_SettingsMapper::getSetting("general", "maintenance") && $user->group == 'admin'): ?>
+                <? if (Model_SettingsMapper::getSetting('maintenance') && $user->group == 'admin'): ?>
                     <span class="error">Maintenance</span>
                 <? endif ?>
                 <br/>

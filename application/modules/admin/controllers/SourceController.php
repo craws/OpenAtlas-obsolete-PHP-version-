@@ -13,7 +13,7 @@ class Admin_SourceController extends Zend_Controller_Action {
             $this->view->menuHighlight = $controller;
             $this->view->controller = $controller;
             $this->view->origin = $origin;
-            $this->view->sources = Model_EntityMapper::getByCodes('Source', 'Source Content');
+            $this->view->sources = Model_EntityMapper::getByCodes('Source');
             return;
         }
         Zend_Db_Table::getDefaultAdapter()->beginTransaction();
@@ -39,8 +39,8 @@ class Admin_SourceController extends Zend_Controller_Action {
         }
         Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         foreach ($this->getRequest()->getPost() as $entityId) {
-            if (!Model_LinkMapper::linkExists('P67', $source->id, $entityId)) {
-                Model_LinkMapper::insert('P67', $source->id, $entityId);
+            if (!Model_LinkMapper::linkExists('P67', $source, $entityId)) {
+                $source->link('P67', $entityId);
             }
         }
         Zend_Db_Table::getDefaultAdapter()->commit();
@@ -57,7 +57,7 @@ class Admin_SourceController extends Zend_Controller_Action {
     }
 
     public function indexAction() {
-        $this->view->sources = Model_EntityMapper::getByCodes('Source', 'Source Content');
+        $this->view->sources = Model_EntityMapper::getByCodes('Source');
         $this->view->places = [];
     }
 
@@ -91,16 +91,16 @@ class Admin_SourceController extends Zend_Controller_Action {
         $sourceId = Model_EntityMapper::insert('E33', $form->getValue('name'), $form->getValue('description'));
         $source = Model_EntityMapper::getById($sourceId);
         $type = Model_NodeMapper::getByNodeCategoryName('Linguistic object classification', 'Source Content');
-        Model_LinkMapper::insert('P2', $source, $type);
+        $source->link('P2', $type);
         self::save($form, $source, $hierarchies);
         if ($event) {
-            Model_LinkMapper::insert('P67', $source, $event);
+            $source->link('P67', $event);
         }
         if ($actor) {
-            Model_LinkMapper::insert('P67', $source, $actor);
+            $source->link('P67', $actor);
         }
         if ($object) {
-            Model_LinkMapper::insert('P67', $source, $object);
+            $source->link('P67', $object);
         }
         Model_UserLogMapper::insert('entity', $source->id, 'insert');
         Zend_Db_Table::getDefaultAdapter()->commit();
@@ -135,7 +135,7 @@ class Admin_SourceController extends Zend_Controller_Action {
         Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         $textId = Model_EntityMapper::insert('E33', $form->getValue('name'), $form->getValue('description'));
         Model_LinkMapper::insert('P2', $textId, Model_NodeMapper::getById($form->getValue('type')));
-        Model_LinkMapper::insert('P73', $source, $textId);
+        $source->link('P73', $textId);
         Model_UserLogMapper::insert('entity', $textId, 'insert');
         Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_insert');
@@ -157,7 +157,7 @@ class Admin_SourceController extends Zend_Controller_Action {
         $text = Model_EntityMapper::getById($link->range->id);
         $source = Model_EntityMapper::getById($link->domain->id);
         $form = new Admin_Form_Text();
-        foreach (Model_LinkMapper::getLinks($text, 'P2') as $link) {
+        foreach ($text->getLinks('P2') as $link) {
             if (array_key_exists($link->range->id, $form->getElement('type')->getMultiOptions())) {
                 $typeLink = $link;
             }
@@ -174,7 +174,7 @@ class Admin_SourceController extends Zend_Controller_Action {
         Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         $text->update();
         $typeLink->delete();
-        Model_LinkMapper::insert('P2', $text, Model_NodeMapper::getById($form->getValue('type')));
+        $text->link('P2', Model_NodeMapper::getById($form->getValue('type')));
         Model_UserLogMapper::insert('entity', $text->id, 'update');
         Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_update');
@@ -213,7 +213,7 @@ class Admin_SourceController extends Zend_Controller_Action {
         $source->description = $form->getValue('description');
         Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         $source->update();
-        foreach (Model_LinkMapper::getLinks($source, 'P2') as $link) {
+        foreach ($source->getLinks('P2') as $link) {
             if ($link->range->name != "Source Content") {
                 $link->delete();
             }
@@ -234,7 +234,7 @@ class Admin_SourceController extends Zend_Controller_Action {
         $this->view->actorLinks = [];
         $this->view->eventLinks = [];
         $this->view->placeLinks = [];
-        foreach (Model_LinkMapper::getLinks($source, 'P67') as $link) {
+        foreach ($source->getLinks('P67') as $link) {
             $code = $link->range->class->code;
             if ($code == 'E18') {
                 $this->view->placeLinks[] = $link;
@@ -245,19 +245,19 @@ class Admin_SourceController extends Zend_Controller_Action {
             }
         }
         $referenceLinks = [];
-        foreach (Model_LinkMapper::getLinks($source, 'P67', true) as $link) {
+        foreach ($source->getLinks('P67', true) as $link) {
             switch ($link->domain->class->code) {
                 case 'E31':
                     $referenceLinks[] = $link;
                     break;
             }
         }
-        foreach (Model_LinkMapper::getLinks($source, 'P128', true) as $link) {
+        foreach ($source->getLinks('P128', true) as $link) {
             $referenceLinks[] = $link;
         }
         $this->view->referenceLinks = $referenceLinks;
         $this->view->source = $source;
-        $this->view->textLinks = Model_LinkMapper::getLinks($source, 'P73');
+        $this->view->textLinks = $source->getLinks('P73');
     }
 
 }

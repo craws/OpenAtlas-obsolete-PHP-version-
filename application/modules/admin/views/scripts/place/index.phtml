@@ -4,11 +4,9 @@
 $table = ['id' => 'place', 'pager' => true, 'filter' => true];
 $table['header'] = [_('name'), _('type'), _('first'), _('last')];
 foreach ($this->objects as $object) {
-    $type = Model_NodeMapper::getNodeByEntity('Site', $object);
-    $typeName = ($type && $type->rootId) ? $type->getNameDirected() : '';
     $table['data'][] = [
         $this->link($object),
-        $typeName,
+        $object->printTypes('Site'),
         $object->first,
         $object->last
     ];

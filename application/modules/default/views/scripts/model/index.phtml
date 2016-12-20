@@ -1,11 +1,11 @@
 <? $this->breadcrumb = [$this->ucstring('model')]; ?>
+<p>
+    <a href="class"><?= $this->ucstring('classes')?></a> (<?= $this->count['classes'] ?>) - 
+    <a href="property"><?= $this->ucstring('properties')?></a> (<?= $this->count['properties']  ?>)
+</p>
 <div>
     <a href="/file/view/file/schema"><img src="/file/view/file/schema" style="width:500px;" alt="schema" /></a>
 </div>
-<p>
-    <a href="class"><?= $this->ucstring('classes')?></a> (<?= $this->count['classes'] ?>)
-    <a href="property"><?= $this->ucstring('properties')?></a> (<?= $this->count['properties']  ?>)
-</p>
 <div>
 <p style="font-weight: bold;">Check for valid links</p>
 <?= $this->form ?>

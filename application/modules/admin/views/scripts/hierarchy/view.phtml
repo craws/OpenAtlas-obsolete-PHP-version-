@@ -1,11 +1,7 @@
 <? $node = $this->node; ?>
 <? $this->breadcrumb = [$this->link('hierarchy')]; ?>
-<? if ($node->superId): ?>
-    <? $this->breadcrumb[] = $this->link(Model_NodeMapper::getById($node->rootId)); ?>
-    <? $this->buttonBar = $this->link($node, 'update'); ?>
-    <? if (!$this->linksEntities && !$this->linksProperties && empty($node->subs)): ?>
-        <? $this->buttonBar .= $this->link($node, 'delete'); ?>
-    <? endif ?>
+<? if ($this->root): ?>
+    <? $this->breadcrumb[] = '<a href="/admin/hierarchy#tab' . $this->root->id . '">' . $this->root->name . '</a>'; ?>
 <? endif ?>
 <? $this->breadcrumb[] = $node->name; ?>
 <div id="tabs" class="tabsContainer">
@@ -22,6 +18,14 @@
         <? endif ?>
     </ul>
     <div id="tabInfo">
+        <? if ($this->root): ?>
+            <div class="buttonBar">
+                <?= $this->link($node, 'update'); ?>
+                <? if (!$this->linksEntities && !$this->linksProperties && empty($node->subs)): ?>
+                    <?= $this->link($node, 'delete'); ?>
+                <? endif ?>
+            </div>
+        <? endif ?>
         <h1><?= $node->name ?></h1>
         <? $table = []; ?>
         <? if ($node->superId): ?>

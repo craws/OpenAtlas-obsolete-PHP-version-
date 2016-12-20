@@ -10,6 +10,7 @@
     </ul>
     <div id="tabInfo">
         <div class="buttonBar">
+            <?= $this->pageButtons($reference) ?>
             <?= $this->link($reference, 'update') ?>
             <?= $this->link($reference, 'delete') ?>
             <?= $this->bookmarkToggle($reference->id) ?>
@@ -17,7 +18,7 @@
         <h1><?= $reference->name ?></h1>
         <?
             $table['data'] = [];
-            foreach ($this->getNodesForView($reference) as $rootName => $nodes) {
+            foreach ($reference->getTypesForView() as $rootName => $nodes) {
                 $table['data'][$rootName] = implode('<br/>', $nodes);
             }
             $this->table = $this->tableLog($table, 'entity', $reference->id);

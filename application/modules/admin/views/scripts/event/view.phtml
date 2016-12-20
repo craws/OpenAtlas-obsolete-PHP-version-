@@ -13,6 +13,7 @@
     <div id="tabInfo">
         <? if ($event->id != $this->rootEvent->id): ?>
             <div class="buttonBar">
+                <?= $this->pageButtons($event) ?>
                 <?= $this->link($event, 'update') ?>
                 <?= $this->link($event, 'delete') ?>
                 <?= $this->bookmarkToggle($event->id) ?>
@@ -27,7 +28,7 @@
         if ($this->place) {
             $table['data'][_('place')] = $this->link($this->place);
         }
-        foreach ($this->getNodesForView($event) as $rootName => $nodes) {
+        foreach ($event->getTypesForView() as $rootName => $nodes) {
             $table['data'][$rootName] = implode('<br/>', $nodes);
         }
         foreach (['OA5' => _('begin'), 'OA6' => _('end')] as $key => $label) {
@@ -69,20 +70,18 @@
             $actorTable = ['id' => 'actor', 'pager' => true, 'filter' => true];
             $actorTable['header'] = [_('actor'), _('class'), _('activity'), 'Involvement', _('first'), _('last'), '', ''];
             foreach ($this->actorLinks as $link) {
-                $involvementType = Model_LinkPropertyMapper::getLinkedEntity($link, 'P2');
                 $text = 'Involvement: ' . $link->range->name . ' ' . $link->property->nameInverseTranslated;
                 $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_remove', $text)) .
                     "')\" ";
                 $deleteButton = '<a href="/admin/function/unlink/id/' . $link->id . '/entityId/' . $event->id .
                     '/#tabActor' . '" class="button"' . $confirm . '>' . $this->ucstring('remove') . '</a>';
-                $dates = Model_DateMapper::getLinkDateRange($link);
                 $actorTable['data'][] = [
                     $this->link($link->range),
                     $link->range->class->nameTranslated,
                     $link->property->nameInverseTranslated,
-                    ($involvementType && $involvementType->rootId) ? $involvementType->name : '',
-                    $dates['first'],
-                    $dates['last'],
+                    ($link->type->rootId) ? $link->type->name : '',
+                    ($link->first) ? $link->first : '<span class="inactive" style="float:right;">' . $event->first . '</span>',
+                    ($link->last) ? $link->last : '<span class="inactive" style="float:right;">' . $event->last . '</span>',
                     '<a class="button" href="/admin/involvement/update/origin/event/id/' . $link->id . '">' .
                     $this->ucstring('edit') . '</a>',
                     $deleteButton,
@@ -126,7 +125,7 @@
             $table['header'] = [_('name'), _('page'), 'class', 'type', '', ''];
             foreach ($this->referenceLinks as $link) {
                 $reference = $link->domain;
-                $type = Model_LinkMapper::getLinkedEntity($reference, 'P2');
+                $type = reset($reference->types)[0]; // get first and only type
                 $text = $this->ucstring('referred_by') . ': ' . $reference->name;
                 $confirm = " onclick=\"return confirm('" . $this->ucstring($this->translate('confirm_remove', $text)) .
                     "')\" ";
@@ -135,10 +134,10 @@
                 $table['data'][] = [
                     $this->link($reference),
                     $link->description,
-                    Model_NodeMapper::getById($type->rootId)->name,
-                    $type->name,
-                        '<a class="button" href="/admin/biblio/update/origin/actor/id/' . $link->id . '">' .
-                    $this->ucstring('edit') . '</a>',
+                    ($type->rootId) ? Model_NodeMapper::getById($type->rootId)->name : $type->name,
+                    ($type->rootId) ? $type->name : '',
+                    '<a class="button" href="/admin/biblio/update/origin/actor/id/' . $link->id . '">' .
+                        $this->ucstring('edit') . '</a>',
                     $deleteLink
                 ];
             }

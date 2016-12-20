@@ -6,13 +6,14 @@ foreach (Zend_Registry::get('config')->get('codeActor')->toArray() as $code) {
     $this->buttonBar .= $this->link($code, 'insert');
 }
 $table = ['id' => 'actor', 'pager' => true, 'filter' => true];
-$table['header'] = [_('name'), _('class'), _('first'), _('last')];
+$table['header'] = [_('name'), _('class'), _('first'), _('last'), _('info')];
 foreach ($this->actors as $actor) {
     $table['data'][] = [
         $this->link($actor),
         $actor->class->nameTranslated,
         $actor->first,
-        $actor->last
+        $actor->last,
+        $this->truncateString($actor->description),
     ];
 }
 ?>

@@ -7,18 +7,18 @@ class Model_ClassMapper extends Model_AbstractMapper {
     public static function getAll() {
         $sql = "
             SELECT c.id, c.code, c.name, c.created, c.modified,
-              COALESCE (
-                (SELECT text FROM model.i18n WHERE table_name LIKE 'class' AND table_field LIKE 'name' AND
-                  table_id = c.id AND language_code LIKE :language_code),
-                (SELECT text FROM model.i18n WHERE table_name LIKE 'class' AND table_field LIKE 'name' AND
-                  table_id = c.id AND language_code LIKE :language_default_code)
-              ) as name_i18n,
-              COALESCE (
-                (SELECT text FROM model.i18n WHERE table_name LIKE 'class' AND table_field LIKE 'comment' AND
-                  table_id = c.id AND language_code LIKE :language_code),
-                (SELECT text FROM model.i18n WHERE table_name LIKE 'class' AND table_field LIKE 'comment' AND
-                  table_id = c.id AND language_code LIKE :language_default_code)
-              ) as comment_i18n
+                COALESCE (
+                    (SELECT text FROM model.i18n WHERE table_name = 'class' AND table_field = 'name' AND
+                        table_id = c.id AND language_code = :language_code),
+                    (SELECT text FROM model.i18n WHERE table_name = 'class' AND table_field = 'name' AND
+                        table_id = c.id AND language_code = :language_default_code)
+                ) as name_i18n,
+                COALESCE (
+                    (SELECT text FROM model.i18n WHERE table_name = 'class' AND table_field = 'comment' AND
+                        table_id = c.id AND language_code = :language_code),
+                    (SELECT text FROM model.i18n WHERE table_name = 'class' AND table_field = 'comment' AND
+                        table_id = c.id AND language_code = :language_default_code)
+                ) as comment_i18n
             FROM model.class c";
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->bindValue(':language_code', Zend_Registry::get('Zend_Locale'));

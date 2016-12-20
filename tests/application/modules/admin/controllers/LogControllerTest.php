@@ -17,7 +17,7 @@ class Admin_LogControllerTest extends ControllerTestCase {
     }
 
     public function testViewDelete() {
-        $this->assertTrue(Model_SettingsMapper::getSetting('general', 'log_level') < 8);
+        $this->assertTrue(Model_SettingsMapper::getSetting('log_level') < 8);
         $logId = Model_LogMapper::log('info', 'test', 'testview_and_long_text_for_code_coverage_and_so_on.');
         $this->request->setQuery(['id' => $logId]);
         $this->dispatch('admin/log/view');

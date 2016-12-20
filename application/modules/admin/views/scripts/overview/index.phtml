@@ -35,16 +35,13 @@
     $table['header'] = [ _('name'), _('class'), _('first'), _('last'), _('user'), _('date')];
     foreach ($this->latestEntries as $entity) {
         $log = Model_UserLogMapper::getLogForView('entity', $entity->id);
-        if (!$log['created']) {
-            $log['created'] = '';
-        }
         $table['data'][] = [
             $this->link($entity),
             $this->link($entity->class),
             $entity->first,
             $entity->last,
             $log['creator_name'],
-            $log['created']
+            ($log['created']) ? $log['created'] : ''
         ];
     }
     ?>

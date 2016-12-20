@@ -60,7 +60,7 @@ class Admin_EventController extends Zend_Controller_Action {
         $event = Model_EntityMapper::getById($eventId);
         self::save($event, $form, $hierarchies);
         if ($source) {
-            Model_LinkMapper::insert('P67', $source, $event);
+            $source->link('P67', $event);
         }
         Model_UserLogMapper::insert('entity', $eventId, 'insert');
         Zend_Db_Table::getDefaultAdapter()->commit();
@@ -113,7 +113,7 @@ class Admin_EventController extends Zend_Controller_Action {
         Model_UserLogMapper::insert('entity', $event->id, 'update');
         Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         $event->update();
-        foreach (Model_LinkMapper::getLinks($event, ['P2', 'P7', 'P117', 'P22', 'P23', 'P24']) as $link) {
+        foreach ($event->getLinks(['P2', 'P7', 'P117', 'P22', 'P23', 'P24']) as $link) {
             $link->delete();
         }
         self::save($event, $form, $hierarchies);
@@ -124,19 +124,19 @@ class Admin_EventController extends Zend_Controller_Action {
 
     public function viewAction() {
         $event = Model_EntityMapper::getById($this->_getParam('id'));
-        $this->view->actorLinks = Model_LinkMapper::getLinks($event, ['P11', 'P14', 'P22', 'P23']);
+        $this->view->actorLinks = $event->getLinks(['P11', 'P14', 'P22', 'P23']);
         $this->view->event = $event;
         $this->view->dates = Model_DateMapper::getDates($event);
-        $this->view->subs = Model_LinkMapper::getLinkedEntities($event, 'P117', true);
-        $this->view->super = Model_LinkMapper::getLinkedEntity($event, 'P117');
+        $this->view->subs = $event->getLinkedEntities('P117', true);
+        $this->view->super = $event->getLinkedEntity('P117');
         if ($event->class->name == 'Acquisition') {
-            $this->view->acquisitionRecipient = Model_LinkMapper::getLinkedEntity($event, 'P22');
-            $this->view->acquisitionDonor = Model_LinkMapper::getLinkedEntity($event, 'P23');
-            $this->view->acquisitionPlace = Model_LinkMapper::getLinkedEntity($event, 'P24');
+            $this->view->acquisitionRecipient = $event->getLinkedEntity('P22');
+            $this->view->acquisitionDonor = $event->getLinkedEntity('P23');
+            $this->view->acquisitionPlace = $event->getLinkedEntity('P24');
         }
         $sourceLinks = [];
         $referenceLinks = [];
-        foreach (Model_LinkMapper::getLinks($event, 'P67', true) as $link) {
+        foreach ($event->getLinks('P67', true) as $link) {
             switch ($link->domain->class->code) {
                 case 'E31':
                     $referenceLinks[] = $link;
@@ -148,9 +148,9 @@ class Admin_EventController extends Zend_Controller_Action {
         }
         $this->view->sourceLinks = $sourceLinks;
         $this->view->referenceLinks = $referenceLinks;
-        $place = Model_LinkMapper::getLinkedEntity($event, 'P7');
+        $place = $event->getLinkedEntity('P7');
         if ($place) {
-            $this->view->place = Model_LinkMapper::getLinkedEntity($place, 'P53', true);
+            $this->view->place = $place->getLinkedEntity('P53', true);
         }
     }
 
@@ -160,27 +160,27 @@ class Admin_EventController extends Zend_Controller_Action {
             'description' => $event->description,
             'modified' => ($event->modified) ? $event->modified->getTimestamp() : 0,
         ]);
-        $superEvent = Model_LinkMapper::getLinkedEntity($event, 'P117');
+        $superEvent = $event->getLinkedEntity('P117');
         if ($superEvent->id != $this->rootEvent->id) {
             $form->populate(['superId' => $superEvent->id]);
             $form->populate(['superButton' => $superEvent->name]);
         }
         if ($event->class->name == 'Acquisition') {
-            $recipient = Model_LinkMapper::getLinkedEntity($event, 'P22');
+            $recipient = $event->getLinkedEntity('P22');
             if ($recipient) {
                 $form->populate([
                     'recipientButton' => $recipient->name,
                     'recipientId' => $recipient->id
                 ]);
             }
-            $donor = Model_LinkMapper::getLinkedEntity($event, 'P23');
+            $donor = $event->getLinkedEntity('P23');
             if ($donor) {
                 $form->populate([
                     'donorButton' => $donor->name,
                     'donorId' => $donor->id
                 ]);
             }
-            $acquisitionPlace = Model_LinkMapper::getLinkedEntity($event, 'P24');
+            $acquisitionPlace = $event->getLinkedEntity('P24');
             if ($acquisitionPlace) {
                 $form->populate([
                     'acquisitionPlaceButton' => $acquisitionPlace->name,
@@ -188,9 +188,9 @@ class Admin_EventController extends Zend_Controller_Action {
                 ]);
             }
         }
-        $location = Model_LinkMapper::getLinkedEntity($event, 'P7');
+        $location = $event->getLinkedEntity('P7');
         if ($location) {
-            $place = Model_LinkMapper::getLinkedEntity($location, 'P53', true);
+            $place = $location->getLinkedEntity('P53', true);
             $form->populate([
                 'placeButton' => $place->name,
                 'placeId' => $place->id
@@ -208,19 +208,19 @@ class Admin_EventController extends Zend_Controller_Action {
         Model_DateMapper::saveDates($event, $form);
         if ($form->getValue('placeId')) {
             $place = Model_LinkMapper::getLinkedEntity($form->getValue('placeId'), 'P53');
-            Model_LinkMapper::insert('P7', $event, $place);
+            $event->link('P7', $place);
         }
         $superEventId = ($form->getValue('superId')) ? $form->getValue('superId') : $this->rootEvent->id;
-        Model_LinkMapper::insert('P117', $event, $superEventId);
+        $event->link('P117', $superEventId);
         if ($event->class->name == 'Acquisition') {
             if ($this->_getParam('recipientId')) {
-                Model_LinkMapper::insert('P22', $event, $this->_getParam('recipientId'));
+                $event->link('P22', $this->_getParam('recipientId'));
             }
             if ($this->_getParam('donorId')) {
-                Model_LinkMapper::insert('P23', $event, $this->_getParam('donorId'));
+                $event->link('P23', $this->_getParam('donorId'));
             }
             if ($this->_getParam('acquisitionPlaceId')) {
-                Model_LinkMapper::insert('P24', $event, $this->_getParam('acquisitionPlaceId'));
+                $event->link('P24', $this->_getParam('acquisitionPlaceId'));
             }
         }
     }

@@ -5,19 +5,14 @@ $this->buttonBar = '<a href="/admin/reference/insert/type/bibliography">+ Biblio
 $this->buttonBar .= '<a href="/admin/reference/insert/type/edition">+ Edition</a>';
 $this->buttonBar .= '<a href="/admin/carrier/insert">+ Information Carrier</a>';
 $table = ['id' => 'reference', 'pager' => true, 'filter' => true];
-$table['header'] = [_('name'), _('class'), _('type')];
+$table['header'] = [_('name'), _('class'), _('type'), _('info')];
 foreach ($this->references as $reference) {
-    $type = Model_LinkMapper::getLinkedEntity($reference, 'P2');
-    $className = $type->name;
-    $typeName = '';
-    if ($type->rootId) {
-        $className = Model_NodeMapper::getById($type->rootId)->name;
-        $typeName = $type->name;
-    }
+    $type = reset($reference->types)[0]; // get first and only type
     $table['data'][] = [
         $this->link($reference),
-        $className,
-        $typeName,
+        ($type->rootId) ? Model_NodeMapper::getById($type->rootId)->name : $type->name,
+        ($type->rootId) ? $type->name : '',
+        $this->truncateString($reference->description),
     ];
 }
 ?>

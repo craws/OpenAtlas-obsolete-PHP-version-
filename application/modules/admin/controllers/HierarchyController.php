@@ -16,7 +16,7 @@ class Admin_HierarchyController extends Zend_Controller_Action {
             $this->_helper->message('error_subs_exists');
             return $this->_helper->redirector->gotoUrl('/admin/hierarchy/view/id/' . $type->id);
         }
-        if (Model_LinkMapper::getLinks($type, 'P2', true) || Model_LinkMapper::getLinks($type, 'P89', true)) {
+        if ($type->getLinks(['P2', 'P89'], true)) {
             $this->_helper->message('error_links_exists');
             return $this->_helper->redirector->gotoUrl('/admin/hierarchy/view/id/' . $type->id);
         }
@@ -27,40 +27,81 @@ class Admin_HierarchyController extends Zend_Controller_Action {
         return $this->_helper->redirector->gotoUrl('/admin/hierarchy#tab' . $type->rootId);
     }
 
+    private function walkTree($node) {
+        $count = ($node->class->code == 'E53') ? $node->count - count($node->subs) : $node->count;
+        $text = "{href: '/admin/hierarchy/view/id/" . $node->id . "',";
+        $text .= "text: '" . $node->name . " (" . $count . ")', 'id':'" . $node->id . "'";
+        if ($node->subs) {
+            $text .= ",'children' : [";
+            foreach ($node->subs as $sub) {
+                $text .= self::walkTree($sub);
+            }
+            $text .= "]";
+        }
+        $text .= "},";
+        return $text;
+    }
+
+    private function treeSelect($node) {
+        $tree = "'core':{'data':[";
+        foreach ($node->subs as $sub) {
+            $tree .= self::walkTree($sub);
+        }
+        $tree .= "]}";
+        $html = '<div id="' . $node->id . '-tree"></div>
+            <script type="text/javascript">
+                $(document).ready(function () {
+                $("#' . $node->id . '-tree").jstree({
+                    "search": {"case_insensitive": true, "show_only_matches": true},
+                    "plugins" : ["core", "html_data", "search"],' . $tree . '});
+                    $("#' . $node->id . '-tree-search").keyup(function() {
+                        $("#' . $node->id . '-tree").jstree("search", $(this).val());
+                    });
+                    $("#' . $node->id . '-tree").on("select_node.jstree",
+                       function (e, data) { document.location.href = data.node.original.href; })
+                });
+            </script>';
+        return $html;
+    }
+
     public function indexAction() {
-        $nodes = [];
+        $nodes['system'] = [];
+        $nodes['custom'] = [];
         foreach (Zend_Registry::get('nodes') as $node) {
             if ($node->extendable) {
-                $nodes[] = $node;
+                $nodeType = ($node->system) ? 'system' : 'custom';
+                $nodes[$nodeType][$node->id] = ['node' => $node, 'tree' => self::treeSelect($node)];
             }
         }
-        usort($nodes, function($a, $b) {
-            return strcmp($a->name, $b->name);
-        });
         $this->view->nodes = $nodes;
     }
 
     public function insertAction() {
-        $super = Model_NodeMapper::getById($this->_getParam('superId'));
-        if ($this->getRequest()->isPost()) {
-            $name = trim(str_replace(['(', ')'], '', $this->_getParam('name')));
-            if (!$name) {
-                $this->_helper->message('error_name_empty');
-                return $this->_helper->redirector->gotoUrl('/admin/hierarchy/#tab' . $super->rootId);
-            }
-            $inverse = trim(str_replace(['(', ')'], '', $this->_getParam('inverse')));
-            if ($inverse) {
-                $name .= ' (' . $inverse . ')';
-            }
-            Zend_Db_Table::getDefaultAdapter()->beginTransaction();
-            $typeId = Model_EntityMapper::insert($super->class->code, $name);
-            Model_LinkMapper::insert($super->propertyToSuper, $typeId, $super);
-            Model_UserLogMapper::insert('entity', $typeId, 'insert');
-            Zend_Db_Table::getDefaultAdapter()->commit();
-            $this->_helper->message('info_insert');
+        $root = Model_NodeMapper::getById($this->_getParam('id'));
+        if (!$root->extendable) {
+            $this->_helper->message('error_forbidden');
+            return $this->_helper->redirector->gotoUrl('/admin/hierarchy');
         }
-        $tabId = ($super->rootId) ? $super->rootId : $super->id;
-        return $this->_helper->redirector->gotoUrl('/admin/hierarchy/#tab' . $tabId);
+        $form = new Admin_Form_Node();
+        $form->addHierarchies('super', $root, true);
+        if (!$root->directional) {
+            $form->removeElement('inverse_text');
+        }
+        if ($this->_getParam('mode') == 'insert' || !$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
+            $form->populate(['name' => trim($this->_getParam('name'))]);
+            $this->view->form = $form;
+            $this->view->node = $root;
+            return;
+        }
+        $name = $form->getValue('name');
+        $name .= ($form->getValue('inverse_text')) ? ' (' . $form->getValue('inverse_text') . ')' : '';
+        $superIdValue = $form->getValue($root->nameClean . 'Id') ;
+        $superId = ($superIdValue) ? $superIdValue : $root->id;
+        Zend_Db_Table::getDefaultAdapter()->beginTransaction();
+        $nodeId = Model_EntityMapper::insert($root->class->id, $name, $form->getValue('description'));
+        Model_LinkMapper::insert($root->propertyToSuper, $nodeId, $superId);
+        Zend_Db_Table::getDefaultAdapter()->commit();
+        return $this->_helper->redirector->gotoUrl('/admin/hierarchy/#tab' . $root->id);
     }
 
     public function insertHierarchyAction() {
@@ -91,35 +132,34 @@ class Admin_HierarchyController extends Zend_Controller_Action {
             return $this->_helper->redirector->gotoUrl('/admin/hierarchy');
         }
         $form = new Admin_Form_Node();
+        $form->addHierarchies('super', $node, true);
         if (!$node->directional) {
-            $form->removeElement('inverse');
+            $form->removeElement('inverse_text');
         }
-        $superElement = $form->getElement('super');
-        $options = Model_NodeMapper::getSuperCandidates(Model_NodeMapper::getById($node->rootId), $node->id);
-        $superElement->addMultiOptions($options);
         if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
             $array = explode('(', $node->name);
             $inverse = (isset($array[1])) ? trim(str_replace(['(', ')'], '', $array[1])) : '';
             $form->populate([
                 'description' => $node->description,
-                'inverse' => $inverse,
-                'name' => trim($array[0]),
-                'super' => $node->superId,
+                'inverse_text' => $inverse,
+                'name' => trim($array[0])
             ]);
+            $this->view->root = ($node->rootId) ? Model_NodeMapper::getById($node->rootId) : NULL;
             $this->view->form = $form;
-            $this->view->type = $node;
+            $this->view->node = $node;
             return;
         }
+        $inverse = trim(str_replace(['(', ')'], '', $form->getValue('inverse_text')));
         $node->name = str_replace(['(', ')'], '', $form->getValue('name'));
-        $inverse = trim(str_replace(['(', ')'], '', $form->getValue('inverse')));
-        if ($inverse) {
-            $node->name .= ' (' . $inverse . ')';
-        }
+        $node->name .= ($inverse) ? ' (' . $inverse . ')' : '';
         $node->description = $this->_getParam('description');
+        $root = Model_NodeMapper::getById($node->rootId);
+        $superIdValue = $form->getValue($root->nameClean . 'Id') ;
+        $superId = ($superIdValue) ? $superIdValue : $root->id;
         Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         $node->update();
         $superLink = Model_LinkMapper::getLink($node, $node->propertyToSuper);
-        $superLink->range = Model_NodeMapper::getById($form->getValue('super'));
+        $superLink->range = Model_NodeMapper::getById($superId);
         $superLink->update();
         Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_update');
@@ -171,17 +211,18 @@ class Admin_HierarchyController extends Zend_Controller_Action {
 
     public function viewAction() {
         $node = Model_NodeMapper::getById($this->_getParam('id'));
-        $linksEntitites = Model_LinkMapper::getLinkedEntities($node, $node->propertyToEntity, true);
+        $linksEntitites = $node->getLinkedEntities($node->propertyToEntity, true);
         if ($node->class->code == 'E53') {
             $linksEntitites = [];
-            foreach (Model_LinkMapper::getLinkedEntities($node, $node->propertyToEntity, true) as $object) {
-                $linkedEntity = Model_LinkMapper::getLinkedEntity($object, 'P53', true);
+            foreach ($node->getLinkedEntities($node->propertyToEntity, true) as $object) {
+                $linkedEntity = $object->getLinkedEntity('P53', true);
                 if ($linkedEntity) { // needed to remove node subs
                     $linksEntitites[] = $linkedEntity;
                 }
             }
         }
         $this->view->node = $node;
+        $this->view->root = ($node->rootId) ? Model_NodeMapper::getById($node->rootId) : NULL;
         $this->view->linksEntities = $linksEntitites;
         $this->view->linksProperties = Model_LinkPropertyMapper::getByEntity($node);
     }
