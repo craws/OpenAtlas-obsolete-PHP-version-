@@ -1,12 +1,5 @@
 SET search_path = web;
 
-ALTER SEQUENCE group_id_seq RESTART WITH 1;
-ALTER SEQUENCE language_id_seq RESTART WITH 1;
-
-INSERT INTO language (name, shortform) VALUES
-('English', 'en'),
-('Deutsch', 'de');
-
 INSERT INTO "group" (name) VALUES
 ('admin'),
 ('editor'),
@@ -35,8 +28,8 @@ INSERT INTO settings (name, value) VALUES
 ('mail_transport_host', ''),
 ('mail_from_email', ''),
 ('mail_from_name', ''),
-('mail_recipients_login', 'test@craws.net'),
-('mail_recipients_feedback', 'test@craws.net')
+('mail_recipients_login', ''),
+('mail_recipients_feedback', '')
 ;
 
 INSERT INTO "user" (username, password, active, email, group_id) VALUES
