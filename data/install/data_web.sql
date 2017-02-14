@@ -1,5 +1,12 @@
 SET search_path = web;
 
+ALTER SEQUENCE group_id_seq RESTART WITH 1;
+ALTER SEQUENCE language_id_seq RESTART WITH 1;
+
+INSERT INTO language (name, shortform) VALUES
+('English', 'en'),
+('Deutsch', 'de');
+
 INSERT INTO "group" (name) VALUES
 ('admin'),
 ('editor'),
