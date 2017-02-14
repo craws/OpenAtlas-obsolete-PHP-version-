@@ -199,6 +199,7 @@ function editshape() {
             var latLngs = mylayer.getLatLngs();
             var latLngs; // to store coordinates of vertices
             var newvector = []; // array to store coordinates as numbers
+            geoJsonArray = [];
             var type = geometrytype.toLowerCase();
             document.getElementById('editsavebtn').disabled = false;
             if (type != 'marker') {  // if other type than point then store array of coordinates as variable
@@ -210,9 +211,10 @@ function editshape() {
                 if (type === 'polygon') {
                     // if polygon add first xy again as last xy to close polygon
                     newvector.push(' ' + latLngs[0].lng + ' ' + latLngs[0].lat);
-                    geoJsonArray.push('[' + latLngs[0].lng + ',' + latLngs[0].lat + ']');
                     shapesyntax = '(' + newvector + ')';
+                    geoJsonArray.push('[' + latLngs[0].lng + ',' + latLngs[0].lat + ']');
                     returndata();
+
                 }
                 if (type === 'linestring') {
                     shapesyntax = newvector;
