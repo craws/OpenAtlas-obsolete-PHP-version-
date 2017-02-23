@@ -79,7 +79,7 @@
                     $this->link($link->range),
                     $link->range->class->nameTranslated,
                     $link->property->nameInverseTranslated,
-                    ($link->type->rootId) ? $link->type->name : '',
+                    ($link->type && $link->type->rootId) ? $link->type->name : '',
                     ($link->first) ? $link->first : '<span class="inactive" style="float:right;">' . $event->first . '</span>',
                     ($link->last) ? $link->last : '<span class="inactive" style="float:right;">' . $event->last . '</span>',
                     '<a class="button" href="/admin/involvement/update/origin/event/id/' . $link->id . '">' .
