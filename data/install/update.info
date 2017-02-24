@@ -3,6 +3,40 @@ INFO
 
 Watch out for database role in SQLs and change "openatlas_master" if needed.
 
+2.3.1 to 2.3.2 Upgrade
+======================
+
+To delete oprhaned dates execute:
+
+DELETE FROM model.entity WHERE entity.id IN (
+    SELECT e.id FROM model.entity e
+    LEFT JOIN model.link l1 on e.id = l1.domain_id
+    LEFT JOIN model.link l2 on e.id = l2.range_id
+    LEFT JOIN model.link_property lp1 on e.id = lp1.domain_id
+    LEFT JOIN model.link_property lp2 on e.id = lp2.range_id
+    WHERE
+        e.class_id = (SELECT id FROM model.class WHERE code = 'E61') AND
+        (l1.domain_id IS NULL OR l1.range_id IN (SELECT id FROM model.entity WHERE name IN ('Exact date value', 'To date value', 'From date value'))) AND
+        l2.range_id IS NULL AND
+        lp1.domain_id IS NULL AND
+        lp2.range_id IS NULL
+);
+
+To prevent further orphaned dates add this function and trigger:
+
+CREATE OR REPLACE FUNCTION model.delete_dates() RETURNS trigger AS $$
+    BEGIN
+        DELETE FROM model.entity WHERE id = OLD.range_id AND class_id = (SELECT id FROM model.class WHERE code = 'E61');
+        RETURN OLD;
+    END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER on_delete_link_property
+AFTER DELETE ON model.link_property
+     FOR EACH ROW EXECUTE PROCEDURE model.delete_dates();
+ALTER FUNCTION model.delete_dates() OWNER TO openatlas_master;
+
+
 2.2.0 to 2.3.0 Upgrade
 ======================
 
