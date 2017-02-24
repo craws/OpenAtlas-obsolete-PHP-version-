@@ -71,13 +71,7 @@ use apache_example.conf as template for a new vhost
     # apacha2ctl configtest
     # /etc/init.d/apache2 restart
 
-### I18N
-
-compile .po files in data/language
-
-    $ msgfmt file.po -o file.mo
-
 ### Finishing
 
 - change default user and password
-- remove the data/install directory
+- remove the data/install directory on production systems
