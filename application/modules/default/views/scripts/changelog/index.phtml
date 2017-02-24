@@ -1,6 +1,16 @@
 <?
     $this->breadcrumb = [$this->ucstring('changelog')];
-    $versions['2.3.0']['date'] = '17.12.2016';
+    $versions['2.3.2']['date'] = '2017-02-28';
+    $versions['2.3.2']['data']['fix'] = [
+        763 => 'Polygon Map Bug',
+        788 => 'Missing Involvement Types',
+        446 => 'Orphaned dates in database'
+    ];
+    $versions['2.3.1']['date'] = '2016-12-20';
+    $versions['2.3.1']['data']['fix'] = [
+        777 => 'Hierarchy update fix'
+    ];
+    $versions['2.3.0']['date'] = '2016-12-17';
     $versions['2.3.0']['data']['feature'] = [
         764 => 'Improved hierachy overview',
         702 => 'Improved settings',
@@ -11,12 +21,12 @@
         569 => 'Previous and next buttons',
         768 => 'Show info column in main lists'
     ];
-    $versions['2.2.0']['date'] = '11.09.2016';
+    $versions['2.2.0']['date'] = '2016-09-11';
     $versions['2.2.0']['data']['feature'] = [
         547 => 'Map: multiple points and areas for Places',
         719 => 'Favicon support for current systems'
     ];
-    $versions['2.1.0']['date'] = '18.08.2016';
+    $versions['2.1.0']['date'] = '2016-08-18';
     $versions['2.1.0']['data']['feature'] = [
         643 => 'Performance improvements',
         700 => 'Improved frontend',
@@ -25,7 +35,7 @@
     $versions['2.1.0']['data']['fix'] = [
         696 => 'Add texts to source'
     ];
-    $versions['2.0.0']['date'] = '19.06.2016';
+    $versions['2.0.0']['date'] = '2016-06-19';
     $versions['2.0.0']['data']['feature'] = [
         428 => 'Dynamic Types',
         687 => 'Remove required restriction from type fields'
@@ -34,7 +44,7 @@
         688 => 'Translation errors',
         689 => 'Show/Hide buttons'
     ];
-    $versions['1.6.0']['date'] = '04.05.2016';
+    $versions['1.6.0']['date'] = '2016-05-04';
     $versions['1.6.0']['data']['feature'] = [
         340 => 'Multiuser capability',
         672 => 'Add multiple sources for event/actor/place',
@@ -44,13 +54,13 @@
     $versions['1.6.0']['data']['fix'] = [
         674 => 'Place error occurs during saving'
     ];
-    $versions['1.5.0']['date'] = '01.04.2016';
+    $versions['1.5.0']['date'] = '2016-04-01';
     $versions['1.5.0']['data']['feature'] = [
         564 => 'Add multiple entries for relation, member and involvement',
         586 => 'Bookmarks',
         671 => 'Redmine links for changelog'
     ];
-    $versions['1.4.0']['date'] = '26.03.2016';
+    $versions['1.4.0']['date'] = '2016-03-26';
     $versions['1.4.0']['data']['feature'] = [
         528 => 'jsTree views for hierarchies',
         566 => 'Enhanced profile and site settings',
@@ -58,7 +68,7 @@
         654 => 'New map layers',
         666 => 'Added Credits'
     ];
-    $versions['1.3.0']['date'] = '28.02.2016';
+    $versions['1.3.0']['date'] = '2016-02-28';
     $versions['1.3.0']['data']['feature'] = [
         462 => 'Actor - add member to group from actor view',
         563 => 'Actor - insert and continue for relations and members',
@@ -69,7 +79,7 @@
         601 => 'Application is very slow on some views',
         638 => 'Names with an apostrophe in a table not selectable'
     ];
-    $versions['1.2.0']['date'] = '13.12.2015';
+    $versions['1.2.0']['date'] = '2015-12-13';
     $versions['1.2.0']['data']['feature'] = [
         499 => 'Actor - place tab with map',
         511 => 'Search - advanced features'
@@ -78,7 +88,7 @@
         547 => 'Prevent double submit',
         587 => 'Support multiple email recipients'
     ];
-    $versions['1.1.0']['date'] = '09.11.2015';
+    $versions['1.1.0']['date'] = '2015-11-09';
     $versions['1.1.0']['data']['feature'] = [
         529 => 'Reference - Information Carrier',
         527 => 'New user groups - manager and readonly',
@@ -92,7 +102,7 @@
         544 => 'Map - Form data lost after mapsearch',
         533 => 'Map - Markers outside of Map',
     ];
-    $versions['1.0.0']['date'] = '11.10.2015';
+    $versions['1.0.0']['date'] = '2015-10-11';
     $versions['1.0.0']['data']['feature'] = [
         487 => 'Event - Acquisition of places',
         508 => 'Reference - Editions',
@@ -101,11 +111,11 @@
         412 => 'Layout - improved layout and color scheme',
         525 => 'Layout - overlays for tables in forms'
     ];
-    $versions['0.11.0']['date'] = '11.09.2015';
+    $versions['0.11.0']['date'] = '2015-09-11';
     $versions['0.11.0']['data']['feature'] = [
         433 => 'Search functions'
     ];
-    $versions['0.10.0']['date'] = '01.09.2015';
+    $versions['0.10.0']['date'] = '2015-09-01';
     $versions['0.10.0']['data']['feature'] = [
         429 => 'Actor - member of',
         472 => 'Actor - activity for event relations',
@@ -115,27 +125,27 @@
         489 => 'Layout - overwork, multiple possibilities to create and link entities',
         421 => 'CRM link checker'
     ];
-    $versions['0.9.0']['date'] = '12.07.2015';
+    $versions['0.9.0']['date'] = '2015-07-12';
     $versions['0.9.0']['data']['feature'] = [
         392 => 'Event',
         423 => 'Map - advanced features',
         474 => 'Layout - new tab based layout for views'
     ];
-    $versions['0.8.0']['date'] = '18.06.2015';
+    $versions['0.8.0']['date'] = '2015-06-18';
     $versions['0.8.0']['data']['feature'] = [
         326 => 'Map - search, show existing places',
         425 => 'Actor - added gender type',
         425 => 'Place - multiple evidences possible',
         425 => 'Forms - add multiple types with ajax (e.g. aliases)'
     ];
-    $versions['0.7.0']['date'] = '29.05.2015';
+    $versions['0.7.0']['date'] = '2015-05-29';
     $versions['0.7.0']['data']['feature'] = [
         403 => 'Physical things - places',
         403 => 'Actor - residence, appears first and last places',
         353 => 'Maps - with Leaflet (GIS)',
         420 => 'First and last dates in list views (e.g. actor, place)'
     ];
-    $versions['0.6.0']['date'] = '13.05.2015';
+    $versions['0.6.0']['date'] = '2015-05-13';
     $versions['0.6.0']['data']['feature'] = [
         402 => 'Begin, end, birth and death for actors (precise and range)',
         402 => 'Begin, end for relations (precise and range)',
@@ -145,7 +155,7 @@
     $versions['0.6.0']['data']['fix'] = [
         410 => 'wrong domains for links'
     ];
-    $versions['0.5.0']['date'] = '08.04.2015';
+    $versions['0.5.0']['date'] = '2015-04-08';
     $versions['0.5.0']['data']['feature'] = [
         377 => 'Type hierarchy (editable)',
         377 => 'Primary source type for documents',
@@ -154,7 +164,7 @@
         365 => 'Actor to actor relations',
         386 => 'Filter for tables'
     ];
-    $versions['0.4.0']['date'] = '23.02.2015';
+    $versions['0.4.0']['date'] = '2015-02-23';
     $versions['0.4.0']['data']['feature'] = [
         362 => 'Document - Insert, update, delete, add texts, link with actors',
         354 => 'Alternative names',
@@ -166,7 +176,7 @@
     $versions['0.4.0']['data']['fix'] = [
         357 => 'wrong range link in listview properties'
     ];
-    $versions['0.3.0']['date'] = '10.02.2015';
+    $versions['0.3.0']['date'] = '2015-02-10';
     $versions['0.3.0']['data']['feature'] = [
         348 => 'Actor - begin and end dates',
         307 => 'Log user CRM data manipulation'
@@ -174,25 +184,25 @@
     $versions['0.3.0']['data']['fix'] = [
         344 => 'tablesorter IE 11 bug'
     ];
-    $versions['0.2.0']['date'] = '18.01.2015';
+    $versions['0.2.0']['date'] = '2015-01-18';
     $versions['0.2.0']['data']['feature'] = [
         310 => 'Actor - insert, update, delete, list, view',
         337 => 'CRM - new OpenAtlas shortcuts'
     ];
-    $versions['0.1.0']['date'] = '30.12.2014';
+    $versions['0.1.0']['date'] = '2014-12-30';
     $versions['0.1.0']['data']['feature'] = [
         318 => 'CRM - classes',
         318 => 'CRM - properties',
         318 => 'CRM - relations (super/sub classes, domains, ranges)',
         318 => 'OpenAtlas shortcuts'
     ];
-    $versions['0.0.2']['date'] = '03.12.2014';
+    $versions['0.0.2']['date'] = '2014-12-03';
     $versions['0.0.2']['data']['feature'] = [
         306 => 'CICOC classes',
         308 => 'Database design',
         314 => 'Feedback form and translations'
     ];
-    $versions['0.0.1']['date'] = '05.11.2014';
+    $versions['0.0.1']['date'] = '2014-11-05';
     $versions['0.0.1']['data']['feature'] = [
         0 => 'Initial version based on the "Zend Base" project from
             <a onclick="window.open(this.href); return false;" href="http://craws.net"> craws.net</a>'
@@ -201,7 +211,7 @@
     foreach ($versions as $version => $data) {
         $date = 'TBA';
         if ($data['date']) {
-            $date = $this->printDate(new Zend_Date($data['date'], 'de'));
+            $date = $this->printDate(new Zend_Date($data['date'], 'en'));
         }
         $html =  '<div class="changelog">
                 <div class="changelogVersion">Version ' . $version . '</div>
