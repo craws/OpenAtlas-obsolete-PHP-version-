@@ -2,8 +2,8 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.5.5
--- Dumped by pg_dump version 9.5.5
+-- Dumped from database version 9.5.6
+-- Dumped by pg_dump version 9.5.6
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -71,6 +71,7 @@ DROP TRIGGER IF EXISTS update_modified ON model.property;
 DROP TRIGGER IF EXISTS update_modified ON model.i18n;
 DROP TRIGGER IF EXISTS update_modified ON model.class_inheritance;
 DROP TRIGGER IF EXISTS update_modified ON model.class;
+DROP TRIGGER IF EXISTS on_delete_link_property ON model.link_property;
 SET search_path = gis, pg_catalog;
 
 DROP TRIGGER IF EXISTS update_modified ON gis.polygon;
@@ -218,9 +219,7 @@ DROP TABLE IF EXISTS gis.linestring;
 SET search_path = model, pg_catalog;
 
 DROP FUNCTION IF EXISTS model.update_modified();
-SET search_path = gis, pg_catalog;
-
-DROP FUNCTION IF EXISTS gis.geometry_creation();
+DROP FUNCTION IF EXISTS model.delete_dates();
 DROP SCHEMA IF EXISTS web;
 DROP SCHEMA IF EXISTS model;
 DROP SCHEMA IF EXISTS log;
@@ -261,41 +260,23 @@ CREATE SCHEMA web;
 
 ALTER SCHEMA web OWNER TO openatlas_master;
 
-SET search_path = gis, pg_catalog;
+SET search_path = model, pg_catalog;
 
 --
--- Name: geometry_creation(); Type: FUNCTION; Schema: gis; Owner: openatlas_master
+-- Name: delete_dates(); Type: FUNCTION; Schema: model; Owner: openatlas_master
 --
 
-CREATE FUNCTION geometry_creation() RETURNS trigger
+CREATE FUNCTION delete_dates() RETURNS trigger
     LANGUAGE plpgsql
-    AS $$  BEGIN
-   IF (NEW.geom IS NULL) THEN
-    NEW.geom = ST_SetSRID(ST_MakePoint(NEW.easting, NEW.northing), 4326);
-   END IF;
-
-   IF (NEW.easting IS NULL) THEN
-    NEW.easting = ST_X(NEW.geom);
-    NEW.northing = ST_Y(NEW.geom);
-   END IF;
-
-   IF (NEW.northing IS NULL) THEN
-    NEW.easting = ST_X(NEW.geom);
-    NEW.northing = ST_Y(NEW.geom);
-   END IF;
-
-    NEW.easting = ST_X(NEW.geom);
-    NEW.northing = ST_Y(NEW.geom);
-
-
-   RETURN NEW;
-  END;
+    AS $$
+    BEGIN
+        DELETE FROM model.entity WHERE id = OLD.range_id AND class_id = (SELECT id FROM model.class WHERE code = 'E61');
+        RETURN OLD;
+    END;
 $$;
 
 
-ALTER FUNCTION gis.geometry_creation() OWNER TO openatlas_master;
-
-SET search_path = model, pg_catalog;
+ALTER FUNCTION model.delete_dates() OWNER TO openatlas_master;
 
 --
 -- Name: update_modified(); Type: FUNCTION; Schema: model; Owner: openatlas_master
@@ -1841,6 +1822,13 @@ CREATE TRIGGER update_modified BEFORE UPDATE ON polygon FOR EACH ROW EXECUTE PRO
 
 
 SET search_path = model, pg_catalog;
+
+--
+-- Name: on_delete_link_property; Type: TRIGGER; Schema: model; Owner: openatlas_master
+--
+
+CREATE TRIGGER on_delete_link_property AFTER DELETE ON link_property FOR EACH ROW EXECUTE PROCEDURE delete_dates();
+
 
 --
 -- Name: update_modified; Type: TRIGGER; Schema: model; Owner: openatlas_master
