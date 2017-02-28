@@ -67,7 +67,6 @@ class Admin_IndexController extends Zend_Controller_Action {
                 $settings['sitename'] . "(" . $this->getRequest()->getHttpHost() .
                 ").\r\n\r";
             $mail = new Zend_Mail('utf-8');
-            $mail->setFrom($settings['mail_from_email'], $settings['mail_from_name']);
             foreach (explode(',', $settings['mail_recipients_login']) as $receiver) {
                 $mail->addTo($receiver);
             }
@@ -123,7 +122,6 @@ class Admin_IndexController extends Zend_Controller_Action {
         $this->view->mailPassword = $password;
         $this->view->mailUrl = 'http://' . $this->getRequest()->getHttpHost() . '/admin';
         $mail = new Zend_Mail('utf-8');
-        $mail->setFrom($settings['mail_from_email'], $settings['mail_from_name']);
         $mail->addTo($user->email);
         $mail->setSubject($this->view->translate('mail_new_password_subject'));
         $mail->setBodyHtml($this->view->render('mail/reset-confirm.phtml'));
@@ -161,7 +159,6 @@ class Admin_IndexController extends Zend_Controller_Action {
             $this->view->mailHost = $this->getRequest()->getHttpHost();
             $this->view->mailResetConfirmHours = $settings['reset_confirm_hours'];
             $mail = new Zend_Mail('utf-8');
-            $mail->setFrom($settings['mail_from_email'], $settings['mail_from_name']);
             $mail->addTo($email);
             $mail->setSubject($this->view->translate('mail_reset_password_subject'));
             $mail->setBodyHtml($this->view->render('mail/reset-password.phtml'));

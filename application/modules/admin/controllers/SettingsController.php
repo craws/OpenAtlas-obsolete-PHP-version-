@@ -12,7 +12,6 @@ class Admin_SettingsController extends Zend_Controller_Action {
             return;
         }
         $mail = new Zend_Mail('utf-8');
-        $mail->setFrom($settings['mail_from_email'], $settings['mail_from_name']);
         $mail->addTo($recipient);
         $mail->setSubject('Test mail from ' . $settings['sitename']);
         $user = Zend_Registry::get('user');

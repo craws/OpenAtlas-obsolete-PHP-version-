@@ -18,7 +18,6 @@ class Admin_OverviewController extends Zend_Controller_Action {
             foreach($receivers as $receiver) {
                 $mail->addTo($receiver);
             }
-            $mail->setFrom($settings['mail_from_email'], $settings['mail_from_name']);
             $mail->setSubject($form->getValue('subject') . ' from ' . $settings['sitename']);
             $user = Zend_Registry::get('user');
             $body = $form->getValue('subject') . ' from ' . $user->username . ' (' . $user->id . ') ' . $user->email .
