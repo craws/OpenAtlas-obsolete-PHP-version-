@@ -8,5 +8,8 @@ class Model_Link extends Model_AbstractObject {
     public $domain;
     public $property;
     public $range;
+    public $type;
+    public $first; // for list views
+    public $last; // for list views
 
 }

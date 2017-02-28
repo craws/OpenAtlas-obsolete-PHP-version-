@@ -23,7 +23,7 @@ class Admin_BiblioController extends Zend_Controller_Action {
         $reference = Model_EntityMapper::getById($this->_getParam('referenceId'));
         $propertyCode = ($reference->class->code == 'E84') ? 'P128' : 'P67';
         Zend_Db_Table::getDefaultAdapter()->beginTransaction();
-        $linkId = Model_LinkMapper::insert($propertyCode, $reference, $entity, $form->getValue('page'));
+        $linkId = $reference->link($propertyCode, $entity, $form->getValue('page'));
         Model_UserLogMapper::insert('link', $linkId, 'insert');
         Zend_Db_Table::getDefaultAdapter()->commit();
         $this->_helper->message('info_insert');

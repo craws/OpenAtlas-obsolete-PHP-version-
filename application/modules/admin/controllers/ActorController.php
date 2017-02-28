@@ -56,7 +56,7 @@ class Admin_ActorController extends Zend_Controller_Action {
         $actorId = Model_EntityMapper::insert($class->id, $form->getValue('name'), $form->getValue('description'));
         $actor = Model_EntityMapper::getById($actorId);
         if ($source) {
-            Model_LinkMapper::insert('P67', $source, $actor);
+            $source->link('P67', $actor);
         }
         self::save($actor, $form, $hierarchies);
         Model_UserLogMapper::insert('entity', $actorId, 'insert');
@@ -104,10 +104,10 @@ class Admin_ActorController extends Zend_Controller_Action {
         $actor->description = $form->getValue('description');
         Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         $actor->update();
-        foreach (Model_LinkMapper::getLinkedEntities($actor, 'P131') as $alias) {
+        foreach ($actor->getLinkedEntities('P131') as $alias) {
             $alias->delete();
         }
-        foreach (Model_LinkMapper::getLinks($actor, ['P2', 'P74', 'OA8', 'OA9']) as $link) {
+        foreach ($actor->getLinks(['P2', 'P74', 'OA8', 'OA9']) as $link) {
             $link->delete();
         }
         self::save($actor, $form, $hierarchies);
@@ -120,13 +120,13 @@ class Admin_ActorController extends Zend_Controller_Action {
     public function viewAction() {
         $actor = Model_EntityMapper::getById($this->_getParam('id'));
         $this->view->actor = $actor;
-        $this->view->aliases = Model_LinkMapper::getLinkedEntities($actor, 'P131');
+        $this->view->aliases = $actor->getLinkedEntities('P131');
         $this->view->dates = Model_DateMapper::getDates($actor);
-        $this->view->relationInverseLinks = Model_LinkMapper::getLinks($actor, 'OA7', true);
-        $this->view->relationLinks = Model_LinkMapper::getLinks($actor, 'OA7');
+        $this->view->relationInverseLinks = $actor->getLinks('OA7', true);
+        $this->view->relationLinks = $actor->getLinks('OA7');
         $sourceLinks = [];
         $referenceLinks = [];
-        foreach (Model_LinkMapper::getLinks($actor, 'P67', true) as $link) {
+        foreach ($actor->getLinks('P67', true) as $link) {
             switch ($link->domain->class->code) {
                 case 'E31':
                     $referenceLinks[] = $link;
@@ -138,39 +138,39 @@ class Admin_ActorController extends Zend_Controller_Action {
         }
         $this->view->sourceLinks = $sourceLinks;
         $this->view->referenceLinks = $referenceLinks;
-        $eventLinks = Model_LinkMapper::getLinks($actor, ['P11', 'P14', 'P22', 'P23'], true);
+        $eventLinks = $actor->getLinks(['P11', 'P14', 'P22', 'P23'], true);
         $this->view->eventLinks = $eventLinks;
-        $this->view->memberOfLinks = Model_LinkMapper::getLinks($actor, 'P107', true);
+        $this->view->memberOfLinks = $actor->getLinks('P107', true);
         if ($actor->class->code != 'E21') {
-            $this->view->memberLinks = Model_LinkMapper::getLinks($actor, 'P107');
+            $this->view->memberLinks = $actor->getLinks('P107');
         }
         $objectIds = [];
-        $residence = Model_LinkMapper::getLinkedEntity($actor, 'P74');
+        $residence = $actor->getLinkedEntity('P74');
         if ($residence) {
-            $object = Model_LinkMapper::getLinkedEntity($residence, 'P53', true);
+            $object = $residence->getLinkedEntity('P53', true);
             $objectIds[] = $object->id;
             $this->view->residence = $object;
         }
-        $firstPlace = Model_LinkMapper::getLinkedEntity($actor, 'OA8');
+        $firstPlace = $actor->getLinkedEntity('OA8');
         if ($firstPlace) {
-            $object = Model_LinkMapper::getLinkedEntity($firstPlace, 'P53', true);
+            $object = $firstPlace->getLinkedEntity('P53', true);
             $objectIds[] = $object->id;
             $this->view->first = $object;
         }
-        $lastPlace = Model_LinkMapper::getLinkedEntity($actor, 'OA9');
+        $lastPlace = $actor->getLinkedEntity('OA9');
         if ($lastPlace) {
-            $object = Model_LinkMapper::getLinkedEntity($lastPlace, 'P53', true);
+            $object = $lastPlace->getLinkedEntity('P53', true);
             $objectIds[] = $object->id;
             $this->view->last = $object;
         }
         foreach ($eventLinks as $link) {
             $event = $link->domain;
-            $place = Model_LinkMapper::getLinkedEntity($event, 'P7');
+            $place = $event->getLinkedEntity('P7');
             if ($place) {
-                $object = Model_LinkMapper::getLinkedEntity($place, 'P53', true);
+                $object = $place->getLinkedEntity('P53', true);
                 $objectIds[] = $object->id;
             }
-            $acquisition = Model_LinkMapper::getLinkedEntity($event, 'P24');
+            $acquisition = $event->getLinkedEntity('P24');
             if ($acquisition) {
                 $objectIds[] = $acquisition->id;
             }
@@ -202,9 +202,9 @@ class Admin_ActorController extends Zend_Controller_Action {
             'modified' => ($actor->modified) ? $actor->modified->getTimestamp() : 0
         ]);
         foreach (['residence' => 'P74', 'appearsFirst' => 'OA8', 'appearsLast' => 'OA9'] as $formField => $propertyCode) {
-            $place = Model_LinkMapper::getLinkedEntity($actor, $propertyCode);
+            $place = $actor->getLinkedEntity($propertyCode);
             if ($place) {
-                $object = Model_LinkMapper::getLinkedEntity($place, 'P53', true);
+                $object = $place->getLinkedEntity('P53', true);
                 $form->populate([
                     $formField . 'Id' => $object->id,
                     $formField . 'Button' => $object->name
@@ -221,14 +221,14 @@ class Admin_ActorController extends Zend_Controller_Action {
         foreach (['residenceId' => 'P74', 'appearsFirstId' => 'OA8', 'appearsLastId' => 'OA9'] as $formField => $propertyCode) {
             if ($form->getValue($formField)) {
                 $place = Model_LinkMapper::getLinkedEntity($form->getValue($formField), 'P53');
-                Model_LinkMapper::insert($propertyCode, $entity, $place);
+                $entity->link($propertyCode, $place);
             }
         }
         $data = $form->getValues();
         foreach (array_unique($data['alias']) as $name) {
             if (trim($name)) {
                 $aliasId = Model_EntityMapper::insert('E82', trim($name));
-                Model_LinkMapper::insert('P131', $entity, $aliasId);
+                $entity->link('P131', $aliasId);
             }
         }
     }

@@ -1,18 +1,20 @@
 <? $this->breadcrumb = [$this->link('overview'), $this->ucstring('feedback')]; ?>
 <p><?= $this->translate('feedback_intro') ?>:</p>
 <p>
-    1. <?= $this->translate('feedback_redmine') ?>:
+    - <?= $this->translate('feedback_redmine') ?>:
     <a href="http://redmine.craws.net/projects/uni" onclick="window.open(this.href); return false;">
         http://redmine.craws.net
     </a>
 </p>
+<? if ($this->feedbackEmail): ?>
 <p>
-    2. <?= $this->translate('feedback_mail') ?>
-    <a href="mailto:<?= $this->feedbackReceiver ?>"><?= $this->feedbackReceiver ?></a>
+    - <?= $this->translate('feedback_mail') ?>
+    <a href="mailto:<?= $this->feedbackEmail ?>"><?= $this->feedbackEmail ?></a>
 </p>
-<? if (Model_SettingsMapper::getSetting('module', 'mail')): ?>
+<? endif ?>
+<? if (Model_SettingsMapper::getSetting('mail') && $this->feedbackEmail): ?>
     <?= $this->form->renderForm(false); ?>
-    <p>3. <?= $this->translate('feedback_form') ?></p>
+    <p>- <?= $this->translate('feedback_form') ?></p>
     <div class="tableRow">
         <?= $this->form->subject->renderLabel() ?>
         <div class="tableCell"><?= $this->form->subject->renderViewHelper() ?></div>
@@ -25,4 +27,3 @@
         <?= $this->form->formSubmit->renderViewHelper() ?>
     </div>
 <? endif ?>
-

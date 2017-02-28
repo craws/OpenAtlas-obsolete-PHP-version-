@@ -1,0 +1,9 @@
+<? $this->breadcrumb = [$this->ucstring('unsubscribe_newsletter')]; ?>
+<? if (!$this->subscriber): ?>
+    <?= $this->translate('unsubscribe_user_not_found'); ?>
+<? else: ?>
+    <p><?= $this->translate('unsubscribe_confirmation'); ?></p>
+    <a class="button" href="/unsubscribe/index/code/<?= $this->code ?>/confirm/true">
+        <?= $this->ucstring('unsubscribe') ?>
+    </a>
+<? endif ?>

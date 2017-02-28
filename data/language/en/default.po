@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenATLAS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-06 19:13+0100\n"
+"POT-Creation-Date: 2016-11-29 14:50+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Alexander Watzinger <alexander.watzinger@craws.net>\n"
 "Language-Team: craws.net <alexander.watzinger@craws.net>\n"
@@ -48,7 +48,7 @@ msgstr "missing class"
 #: ../../../application/modules/admin/controllers/RelationController.php:28
 #: ../../../application/modules/admin/controllers/SourceController.php:107
 #: ../../../application/modules/admin/controllers/SourceController.php:141
-#: ../../../application/modules/admin/controllers/UserController.php:101
+#: ../../../application/modules/admin/controllers/UserController.php:153
 msgid "info_insert"
 msgstr "An entry has been created."
 
@@ -75,10 +75,10 @@ msgstr "Update failed."
 #: ../../../application/modules/admin/controllers/ProfileController.php:86
 #: ../../../application/modules/admin/controllers/ReferenceController.php:101
 #: ../../../application/modules/admin/controllers/RelationController.php:69
-#: ../../../application/modules/admin/controllers/SettingsController.php:26
+#: ../../../application/modules/admin/controllers/SettingsController.php:134
 #: ../../../application/modules/admin/controllers/SourceController.php:180
 #: ../../../application/modules/admin/controllers/SourceController.php:224
-#: ../../../application/modules/admin/controllers/UserController.php:69
+#: ../../../application/modules/admin/controllers/UserController.php:121
 msgid "info_update"
 msgstr "Changes have been saved."
 
@@ -86,7 +86,7 @@ msgstr "Changes have been saved."
 #: ../../../application/modules/admin/controllers/HierarchyController.php:90
 #: ../../../application/modules/admin/controllers/HierarchyController.php:132
 #: ../../../application/modules/admin/controllers/UserController.php:11
-#: ../../../application/modules/admin/controllers/UserController.php:33
+#: ../../../application/modules/admin/controllers/UserController.php:84
 msgid "error_forbidden"
 msgstr "Forbidden"
 
@@ -117,7 +117,7 @@ msgstr "Failed login"
 msgid "error_login_attempts_exceeded"
 msgstr "Too many login attempts. You can try again after a few minutes."
 
-#: ../../../application/modules/admin/controllers/IndexController.php:105
+#: ../../../application/modules/admin/controllers/IndexController.php:104
 msgid "error_invalid_request"
 msgstr "Invalid request"
 
@@ -125,33 +125,35 @@ msgstr "Invalid request"
 msgid "error_reset_outdated"
 msgstr "This request isn't valid anymore."
 
-#: ../../../application/modules/admin/controllers/IndexController.php:127
+#: ../../../application/modules/admin/controllers/IndexController.php:128
 msgid "mail_new_password_subject"
 msgstr "New Password"
 
-#: ../../../application/modules/admin/controllers/IndexController.php:132
+#: ../../../application/modules/admin/controllers/IndexController.php:133
 msgid "info_mail_new_password_send"
 msgstr "A new password has been sent to %s."
 
-#: ../../../application/modules/admin/controllers/IndexController.php:135
-#: ../../../application/modules/admin/controllers/IndexController.php:170
-#: ../../../application/modules/admin/controllers/OverviewController.php:33
+#: ../../../application/modules/admin/controllers/IndexController.php:137
+#: ../../../application/modules/admin/controllers/IndexController.php:175
+#: ../../../application/modules/admin/controllers/OverviewController.php:34
+#: ../../../application/modules/admin/controllers/UserController.php:69
+#: ../../../application/modules/admin/controllers/UserController.php:168
 msgid "error_mail_send"
 msgstr "The mail couldn't be sent."
 
-#: ../../../application/modules/admin/controllers/IndexController.php:148
+#: ../../../application/modules/admin/controllers/IndexController.php:150
 msgid "error_nonexist_email"
 msgstr "Sorry, but this email address is unknown to us."
 
-#: ../../../application/modules/admin/controllers/IndexController.php:161
+#: ../../../application/modules/admin/controllers/IndexController.php:166
 msgid "mail_reset_password_subject"
 msgstr "Password Reset "
 
-#: ../../../application/modules/admin/controllers/IndexController.php:166
+#: ../../../application/modules/admin/controllers/IndexController.php:171
 msgid "info_mail_password_confirmed_send"
 msgstr "A confirmation mail for a password reset has been sent to %s."
 
-#: ../../../application/modules/admin/controllers/OverviewController.php:28
+#: ../../../application/modules/admin/controllers/OverviewController.php:29
 msgid "info_feedback_thanks"
 msgstr "Thank you for your feedback."
 
@@ -160,7 +162,7 @@ msgid "error_wrong_password"
 msgstr "Wrong Password"
 
 #: ../../../application/modules/admin/controllers/ProfileController.php:46
-#: ../../../application/modules/admin/controllers/UserController.php:80
+#: ../../../application/modules/admin/controllers/UserController.php:132
 msgid "error_password_retype"
 msgstr "The passwords didn't mach."
 
@@ -169,15 +171,184 @@ msgid "info_password_update"
 msgstr "Your password has been updated."
 
 #: ../../../application/modules/admin/controllers/ProfileController.php:73
-#: ../../../application/modules/admin/controllers/UserController.php:57
-#: ../../../application/modules/admin/controllers/UserController.php:86
+#: ../../../application/modules/admin/controllers/UserController.php:109
+#: ../../../application/modules/admin/controllers/UserController.php:138
 msgid "error_email_exists"
 msgstr "This email address is already in use."
 
+#: ../../../application/modules/admin/controllers/SettingsController.php:11
+msgid "error_invalid_mail"
+msgstr "invalid_mail"
+
+#: ../../../application/modules/admin/controllers/SettingsController.php:22
+msgid "info_test_mail_send"
+msgstr "A test mail was sent to %s."
+
+#: ../../../application/modules/admin/controllers/SettingsController.php:25
+msgid "error_test_mail_send"
+msgstr "The mail couldn't be sent to %s."
+
+#: ../../../application/modules/admin/controllers/SettingsController.php:47
+#: ../../../application/modules/admin/controllers/SettingsController.php:81
+msgid "general"
+msgstr "general"
+
+#: ../../../application/modules/admin/controllers/SettingsController.php:52
+#: ../../../application/modules/admin/controllers/SettingsController.php:53
+#: ../../../application/modules/admin/controllers/SettingsController.php:56
+#: ../../../application/modules/admin/forms/Settings.php:53
+msgid "on"
+msgstr "on"
+
+#: ../../../application/modules/admin/controllers/SettingsController.php:52
+#: ../../../application/modules/admin/controllers/SettingsController.php:53
+#: ../../../application/modules/admin/controllers/SettingsController.php:56
+#: ../../../application/modules/admin/forms/Settings.php:53
+msgid "off"
+msgstr "off"
+
+#: ../../../application/modules/admin/controllers/SettingsController.php:55
+#: ../../../application/modules/admin/controllers/SettingsController.php:89
+#: ../../../application/modules/admin/controllers/SettingsController.php:90
+msgid "mail"
+msgstr "email"
+
+#: ../../../application/modules/admin/controllers/SettingsController.php:68
+#: ../../../application/modules/admin/controllers/SettingsController.php:105
+msgid "authentication"
+msgstr "authentication"
+
+#: ../../../application/modules/admin/controllers/SettingsController.php:82
+msgid "sitename"
+msgstr "sitename"
+
+#: ../../../application/modules/admin/controllers/SettingsController.php:83
+#: ../../../application/modules/admin/forms/Settings.php:60
+msgid "default_language"
+msgstr "default language"
+
+#: ../../../application/modules/admin/controllers/SettingsController.php:84
+#: ../../../application/modules/admin/forms/Settings.php:79
+msgid "default_table_rows"
+msgstr "default table rows"
+
+#: ../../../application/modules/admin/controllers/SettingsController.php:85
+#: ../../../application/modules/admin/forms/Settings.php:65
+msgid "log_level"
+msgstr "log level"
+
+#: ../../../application/modules/admin/controllers/SettingsController.php:86
+msgid "maintenance"
+msgstr "maintenance"
+
+#: ../../../application/modules/admin/controllers/SettingsController.php:87
+msgid "offline"
+msgstr "offline"
+
+#: ../../../application/modules/admin/controllers/SettingsController.php:91
+msgid "mail_transport_username"
+msgstr "username"
+
+#: ../../../application/modules/admin/controllers/SettingsController.php:92
+#: ../../../application/modules/admin/forms/Settings.php:12
+msgid "mail_transport_password"
+msgstr "password"
+
+#: ../../../application/modules/admin/controllers/SettingsController.php:93
+#: ../../../application/modules/admin/forms/Settings.php:17
+msgid "mail_transport_password_retype"
+msgstr "retype password"
+
+#: ../../../application/modules/admin/controllers/SettingsController.php:94
+msgid "mail_transport_host"
+msgstr "host"
+
+#: ../../../application/modules/admin/controllers/SettingsController.php:95
+msgid "mail_transport_port"
+msgstr "port"
+
+#: ../../../application/modules/admin/controllers/SettingsController.php:96
+#: ../../../application/modules/admin/forms/Settings.php:22
+msgid "mail_transport_type"
+msgstr "transport type"
+
+#: ../../../application/modules/admin/controllers/SettingsController.php:97
+msgid "mail_transport_ssl"
+msgstr "SSL"
+
+#: ../../../application/modules/admin/controllers/SettingsController.php:98
+msgid "mail_transport_auth"
+msgstr "auth"
+
+#: ../../../application/modules/admin/controllers/SettingsController.php:99
+msgid "mail_from_email"
+msgstr "email from"
+
+#: ../../../application/modules/admin/controllers/SettingsController.php:100
+msgid "mail_from_name"
+msgstr "from name"
+
+#: ../../../application/modules/admin/controllers/SettingsController.php:101
+msgid "mail_recipients_login"
+msgstr "recipients login"
+
+#: ../../../application/modules/admin/controllers/SettingsController.php:101
+msgid "info_mail_recipients_login"
+msgstr ""
+"You can use multiple mails separated by comma. Each recipient will be "
+"informed when somebody logs in."
+
+#: ../../../application/modules/admin/controllers/SettingsController.php:102
+msgid "mail_recipients_feedback"
+msgstr "recipients feedback"
+
+#: ../../../application/modules/admin/controllers/SettingsController.php:102
+msgid "info_mail_recipients_feedback"
+msgstr ""
+"You can use multiple mails separated by comma. The first one will be shown "
+"on the feedback site."
+
+#: ../../../application/modules/admin/controllers/SettingsController.php:106
+msgid "random_password_length"
+msgstr "random password length"
+
+#: ../../../application/modules/admin/controllers/SettingsController.php:107
+msgid "reset_confirm_hours"
+msgstr "reset confirm hours"
+
+#: ../../../application/modules/admin/controllers/SettingsController.php:108
+msgid "failed_login_tries"
+msgstr "failed login tries"
+
+#: ../../../application/modules/admin/controllers/SettingsController.php:109
+msgid "failed_login_forget_minutes"
+msgstr "Failed login forget minutes"
+
 #: ../../../application/modules/admin/controllers/UserController.php:53
-#: ../../../application/modules/admin/controllers/UserController.php:83
+#: ../../../application/modules/default/views/scripts/unsubscribe/index.phtml:7
+msgid "unsubscribe"
+msgstr "unsubscribe"
+
+#: ../../../application/modules/admin/controllers/UserController.php:54
+msgid "mail_unsubscribe"
+msgstr "Click here to %s from this newsletter."
+
+#: ../../../application/modules/admin/controllers/UserController.php:75
+msgid "info_newsletter_send"
+msgstr "The newsletter was sent to %s recipients."
+
+#: ../../../application/modules/admin/controllers/UserController.php:105
+#: ../../../application/modules/admin/controllers/UserController.php:135
 msgid "error_username_exists"
 msgstr "This username is already in use"
+
+#: ../../../application/modules/admin/controllers/UserController.php:163
+msgid "mail_registration_subject"
+msgstr "Your account information for"
+
+#: ../../../application/modules/admin/controllers/UserController.php:171
+msgid "info_registration_mail_sent"
+msgstr "A registration mail was sent."
 
 #: ../../../application/modules/admin/forms/Actor.php:12
 #: ../../../application/modules/admin/views/scripts/actor/view.phtml:47
@@ -198,7 +369,7 @@ msgstr "death"
 #: ../../../application/modules/admin/forms/Profile.php:10
 #: ../../../application/modules/admin/forms/Reference.php:13
 #: ../../../application/modules/admin/forms/Source.php:11
-#: ../../../application/modules/admin/forms/Text.php:20
+#: ../../../application/modules/admin/forms/Text.php:23
 #: ../../../application/modules/admin/forms/User.php:49
 #: ../../../application/modules/admin/views/scripts/actor/form.phtml:44
 #: ../../../application/modules/admin/views/scripts/actor/index.phtml:9
@@ -346,8 +517,8 @@ msgstr "place of issue"
 #: ../../../application/modules/admin/forms/Node.php:22
 #: ../../../application/modules/admin/forms/Password.php:26
 #: ../../../application/modules/admin/forms/Profile.php:30
-#: ../../../application/modules/admin/forms/Settings.php:15
-#: ../../../application/modules/admin/forms/User.php:68
+#: ../../../application/modules/admin/forms/Settings.php:83
+#: ../../../application/modules/admin/forms/User.php:75
 #: ../../../application/layouts/scripts/map.phtml:26
 msgid "save"
 msgstr "save"
@@ -399,6 +570,7 @@ msgstr "place"
 
 #: ../../../application/modules/admin/forms/Event.php:54
 #: ../../../application/modules/admin/views/scripts/event/form.phtml:138
+#: ../../../application/modules/admin/views/scripts/user/newsletter.phtml:8
 msgid "recipient"
 msgstr "recipient"
 
@@ -412,6 +584,8 @@ msgid "given_place"
 msgstr "given place"
 
 #: ../../../application/modules/admin/forms/Feedback.php:12
+#: ../../../application/modules/admin/forms/Newsletter.php:11
+#: ../../../application/modules/admin/forms/Newsletter.php:16
 msgid "subject"
 msgstr "subject"
 
@@ -428,6 +602,8 @@ msgid "problem"
 msgstr "problem"
 
 #: ../../../application/modules/admin/forms/Feedback.php:24
+#: ../../../application/modules/admin/forms/Newsletter.php:25
+#: ../../../application/modules/admin/views/scripts/user/newsletter.phtml:24
 msgid "send"
 msgstr "send"
 
@@ -465,6 +641,7 @@ msgstr "limit"
 #: ../../../application/modules/admin/views/scripts/overview/index.phtml:35
 #: ../../../application/modules/admin/views/scripts/user/index.phtml:3
 #: ../../../application/modules/admin/views/scripts/user/insert.phtml:1
+#: ../../../application/modules/admin/views/scripts/user/newsletter.phtml:1
 #: ../../../application/modules/admin/views/scripts/user/update.phtml:1
 #: ../../../application/modules/admin/views/scripts/user/view.phtml:4
 msgid "user"
@@ -481,25 +658,53 @@ msgstr "apply"
 
 #: ../../../application/modules/admin/forms/Login.php:10
 #: ../../../application/modules/admin/forms/User.php:17
+#: ../../../application/modules/admin/views/scripts/mail/registration.phtml:3
 #: ../../../application/modules/admin/views/scripts/mail/reset-confirm.phtml:4
-#: ../../../application/modules/admin/views/scripts/user/index.phtml:6
+#: ../../../application/modules/admin/views/scripts/user/index.phtml:9
+#: ../../../application/modules/admin/views/scripts/user/newsletter.phtml:8
 #: ../../../application/modules/admin/views/scripts/user/view.phtml:18
 msgid "username"
 msgstr "username"
 
 #: ../../../application/modules/admin/forms/Login.php:19
 #: ../../../application/modules/admin/forms/User.php:37
+#: ../../../application/modules/admin/views/scripts/mail/registration.phtml:4
 #: ../../../application/modules/admin/views/scripts/mail/reset-confirm.phtml:5
 msgid "password"
 msgstr "password"
 
 #: ../../../application/modules/admin/forms/Login.php:26
-#: ../../../application/layouts/scripts/default.phtml:63
+#: ../../../application/layouts/scripts/default.phtml:68
 #: ../../../application/modules/admin/views/scripts/index/index.phtml:1
 #: ../../../application/modules/admin/views/scripts/index/index.phtml:2
 #: ../../../application/modules/admin/views/scripts/index/reset-password.phtml:1
 msgid "login"
 msgstr "login"
+
+#: ../../../application/modules/admin/forms/Newsletter.php:19
+#: ../../../application/modules/admin/forms/Settings.php:74
+#: ../../../application/modules/admin/forms/User.php:59
+#: ../../../application/modules/admin/views/scripts/actor/view.phtml:5
+#: ../../../application/modules/admin/views/scripts/carrier/view.phtml:5
+#: ../../../application/modules/admin/views/scripts/event/view.phtml:5
+#: ../../../application/modules/admin/views/scripts/hierarchy/view.phtml:13
+#: ../../../application/modules/admin/views/scripts/place/view.phtml:5
+#: ../../../application/modules/admin/views/scripts/reference/view.phtml:5
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:6
+#: ../../../application/modules/admin/views/scripts/user/view.phtml:27
+#: ../../../application/modules/default/views/scripts/class/view.phtml:10
+#: ../../../application/modules/default/views/scripts/property/view.phtml:9
+msgid "info"
+msgstr "info"
+
+#: ../../../application/modules/admin/forms/Newsletter.php:23
+#: ../../../application/modules/admin/forms/Source.php:15
+#: ../../../application/modules/admin/views/scripts/content/index.phtml:3
+#: ../../../application/modules/admin/views/scripts/content/update.phtml:1
+#: ../../../application/modules/admin/views/scripts/content/view.phtml:1
+#: ../../../application/modules/admin/views/scripts/source/view.phtml:31
+msgid "content"
+msgstr "content"
 
 #: ../../../application/modules/admin/forms/Password.php:10
 msgid "current_password"
@@ -518,7 +723,8 @@ msgstr "Retype new password"
 #: ../../../application/modules/admin/forms/Profile.php:14
 #: ../../../application/modules/admin/forms/User.php:53
 #: ../../../application/modules/admin/views/scripts/profile/update.phtml:11
-#: ../../../application/modules/admin/views/scripts/user/index.phtml:6
+#: ../../../application/modules/admin/views/scripts/user/index.phtml:9
+#: ../../../application/modules/admin/views/scripts/user/newsletter.phtml:8
 #: ../../../application/modules/admin/views/scripts/user/view.phtml:21
 msgid "email"
 msgstr "email"
@@ -535,6 +741,8 @@ msgstr "show email"
 #: ../../../application/modules/admin/forms/Profile.php:25
 #: ../../../application/modules/admin/views/scripts/profile/update.phtml:25
 #: ../../../application/modules/admin/views/scripts/user/index.phtml:6
+#: ../../../application/modules/admin/views/scripts/user/index.phtml:9
+#: ../../../application/modules/admin/views/scripts/user/newsletter.phtml:1
 msgid "newsletter"
 msgstr "newsletter"
 
@@ -548,66 +756,33 @@ msgstr "search term"
 msgid "search"
 msgstr "search"
 
-#: ../../../application/modules/admin/forms/Settings.php:33
-#: ../../../application/modules/admin/views/scripts/settings/index.phtml:15
-msgid "off"
-msgstr "off"
-
-#: ../../../application/modules/admin/forms/Settings.php:33
-#: ../../../application/modules/admin/views/scripts/settings/index.phtml:16
-msgid "on"
-msgstr "on"
-
-#: ../../../application/modules/admin/forms/Settings.php:38
+#: ../../../application/modules/admin/forms/Settings.php:68
 msgid "emergency"
 msgstr "emergency"
 
-#: ../../../application/modules/admin/forms/Settings.php:39
+#: ../../../application/modules/admin/forms/Settings.php:69
 msgid "alert"
 msgstr "alert"
 
-#: ../../../application/modules/admin/forms/Settings.php:40
+#: ../../../application/modules/admin/forms/Settings.php:70
 msgid "critical"
 msgstr "critical"
 
-#: ../../../application/modules/admin/forms/Settings.php:41
+#: ../../../application/modules/admin/forms/Settings.php:71
 msgid "error"
 msgstr "error"
 
-#: ../../../application/modules/admin/forms/Settings.php:42
+#: ../../../application/modules/admin/forms/Settings.php:72
 msgid "warn"
 msgstr "warn"
 
-#: ../../../application/modules/admin/forms/Settings.php:43
+#: ../../../application/modules/admin/forms/Settings.php:73
 msgid "notice"
 msgstr "notice"
 
-#: ../../../application/modules/admin/forms/Settings.php:44
-#: ../../../application/modules/admin/forms/User.php:57
-#: ../../../application/modules/admin/views/scripts/actor/view.phtml:5
-#: ../../../application/modules/admin/views/scripts/carrier/view.phtml:5
-#: ../../../application/modules/admin/views/scripts/event/view.phtml:5
-#: ../../../application/modules/admin/views/scripts/hierarchy/view.phtml:13
-#: ../../../application/modules/admin/views/scripts/place/view.phtml:5
-#: ../../../application/modules/admin/views/scripts/reference/view.phtml:5
-#: ../../../application/modules/admin/views/scripts/source/view.phtml:6
-#: ../../../application/modules/admin/views/scripts/user/view.phtml:27
-#: ../../../application/modules/default/views/scripts/class/view.phtml:10
-#: ../../../application/modules/default/views/scripts/property/view.phtml:9
-msgid "info"
-msgstr "info"
-
-#: ../../../application/modules/admin/forms/Settings.php:45
+#: ../../../application/modules/admin/forms/Settings.php:75
 msgid "debug"
 msgstr "debug"
-
-#: ../../../application/modules/admin/forms/Source.php:15
-#: ../../../application/modules/admin/views/scripts/content/index.phtml:3
-#: ../../../application/modules/admin/views/scripts/content/update.phtml:1
-#: ../../../application/modules/admin/views/scripts/content/view.phtml:1
-#: ../../../application/modules/admin/views/scripts/source/view.phtml:31
-msgid "content"
-msgstr "content"
 
 #: ../../../application/modules/admin/forms/Test.php:11
 #: ../../../application/modules/admin/views/scripts/hierarchy/view.phtml:64
@@ -634,7 +809,7 @@ msgstr "range"
 msgid "test"
 msgstr "test"
 
-#: ../../../application/modules/admin/forms/Text.php:11
+#: ../../../application/modules/admin/forms/Text.php:13
 #: ../../../application/modules/admin/views/scripts/actor/view.phtml:155
 #: ../../../application/modules/admin/views/scripts/biblio/form.phtml:22
 #: ../../../application/modules/admin/views/scripts/carrier/view.phtml:43
@@ -652,7 +827,7 @@ msgstr "test"
 msgid "type"
 msgstr "type"
 
-#: ../../../application/modules/admin/forms/Text.php:24
+#: ../../../application/modules/admin/forms/Text.php:27
 #: ../../../application/modules/admin/views/scripts/content/index.phtml:9
 #: ../../../application/modules/admin/views/scripts/source/view.phtml:154
 msgid "text"
@@ -663,12 +838,16 @@ msgid "active"
 msgstr "active"
 
 #: ../../../application/modules/admin/forms/User.php:23
-#: ../../../application/modules/admin/views/scripts/user/index.phtml:6
+#: ../../../application/modules/admin/views/scripts/user/index.phtml:9
 #: ../../../application/modules/admin/views/scripts/user/view.phtml:19
 msgid "group"
 msgstr "group"
 
-#: ../../../application/modules/admin/forms/User.php:58
+#: ../../../application/modules/admin/forms/User.php:61
+msgid "send_registration_mail"
+msgstr "Send account information to the user"
+
+#: ../../../application/modules/admin/forms/User.php:65
 msgid "insert"
 msgstr "Insert"
 
@@ -683,6 +862,10 @@ msgstr "This entry doesn't exist. Maybe you followed an out-dated link."
 #: ../../../application/modules/default/controllers/ErrorController.php:22
 msgid "error_application"
 msgstr "Sorry, but an error occurred."
+
+#: ../../../application/modules/default/controllers/UnsubscribeController.php:17
+msgid "info_unsubscribed"
+msgstr "You have successfully unsubscribed."
 
 #: ../../../library/Craws/View/Helper/BookmarkToggle.php:7
 msgid "bookmark"
@@ -807,7 +990,7 @@ msgid "class"
 msgstr "class"
 
 #: ../../../library/Craws/View/Helper/TableLog.php:13
-#: ../../../application/modules/admin/views/scripts/user/index.phtml:6
+#: ../../../application/modules/admin/views/scripts/user/index.phtml:9
 #: ../../../application/modules/admin/views/scripts/user/view.phtml:23
 msgid "created"
 msgstr "created"
@@ -822,23 +1005,23 @@ msgid "hide"
 msgstr "hide"
 
 #: ../../../application/layouts/scripts/admin.phtml:85
-#: ../../../application/layouts/scripts/default.phtml:47
+#: ../../../application/layouts/scripts/default.phtml:52
 msgid "hello"
 msgstr "hello"
 
 #: ../../../application/layouts/scripts/admin.phtml:88
-#: ../../../application/layouts/scripts/default.phtml:50
+#: ../../../application/layouts/scripts/default.phtml:55
 #: ../../../application/modules/admin/views/scripts/profile/index.phtml:2
 msgid "profile"
 msgstr "profile"
 
 #: ../../../application/layouts/scripts/admin.phtml:89
-#: ../../../application/layouts/scripts/default.phtml:51
+#: ../../../application/layouts/scripts/default.phtml:56
 msgid "logout"
 msgstr "logout"
 
 #: ../../../application/layouts/scripts/admin.phtml:93
-#: ../../../application/layouts/scripts/default.phtml:55
+#: ../../../application/layouts/scripts/default.phtml:60
 msgid "version"
 msgstr "version"
 
@@ -860,7 +1043,7 @@ msgstr ""
 "JavaScript seems to be disabled. The functionality of this site will be "
 "limited."
 
-#: ../../../application/layouts/scripts/default.phtml:61
+#: ../../../application/layouts/scripts/default.phtml:66
 msgid "admin"
 msgstr "admin"
 
@@ -869,35 +1052,35 @@ msgid "details"
 msgstr "details"
 
 #: ../../../application/layouts/scripts/map.phtml:30
+msgid "map_clear"
+msgstr "clear"
+
+#: ../../../application/layouts/scripts/map.phtml:31
 msgid "map_info_reedit"
 msgstr "For re-editing please save or reload the whole place."
 
-#: ../../../application/layouts/scripts/map.phtml:31
+#: ../../../application/layouts/scripts/map.phtml:32
 msgid "map_info_shape"
 msgstr "Draw the shape of a physical thing if the precise extend is known."
 
-#: ../../../application/layouts/scripts/map.phtml:32
+#: ../../../application/layouts/scripts/map.phtml:33
 msgid "map_info_area"
 msgstr ""
 "Draw the area in which the physical thing is located. E.g. if its precise "
 "shape is not known but known to be within a certain area."
 
-#: ../../../application/layouts/scripts/map.phtml:33
+#: ../../../application/layouts/scripts/map.phtml:34
 msgid "map_info_point"
 msgstr ""
 "Set a marker/point at the position where the physical thing is located."
 
-#: ../../../application/layouts/scripts/map.phtml:34
+#: ../../../application/layouts/scripts/map.phtml:35
 msgid "map_info_close"
 msgstr "details"
 
-#: ../../../application/layouts/scripts/map.phtml:35
+#: ../../../application/layouts/scripts/map.phtml:36
 msgid "map_info_description"
 msgstr "Here you can enter a description."
-
-#: ../../../application/layouts/scripts/map.phtml:36
-msgid "map_clear"
-msgstr "clear"
 
 #: ../../../application/modules/admin/views/scripts/actor/form.phtml:44
 #: ../../../application/modules/admin/views/scripts/actor/index.phtml:9
@@ -1180,6 +1363,7 @@ msgstr "referred by"
 #: ../../../application/modules/admin/views/scripts/member/member.phtml:2
 #: ../../../application/modules/admin/views/scripts/relation/insert.phtml:2
 #: ../../../application/modules/admin/views/scripts/tableSorter.phtml:3
+#: ../../../application/modules/admin/views/scripts/user/newsletter.phtml:4
 msgid "no_entries"
 msgstr "no entries"
 
@@ -1300,6 +1484,10 @@ msgstr "path"
 msgid "message"
 msgstr "message"
 
+#: ../../../application/modules/admin/views/scripts/mail/registration.phtml:2
+msgid "mail_registration_for"
+msgstr "Your account information for"
+
 #: ../../../application/modules/admin/views/scripts/mail/reset-confirm.phtml:2
 msgid "mail_new_password_for"
 msgstr "New password for"
@@ -1337,17 +1525,19 @@ msgstr "feedback"
 
 #: ../../../application/modules/admin/views/scripts/overview/feedback.phtml:2
 msgid "feedback_intro"
-msgstr "There are multiple ways to provide feedback"
+msgstr ""
+"Thank you for your interest. Please use one of the following methods to "
+"provide feedback"
 
 #: ../../../application/modules/admin/views/scripts/overview/feedback.phtml:4
 msgid "feedback_redmine"
 msgstr "Our issue tracker, preferred but account required"
 
-#: ../../../application/modules/admin/views/scripts/overview/feedback.phtml:10
+#: ../../../application/modules/admin/views/scripts/overview/feedback.phtml:11
 msgid "feedback_mail"
 msgstr "Send a mail to"
 
-#: ../../../application/modules/admin/views/scripts/overview/feedback.phtml:15
+#: ../../../application/modules/admin/views/scripts/overview/feedback.phtml:17
 msgid "feedback_form"
 msgstr "Our feedback form"
 
@@ -1364,7 +1554,7 @@ msgid "feedback_teaser"
 msgstr "Want a new feature or experience any problems? Tell us about it:"
 
 #: ../../../application/modules/admin/views/scripts/overview/index.phtml:23
-#: ../../../application/modules/admin/views/scripts/user/index.phtml:6
+#: ../../../application/modules/admin/views/scripts/user/index.phtml:9
 msgid "last_login"
 msgstr "last login"
 
@@ -1416,7 +1606,7 @@ msgstr "no"
 
 #: ../../../application/modules/admin/views/scripts/profile/index.phtml:17
 #: ../../../application/modules/admin/views/scripts/profile/index.phtml:21
-#: ../../../application/modules/admin/views/scripts/user/index.phtml:10
+#: ../../../application/modules/admin/views/scripts/user/index.phtml:13
 msgid "yes"
 msgstr "yes"
 
@@ -1485,6 +1675,10 @@ msgstr "no search results"
 #: ../../../application/modules/admin/views/scripts/settings/index.phtml:2
 msgid "settings"
 msgstr "settings"
+
+#: ../../../application/modules/admin/views/scripts/settings/index.phtml:23
+msgid "send_test_mail"
+msgstr "Send test mail"
 
 #: ../../../application/modules/admin/views/scripts/source/text-add.phtml:1
 msgid "add_text"
@@ -1584,6 +1778,29 @@ msgstr "credits"
 msgid "under_maintenance"
 msgstr "This site is under maintenance. Please try again later."
 
+#: ../../../application/modules/default/views/scripts/unsubscribe/index.phtml:1
+msgid "unsubscribe_newsletter"
+msgstr "Unsubscribe newsletter"
+
+#: ../../../application/modules/default/views/scripts/unsubscribe/index.phtml:3
+msgid "unsubscribe_user_not_found"
+msgstr ""
+"Sorry, but this link seems invalid, You can also unsubscribe from the "
+"newsletter in your profile."
+
+#: ../../../application/modules/default/views/scripts/unsubscribe/index.phtml:5
+msgid "unsubscribe_confirmation"
+msgstr ""
+"Click the button to unsubscribe from the newsletter. You can always turn it "
+"on again in your profile."
+
+#, fuzzy
+#~ msgid "error_mail_sent"
+#~ msgstr "The mail couldn't be sent."
+
+#~ msgid "notify_login"
+#~ msgstr "notify login"
+
 #~ msgid "label_location_switch"
 #~ msgstr "location"
 
@@ -1615,9 +1832,6 @@ msgstr "This site is under maintenance. Please try again later."
 
 #~ msgid "involvement"
 #~ msgstr "involvement"
-
-#~ msgid "function"
-#~ msgstr "function"
 
 #~ msgid "node"
 #~ msgstr "node"

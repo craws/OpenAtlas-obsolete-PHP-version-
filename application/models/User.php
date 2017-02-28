@@ -17,6 +17,7 @@ class Model_User extends Model_AbstractObject {
     public $bookmarks = [];
     public $passwordResetCode;
     public $passwordResetDate;
+    public $unsubscribeCode;
     public $group = 'guest';
 
     public function getSetting($name) {
@@ -32,9 +33,9 @@ class Model_User extends Model_AbstractObject {
             return false;
         }
         $lastFailureDate = $user->loginLastFailure;
-        $lastFailureDate->addMinute(Model_SettingsMapper::getSetting('authentication', 'failed_login_forget_minutes'));
+        $lastFailureDate->addMinute(Model_SettingsMapper::getSetting('failed_login_forget_minutes'));
         if ($lastFailureDate->isLater(new Zend_Date()) &&
-          $user->loginFailedCount >= Model_SettingsMapper::getSetting('authentication', 'failed_login_tries')) {
+          $user->loginFailedCount >= Model_SettingsMapper::getSetting('failed_login_tries')) {
             return true;
         }
         return false;

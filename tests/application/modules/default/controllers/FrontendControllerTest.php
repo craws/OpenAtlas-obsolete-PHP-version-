@@ -10,7 +10,7 @@ class FrontendControllerTest extends ControllerTestCase {
         $this->login();
         $this->resetRequest()->resetResponse();
         $settings = Zend_Registry::get('settings');
-        $settings['general']['offline'] = 0;
+        $settings['offline'] = 0;
         Zend_Registry::set('settings', $settings);
         $this->dispatch('offline');
         $this->resetRequest()->resetResponse();
@@ -31,6 +31,7 @@ class FrontendControllerTest extends ControllerTestCase {
         $this->resetRequest()->resetResponse();
         $this->dispatch('property');
         $this->dispatch('property/view/id/' . Model_PropertyMapper::getByCode('P2')->id);
+        $this->dispatch('unsubscribe');
     }
 
     public function testModelAction() {

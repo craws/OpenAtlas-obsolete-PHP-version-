@@ -5,20 +5,92 @@
 class Model_EntityMapper extends \Model_AbstractMapper {
 
     private static $sql = "
-        SELECT e.id, e.class_id, e.name, e.description, e.created, e.modified, c.code,
-            e.value_timestamp, e.value_integer,
+        SELECT
+            e.id, e.class_id, e.name, e.description, e.created, e.modified, c.code, e.value_timestamp, e.value_integer,
+            string_agg(CAST(t.id AS text), ',') AS types,
             min(date_part('year', d1.value_timestamp)) AS first,
             max(date_part('year', d2.value_timestamp)) AS last
+
         FROM model.entity e
         JOIN model.class c ON e.class_id = c.id
-        LEFT OUTER JOIN model.link l ON e.id = l.domain_id
-        LEFT OUTER JOIN model.entity d1 ON l.range_id = d1.id
-        LEFT OUTER JOIN model.entity d2 ON l.range_id = d2.id
+
+        LEFT JOIN model.link tl ON e.id = tl.domain_id
+        LEFT JOIN model.entity t ON tl.range_id = t.id AND tl.property_id = (SELECT id FROM model.property WHERE code = 'P2')
+
+        LEFT JOIN model.link dl1 ON e.id = dl1.domain_id AND
+            dl1.property_id IN (SELECT id FROM model.property WHERE code in ('OA1', 'OA3', 'OA5'))
+        LEFT JOIN model.entity d1 ON dl1.range_id = d1.id
+
+        LEFT JOIN model.link dl2 ON e.id = dl2.domain_id
+            AND dl2.property_id IN (SELECT id FROM model.property WHERE code in ('OA2', 'OA4', 'OA6'))
+        LEFT JOIN model.entity d2 ON dl2.range_id = d2.id
     ";
+
+    public static function getPagerIds($entity, $classCodes) {
+        $sqlFirst = "
+            SELECT min(e.id) AS id
+            FROM model.entity e
+            JOIN model.class c ON e.class_id = c.id ";
+        if ($entity->class->name == 'Linguistic Object') {
+            $sqlFirst .= "
+                JOIN model.link tl ON e.id = tl.domain_id
+                JOIN model.entity t ON
+                    tl.range_id = t.id AND
+                    tl.property_id = (SELECT id FROM model.property WHERE code = 'P2') AND
+                    NOT t.name = ANY ('{Comment,Source Content,Source Original Text,Source Translation,Source Transliteration}'::text[])";
+        }
+        $sqlFirst .= " WHERE c.code = ANY('{" . implode(',',$classCodes) . "}'::text[])";
+        $sqlPrevious = "
+            SELECT max(e.id) AS id
+            FROM model.entity e
+            JOIN model.class c ON e.class_id = c.id ";
+        if ($entity->class->name == 'Linguistic Object') {
+            $sqlPrevious .= "
+                JOIN model.link tl ON e.id = tl.domain_id
+                JOIN model.entity t ON
+                    tl.range_id = t.id AND
+                    tl.property_id = (SELECT id FROM model.property WHERE code = 'P2') AND
+                    NOT t.name = ANY ('{Comment,Source Content,Source Original Text,Source Translation,Source Transliteration}'::text[])";
+        }
+        $sqlPrevious .= " WHERE e.id < :id AND c.code = ANY('{" . implode(',',$classCodes) . "}'::text[])";
+        $sqlNext = "
+            SELECT min(e.id) AS id
+            FROM model.entity e
+            JOIN model.class c ON e.class_id = c.id ";
+        if ($entity->class->name == 'Linguistic Object') {
+            $sqlNext .= "
+                JOIN model.link tl ON e.id = tl.domain_id
+                JOIN model.entity t ON
+                    tl.range_id = t.id AND
+                    tl.property_id = (SELECT id FROM model.property WHERE code = 'P2') AND
+                    NOT t.name = ANY ('{Comment,Source Content,Source Original Text,Source Translation,Source Transliteration}'::text[])";
+        }
+        $sqlNext .= " WHERE e.id > :id AND c.code = ANY('{" . implode(',',$classCodes) . "}'::text[])";
+        $sqlLast = "SELECT max(e.id) AS last_id, ";
+        $sqlLast .= "(" . $sqlNext . ") as next_id, ";
+        $sqlLast .= "(" . $sqlFirst . ") as first_id, ";
+        $sqlLast .= "(" . $sqlPrevious . ") as previous_id ";
+        $sqlLast .= "
+            FROM model.entity e
+            JOIN model.class c ON e.class_id = c.id ";
+        if ($entity->class->name == 'Linguistic Object') {
+            $sqlLast .= "
+                JOIN model.link tl ON e.id = tl.domain_id
+                JOIN model.entity t ON
+                    tl.range_id = t.id AND
+                    tl.property_id = (SELECT id FROM model.property WHERE code = 'P2') AND
+                    NOT t.name = ANY ('{Comment,Source Content,Source Original Text,Source Translation,Source Transliteration}'::text[])";
+        }
+        $sqlLast .= " WHERE c.code = ANY('{" . implode(',',$classCodes) . "}'::text[]);";
+        $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sqlLast);
+        $statement->bindValue(':id', $entity->id);
+        $statement->execute();
+        return $statement->fetch();
+    }
 
     public static function search($term, $codes, $description = false, $own = false) {
         $sql = self::$sql;
-        $sql .= ($own) ? " LEFT JOIN web.user_log ul ON e.id = ul.table_id AND ul.table_name LIKE 'entity'" : '';
+        $sql .= ($own) ? " LEFT JOIN web.user_log ul ON e.id = ul.table_id AND ul.table_name = 'entity'" : '';
         $sql .= " WHERE lower(e.name) LIKE :term ";
         $sql .= ($description) ? " OR lower(e.description) LIKE :term AND " : " AND ";
         $sql .= ($own) ? " ul.user_id = :user_id AND " : '';
@@ -36,13 +108,13 @@ class Model_EntityMapper extends \Model_AbstractMapper {
             switch ($entity->class->code) {
                 // @codeCoverageIgnoreStart
                 case 'E82':
-                    $entityForAlias = Model_LinkMapper::getLinkedEntity($entity, 'P131', true);
+                    $entityForAlias = $entity->getLinkedEntity('P131', true);
                     if (!isset($entitites[$entityForAlias->id])) { // otherwise the one with dates would be overwriten
                         $entitites[$entityForAlias->id] = $entityForAlias;
                     }
                     break;
                 case 'E41':
-                    $entityForAlias = Model_LinkMapper::getLinkedEntity($entity, 'P1', true);
+                    $entityForAlias = $entity->getLinkedEntity('P1', true);
                     if (!isset($entitites[$entityForAlias->id])) { // otherwise the one with dates would be overwriten
                         $entitites[$entityForAlias->id] = $entityForAlias;
                     }
@@ -84,7 +156,7 @@ class Model_EntityMapper extends \Model_AbstractMapper {
         return self::populate(new Model_Entity(), $row);
     }
 
-    public static function getByCodes($code, $nodeRoot = false) {
+    public static function getByCodes($code) {
         $codes = Zend_Registry::get('config')->get('code' . $code)->toArray();
         $sql = self::$sql . " WHERE c.code IN ('" . implode("', '", $codes) . "') GROUP BY e.id, c.code
             ORDER BY e.name;";
@@ -93,11 +165,10 @@ class Model_EntityMapper extends \Model_AbstractMapper {
         $entitites = [];
         foreach ($statement->fetchAll() as $row) {
             $entity = self::populate(new Model_Entity(), $row);
-            if ($nodeRoot) {
-                foreach (Model_LinkMapper::getLinkedEntities($entity, 'P2') as $node) {
-                    if ($node->name == $nodeRoot) {
+            if ($code == 'Source') {
+                if (isset($entity->types['Linguistic object classification']) &&
+                    $entity->types['Linguistic object classification'][0]->name == 'Source Content') {
                         $entitites[] = $entity;
-                    }
                 }
                 continue;
             }
@@ -127,6 +198,15 @@ class Model_EntityMapper extends \Model_AbstractMapper {
         $entity->modified = parent::toZendDate($row['modified']);
         $entity->first = (isset($row['first'])) ? $row['first'] : null;
         $entity->last = (isset($row['last'])) ? $row['last'] : null;
+        $types = [];
+        if (isset($row['types']) && $row['types']) {
+            foreach (array_unique(explode(',', $row['types'])) as $type_id) {
+                $type = Model_NodeMapper::getById($type_id);
+                $root_name = ($type->rootId) ? Model_NodeMapper::getById($type->rootId)->name : $type->name;
+                $types[$root_name][] = $type;
+            }
+            $entity->types = $types;
+        }
         return $entity;
     }
 
@@ -170,14 +250,14 @@ class Model_EntityMapper extends \Model_AbstractMapper {
 
     public static function delete(Model_Entity $entity) {
         self::deleteDates($entity);
-        foreach (Model_LinkMapper::getLinks($entity, ['P1', 'P53', 'P73', 'P131']) as $link) {
+        foreach ($entity->getLinks(['P1', 'P53', 'P73', 'P131']) as $link) {
             parent::deleteAbstract('model.entity', $link->range->id);
         }
         parent::deleteAbstract('model.entity', $entity->id);
     }
 
     public static function deleteDates(Model_Entity $entity) {
-        foreach (Model_LinkMapper::getLinks($entity, ['OA1', 'OA2', 'OA3', 'OA4', 'OA5', 'OA6']) as $link) {
+        foreach ($entity->getLinks(['OA1', 'OA2', 'OA3', 'OA4', 'OA5', 'OA6']) as $link) {
             parent::deleteAbstract('model.entity', $link->range->id);
         }
     }
@@ -192,7 +272,7 @@ class Model_EntityMapper extends \Model_AbstractMapper {
         $sql = "
             SELECT e.id, e.class_id, e.name, e.description, e.created, e.modified, c.code
             FROM model.entity e JOIN model.class c ON e.class_id = c.id
-            WHERE e.name LIKE :name ORDER BY id ASC LIMIT 1;";
+            WHERE e.name = :name ORDER BY id ASC LIMIT 1;";
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->bindValue(':name', Zend_Registry::get('config')->get('eventRootName'));
         $statement->execute();

@@ -37,9 +37,22 @@ $(document).ready(function () {
         }
     });
 
+    $("#settingsForm").validate({
+        rules: {
+            mail_transport_password_retype: {equalTo: "#mail_transport_password"},
+            mail_from_email: {email: true}
+        }
+    });
+
     $("#passwordResetForm").validate({
         rules: {
             email: {email: true}
+        }
+    });
+
+    $("#testMailForm").validate({
+        rules: {
+            testMailReceiver: {email: true}
         }
     });
 

@@ -36,8 +36,8 @@ class Model_GisMapper extends Model_AbstractMapper {
                 JOIN model.entity object ON l.domain_id = object.id
                 JOIN gis." . $shape . " " . $shape . " ON place.id = " . $shape . ".entity_id
                 WHERE
-                    place.class_id = (SELECT id FROM model.class WHERE code LIKE 'E53') AND
-                    l.property_id = (SELECT id FROM model.property WHERE code LIKE 'P53');
+                    place.class_id = (SELECT id FROM model.class WHERE code = 'E53') AND
+                    l.property_id = (SELECT id FROM model.property WHERE code = 'P53');
                 ";
             $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
             $statement->execute();

@@ -16,7 +16,7 @@ if (isset($this->table['filter']) && $this->table['filter']) {
 <? if (isset($this->table['pager']) && $this->table['pager']): ?>
     <? $tableRows = Zend_Registry::get('user')->getSetting('table_rows'); ?>
     <? if (!$tableRows): ?>
-        <? $tableRows = Model_SettingsMapper::getSetting('general', 'default_table_rows'); ?>
+        <? $tableRows = Model_SettingsMapper::getSetting('default_table_rows'); ?>
     <? endif ?>
     <? $pager = '.tablesorterPager({positionFixed: false, container: $("#' . $tableId . 'Pager"), size: ' . $tableRows . '})'; ?>
     <div id="<?= $tableId ?>Pager" class="pager">

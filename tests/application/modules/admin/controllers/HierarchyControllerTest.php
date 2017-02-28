@@ -21,18 +21,18 @@ class Admin_HierarchyControllerTest extends ControllerTestCase {
 
     public function testCrudNode() {
         $kindredship = Model_NodeMapper::getByNodeCategoryName('Actor Actor Relation', 'Parent of (Child of)');
-        $this->request->setMethod('POST')->setPost([]);
-        $this->dispatch('admin/hierarchy/insert/superId/' . $kindredship->superId);
+        $this->request->setMethod('POST')->setPost(['mode' => 'insert']);
+        $this->dispatch('admin/hierarchy/insert/id/' . $kindredship->superId);
         $this->resetRequest()->resetResponse();
         $this->request->setMethod('POST')->setPost(['name' => 'a new relation', 'inverse' => 'inverse']);
-        $this->dispatch('admin/hierarchy/insert/superId/' . $kindredship->rootId);
+        $this->dispatch('admin/hierarchy/insert/id/' . $kindredship->rootId);
         $this->resetRequest()->resetResponse();
         $this->dispatch('admin/hierarchy/update/id/' . $kindredship->id);
         $this->resetRequest()->resetResponse();
         $formValues = [
-            'super' => $kindredship->superId,
+            'actor_actor_relationId' => $kindredship->superId,
             'name' => 'new name',
-            'inverse' => 'whatever',
+            'inverse_text' => 'whatever',
             'description' => 'description'
         ];
         $this->request->setMethod('POST')->setPost($formValues);

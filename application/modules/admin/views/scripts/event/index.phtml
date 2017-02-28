@@ -5,13 +5,14 @@
 <? endforeach ?>
 <?
 $table = ['id' => 'event', 'pager' => true, 'filter' => true];
-$table['header'] = [_('name'), _('class'), _('first'), _('last')];
+$table['header'] = [_('name'), _('class'), _('first'), _('last'), _('info')];
 foreach ($this->events as $event) {
     $table['data'][] = [
         $this->link($event),
         $event->class->nameTranslated,
         $event->first,
-        $event->last
+        $event->last,
+        $this->truncateString($event->description),
     ];
 }
 $this->table = $table;

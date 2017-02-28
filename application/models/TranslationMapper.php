@@ -40,7 +40,7 @@ class Model_TranslationMapper {
 
     public static function delete($itemId, $texts) {
         foreach (array_keys(reset($texts)) as $name) {
-            $sql = 'DELETE FROM web.i18n WHERE field LIKE :field AND item_id = :item_id;';
+            $sql = 'DELETE FROM web.i18n WHERE field = :field AND item_id = :item_id;';
             $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
             $statement->bindValue('field', $name);
             $statement->bindValue('item_id', $itemId);

@@ -4,14 +4,17 @@
 
 class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
 
+    private $settings;
+
     protected function _initApplication() {
         $this->bootstrap('modules');
         $this->bootstrap('database');
         mb_internal_encoding("UTF-8");
         $this->bootstrap('View');
         $view = $this->getResource('view');
-        Zend_Registry::set('settings', Model_SettingsMapper::getSettings());
-        $view->headTitle(Model_SettingsMapper::getSetting('general', 'sitename'))->setSeparator(' - ');
+        $this->settings = Model_SettingsMapper::getSettings();
+        Zend_Registry::set('settings', $this->settings);
+        $view->headTitle($this->settings['sitename'])->setSeparator(' - ');
         Zend_Controller_Action_HelperBroker::addHelper(new \Craws\Controller\Helper\Message());
         Zend_Controller_Action_HelperBroker::addPath(APPLICATION_PATH .
             '/modules/default/controllers/helper/', 'Controller_Helper_Log');
@@ -19,8 +22,7 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
 
     protected function _initPlugin() {
         $this->bootstrap('user');
-        if (Model_SettingsMapper::getSetting('general', 'offline') ||
-            Model_SettingsMapper::getSetting('general', 'maintenance')) {
+        if ($this->settings['offline'] || $this->settings['maintenance']) {
             $front = $this->getResource('frontController');
             $plugin = new \Craws\Plugin\Offline();
             $front->registerPlugin($plugin);
@@ -57,16 +59,11 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         return $databaseAdapter;
     }
 
-    protected function _initModuleSettings() {
-        $settings = Model_SettingsMapper::getSettings();
-        Zend_Registry::set('moduleSettings', $settings['module']); /* needed for acl */
-    }
-
     protected function _initLanguage() {
         $this->bootstrap('user');
         $user = Zend_Registry::get('user');
         $defaultNamespace = new Zend_Session_Namespace('Default');
-        $defaultLocale = Model_LanguageMapper::getById(Model_SettingsMapper::getSetting('general', 'language'))->shortform;
+        $defaultLocale = Model_LanguageMapper::getById($this->settings['default_language'])->shortform;
         $translate = $this->getPluginResource("translate")->getTranslate();
         // @codeCoverageIgnoreStart
         // CoverageIgnore because not accessing with a browser
@@ -98,6 +95,24 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap {
         Zend_Registry::set('Zend_Locale', $locale);
         Zend_Registry::set('Default_Locale', $defaultLocale);
     }
+
+    // @codeCoverageIgnoreStart
+    protected function _initMail() {
+        if (!$this->setting['mail'] || !$this->settings['mail_transport_type'] == 'smtp') {
+            return; // at the moment only smtp is supported
+        }
+        $config = [
+            'username' => $this->settings['mail_transport_username'],
+            'password' => $this->settings['mail_transport_password'],
+            'ssl' => $this->settings['mail_transport_ssl'],
+            'auth' => $this->settings['mail_transport_auth'],
+            'port' => $this->settings['mail_transport_port']
+        ];
+        Zend_Mail::setDefaultTransport(new Zend_Mail_Transport_Smtp($this->settings['mail_transport_host'], $config));
+        # setDefaultFrom doesn't seem to work and has to be set before $mail->send() with $mail->setFrom
+        Zend_Mail::setDefaultFrom($this->settings['mail_from_email'], $this->settings['mail_from_name']);
+    }
+    // @codeCoverageIgnoreEnd
 
     protected function _initModel() {
         Zend_Registry::set('classes', Model_ClassMapper::getAll());

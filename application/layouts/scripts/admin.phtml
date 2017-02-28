@@ -10,7 +10,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <?= $this->headTitle('Admin') ?>
+        <?= $this->headTitle($this->ucstring($controller)) ?>
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
         <link rel="icon" type="image/png" href="/favicon-32x32.png" sizes="32x32" />
         <link rel="icon" type="image/png" href="/favicon-16x16.png" sizes="16x16" />
@@ -66,16 +66,16 @@
                 <? if (strpos(filter_input(INPUT_SERVER, 'HTTP_HOST'), 'local') !== false): ?>
                     <span class="info">local</span>
                 <? endif ?>
-                <? if (Model_SettingsMapper::getSetting("general", "offline") &&
+                <? if (Model_SettingsMapper::getSetting('offline') &&
                     in_array($user->group, ['admin', 'editor'])): ?>
                     <span class="error">Offline</span>
                 <? endif ?>
-                <? if (Model_SettingsMapper::getSetting("general", "maintenance") && $user->group == 'admin'): ?>
+                <? if (Model_SettingsMapper::getSetting('maintenance') && $user->group == 'admin'): ?>
                     <span class="error">Maintenance</span>
                 <? endif ?>
-                <br/>
+                <br/><br/>
                 <? foreach ($this->messenger() as $message): ?>
-                    <br/><div class='message <?= $message['type'] ?>'><?= $this->translate($message['message']) ?></div>
+                    <div class='message <?= $message['type'] ?>'><?= $this->translate($message['message']) ?></div>
                 <? endforeach ?>
             </div>
             <div id="adminUser">

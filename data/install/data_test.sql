@@ -40,8 +40,6 @@ INSERT INTO link (property_id, domain_id, range_id) VALUES
 ((SELECT id FROM property WHERE code='P128'), (SELECT id FROM entity WHERE name='tCarrier' ), (SELECT id FROM entity WHERE name='tSource')),
 ((SELECT id FROM property WHERE code='P117'), (SELECT id FROM entity WHERE name='tEvent'   ), (SELECT id FROM entity WHERE name='History of the World')),
 ((SELECT id FROM property WHERE code='P24' ), (SELECT id FROM entity WHERE name='tEvent'   ), (SELECT id FROM entity WHERE name='tObject')),
-((SELECT id FROM property WHERE code='P22' ), (SELECT id FROM entity WHERE name='tEvent'   ), (SELECT id FROM entity WHERE name='tActor')),
-((SELECT id FROM property WHERE code='P23' ), (SELECT id FROM entity WHERE name='tEvent'   ), (SELECT id FROM entity WHERE name='tActor')),
 ((SELECT id FROM property WHERE code='P117'), (SELECT id FROM entity WHERE name='tSubEvent'), (SELECT id FROM entity WHERE name='tEvent')),
 ((SELECT id FROM property WHERE code='P89' ), (SELECT id FROM entity WHERE name='tPlace'   ), (SELECT id FROM entity WHERE name='Austria')),
 ((SELECT id FROM property WHERE code='P67' ), (SELECT id FROM entity WHERE name='tBiblio'  ), (SELECT id FROM entity WHERE name='tActor')),
@@ -57,3 +55,4 @@ INSERT INTO link (property_id, domain_id, range_id) VALUES
 ((SELECT id FROM property WHERE code='P1'  ), (SELECT id FROM entity WHERE name='tObject'  ), (SELECT id FROM entity WHERE name='tAlias'));
 
 INSERT INTO gis.point (entity_id, name, type, geom) VALUES (1003, 'testPoint', 'centerpoint', '0101000020E6100000F5E0FE877672294095A93A0EC9F54740');
+INSERT INTO gis.polygon (entity_id, name, type, geom) VALUES (1003, 'testShape', 'area', '0103000020E610000001000000040000000FDFFEEB8A722940AD57FADFC5F547409EDFFE7F9C7229403BF4BDFABBF54740BEE0FEA7BF7229402DF976C0C1F547400FDFFEEB8A722940AD57FADFC5F54740');

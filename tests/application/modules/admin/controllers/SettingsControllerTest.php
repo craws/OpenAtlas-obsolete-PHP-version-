@@ -16,10 +16,8 @@ class Admin_SettingsControllerTest extends ControllerTestCase {
     public function testUpdate() {
         $this->dispatch('admin/settings/update');
         $settingsPost = [];
-        foreach (Model_SettingsMapper::getSettings() as $group => $items) {
-            foreach ($items as $name => $value) {
-                $settingsPost[$group . "__" . $name] = $value;
-            }
+        foreach (Model_SettingsMapper::getSettings() as $name => $value) {
+            $settingsPost[$name] = $value;
         }
         $this->request->setMethod('POST')->setPost($settingsPost);
         $this->dispatch('admin/settings/update');

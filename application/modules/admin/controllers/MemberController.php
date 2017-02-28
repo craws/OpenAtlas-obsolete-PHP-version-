@@ -16,7 +16,7 @@ class Admin_MemberController extends Zend_Controller_Action {
         }
         Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         foreach (explode(",", $form->getValue('relatedActorIds')) as $relatedActorId) {
-            $linkId = Model_LinkMapper::insert('P107', $group, $relatedActorId, $this->_getParam('description'));
+            $linkId = $group->link('P107', $relatedActorId, $this->_getParam('description'));
             self::save($linkId, $form, $hierarchies);
             Model_UserLogMapper::insert('link', $linkId, 'insert');
         }
@@ -67,8 +67,7 @@ class Admin_MemberController extends Zend_Controller_Action {
         $form->removeElement('relatedActorIds');
         if (!$this->getRequest()->isPost() || !$form->isValid($this->getRequest()->getPost())) {
             $form->populateDates($link, ['OA5' => 'begin', 'OA6' => 'end']);
-            $type = Model_LinkPropertyMapper::getLinkedEntity($link, 'P2');
-            $node = Model_NodeMapper::getById($type->id);
+            $node = Model_NodeMapper::getById($link->type->id);
             $form->populate(['typeId' => $node->id, 'description' => $link->description]);
             $this->view->actor = $originActor;
             $this->view->form = $form;
@@ -77,7 +76,7 @@ class Admin_MemberController extends Zend_Controller_Action {
         }
         Zend_Db_Table::getDefaultAdapter()->beginTransaction();
         $link->delete();
-        $linkId = Model_LinkMapper::insert('P107', $actor, $relatedActor, $this->_getParam('description'));
+        $linkId = $actor->link('P107', $relatedActor, $this->_getParam('description'));
         self::save($linkId, $form, $hierarchies);
         Model_UserLogMapper::insert('link', $linkId, 'update');
         Zend_Db_Table::getDefaultAdapter()->commit();

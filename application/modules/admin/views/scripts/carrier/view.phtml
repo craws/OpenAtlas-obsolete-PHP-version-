@@ -13,7 +13,7 @@
         <h1><?= $carrier->name ?></h1>
         <?
         $table = [];
-        foreach ($this->getNodesForView($carrier) as $rootName => $nodes) {
+        foreach ($carrier->getTypesForView() as $rootName => $nodes) {
             $table['data'][$rootName] = implode('<br/>', $nodes);
         }
         if ($this->object) {

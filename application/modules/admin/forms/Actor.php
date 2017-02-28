@@ -70,7 +70,7 @@ class Admin_Form_Actor extends Admin_Form_Base {
 
     public function prepareUpdate(Model_Entity $actor) {
         $aliasIndex = 0;
-        $aliasElements = Model_LinkMapper::getLinkedEntities($actor, 'P131');
+        $aliasElements = $actor->getLinkedEntities('P131');
         if ($aliasElements) {
             foreach ($aliasElements as $alias) {
                 $element = $this->createElement('text', 'alias' . $aliasIndex, ['belongsTo' => 'alias']);

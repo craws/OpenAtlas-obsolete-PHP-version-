@@ -5,9 +5,10 @@
 class Model_NodeMapper extends Model_EntityMapper {
 
     public static function registerHierarchies() {
-        $sqlForms = "SELECT f.id, f.name, f.extendable,
-            (SELECT ARRAY(SELECT h.id FROM web.hierarchy h JOIN web.hierarchy_form hf ON h.id = hf.hierarchy_id
-            WHERE hf.form_id = f.id )) AS hierarchy_ids
+        $sqlForms = "
+            SELECT f.id, f.name, f.extendable,
+                (SELECT ARRAY(SELECT h.id FROM web.hierarchy h JOIN web.hierarchy_form hf ON h.id = hf.hierarchy_id
+                    WHERE hf.form_id = f.id )) AS hierarchy_ids
             FROM web.form f ORDER BY name ASC;";
         $statementForms = Zend_Db_Table::getDefaultAdapter()->prepare($sqlForms);
         $statementForms->execute();
@@ -19,9 +20,11 @@ class Model_NodeMapper extends Model_EntityMapper {
             $forms[$row['name']]['extendable'] = $row['extendable'];
         }
         Zend_Registry::set('forms', $forms);
-        $sql = "SELECT h.id, h.multiple, h.system, h.extendable, h.directional,
-            e.name, e.description, e.class_id, e.created, e.modified
-            FROM web.hierarchy h JOIN model.entity e ON h.id = e.id;";
+        $sql = "
+            SELECT h.id, h.multiple, h.system, h.extendable, h.directional,
+                e.name, e.description, e.class_id, e.created, e.modified
+            FROM web.hierarchy h
+            JOIN model.entity e ON h.id = e.id;";
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->execute();
         $nodes = [];
@@ -59,12 +62,20 @@ class Model_NodeMapper extends Model_EntityMapper {
     }
 
     private static function addSubs(Model_Node $node, &$nodeIds) {
-        $sql = "SELECT e.id, e.name, e.description, e.class_id, e.created, e.modified
+        $sql = "
+            SELECT e.id, e.name, e.description, e.class_id, e.created, e.modified,
+                (SELECT COUNT(*) FROM model.link l JOIN model.property p ON l.property_id = p.id
+                    WHERE l.range_id = e.id AND p.code = 'P2') AS type_count,
+                (SELECT COUNT(*) FROM model.link_property l JOIN model.property p ON l.property_id = p.id
+                    WHERE l.range_id = e.id AND p.code = 'P2') AS type_property_count,
+                (SELECT COUNT(*) FROM model.link l JOIN model.property p ON l.property_id = p.id
+                    WHERE l.range_id = e.id AND p.code = 'P89') AS place_count
             FROM model.entity e JOIN model.link l ON e.id = l.domain_id
             WHERE
                 l.range_id = :range_id AND
                 l.property_id = :property_id AND
-                e.name NOT LIKE 'Location of%';";
+                e.name NOT LIKE 'Location of%'
+            ORDER BY e.name;";
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->bindValue(':range_id', $node->id);
         $statement->bindValue(':property_id', Model_PropertyMapper::getByCode($node->propertyToSuper)->id);
@@ -80,6 +91,7 @@ class Model_NodeMapper extends Model_EntityMapper {
             $sub->propertyToEntity = $node->propertyToEntity;
             $sub->propertyToSuper = $node->propertyToSuper;
             $node->subs[] = $sub;
+            $sub->count = $row['place_count'] + $row['type_count'] + $row['type_property_count'];
             $nodeIds[] = $sub->id;
             self::addSubs($sub, $nodeIds);
         }
@@ -113,19 +125,18 @@ class Model_NodeMapper extends Model_EntityMapper {
         $nodes = [];
         foreach (Zend_Registry::get('nodes') as $node) {
             if (\Craws\FilterInput::filter($node->name, 'node') == \Craws\FilterInput::filter($rootName, 'node')) {
-                $realEntity = $entity;
                 /* if its a place we need the object for locations */
                 if (in_array($node->name, ['Administrative Unit', 'Historical Place'])) {
-                    $realEntity = Model_LinkMapper::getLinkedEntity($entity, 'P53');
+                    $entity = Model_LinkMapper::getLinkedEntity($entity, 'P53');
                 }
                 if (is_a($entity, 'Model_Entity')) {
-                    foreach (Model_LinkMapper::getLinkedEntities($realEntity, $node->propertyToEntity) as $linkedNode) {
+                    foreach (Model_LinkMapper::getLinkedEntities($entity, $node->propertyToEntity) as $linkedNode) {
                         if ($linkedNode->rootId == $node->id || $linkedNode->id == $node->id) {
                             $nodes[] = $linkedNode;
                         }
                     }
                 } else if (is_a($entity, 'Model_Link')) {
-                    foreach (Model_LinkPropertyMapper::getLinkedEntities($realEntity, $node->propertyToEntity) as $linkedNode) {
+                    foreach (Model_LinkPropertyMapper::getLinkedEntities($entity, $node->propertyToEntity) as $linkedNode) {
                         if ($linkedNode->rootId == $node->id || $linkedNode->id == $node->id) {
                             $nodes[] = $linkedNode;
                         }
@@ -194,7 +205,7 @@ class Model_NodeMapper extends Model_EntityMapper {
         return $returnCandidates;
     }
 
-    public static function getTreeData($rootName, $selection = false) {
+    public static function getTreeData($rootName, $selection = false, $hierarchyEntityId = null) {
         if ($selection && !is_array($selection)) {
             $selection = [$selection];
         }
@@ -205,11 +216,11 @@ class Model_NodeMapper extends Model_EntityMapper {
             }
         }
         $item = self::getHierarchyByName($rootName);
-        $data = "{'data':[" . self::walkTree($item, $selectedIds) . "]}";
+        $data = "{'data':[" . self::walkTree($item, $selectedIds, $hierarchyEntityId) . "]}";
         return $data;
     }
 
-    private static function walkTree(Model_Node $item, $selectedIds) {
+    private static function walkTree(Model_Node $item, $selectedIds, $hierarchyEntityId) {
         $text = '';
         if ($item->rootId) { // only if not root item
             $text = "{'text':'" . str_replace("'", "\'", $item->name) . "', 'id':'" . $item->id . "',";
@@ -219,7 +230,10 @@ class Model_NodeMapper extends Model_EntityMapper {
             if ($item->subs) {
                 $text .= "'children' : [";
                 foreach ($item->subs as $sub) {
-                    $text .= self::walkTree($sub, $selectedIds);
+                    if ($hierarchyEntityId == $sub->id) {
+                        continue; // don't offer self and subs as super in hierarchy update
+                    }
+                    $text .= self::walkTree($sub, $selectedIds, $hierarchyEntityId);
                 }
                 $text .= "]";
             }
@@ -228,7 +242,10 @@ class Model_NodeMapper extends Model_EntityMapper {
         }
         if ($item->subs) {
             foreach ($item->subs as $sub) {
-                $text .= self::walkTree($sub, $selectedIds);
+                if ($hierarchyEntityId == $sub->id) {
+                    continue; // don't offer self and subs as super in hierarchy update
+                }
+                $text .= self::walkTree($sub, $selectedIds, $hierarchyEntityId);
             }
         }
         return $text;

@@ -8,6 +8,8 @@ Demo: http://openatlas.craws.net
 
 Wiki and issue tracker: http://redmine.craws.net/projects/uni/wiki
 
+Features: http://redmine.craws.net/projects/uni/wiki/Features
+
 GitHub: https://github.com/craws/OpenAtlas
 
 # Installation

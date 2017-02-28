@@ -1,2 +1,52 @@
 <? $this->breadcrumb = [$this->link('settings'), $this->ucstring('edit')]; ?>
-<?= $this->form->setAction($this->url()) ?>
+<? $form = $this->form; ?>
+<? $settings = Model_SettingsMapper::getSettings(); ?>
+<?= $this->displayErrors($form); ?>
+<?= $form->renderForm(false); ?>
+<div class="buttonBar">
+    <?= $form->formSubmit->renderViewHelper(); ?>
+</div>
+<div id="tabs" class="tabsContainer">
+    <ul>
+        <? foreach ($this->groups as $name => $items): ?>
+            <li><a href="#tab<?= ucfirst($name) ?>"><?= $this->ucstring($name) ?></a></li>
+        <? endforeach ?>
+    </ul>
+    <? foreach ($this->groups as $name => $items): ?>
+        <div id="tab<?= ucfirst($name) ?>">
+            <div class="dataTable">
+                <? foreach ($items as $item => $info): ?>
+                    <? $classes = (0 === strpos($item, 'mail_')) ? 'mailOption opaque' : ''; ?>
+                    <div class="tableRow <?= $classes ?>">
+                        <div>
+                            <label><?= $form->$item->getLabel() ?></label>
+                            <? if ($info): ?>
+                                <span class="tooltip" title="<?= $this->translate($info) ?>">i</span>
+                            <? endif ?>
+                        </div>
+                        <div class="tableCell"><?= $form->$item->renderViewHelper() ?></div>
+                    </div>
+                <? endforeach ?>
+                <div></div> <? // needed a div here for fade out effect ?>
+            </div>
+        </div>
+    <? endforeach ?>
+</div>
+<?= '</form>' ?>
+<script type="text/javascript">
+    $(function () {
+        $("#tabs").tabs();
+        <? if (!$settings['mail']): ?>
+            $(".mailOption").toggleClass('faded opaque');
+            $(".faded:not(:last-child) :input").attr("disabled", true);
+        <? endif ?>
+        $('input[type=radio][name=mail]').on('change', function() {
+            $(".mailOption").toggleClass('faded opaque');
+            if ($('#mail_transport_username').is(':disabled')) {
+                $(".mailOption:not(:last-child) :input").attr("disabled", false);
+            } else {
+                $(".mailOption:not(:last-child) :input").attr("disabled", true);
+            }
+        });
+    });
+</script>
