@@ -72,9 +72,9 @@ class Admin_IndexController extends Zend_Controller_Action {
             }
             $mail->setSubject('Login ' . $user->username . ' on ' . $this->getRequest()->getHttpHost());
             $mail->setBodyText($message);
-//            if (!$mail->send()) {
-//                $this->_helper->log('error', 'mail', 'Failed to send login info mail');
-//            }
+            if (!$mail->send()) {
+                $this->_helper->log('error', 'mail', 'Failed to send login info mail');
+            }
         }
         $session = new Zend_Session_Namespace('lastRequest');
         if (isset($session->lastRequestUri)) {
