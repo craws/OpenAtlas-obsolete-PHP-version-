@@ -15,7 +15,7 @@ foreach ($this->nodes as $hierarchy => $rootNode) {
                     <form method="post" action="/admin/hierarchy/insert/id/' . $node->id . '" style="margin-bottom:1em;">
                         <input class="tree-filter" id="' . $node->id . '-tree-search" placeholder="Filter" style="width:8em;" name="name"/>
                         <input type="hidden" name="mode" value="insert" />
-                        <button value="insert" name="submit" type="submit">+</button>';
+                        <button value="insert" name="addHierarchySubmit" type="submit">+</button>';
         if (!$node->system && (in_array(Zend_Registry::get('user')->group, ['admin', 'manager']))) {
             $tabDiv[$hierarchy] .= ' <a href="/admin/hierarchy/update-hierarchy/id/' . $node->id . '">' .
                 $this->ucstring('edit') . '</a>' . $this->link($node, 'delete');
