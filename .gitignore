@@ -17,9 +17,6 @@ nbproject/
 # framework
 library/Zend/
 
-# binaries
-*.mo
-
 # tmp
 data/upload/tmp/*
 *.~lock*

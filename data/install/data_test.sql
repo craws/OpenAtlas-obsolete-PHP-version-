@@ -4,6 +4,8 @@ INSERT INTO "user" (username, password, active, email, group_id) VALUES
 ('testUser', '$2a$08$cVEBAnh6MIp/KEcEoMcYAOOK9B70eeq9FVQ6pNxKJK8UBfsKQeW5ycVEBAnh6MIp/KEcEoMcYAQ', 1, 'nobody@craws.net', 2),
 ('testUser2', '$2a$08$cVEBAnh6MIp/KEcEoMcYAOOK9B70eeq9FVQ6pNxKJK8UBfsKQeW5ycVEBAnh6MIp/KEcEoMcYAQ', 0, 'everybody@craws.net', 2);
 
+UPDATE settings SET value = 'nobody@craws.net' WHERE name = 'mail_recipients_login';
+
 INSERT INTO user_settings (user_id, name, value) VALUES
 ((SELECT id FROM "user" WHERE username = 'a'), 'layout', 'advanced'),
 ((SELECT id FROM "user" WHERE username = 'a'), 'language', '1'),

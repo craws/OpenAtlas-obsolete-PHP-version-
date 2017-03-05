@@ -54,7 +54,6 @@ class Admin_UserController extends Zend_Controller_Action {
                 $unsubscribeText = '<br><br>' . $this->view->translate('mail_unsubscribe', $htmlLink);
                 $mail = new Zend_Mail('utf-8');
                 $mail->addTo($recipient->email);
-                $mail->setFrom($settings['mail_from_email'], $settings['mail_from_name']);
                 $mail->setSubject($form->getValue('subject'));
                 $user = Zend_Registry::get('user');
                 $body = nl2br($form->getValue('body')) . $unsubscribeText;
@@ -157,7 +156,6 @@ class Admin_UserController extends Zend_Controller_Action {
             $this->view->mailPassword = $form->getValue('password');
             $this->view->mailUrl = 'http://' . $this->getRequest()->getHttpHost() . '/admin';
             $mail = new Zend_Mail('utf-8');
-            $mail->setFrom($settings['mail_from_email'], $settings['mail_from_name']);
             $mail->addTo($user->email);
             $mail->setSubject($this->view->translate('mail_registration_subject') . ' ' . $settings['sitename']);
             $mail->setBodyHtml($this->view->render('mail/registration.phtml'));
