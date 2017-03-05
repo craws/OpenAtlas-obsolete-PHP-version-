@@ -211,7 +211,7 @@
     foreach ($versions as $version => $data) {
         $date = 'TBA';
         if ($data['date']) {
-            $date = $this->printDate(new Zend_Date($data['date'], 'en'));
+            $date = $this->printDate(new Zend_Date(strtotime($data['date']), 'en'));
         }
         $html =  '<div class="changelog">
                 <div class="changelogVersion">Version ' . $version . '</div>
