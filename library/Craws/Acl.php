@@ -70,6 +70,7 @@ class Acl extends \Zend_Acl {
 
         $this->add(new \Zend_Acl_Resource('admin:overview:feedback'));
         $this->add(new \Zend_Acl_Resource('admin:overview:index'));
+        $this->add(new \Zend_Acl_Resource('admin:overview:network'));
 
         $this->add(new \Zend_Acl_Resource('admin:place:delete'));
         $this->add(new \Zend_Acl_Resource('admin:place:index'));
@@ -209,6 +210,8 @@ class Acl extends \Zend_Acl {
         $this->allow('editor', 'admin:member:insert');
         $this->allow('editor', 'admin:member:member');
         $this->allow('editor', 'admin:member:update');
+
+        $this->allow('editor', 'admin:overview:network');
 
         $this->allow('editor', 'admin:place:delete');
         $this->allow('editor', 'admin:place:insert');

@@ -18,6 +18,11 @@
     <p><?= $this->translate('feedback_teaser') ?>
         <a href="/admin/overview/feedback"><?= $this->ucstring('feedback') ?></a>
     </p>
+    <? $user = Zend_Registry::get('user'); ?>
+    <? $acl = new \Craws\Acl(); ?>
+    <? if ($acl->isAllowed($user->group, 'admin:overview:network')): ?>
+        <a href="/admin/overview/network"><?= $this->ucstring('network') ?></a>
+    <? endif ?>
     <? if ($namespace->lastLogin): ?>
         <p style="font-size:0.9em;">
             <?= $this->ucstring('last_login') ?> <?= $namespace->lastLogin->setLocale(Zend_Registry::get('Zend_Locale')) ?>
