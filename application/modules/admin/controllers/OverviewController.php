@@ -53,7 +53,7 @@ class Admin_OverviewController extends Zend_Controller_Action {
 
     public function networkAction() {
         $namespace = new Zend_Session_Namespace('Default');
-        //if (!$namespace->network) {
+        if (!$namespace->network) {
             $namespace->network['classes'] = [
                 'E21' => ['active' => true,  'color' => '#34B522'], // Person
                 'E7'  => ['active' => true,  'color' => '#E54A2A'], // Activity
@@ -72,12 +72,12 @@ class Admin_OverviewController extends Zend_Controller_Action {
                 'P107' => ['active' => true],  // has current or former member
                 'P11'  => ['active' => true],  // had participant
                 'P14'  => ['active' => true],  // carried out by
-                'P7'   => ['active' => false], // took place at
-                'P74'  => ['active' => false], // has current or former residence
-                'P67'  => ['active' => false], // refers to
+                'P7'   => ['active' => true], // took place at
+                'P74'  => ['active' => true], // has current or former residence
+                'P67'  => ['active' => true], // refers to
                 'OA7'  => ['active' => true],  // has relationship to
-                'OA8'  => ['active' => false], // appears for the first time in
-                'OA9'  => ['active' => false], // appears for the last time in
+                'OA8'  => ['active' => true], // appears for the first time in
+                'OA9'  => ['active' => true], // appears for the last time in
             ];
             $namespace->network['options'] = [
                 'show orphans' => false,
@@ -86,30 +86,30 @@ class Admin_OverviewController extends Zend_Controller_Action {
                 'charge' => -800,
                 'linkDistance' => 80
             ];
-        //}
+        }
         if ($this->getRequest()->isPost()) {
             foreach ($namespace->network['classes'] as $code => $params) {
                 $namespace->network['classes'][$code]['active'] = false;
-                $namespace->network['classes'][$code]['color'] = $_POST[$code . '_color'];
-                if (array_key_exists($code, $_POST)) {
+                $namespace->network['classes'][$code]['color'] = $this->_getParam($code . '_color');
+                if ($this->_getParam($code)) {
                     $namespace->network['classes'][$code]['active'] = true;
                 }
             }
             foreach ($namespace->network['properties'] as $code => $params) {
                 $namespace->network['properties'][$code]['active'] = false;
-                if (array_key_exists($code, $_POST)) {
+                if ($this->_getParam($code)) {
                     $namespace->network['properties'][$code]['active'] = true;
                 }
             }
             foreach ($namespace->network['options'] as $option => $value) {
                 if ($option == 'show orphans') {
                     $namespace->network['options']['show orphans'] = false;
-                    if (array_key_exists('show-orphans', $_POST)) {
+                    if ($this->_getParam('show-orphans')) {
                         $namespace->network['options']['show orphans'] = true;
                     }
                     continue;
                 }
-                $namespace->network['options'][$option] = $_POST[$option];
+                $namespace->network['options'][$option] = $this->_getParam($option);
             }
         }
         $this->view->networkData = Model_Network::getData();
