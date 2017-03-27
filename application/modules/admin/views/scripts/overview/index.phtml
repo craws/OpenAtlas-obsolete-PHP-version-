@@ -56,17 +56,17 @@
 <? if ($this->bookmarks): ?>
     <h1 style="padding-top:1em;"><?= $this->ucstring('bookmarks') ?></h1>
     <?
-    $table = ['id' => 'bookmark'];
-    $table['header'] = [ _('name'), _('class'), _('first'), _('last'), ''];
-    foreach ($this->bookmarks as $entity) {
-        $table['data'][] = [
-            $this->link($entity),
-            $this->link($entity->class),
-            $entity->first,
-            $entity->last,
-            $this->bookmarkToggle($entity->id)
-        ];
-    }
+        $table = ['id' => 'bookmark', 'pager' => true, 'filter' => true];
+        $table['header'] = [ _('name'), _('class'), _('first'), _('last'), ''];
+        foreach ($this->bookmarks as $entity) {
+            $table['data'][] = [
+                $this->link($entity),
+                $this->link($entity->class),
+                $entity->first,
+                $entity->last,
+                $this->bookmarkToggle($entity->id)
+            ];
+        }
     ?>
     <? $this->table = $table; ?>
     <?= $this->render('tableSorter.phtml'); ?>
