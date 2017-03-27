@@ -1,21 +1,5 @@
 <?php
 
-/*
- * Some notes:
- *
- * Instead of using database mockups the database is rebuild for every test. This has the advantage that install
- * sql files are tested but the tests take longer.
- *
- * I strive for 100% coverage but make use of CoverageIgnore statements in code and don't cover views.
- *
- * Also, I'm in no way an expert in unit testing. E.g. there are very few assertions, in
- * admin/controllers/FunctionControllerTests are a few detached statements and I'm sure there are other issues
- * which could be done in a more "true unit testing way".
- *
- * Alex
- *
- */
-
 class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase {
 
     protected $testString = 'unitTestString';
@@ -47,7 +31,10 @@ class ControllerTestCase extends Zend_Test_PHPUnit_ControllerTestCase {
     }
 
     public function login() {
-        $this->request->setMethod('POST')->setPost(['username' => $this->defaultUsername, 'password' => $this->defaultUsername]);
+        $this->request->setMethod('POST')->setPost([
+            'username' => $this->defaultUsername,
+            'password' => $this->defaultUsername
+        ]);
         $this->dispatch('admin/index/index');
         $this->resetRequest()->resetResponse();
     }

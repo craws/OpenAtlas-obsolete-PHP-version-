@@ -13,11 +13,11 @@ if (isset($this->table['filter']) && $this->table['filter']) {
     $widgets = '{widgets: ["zebra", "filter"], widgetOptions: {filter_external: ".search", filter_columnFilters: false}}';
 }
 ?>
-<? if (isset($this->table['pager']) && $this->table['pager']): ?>
-    <? $tableRows = Zend_Registry::get('user')->getSetting('table_rows'); ?>
-    <? if (!$tableRows): ?>
-        <? $tableRows = Model_SettingsMapper::getSetting('default_table_rows'); ?>
-    <? endif ?>
+<? $tableRows = Zend_Registry::get('user')->getSetting('table_rows'); ?>
+<? if (!$tableRows): ?>
+    <? $tableRows = Model_SettingsMapper::getSetting('default_table_rows'); ?>
+<? endif ?>
+<? if (isset($this->table['pager']) && $this->table['pager'] && count($this->table['data']) > $tableRows): ?>
     <? $pager = '.tablesorterPager({positionFixed: false, container: $("#' . $tableId . 'Pager"), size: ' . $tableRows . '})'; ?>
     <div id="<?= $tableId ?>Pager" class="pager">
         <div class="navigation first"></div>

@@ -51,4 +51,67 @@ class Admin_OverviewController extends Zend_Controller_Action {
         $this->view->bookmarks = $bookmarks;
     }
 
+    public function networkAction() {
+        $namespace = new Zend_Session_Namespace('Default');
+        if (!$namespace->network) {
+            $namespace->network['classes'] = [
+                'E21' => ['active' => true,  'color' => '#34B522'], // Person
+                'E7'  => ['active' => true,  'color' => '#E54A2A'], // Activity
+                'E31' => ['active' => false, 'color' => '#FFA500'], // Document
+                'E33' => ['active' => false, 'color' => '#FFA500'], // Linguistic Object
+                'E40' => ['active' => true,  'color' => '#34623C'], // Legal Body
+                'E74' => ['active' => true,  'color' => '#34623C'], // Group
+                'E53' => ['active' => false, 'color' => '#00FF00'], // Places
+                'E18' => ['active' => false, 'color' => '#FF0000'], // Physical Object
+                'E8'  => ['active' => true,  'color' => '#E54A2A'], // Aquesition
+                'E12' => ['active' => true,  'color' => '#E54A2A'], // Production
+                'E6'  => ['active' => true,  'color' => '#E54A2A'], // Destruction
+                'E84' => ['active' => false, 'color' => '#EE82EE'], // Information Carrier
+            ];
+            $namespace->network['properties'] = [
+                'P107' => ['active' => true],  // has current or former member
+                'P11'  => ['active' => true],  // had participant
+                'P14'  => ['active' => true],  // carried out by
+                'P7'   => ['active' => true], // took place at
+                'P74'  => ['active' => true], // has current or former residence
+                'P67'  => ['active' => true], // refers to
+                'OA7'  => ['active' => true],  // has relationship to
+                'OA8'  => ['active' => true], // appears for the first time in
+                'OA9'  => ['active' => true], // appears for the last time in
+            ];
+            $namespace->network['options'] = [
+                'show orphans' => false,
+                'width'  => 1200,
+                'height'  => 600,
+                'charge' => -800,
+                'linkDistance' => 80
+            ];
+        }
+        if ($this->getRequest()->isPost()) {
+            foreach ($namespace->network['classes'] as $code => $params) {
+                $namespace->network['classes'][$code]['active'] = false;
+                $namespace->network['classes'][$code]['color'] = $this->_getParam($code . '_color');
+                if ($this->_getParam($code)) {
+                    $namespace->network['classes'][$code]['active'] = true;
+                }
+            }
+            foreach ($namespace->network['properties'] as $code => $params) {
+                $namespace->network['properties'][$code]['active'] = false;
+                if ($this->_getParam($code)) {
+                    $namespace->network['properties'][$code]['active'] = true;
+                }
+            }
+            foreach ($namespace->network['options'] as $option => $value) {
+                if ($option == 'show orphans') {
+                    $namespace->network['options']['show orphans'] = false;
+                    if ($this->_getParam('show-orphans')) {
+                        $namespace->network['options']['show orphans'] = true;
+                    }
+                    continue;
+                }
+                $namespace->network['options'][$option] = $this->_getParam($option);
+            }
+        }
+        $this->view->networkData = Model_Network::getData();
+    }
 }

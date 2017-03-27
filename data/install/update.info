@@ -3,6 +3,13 @@ INFO
 
 Watch out for database role in SQLs and change "openatlas_medcon" if needed.
 
+2.3.2 to 2.4.0 Upgrade
+======================
+
+Upload new application files. No database operations needed.
+
+Default network visualization parameters can be changed in: modules/admin/controllers/OverviewController.php
+
 2.3.1 to 2.3.2 Upgrade
 ======================
 
