@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: OpenATLAS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-24 20:13+0100\n"
+"POT-Creation-Date: 2017-03-27 10:03+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Alexander Watzinger <alexander.watzinger@craws.net>\n"
 "Language-Team: craws.net <alexander.watzinger@craws.net>\n"
@@ -647,7 +647,7 @@ msgid "priority"
 msgstr "Priorität"
 
 #: ../../../application/modules/admin/forms/LogFilter.php:34
-#: ../../../application/modules/admin/views/scripts/overview/network.phtml:67
+#: ../../../application/modules/admin/views/scripts/overview/network.phtml:69
 msgid "apply"
 msgstr "Anwenden"
 
@@ -1455,6 +1455,7 @@ msgid "entities"
 msgstr "Instanzen"
 
 #: ../../../application/modules/admin/views/scripts/hierarchy/view.phtml:17
+#: ../../../application/modules/admin/views/scripts/overview/network.phtml:29
 #: ../../../application/modules/default/views/scripts/model/index.phtml:4
 msgid "properties"
 msgstr "Eigenschaften"
@@ -1558,7 +1559,7 @@ msgstr "Hast du Anregungen? Wir freuen uns über"
 #: ../../../application/modules/admin/views/scripts/overview/index.phtml:24
 #: ../../../application/modules/admin/views/scripts/overview/network.phtml:1
 msgid "network"
-msgstr "Netzwerk (experimentell)"
+msgstr "Netzwerk"
 
 #: ../../../application/modules/admin/views/scripts/overview/index.phtml:28
 #: ../../../application/modules/admin/views/scripts/user/index.phtml:9
@@ -1577,25 +1578,35 @@ msgstr "Neueste Einträge"
 msgid "bookmarks"
 msgstr "Bookmarks"
 
-#: ../../../application/modules/admin/views/scripts/overview/network.phtml:40
+#: ../../../application/modules/admin/views/scripts/overview/network.phtml:8
+#: ../../../application/modules/admin/views/scripts/search/form.phtml:18
+#: ../../../application/modules/default/views/scripts/model/index.phtml:3
+msgid "classes"
+msgstr "Klassen"
+
+#: ../../../application/modules/admin/views/scripts/overview/network.phtml:42
 msgid "show orphans"
 msgstr "Zeige verwaiste Einträge"
 
-#: ../../../application/modules/admin/views/scripts/overview/network.phtml:43
+#: ../../../application/modules/admin/views/scripts/overview/network.phtml:45
 msgid "width"
 msgstr "Breite"
 
-#: ../../../application/modules/admin/views/scripts/overview/network.phtml:49
+#: ../../../application/modules/admin/views/scripts/overview/network.phtml:51
 msgid "height"
 msgstr "Höhe"
 
-#: ../../../application/modules/admin/views/scripts/overview/network.phtml:55
+#: ../../../application/modules/admin/views/scripts/overview/network.phtml:57
 msgid "charge"
 msgstr "charge"
 
-#: ../../../application/modules/admin/views/scripts/overview/network.phtml:61
+#: ../../../application/modules/admin/views/scripts/overview/network.phtml:63
 msgid "linkDistance"
 msgstr "Link Entfernung"
+
+#: ../../../application/modules/admin/views/scripts/overview/network.phtml:71
+msgid "manual"
+msgstr "Manual"
 
 #: ../../../application/modules/admin/views/scripts/place/view.phtml:7
 msgid "map"
@@ -1691,11 +1702,6 @@ msgstr "nur selbst bearbeitete Einträge"
 #: ../../../application/modules/admin/views/scripts/search/form.phtml:17
 msgid "search_description"
 msgstr "auch in Beschreibung suchen"
-
-#: ../../../application/modules/admin/views/scripts/search/form.phtml:18
-#: ../../../application/modules/default/views/scripts/model/index.phtml:3
-msgid "classes"
-msgstr "Klassen"
 
 #: ../../../application/modules/admin/views/scripts/search/index.phtml:4
 msgid "no_search_results"

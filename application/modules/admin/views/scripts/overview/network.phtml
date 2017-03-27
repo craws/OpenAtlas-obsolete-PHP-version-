@@ -3,8 +3,9 @@
 <? $network = $namespace->network; ?><link rel="stylesheet" href="/css/d3.css" />
 <script src="/js/d3/d3-3.5.17.min.js"></script>
 <svg style="float:left;"></svg>
-<form style="float:left;" method="post">
+<form style="float:left;margin-left:0.5em;" method="post">
     <div style="float:left;">
+        <?= $this->ucstring('classes') ?>
         <? foreach ($network['classes'] as $code => $params): ?>
             <? $checked = ($params['active']) ? 'checked="checked"' : ''; ?>
             <div class="tableRow">
@@ -25,6 +26,7 @@
         <? endforeach ?>
     </div>
     <div style="float:left;">
+        <?= $this->ucstring('properties') ?>
         <? foreach ($network['properties'] as $code => $params): ?>
             <? $checked = ($params['active']) ? 'checked="checked"' : ''; ?>
             <div class="tableRow">
@@ -65,6 +67,9 @@
         </div>
     </div>
     <button type="submit" style="margin:1em;"><?= $this->ucstring('apply') ?></button>
+    <a href="http://redmine.craws.net/projects/uni/wiki/Manual#Network-visualization" onclick="window.open(this.href);return false;">
+        <?= $this->ucstring('manual') ?>
+    </a>
 </form>
 <script>
     function dragstarted(d) {
