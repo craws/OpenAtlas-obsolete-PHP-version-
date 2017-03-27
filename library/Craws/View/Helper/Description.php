@@ -8,7 +8,7 @@ class Craws_View_Helper_Description extends Zend_View_Helper_Abstract {
         if ($entity->description) {
             $html = '<div class="description">
                     <p class="descriptionTitle">' . $this->view->ucstring('description') . '</p>
-                    <p>' . $entity->description . '</p>
+                    <p>' . nl2br($entity->description) . '</p>
                     </div>';
             return $html;
         }
