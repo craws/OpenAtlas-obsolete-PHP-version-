@@ -217,7 +217,7 @@ class Model_EntityMapper extends \Model_AbstractMapper {
         $statement = Zend_Db_Table::getDefaultAdapter()->prepare($sql);
         $statement->bindValue(':class_id', (int) $classId);
         if ($description) {
-            $statement->bindValue(':description', \Craws\FilterInput::filter($description, 'crm'));
+            $statement->bindValue(':description', \Craws\FilterInput::filter($description, 'description'));
         } else {
             $statement->bindValue(':description', null, PDO::PARAM_NULL);
         }
@@ -241,7 +241,7 @@ class Model_EntityMapper extends \Model_AbstractMapper {
         $statement->bindValue(':id', $entity->id);
         $statement->bindValue(':name', \Craws\FilterInput::filter($entity->name, 'crm'));
         if ($entity->description) {
-            $statement->bindValue(':description', \Craws\FilterInput::filter($entity->description, 'crm'));
+            $statement->bindValue(':description', \Craws\FilterInput::filter($entity->description, 'description'));
         } else {
             $statement->bindValue(':description', null, PDO::PARAM_NULL);
         }

@@ -109,7 +109,7 @@
             <? if ($user->active): ?>
                 <? $acl = new \Craws\Acl(); ?>
                 <? foreach ($menu as $item): ?>
-                    <? if ($acl->isAllowed($user->group, 'admin' . ":" . $item . ':' . 'index')): ?>
+                    <? if ($acl->isAllowed($user->group, 'admin:' . $item . ':index')): ?>
                         <? $menuHighlight = (isset($this->menuHighlight))? $this->menuHighlight : $controller; ?>
                         <div <?= ($item == $menuHighlight) ? 'class="selected"' : '' ?>>
                             <a href="/admin/<?= $item ?>"><?= $this->ucstring($item) ?></a>
