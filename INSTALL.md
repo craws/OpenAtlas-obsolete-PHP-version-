@@ -59,7 +59,7 @@ optional - create database openatlas_master_test for unittests
 
 ### Configuration
 
-adapt /application/configs/config.ini
+adapt /application/configs/application.ini
 
 adapt and rename /application/configs/password_example.ini to password.ini
 
