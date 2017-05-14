@@ -1,5 +1,7 @@
 # About
 
+**Important notice:** We are working on a Python/Flask port, estimated completion at the end of 2017
+
 OpenAtlas is an open source application for archeological, historical and geospatial data.
 
 Website: http://openatlas.eu/website
