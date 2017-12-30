@@ -1,6 +1,6 @@
 **Important notice:**
 
-This is the obsolete PHP version. For the new Python version visit https://github.com/craws/OpenAtlas-Python
+This is the obsolete PHP version. For the new Python version visit https://github.com/craws/OpenAtlas
 
 This version is no longer maintained and depends on deprecated technologies. Don't use it on productive systems.
 
